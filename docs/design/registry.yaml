@@ -1,4 +1,64 @@
 # docs/design/registry.yaml — every screen and shared component, by DS- ID.
 # Plans, commits, mocks and board files use the ID (tickets don't). kind: foundation | component | screen
 # status: draft (mock drawn) | approved (confirmed on the board) | implemented | deprecated (never delete an entry)
-designs: []
+designs:
+  - id: DS-001
+    name: auth-login
+    kind: screen
+    status: draft
+    description: Login screen for candidates, examiners, and administrators with email and password
+  - id: DS-002
+    name: auth-register
+    kind: screen
+    status: draft
+    description: Candidate self-registration screen with email and password
+  - id: DS-003
+    name: candidate-dashboard
+    kind: screen
+    status: approved
+    description: Candidate dashboard displaying available exams, ongoing attempts, and past published grades
+  - id: DS-004
+    name: exam-room
+    kind: screen
+    status: draft
+    description: Active exam taking room with authoritative server countdown, autosave sync indicator, question drawer navigation, Subject 1 & 2 inputs, and submission modal
+  - id: DS-005
+    name: exam-results-review
+    kind: screen
+    status: draft
+    description: Candidate post-grading read-only review with score breakdown, correct answers, and examiner feedback
+  - id: DS-006
+    name: examiner-dashboard
+    kind: screen
+    status: draft
+    description: Examiner dashboard with summary cards for active exams, live candidate attempts, and pending grading queue
+  - id: DS-007
+    name: question-bank-manager
+    kind: screen
+    status: draft
+    description: Question bank manager for creating, tagging, filtering, and previewing the 60 questions and parameter variations
+  - id: DS-008
+    name: exam-builder
+    kind: screen
+    status: draft
+    description: Exam template builder configuring pool rules, timer duration, Subject 1 & 2 point allocations, and availability windows
+  - id: DS-009
+    name: manual-grading-queue
+    kind: screen
+    status: draft
+    description: Examiner interface for reviewing Subject 2 multi-step submissions with rubric scoring, partial credit, and individualized feedback
+  - id: DS-010
+    name: item-analysis-analytics
+    kind: screen
+    status: draft
+    description: Psychometric analytics dashboard displaying item difficulty %, item-total discrimination index, distractor frequency, class average, and median
+  - id: DS-011
+    name: admin-user-management
+    kind: screen
+    status: draft
+    description: Administrator portal for approving/creating examiner accounts, managing candidate profiles, and role assignments
+  - id: DS-012
+    name: admin-exam-supervision
+    kind: screen
+    status: draft
+    description: Administrator overview providing platform-wide directory and supervision of all exams

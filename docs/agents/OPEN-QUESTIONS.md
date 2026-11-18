@@ -9,26 +9,36 @@
 <!-- graffino-agentic:end -->
 
 ## Index
-- Q-001 · What web framework and technology stack should be used?
-- Q-002 · What testing framework and test runner should be configured?
-- Q-003 · What screenshot mechanism should be used for visual regression testing?
+- Q-001 · What web framework and technology stack should be used? · _answered_
+- Q-002 · What testing framework and test runner should be configured? · _answered_
+- Q-003 · What screenshot mechanism should be used for visual regression testing? · _answered_
+- Q-004 · How should question parameterization and mathematical constraints be modeled?
+- Q-005 · How should cohort-wide general feedback and individual candidate feedback be published? · _answered_
 
 ---
 
 ## Q-001 · What web framework and technology stack should be used?
-- **Status:** open
-- **Blocks:** Scaffolding the repository, dependencies, and build/run commands
-- **Who answers:** Repository owner
-- **Proposed answer:** Modern TypeScript web framework (e.g., Next.js / React, Vue, or Svelte)
+- **Status:** answered
+- **Date:** 2026-11-18
+- **Answer:** Laravel 11 for the backend REST API, React + Vite for the frontend SPA, and PostgreSQL for the relational database.
 
 ## Q-002 · What testing framework and test runner should be configured?
-- **Status:** open
-- **Blocks:** Test command configuration and automated test execution
-- **Who answers:** Repository owner
-- **Proposed answer:** Vitest or Jest for unit/integration tests and Playwright for E2E tests
+- **Status:** answered
+- **Date:** 2026-11-18
+- **Answer:** Pest PHP for backend tests, Vitest for frontend unit/integration tests, and Playwright for E2E user flows.
 
 ## Q-003 · What screenshot mechanism should be used for visual regression testing?
+- **Status:** answered
+- **Date:** 2026-11-18
+- **Answer:** Playwright screenshot automation (`npx playwright test`) executing automated visual regression checks against `docs/design/screens/`.
+
+## Q-004 · How should question parameterization and mathematical constraints be modeled?
 - **Status:** open
-- **Blocks:** Visual app screenshot verification command in AGENTS.md
-- **Who answers:** Repository owner
-- **Proposed answer:** Playwright screenshot automation (`npx playwright test`)
+- **Blocks:** Parameterized question evaluation and question builder data model
+- **Who answers:** Client (Mathematics Teacher) & Repository Owner
+- **Proposed answer:** Hybrid parameterization model supporting both curated variant tuples (row A / row B) and algorithmic range generation with constraint rules and examiner pre-preview.
+
+## Q-005 · How should cohort-wide general feedback and individual candidate feedback be published?
+- **Status:** answered
+- **Date:** 2026-11-18
+- **Answer:** The Examiner publishes a single global cohort feedback note all at once after full grading is complete. Individual candidates also receive private per-problem partial points and comments on their Subject 2 submissions, visible only after the Examiner explicitly publishes results.

@@ -97,30 +97,77 @@ them; a ticket with UI has a design subtask instead (team addon).
 
 ## Source
 - Design board: none yet (published from `mocks/`, never pulled)
-- Figma: none (regenerated on request)
-- Token source in code: to be determined upon stack selection
+- Figma: https://www.figma.com/design/tW02fSHT77QqMzeMWkmdVQ/Untitled?node-id=0-1&t=ECNZqs8JTiWAewgc-1
+- Token source in code: `frontend/tailwind.config.js` and `frontend/src/index.css`
 
 ## Tokens
 
 ### Color
 | Token | Light | Dark | Use |
 |---|---|---|---|
+| `bg-canvas` | `#F8FAFC` | `#0B132B` | Page canvas background (midnight tint in dark) |
+| `bg-surface` | `#FFFFFF` | `#111D38` | Cards, exam question containers, modals |
+| `bg-surface-subtle` | `#F1F5F9` | `#172545` | Secondary blocks, disabled items, table headers |
+| `bg-primary` | `#0F766E` | `#2DD4BF` | Primary button fill, active tab highlight (Muted Teal) |
+| `bg-primary-subtle` | `#F0FDFA` | `#0F3238` | Selected option background, tag tint |
+| `text-primary` | `#0F172A` | `#F8FAFC` | High-contrast body text, headings |
+| `text-secondary` | `#475569` | `#94A3B8` | Subtitles, metadata, secondary labels |
+| `text-muted` | `#64748B` | `#64748B` | Placeholders, inactive indicators |
+| `text-primary-accent` | `#0F766E` | `#2DD4BF` | Interactive links, active tab labels |
+| `border-subtle` | `#E2E8F0` | `#1E3156` | Card dividers, question separators |
+| `border-strong` | `#CBD5E1` | `#2B436F` | Inputs, checkboxes, radio borders |
+| `border-focus` | `#0F766E` | `#2DD4BF` | Keyboard focus ring (≥ 3:1 contrast) |
+| `status-success` | `#15803D` | `#4ADE80` | Correct answer, completed submission |
+| `status-success-bg` | `#F0FDF4` | `#0F2E1E` | Correct answer highlight background |
+| `status-warning` | `#B45309` | `#FBBF24` | Time running low (< 5 min), unsaved changes |
+| `status-warning-bg` | `#FFFBEB` | `#332408` | Warning alert banner background |
+| `status-error` | `#B91C1C` | `#F87171` | Invalid input, expired attempt, errors |
+| `status-error-bg` | `#FEF2F2` | `#3A1212` | Error callout background |
 
 ### Typography
 | Token | Family | Size / line height | Weight | Use |
 |---|---|---|---|---|
+| `font-display` | Plus Jakarta Sans | 32px / 40px | 700 | Primary screen headers (one per screen) |
+| `font-h1` | Plus Jakarta Sans | 24px / 32px | 600 | Card titles, section headers |
+| `font-h2` | Plus Jakarta Sans | 18px / 26px | 600 | Question titles, modal titles |
+| `font-h3` | Plus Jakarta Sans | 16px / 24px | 600 | Subsection headers, table headers |
+| `font-body` | Plus Jakarta Sans | 15px / 24px | 400 | Question prompts, candidate responses, body copy |
+| `font-body-medium` | Plus Jakarta Sans | 15px / 24px | 500 | Form labels, button text, navigation items |
+| `font-caption` | Plus Jakarta Sans | 13px / 18px | 400 | Helper text, validation messages, metadata |
+| `font-math` | JetBrains Mono | 15px / 24px | 400 | Mathematical expressions, formulas, variable values |
+| `font-timer` | JetBrains Mono | 20px / 28px | 700 | Server countdown timer with tabular numbers |
 
 ### Spacing
 | Token | Value |
 |---|---|
+| `space-1` | 4px |
+| `space-2` | 8px |
+| `space-3` | 12px |
+| `space-4` | 16px |
+| `space-6` | 24px |
+| `space-8` | 32px |
+| `space-12` | 48px |
+| `space-16` | 64px |
 
 ### Radius, shadow, motion
 | Token | Value | Use |
 |---|---|---|
+| `radius-sm` | 4px | Small tags, badges, input inner corners |
+| `radius-md` | 8px | Buttons, inputs, option selection cards |
+| `radius-lg` | 12px | Exam question containers, modals, cards |
+| `radius-full` | 9999px | Status pills, avatars, rounded radio inputs |
+| `shadow-subtle` | 0 1px 3px rgba(0,0,0,0.06) | Cards in light mode, floating headers |
+| `shadow-modal` | 0 10px 25px -5px rgba(0,0,0,0.15) | Dialogs, dropdown menus, confirmation popups |
+| `motion-fast` | 100ms ease-out | Button hovers, toggle states, checkbox ticks |
+| `motion-normal` | 200ms ease-out | Drawer collapse, tab transitions, modal entry |
 
 ### Breakpoints / window sizes
 | Name | Min | Max |
 |---|---|---|
+| `mobile` | 320px | 639px |
+| `tablet` | 640px | 1023px |
+| `desktop` | 1024px | 1439px |
+| `wide` | 1440px | — |
 
 ## Hard-coded values found (to migrate)
 | path:line | Value | Should be |

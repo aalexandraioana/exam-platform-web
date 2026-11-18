@@ -82,15 +82,36 @@ Provides user interfaces for candidates to take exams and examiners to manage as
 Runs in modern desktop and mobile browsers.
 
 ## 2. Stack and commands
-Web application (stack selection pending — see [OPEN-QUESTIONS.md](docs/agents/OPEN-QUESTIONS.md#Q-001)).
+- **Backend:** Laravel 11 (PHP 8.2+) REST API, Eloquent ORM, Pest PHP tests.
+- **Frontend:** React + Vite (TypeScript) SPA, Tailwind CSS, Vitest.
+- **Database & Services:** PostgreSQL 16 via Docker Compose.
+- **End-to-End & Visual:** Playwright (`npx playwright test`).
 
 ```bash
-# Commands to be established upon framework selection (Q-001, Q-002, Q-003)
-# not run: pending framework and runner setup
+# Start local services
+docker compose up -d
+
+# Backend (backend/)
+composer install
+php artisan migrate --seed
+./vendor/bin/pest
+
+# Frontend (frontend/)
+npm install
+npm run dev
+npm run test
+npx playwright test
+
+# Ledger verification
+python3 docs/agents/tools/ledger-lint.py
 ```
 
 ## 3. Layout
-Layout to be defined upon initial project scaffolding.
+Two-folder monorepo layout:
+- `backend/` — Laravel 11 REST API application, Eloquent migrations, Pest test suite.
+- `frontend/` — React + Vite SPA, Tailwind CSS design tokens, Vitest and Playwright test suites.
+- `docker-compose.yml` — Local development orchestration for PostgreSQL database.
+- `docs/` — Agent memory ledgers (`docs/agents/`) and design system artifacts (`docs/design/`).
 
 ## 4. Rules for this repo
 - Always plan changes using `/plan` before editing code with `/build`.
@@ -102,7 +123,7 @@ Layout to be defined upon initial project scaffolding.
 - Never tag, release, or deploy without user confirmation.
 
 ## 6. Definition of done
-- Automated test suite passes (once configured; see Q-002).
-- Build and linting checks pass (once configured).
-- Visual UI: screenshots of every changed screen, light and dark, compared with [docs/design/DESIGN.md](docs/design/DESIGN.md).
+- Automated test suite passes: `./vendor/bin/pest` (backend), `npm run test` (frontend).
+- Build and linting checks pass.
+- Visual UI: screenshots of every changed screen, light and dark, taken with `npx playwright test` and saved to `docs/design/screens/<DS-id>.<light|dark>.png`, compared with [docs/design/DESIGN.md](docs/design/DESIGN.md).
 - New practices recorded as candidate patterns; open points recorded as Q- entries.

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DS-003 · Candidate Dashboard Mock</title>
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* DESIGN TOKENS MAPPING (docs/design/DESIGN.md) */
+    :root {
+      /* Colors - Light Theme */
+      --bg-canvas: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --bg-surface-subtle: #F1F5F9;
+      --bg-primary: #0F766E;
+      --bg-primary-hover: #115E59;
+      --bg-primary-subtle: #F0FDFA;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --text-primary-accent: #0F766E;
+      --border-subtle: #E2E8F0;
+      --border-strong: #CBD5E1;
+      --border-focus: #0F766E;
+      
+      --status-success: #15803D;
+      --status-success-bg: #F0FDF4;
+      --status-warning: #B45309;
+      --status-warning-bg: #FFFBEB;
+      --status-error: #B91C1C;
+      --status-error-bg: #FEF2F2;
+
+      /* Typography */
+      --font-family-ui: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-family-mono: 'JetBrains Mono', monospace;
+
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      /* Radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+
+      /* Elevation */
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
+      --shadow-modal: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+
+      /* Motion */
+      --motion-fast: 100ms ease-out;
+      --motion-normal: 200ms ease-out;
+    }
+
+    [data-theme="dark"] {
+      /* Colors - Dark Theme (Midnight Tint) */
+      --bg-canvas: #0B132B;
+      --bg-surface: #111D38;
+      --bg-surface-subtle: #172545;
+      --bg-primary: #2DD4BF;
+      --bg-primary-hover: #5EEAD4;
+      --bg-primary-subtle: #0F3238;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --text-primary-accent: #2DD4BF;
+      --border-subtle: #1E3156;
+      --border-strong: #2B436F;
+      --border-focus: #2DD4BF;
+      
+      --status-success: #4ADE80;
+      --status-success-bg: #0F2E1E;
+      --status-warning: #FBBF24;
+      --status-warning-bg: #332408;
+      --status-error: #F87171;
+      --status-error-bg: #3A1212;
+
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-family-ui);
+      font-size: 15px;
+      line-height: 24px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color var(--motion-normal), color var(--motion-normal);
+    }
+
+    /* Interactive Mock Control Bar */
+    .mock-controls {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: var(--space-2) var(--space-6);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .mock-controls .label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary-accent);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .mock-button-group {
+      display: inline-flex;
+      gap: var(--space-1);
+      background: var(--bg-surface-subtle);
+      padding: 2px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .mock-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-family-ui);
+      font-size: 13px;
+      font-weight: 500;
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--motion-fast);
+    }
+
+    .mock-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .mock-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-primary-accent);
+      box-shadow: var(--shadow-subtle);
+      font-weight: 600;
+    }
+
+    /* App Header */
+    .app-header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 var(--space-6);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .brand-badge {
+      background: var(--bg-primary-subtle);
+      color: var(--text-primary-accent);
+      font-size: 13px;
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface-subtle);
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .user-role {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Main Container */
+    .dashboard-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-8) var(--space-6) var(--space-16);
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    /* Typography Utilities */
+    .page-title {
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
+    }
+
+    .page-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .section-title {
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      font-family: var(--font-family-ui);
+      font-size: 15px;
+      font-weight: 500;
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: all var(--motion-fast);
+      min-height: 44px; /* Hit target compliance */
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--bg-primary);
+      color: #FFFFFF;
+      border-color: var(--bg-primary);
+    }
+
+    [data-theme="dark"] .btn-primary {
+      color: #0B132B;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: var(--bg-primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-surface-subtle);
+    }
+
+    /* Ongoing Attempt Card (Attention Item) */
+    .ongoing-banner {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-focus);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      box-shadow: var(--shadow-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ongoing-banner::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 6px;
+      background: var(--bg-primary);
+    }
+
+    .ongoing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      background: var(--status-warning-bg);
+      color: var(--status-warning);
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .ongoing-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
+    }
+
+    .ongoing-meta {
+      font-size: 14px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .timer-pill {
+      font-family: var(--font-family-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary-accent);
+      background: var(--bg-primary-subtle);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* Exam Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--space-4);
+    }
+
+    .exam-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-subtle);
+      transition: transform var(--motion-fast), border-color var(--motion-fast);
+    }
+
+    .exam-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .exam-card-header {
+      margin-bottom: var(--space-4);
+    }
+
+    .exam-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary-accent);
+      background: var(--bg-primary-subtle);
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-2);
+    }
+
+    .exam-title {
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .exam-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 22px;
+      margin-bottom: var(--space-4);
+    }
+
+    .exam-details-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--border-subtle);
+      margin-bottom: var(--space-6);
+    }
+
+    .exam-detail-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    /* History Table */
+    .history-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-surface-subtle);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    td {
+      padding: var(--space-4);
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .score-badge {
+      font-family: var(--font-family-mono);
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--status-success);
+      background: var(--status-success-bg);
+      padding: 4px var(--space-2);
+      border-radius: var(--radius-sm);
+      display: inline-block;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-full);
+    }
+
+    .status-badge.graded {
+      background: var(--status-success-bg);
+      color: var(--status-success);
+    }
+
+    .feedback-snippet {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Empty States */
+    .empty-state {
+      background: var(--bg-surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: var(--space-12) var(--space-6);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
+    }
+
+    .empty-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 400px;
+      margin-bottom: var(--space-4);
+    }
+
+    /* Error Banner State */
+    .alert-banner {
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    .alert-error {
+      background: var(--status-error-bg);
+      border: 1px solid var(--status-error);
+      color: var(--status-error);
+    }
+
+    .alert-content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Skeleton Loading State */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-surface-subtle) 25%, var(--border-subtle) 50%, var(--bg-surface-subtle) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite;
+      border-radius: var(--radius-sm);
+    }
+
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-text {
+      height: 14px;
+      margin-bottom: var(--space-2);
+    }
+
+    .skeleton-title {
+      height: 24px;
+      width: 60%;
+      margin-bottom: var(--space-3);
+    }
+
+    .skeleton-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      height: 220px;
+    }
+
+    /* State Container visibility */
+    .state-view {
+      display: none;
+    }
+    .state-view.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOCK CONTROLS BAR (For review and test verification) -->
+  <aside class="mock-controls" aria-label="Mock state preview switcher">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="label">DS-003 · Candidate Dashboard</span>
+      <span style="font-size: 12px; color: var(--text-muted);">(Mock Preview)</span>
+    </div>
+
+    <!-- Theme Switcher -->
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="mock-button-group">
+        <button type="button" class="mock-btn active" id="btn-theme-light" onclick="setTheme('light')">Light</button>
+        <button type="button" class="mock-btn" id="btn-theme-dark" onclick="setTheme('dark')">Dark (Midnight)</button>
+      </div>
+
+      <!-- State Switcher -->
+      <div class="mock-button-group">
+        <button type="button" class="mock-btn active" onclick="setState('state-success')">Success (Active)</button>
+        <button type="button" class="mock-btn" onclick="setState('state-empty')">Empty</button>
+        <button type="button" class="mock-btn" onclick="setState('state-loading')">Loading</button>
+        <button type="button" class="mock-btn" onclick="setState('state-error')">Error</button>
+        <button type="button" class="mock-btn" onclick="setState('state-longtext')">Long Text</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- APP NAVBAR -->
+  <header class="app-header">
+    <a href="#" class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      Platforma evaluare
+      <span class="brand-badge">Clasa a VI-a</span>
+    </a>
+
+    <div class="user-profile">
+      <div class="user-details">
+        <span class="user-name">Andrei Ionescu</span>
+        <span class="user-role">Candidat · Clasa a VI-a B</span>
+      </div>
+      <div class="avatar" aria-label="Avatar utilizator">AI</div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- STATE 1: SUCCESS / STANDARD (Active ongoing attempt, exams, and history)   -->
+  <!-- ========================================================================= -->
+  <main id="state-success" class="state-view active">
+    <div class="dashboard-container">
+      
+      <!-- Greeting Header -->
+      <header>
+        <h1 class="page-title">Tablou de bord</h1>
+        <p class="page-subtitle">Bine ai venit! Aici găsești evaluările tale active și istoricul rezultatelor obținute.</p>
+      </header>
+
+      <!-- Ongoing Attempt Attention Banner -->
+      <section aria-labelledby="ongoing-attempt-heading">
+        <div class="ongoing-banner">
+          <div>
+            <span class="ongoing-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Încercare în desfășurare
+            </span>
+            <h2 id="ongoing-attempt-heading" class="ongoing-title">Evaluare Unitatea 3: Rapoarte și Proporții</h2>
+            <div class="ongoing-meta">
+              <span>Subiectul 1 (6 cerințe) + Subiectul 2 (3 probleme)</span>
+              <span>•</span>
+              <span>Început la 11:25</span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="timer-pill" aria-label="Timp rămas">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              28:45
+            </div>
+            <a href="#" class="btn btn-primary">Reia examenul</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Available Exams -->
+      <section aria-labelledby="available-exams-heading">
+        <h2 id="available-exams-heading" class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Examene disponibile (2)
+        </h2>
+
+        <div class="cards-grid">
+          <!-- Card 1 -->
+          <article class="exam-card">
+            <div class="exam-card-header">
+              <span class="exam-tag">Geometrie</span>
+              <h3 class="exam-title">Evaluare Sumativă: Triunghiuri și Unghiuri</h3>
+              <p class="exam-desc">Clasificarea triunghiurilor, suma unghiurilor unui triunghi, unghi exterior și proprietăți de congruență.</p>
+              
+              <ul class="exam-details-list">
+                <li class="exam-detail-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Timp alocat: 50 minute (cronometru autoritar)
+                </li>
+                <li class="exam-detail-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                  Structură: S1 (30p auto) + S2 (60p manual) + 10p oficiu
+                </li>
+                <li class="exam-detail-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/></svg>
+                  Disponibil până: 20 nov 2026, ora 18:00
+                </li>
+              </ul>
+            </div>
+
+            <a href="#" class="btn btn-primary" style="width: 100%;">Începe examenul</a>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="exam-card">
+            <div class="exam-card-header">
+              <span class="exam-tag">Algebră</span>
+              <h3 class="exam-title">Exercițiu Recapitualtiv: Mulțimi de Numere Întregi</h3>
+              <p class="exam-desc">Operații cu numere întregi (adunare, scădere, înmulțire), modulul unui număr și relații de ordine.</p>
+              
+              <ul class="exam-details-list">
+                <li class="exam-detail-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Timp alocat: 40 minute
+                </li>
+                <li class="exam-detail-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                  Structură: S1 (30p) + S2 (60p) + 10p oficiu
+                </li>
+                <li class="exam-detail-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/></svg>
+                  Disponibil până: 22 nov 2026, ora 20:00
+                </li>
+              </ul>
+            </div>
+
+            <a href="#" class="btn btn-primary" style="width: 100%;">Începe examenul</a>
+          </article>
+        </div>
+      </section>
+
+      <!-- Section: Submissions & Results -->
+      <section aria-labelledby="history-heading">
+        <h2 id="history-heading" class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Evaluări finalizate și note
+        </h2>
+
+        <div class="history-card">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Examen</th>
+                  <th>Data predării</th>
+                  <th>Punctaj / Notă</th>
+                  <th>Status</th>
+                  <th>Feedback cadru didactic</th>
+                  <th>Acțiuni</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>Evaluare Inițială: Mulțimi și Numere Naturale</strong>
+                    <div style="font-size: 12px; color: var(--text-muted);">Algebră · 50 min</div>
+                  </td>
+                  <td>14 nov 2026, 10:45</td>
+                  <td>
+                    <span class="score-badge">85 / 100 (8.50)</span>
+                  </td>
+                  <td>
+                    <span class="status-badge graded">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      Corectat
+                    </span>
+                  </td>
+                  <td style="max-width: 300px;">
+                    <div class="feedback-snippet">"Foarte bine la Subiectul 1. La problema 2 de la Subiectul 2 atenție la justificarea teoremei unghiurilor congruente."</div>
+                  </td>
+                  <td>
+                    <a href="#" class="btn btn-secondary" style="min-height: 36px; padding: 4px 12px; font-size: 13px;">Vezi lucrarea</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Evaluare de verificare: Rapoarte și Proporții (Pilot)</strong>
+                    <div style="font-size: 12px; color: var(--text-muted);">Algebră · 45 min</div>
+                  </td>
+                  <td>10 nov 2026, 12:10</td>
+                  <td>
+                    <span class="score-badge">95 / 100 (9.50)</span>
+                  </td>
+                  <td>
+                    <span class="status-badge graded">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      Corectat
+                    </span>
+                  </td>
+                  <td style="max-width: 300px;">
+                    <div class="feedback-snippet">"Rezolvare exemplară și pași clari la Subiectul 2."</div>
+                  </td>
+                  <td>
+                    <a href="#" class="btn btn-secondary" style="min-height: 36px; padding: 4px 12px; font-size: 13px;">Vezi lucrarea</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- STATE 2: EMPTY STATE (No ongoing attempts, no active exams, no history)   -->
+  <!-- ========================================================================= -->
+  <main id="state-empty" class="state-view">
+    <div class="dashboard-container">
+      <header>
+        <h1 class="page-title">Tablou de bord</h1>
+        <p class="page-subtitle">Nu există evaluări programate în acest moment.</p>
+      </header>
+
+      <section>
+        <div class="empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          <h2 class="empty-title">Nicio evaluare disponibilă</h2>
+          <p class="empty-desc">Cadrul tău didactic nu a publicat încă un examen nou pentru clasa ta. Revino când este programată următoarea testare.</p>
+          <button type="button" class="btn btn-secondary" onclick="alert('Lista a fost actualizată.')">Reîmprospătează lista</button>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Evaluări finalizate</h2>
+        <div class="empty-state" style="padding: 32px 16px;">
+          <p class="empty-desc" style="margin-bottom: 0;">Nu ai nicio lucrare predată în istoric.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- STATE 3: LOADING STATE (Skeletons for ongoing banner, cards, and table)   -->
+  <!-- ========================================================================= -->
+  <main id="state-loading" class="state-view">
+    <div class="dashboard-container" aria-busy="true" aria-label="Se încarcă datele tabloului de bord">
+      <header>
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-text" style="width: 40%;"></div>
+      </header>
+
+      <!-- Skeleton Ongoing Banner -->
+      <div class="skeleton-card" style="height: 110px;">
+        <div class="skeleton skeleton-text" style="width: 25%;"></div>
+        <div class="skeleton skeleton-title" style="width: 50%;"></div>
+      </div>
+
+      <!-- Skeleton Grid -->
+      <section>
+        <div class="skeleton skeleton-text" style="width: 20%; height: 20px; margin-bottom: 16px;"></div>
+        <div class="cards-grid">
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-text" style="width: 30%;"></div>
+            <div class="skeleton skeleton-title" style="width: 80%;"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width: 90%;"></div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-text" style="width: 30%;"></div>
+            <div class="skeleton skeleton-title" style="width: 80%;"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width: 90%;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Skeleton Table -->
+      <section>
+        <div class="skeleton-card" style="height: 180px;">
+          <div class="skeleton skeleton-text" style="width: 100%; height: 32px; margin-bottom: 12px;"></div>
+          <div class="skeleton skeleton-text" style="width: 100%; height: 24px; margin-bottom: 8px;"></div>
+          <div class="skeleton skeleton-text" style="width: 100%; height: 24px;"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- STATE 4: ERROR STATE (Network / API failure banner with retry action)     -->
+  <!-- ========================================================================= -->
+  <main id="state-error" class="state-view">
+    <div class="dashboard-container">
+      <!-- Error Alert Callout -->
+      <div class="alert-banner alert-error" role="alert">
+        <div class="alert-content">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <div>
+            <strong>Eroare de comunicare cu serverul:</strong> Nu s-au putut prelua examenele disponibile. Verifică conexiunea la internet sau încearcă din nou.
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary" style="background: var(--bg-surface); color: var(--status-error); border-color: var(--status-error);" onclick="setState('state-success')">Reîncearcă</button>
+      </div>
+
+      <header>
+        <h1 class="page-title">Tablou de bord</h1>
+        <p class="page-subtitle">Datele temporare nu au putut fi sincronizate.</p>
+      </header>
+
+      <div class="empty-state">
+        <h2 class="empty-title">Conținut indisponibil offline</h2>
+        <p class="empty-desc">A apărut o problemă la interogarea bazei de date. Dacă problema persistă, contactează cadrul didactic sau administratorul.</p>
+        <button type="button" class="btn btn-primary" onclick="setState('state-success')">Reîncearcă conectarea</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- STATE 5: LONG TEXT / EDGE CASES (Wrapping, truncation & responsive check) -->
+  <!-- ========================================================================= -->
+  <main id="state-longtext" class="state-view">
+    <div class="dashboard-container">
+      <header>
+        <h1 class="page-title">Tablou de bord · Testare cazuri limită de text lung</h1>
+        <p class="page-subtitle">Verificare comportament layout la titluri extinse, descrieri verbose și feedback detaliat pe mai multe paragrafe.</p>
+      </header>
+
+      <!-- Long Ongoing Banner -->
+      <section>
+        <div class="ongoing-banner">
+          <div style="flex: 1; min-width: 0;">
+            <span class="ongoing-badge">Încercare în desfășurare</span>
+            <h2 class="ongoing-title" style="word-break: break-word;">
+              Evaluare Națională Pregătitoare Interdisciplinară de Matematică Aplicată și Raționament Logic Avansat pentru Clasa a VI-a cu Probleme de Geometrie Plană și Calcul Algebric
+            </h2>
+            <div class="ongoing-meta">
+              <span>Subiectul 1 (6 itemi obiectivi cu variante multiple de răspuns și completare) + Subiectul 2 (4 probleme de demonstrație geometrică structurate)</span>
+              <span>•</span>
+              <span>Cronometru server activ</span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0;">
+            <div class="timer-pill">49:58</div>
+            <a href="#" class="btn btn-primary">Reia examenul</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Long Card in Grid -->
+      <section>
+        <h2 class="section-title">Examene cu titluri și instrucțiuni lungi</h2>
+        <div class="cards-grid">
+          <article class="exam-card">
+            <div class="exam-card-header">
+              <span class="exam-tag">Algebră & Geometrie combinată</span>
+              <h3 class="exam-title" style="word-break: break-word;">
+                Concursul Județean de Matematică „Axioma” — Etapa de Calificare Online pentru Elevii Ciclului Gimnazial
+              </h3>
+              <p class="exam-desc">
+                Această evaluare include un set extins de itemi parametrizati numeric și probleme demonstrative. Vă rugăm să citiți cu mare atenție cerințele fiecărui exercițiu, să verificați ipotezele matematice impuse pentru numere naturale și întregi și să specificați explicit toate teoremele aplicate în demonstrațiile geometrice.
+              </p>
+              <ul class="exam-details-list">
+                <li class="exam-detail-item">Timp: 50 minute (+30 secunde toleranță rețea)</li>
+                <li class="exam-detail-item">Punctaj: 100 puncte (10p din oficiu incluse garantat)</li>
+              </ul>
+            </div>
+            <a href="#" class="btn btn-primary" style="width: 100%;">Începe examenul</a>
+          </article>
+        </div>
+      </section>
+
+      <!-- Long Feedback in History Table -->
+      <section>
+        <h2 class="section-title">Istoric cu feedback extins pe mai multe rânduri</h2>
+        <div class="history-card">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Examen</th>
+                  <th>Punctaj</th>
+                  <th>Status</th>
+                  <th>Feedback detaliat de la cadrul didactic</th>
+                  <th>Acțiuni</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="max-width: 250px;">
+                    <strong>Evaluare Semestrială Extinsă de Geometrie: Triunghiuri, Mediatrice, Bisectoare și Linii Importante</strong>
+                  </td>
+                  <td><span class="score-badge">92 / 100</span></td>
+                  <td><span class="status-badge graded">Corectat</span></td>
+                  <td style="max-width: 450px;">
+                    <div style="font-size: 13px; line-height: 20px; color: var(--text-secondary);">
+                      „Rezultatele obținute la Subiectul 1 demonstrează stăpânirea deplină a noțiunilor fundamentale și a definițiilor teoretice. La Subiectul 2, problema 3 (demonstrarea congruenței triunghiurilor dreptunghice prin cazul Ipotenuză-Unghi) a fost redactată impecabil. Recomand o atenție sporită la desenul geometric de la problema 4 pentru a evita confuzia între înălțime și mediană într-un triunghi oarecare.”
+                    </div>
+                  </td>
+                  <td>
+                    <a href="#" class="btn btn-secondary">Vezi lucrarea</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Theme toggle logic
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('btn-theme-light').classList.toggle('active', theme === 'light');
+      document.getElementById('btn-theme-dark').classList.toggle('active', theme === 'dark');
+    }
+
+    // State switcher logic
+    function setState(stateId) {
+      document.querySelectorAll('.state-view').forEach(el => el.classList.remove('active'));
+      document.getElementById(stateId).classList.add('active');
+
+      // Update button active state
+      const buttons = document.querySelectorAll('.mock-button-group:last-child .mock-btn');
+      buttons.forEach(btn => {
+        const matches = btn.getAttribute('onclick').includes(stateId);
+        btn.classList.toggle('active', matches);
+      });
+    }
+  </script>
+</body>
+</html>

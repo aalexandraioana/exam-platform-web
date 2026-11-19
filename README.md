@@ -1,13 +1,13 @@
 # P013 · Question Pool and Parameterized Exams (Bancă de Întrebări și Examene Parametrizate)
 
-Web platform for administering online examinations with question pools, parameterized numerical questions, authoritative server timers, autosave resilience, manual grading workflows, and item psychometric analytics.
+Web platform for administering online mathematics examinations across grade levels, featuring question pools, parameterized numerical questions, authoritative server timers, autosave resilience, manual grading workflows, and item psychometric analytics.
 
 ---
 
 ## 1. Project Overview & Client Context
 
 - **Catalog Project:** P013 (Category C: University / Education)
-- **Target Audience:** Middle-school education (Clasa a VI-a / 6th Grade)
+- **Target Audience:** Mathematics education across grade levels (grades 5–8+, with 6th Grade Mathematics as the reference pool and pilot dataset)
 - **Client / Domain Expert:** Middle-school Mathematics Teacher (see [INTERVIEW.md](file:///home/alexa/Work/exam-platform-web/INTERVIEW.md))
 - **Domain Terminology:** Strictly adheres to [CONTEXT.md](file:///home/alexa/Work/exam-platform-web/CONTEXT.md) (**Exam**, **Candidate**, **Examiner**, **Attempt**, **Submission**).
 
@@ -18,7 +18,7 @@ Web platform for administering online examinations with question pools, paramete
 As required by the project specifications ([catalog-de-proiecte-web.md](file:///home/alexa/Work/exam-platform-web/catalog-de-proiecte-web.md#L910-L915)), the specific parameters established for this implementation are:
 
 1. **Discipline & Question Pool Content:**
-   - **Discipline:** 6th-Grade Mathematics (*Matematică - Clasa a VI-a*).
+   - **Discipline:** Mathematics across grade levels, with 6th-Grade Mathematics (*Matematică - Clasa a VI-a*) as the initial reference pool.
    - **Topics Covered:**
      - *Algebra:* Mulțimi de numere naturale și întregi; rapoarte și proporții.
      - *Geometry:* Unghiuri și triunghiuri.

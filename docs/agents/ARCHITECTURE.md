@@ -6,7 +6,7 @@
 <!-- graffino-agentic:end -->
 
 ## Overview
-exam-platform-web is an online assessment platform administering examinations with question pools, parameterized numerical questions, authoritative server timers, autosave resilience, manual grading workflows, and item psychometric analytics.
+exam-platform-web is an online mathematics assessment platform administering examinations across grade levels (with 6th-grade mathematics as the reference pool and pilot dataset), featuring question pools, parameterized numerical questions, authoritative server timers, autosave resilience, manual grading workflows, and item psychometric analytics.
 
 ```text
 [Browser / Candidate & Examiner UI]

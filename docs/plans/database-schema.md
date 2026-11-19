@@ -46,18 +46,19 @@ erDiagram
 ---
 
 ### 2. `questions`
-**Purpose:** Question bank master records (pool of 60 items across 6th-grade math topics).
+**Purpose:** Mathematics question bank master records supporting multiple grade levels (with 6th-grade math as initial 60-item reference pool).
 | Column | Type | Constraints / Defaults | Description |
 |---|---|---|---|
 | `id` | `BIGSERIAL` | `PRIMARY KEY` | Unique question identifier |
 | `examiner_id` | `BIGINT` | `NOT NULL, FK -> users(id)` | Author/creator of the question |
 | `title` | `VARCHAR(255)` | `NOT NULL` | Short descriptive label (e.g., "Suma unghiurilor într-un triunghi") |
 | `content` | `TEXT` | `NOT NULL` | Mathematical statement with placeholders (e.g., "Calculați $x$ dacă $a = {a}$...") |
+| `grade_level` | `VARCHAR(32)` | `NOT NULL, DEFAULT 'grade_6'`| Target grade level (e.g. `grade_5`, `grade_6`, `grade_7`, `grade_8`) |
 | `section` | `VARCHAR(32)` | `NOT NULL` | Enum: `subject_1` (auto-graded, binary) or `subject_2` (manual multi-step) |
 | `type` | `VARCHAR(32)` | `NOT NULL` | `dual_choice`, `single_choice`, `multiple_choice`, `short_answer`, `parameterized_numeric`, `structured_problem` |
 | `default_points` | `DECIMAL(5,2)`| `NOT NULL, DEFAULT 5.00` | Standard points (5.00 for Subject 1; 15.00-20.00 for Subject 2) |
 | `difficulty` | `VARCHAR(16)` | `NOT NULL` | Enum: `easy`, `medium`, `hard` |
-| `topic` | `VARCHAR(64)` | `NOT NULL` | Topic category (e.g. `multimi_numere`, `rapoarte_proportii`, `triunghiuri`) |
+| `topic` | `VARCHAR(64)` | `NOT NULL` | Mathematics topic (e.g. `multimi_numere`, `rapoarte_proportii`, `triunghiuri`) |
 | `solution_explanation` | `TEXT`| `NULLABLE` | Detailed pedagogical explanation shown post-grading |
 | `metadata` | `JSONB` | `NOT NULL, DEFAULT '{}'` | Options, formula definitions, variable ranges (`{ "a": {"min": 2, "max": 10} }`), tolerance (= 0) |
 | `created_at`, `updated_at` | `TIMESTAMP` | `NOT NULL` | Laravel audit timestamps |
@@ -65,13 +66,14 @@ erDiagram
 ---
 
 ### 3. `exams`
-**Purpose:** Exam templates configured by examiners with timing, baseline points, and grading policies.
+**Purpose:** Exam templates configured by examiners with timing, baseline points, grade targeting, and grading policies.
 | Column | Type | Constraints / Defaults | Description |
 |---|---|---|---|
 | `id` | `BIGSERIAL` | `PRIMARY KEY` | Unique exam identifier |
 | `examiner_id` | `BIGINT` | `NOT NULL, FK -> users(id)` | Examiner who owns the exam |
 | `title` | `VARCHAR(255)` | `NOT NULL` | Title of the assessment |
 | `description` | `TEXT` | `NULLABLE` | Exam instructions and candidate guidance |
+| `grade_level` | `VARCHAR(32)` | `NULLABLE` | Target grade level (e.g., `'grade_6'`) |
 | `duration_minutes` | `INTEGER` | `NOT NULL, DEFAULT 50` | Authoritative assessment duration in minutes |
 | `baseline_points` | `DECIMAL(5,2)`| `NOT NULL, DEFAULT 10.00`| Baseline points (*din oficiu*) per D-005 |
 | `max_attempts` | `INTEGER` | `NOT NULL, DEFAULT 1` | Allowed attempts per candidate (1 or multiple per D-012) |

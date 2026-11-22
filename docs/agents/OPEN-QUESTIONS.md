@@ -185,7 +185,7 @@
 - **Date:** 2026-11-22
 - **Blocks:** P6 (attempt engine: uploads)
 - **Context:** D-011 says photos are "stored securely on server disk", but the Render web service's disk is wiped on every deploy (D-014), so uploads would be lost. Options: a Render persistent disk (paid plan) or object storage (e.g. S3, R2). The answer may need a change to D-011 (PROPOSAL).
-- **Answer:** S3-compatible object storage with a free tier in production (provider chosen in P6, e.g. Cloudflare R2 or Supabase Storage); local disk in development. Chosen over local disk on Render, where every deploy would delete the pilot's photos before grading. Changes D-011's wording (D-048, proposed). (Answered 2026-11-22.)
+- **Answer:** S3-compatible object storage with a free tier in production (provider chosen in P6, e.g. Cloudflare R2 or Supabase Storage); local disk in development. Chosen over local disk on Render, where every deploy would delete the pilot's photos before grading. Supersedes D-011 (D-048). (Answered 2026-11-22.)
 
 ## Q-028 · How does the scheduled auto-submit job run on Render?
 - **Status:** answered

@@ -52,6 +52,24 @@ class User extends Authenticatable
         return $this->hasMany(Competence::class, 'examiner_id');
     }
 
+    /** This Examiner's bank: all their questions, including library entries they published (D-040, D-041). @return HasMany<Question, $this> */
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class, 'examiner_id');
+    }
+
+    /** @return HasMany<Pool, $this> */
+    public function pools(): HasMany
+    {
+        return $this->hasMany(Pool::class, 'examiner_id');
+    }
+
+    /** @return HasMany<TopicLabel, $this> */
+    public function topicLabels(): HasMany
+    {
+        return $this->hasMany(TopicLabel::class, 'examiner_id');
+    }
+
     /** This Candidate's requests to join classes. @return HasMany<ClassMembership, $this> */
     public function memberships(): HasMany
     {

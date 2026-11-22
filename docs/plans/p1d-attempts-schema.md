@@ -65,8 +65,8 @@ spanning tables (awarded points ≤ Item points, barem score ≤ step points) ar
 
 ## Knowledge used
 Confirmed: D-001, D-003, D-004, D-005, D-006, D-008, D-009, D-012, D-013, D-019, D-021, D-031,
-D-036, D-042, D-043, D-044, D-045, D-046, D-048, PATTERN-001. D-026 applies as written (its
-"D-011 still holds" wording was flagged and left unchanged). PATTERN-004 stays a candidate.
+D-036, D-042, D-043, D-044, D-045, D-046, D-048, PATTERN-001. D-026 reworded at the user's request
+("D-048 still holds" instead of the superseded D-011). PATTERN-004 stays a candidate.
 Assumptions approved with the plan: deadline fixed at start; Grace Period in config (30 s); the
 10 MB photo limit is checked at upload; scores empty until grading, and the 1–10 grade is
 total ÷ 10, not stored.

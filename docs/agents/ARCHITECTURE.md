@@ -42,7 +42,8 @@ exam-platform-web is an online mathematics assessment platform administering exa
 | User credentials & roles | PostgreSQL (`users` table) | Backend | Hashed passwords; `role` (candidate, examiner, administrator; CHECK constraint, not mass-assignable) and `is_active` |
 | Competences | PostgreSQL (`competences`) | Backend | Each Examiner's own list: code unique per Examiner, description (D-039) |
 | Classes & memberships | PostgreSQL (`classes`, `class_memberships`) | Backend | Unique join code per class; membership status pending / accepted / rejected, one row per Candidate and class (D-015, D-028) |
-| Exam templates & question pools | PostgreSQL (`exams`, `questions`) | Backend | 60 questions pool with tags, difficulty, formula definitions |
+| Question bank | PostgreSQL (`questions`, `pools`, `pool_question`, `topic_labels`, `question_topic_label`, `barem_steps`) | Backend | Each Examiner's bank, pools and topic labels; Draft/Ready and other rules as CHECK constraints (D-031, D-040, D-041, D-042); library entries are frozen copies (`published_to_library_at`, `copied_from_id`); JSON answer key and parameters |
+| Exam templates | PostgreSQL (`exams`) | Backend | Planned in P1c: blueprint Items drawing from pools (D-043) |
 | Attempt state & parameters | PostgreSQL (`attempts`, `attempt_parameters`) | Backend | State machine (`started`, `in_progress`, `submitted`, `graded`), timer start, snapshot of concrete numbers |
 | Candidate responses & uploads | PostgreSQL (`responses`) & local disk (`storage/app/public`) | Backend | Selected options, numerical inputs, text steps, uploaded solution images |
 | Feedback & psychometrics | PostgreSQL (`exams.cohort_feedback`, `exams.feedback_published_at`, `responses.examiner_comment`, `item_statistics`) | Backend | Cohort note and its publication time on the exam, private per-problem comments on each response (D-019), difficulty/discrimination metrics |

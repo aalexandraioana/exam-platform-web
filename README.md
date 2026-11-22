@@ -102,11 +102,11 @@ The platform enforces three distinct authorization tiers:
 - **Alegere simplă (Single Choice):** 4 radio options, 1 correct (Subject 1).
 - **Alegere multiplă (Multiple Choice):** Checkboxes; all-or-nothing (Subject 1).
 - **Răspuns scurt & Completare (Short Answer / Fill-in-the-blank):** Text or numeric input with exact matching (Subject 1).
-- **Variants and parameterization (any question, D-025):** Questions are fixed by default. Written **Variants** are similar, equivalent questions placed in the same blueprint Item; each **Attempt** gets one Variant per Item, picked at random. A question may also draw values per **Attempt** from simple min/max bounds (e.g. `a > b`), previewed by the **Examiner** before publishing. The picked question, the drawn values and the expected answer are stored on the **Attempt** for auditability, and formulas are evaluated server-side with a sandboxed PHP mathematical expression library (never `eval()`).
+- **Pools, Variants and parameterization (any question, D-043):** Questions are fixed by default. Each blueprint Item draws from one of the Examiner's **pools**: each **Attempt** gets one random Ready question from that pool with the Item's competence and difficulty (a **Variant**), never the same question twice in one Attempt. A question may also draw values per **Attempt** from simple min/max bounds (e.g. `a > b`), previewed by the **Examiner** before publishing. The picked question, the drawn values and the expected answer are stored on the **Attempt** for auditability, and formulas are evaluated server-side with a sandboxed PHP mathematical expression library (never `eval()`).
 - **Problemă structurată (Multi-step Problem):** Step-by-step reasoning or mathematical proof submitted for manual grading (Subject 2), supporting up to 3 photos of handwritten solution work per problem (JPG, PNG or HEIC, 10 MB each, D-026) alongside a step summary text area.
 
 > [!NOTE]
-> The blueprint and Variant rules are decided in D-025 ([docs/agents/DECISIONS.md](docs/agents/DECISIONS.md)). Each Examiner writes their own competences (a code and what is assessed); topics are only descriptive labels on questions (D-039).
+> The blueprint and pool rules are decided in D-043 and D-041 ([docs/agents/DECISIONS.md](docs/agents/DECISIONS.md)). Each Examiner writes their own competences (a code and what is assessed); topics are only descriptive labels on questions (D-039).
 
 ---
 
@@ -120,8 +120,8 @@ The platform enforces three distinct authorization tiers:
 
 ### Examiner Screens
 1. **Dashboard:** Summary metrics (active exams, attempts in progress, submissions awaiting grading).
-2. **Question Bank Manager:** Filterable table of the question pool with tags, difficulty indicators, preview, and Variant editor.
-3. **Exam Builder / Editor:** Template manager defining duration, availability windows, the blueprint (ordered Items, each with a competence, difficulty, points and its equivalent Variants, D-025), target classes, and Subject 1 / Subject 2 weightings.
+2. **Question Bank Manager:** Filterable table of the Examiner's bank (pools, topic labels, competences, grade level, difficulty, Draft / Ready), preview, and the question editor.
+3. **Exam Builder / Editor:** Template manager defining duration, availability windows, the blueprint (ordered Items, each with a competence, difficulty, points and the pool it draws from, D-043), target classes, and Subject 1 / Subject 2 weightings.
 4. **Manual Grading Queue:** List of ungraded **Subject 2** attempts with rubric scoring, partial credit inputs, and feedback boxes.
 5. **Item Analysis & Analytics Dashboard:** Visual psychometric cards (difficulty %, point-biserial discrimination index, distractor frequency) and cohort stats (average, median).
 

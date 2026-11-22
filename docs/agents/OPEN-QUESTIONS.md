@@ -35,6 +35,14 @@
 - Q-024 · What happens when an Item has fewer Variants than the letter an Attempt got? · _answered_
 - Q-025 · What happens to the uncommitted backend/ scaffold, and where does Laravel run locally? · _answered_
 - Q-026 · Does the SPA authenticate with a Sanctum cookie session or a bearer token?
+- Q-027 · Where are Subject 2 photos stored in production?
+- Q-028 · How does the scheduled auto-submit job run on Render?
+- Q-029 · Are Items and answer options shown in random order per Attempt?
+- Q-030 · What happens when the Examiner corrects a Subject 1 answer key after Attempts were graded?
+- Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured?
+- Q-032 · How is mathematical notation shown in question text?
+- Q-033 · In which format is the API documented?
+- Q-034 · Which pages, if any, may search engines index?
 
 ---
 
@@ -168,3 +176,51 @@
 - **Date:** 2026-11-22
 - **Context:** The uncommitted scaffold chose cookie sessions (`SESSION_DRIVER=database`, `SANCTUM_STATEFUL_DOMAINS`, `$middleware->statefulApi()`), while the approved auth plans (docs/plans/auth-part-1-backend.md, auth-parts-2-and-3.md) issue a bearer token stored in localStorage. The SPA and API run on different Render domains (D-014), which affects cookie sessions. P0 leaves `statefulApi()` out; P2 needs the answer.
 
+
+## Q-027 · Where are Subject 2 photos stored in production?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P6 (attempt engine: uploads)
+- **Context:** D-011 says photos are "stored securely on server disk", but the Render web service's disk is wiped on every deploy (D-014), so uploads would be lost. Options: a Render persistent disk (paid plan) or object storage (e.g. S3, R2). The answer may need a change to D-011 (PROPOSAL).
+
+## Q-028 · How does the scheduled auto-submit job run on Render?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P6 (sealing expired Attempts)
+- **Context:** The catalog requires a scheduled job that submits expired Attempts even when the browser is closed. `php artisan schedule:run` needs a cron job or worker on Render (may be paid), and free web services sleep after 15 minutes idle. Options: a Render cron job, a background worker, or checking expiry whenever an Attempt is read plus an external ping.
+
+## Q-029 · Are Items and answer options shown in random order per Attempt?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P5 (exam builder), P6 (attempt start)
+- **Context:** The catalog asks for random order of questions and of options ("ordine aleatoare a întrebărilor și a variantelor"). D-025 defines an ordered list of Items and says nothing about shuffling options in choice questions. INTERVIEW.md (parameter order matters in many exercises) is a reason not to assume.
+
+## Q-030 · What happens when the Examiner corrects a Subject 1 answer key after Attempts were graded?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P8 (grading and publication)
+- **Context:** The catalog requires recalculation when the teacher corrects a question after the exam. D-031 covers barem edits for Subject 2 only (recalculated before publication, locked after). Open: are Subject 1 scores recalculated, and is that allowed after results are published?
+
+## Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P10 (Item Analysis)
+- **Context:** The catalog requires weak items to be flagged and the DoD requires at least one weak item found in the pilot. Open: difficulty and discrimination thresholds, and how Subject 2 items with partial credit enter difficulty and point-biserial discrimination.
+
+## Q-032 · How is mathematical notation shown in question text?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P4b (question bank), P7 (exam room)
+- **Context:** Plain text with JetBrains Mono (DESIGN.md `font-math`), or rendered notation such as KaTeX (a new dependency).
+
+## Q-033 · In which format is the API documented?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P2 onward (each backend part adds a C- contract with a link to the docs)
+- **Context:** The catalog accepts OpenAPI/Swagger or an API.md with request/response examples.
+
+## Q-034 · Which pages, if any, may search engines index?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Blocks:** P2 (first public screens)
+- **Context:** Raised by the P0 SEO review. Everything is `noindex, nofollow` for now (frontend/index.html). Pages behind login (exams, attempts, grading, results) should stay out of indexes; open is whether any public page (e.g. login or a landing page) should be indexable.

@@ -41,4 +41,10 @@ class SchoolClass extends Model
         return $this->belongsToMany(User::class, 'class_memberships', 'class_id', 'candidate_id')
             ->wherePivot('status', MembershipStatus::Accepted->value);
     }
+
+    /** Exams published to this class (D-015). @return BelongsToMany<Exam, $this> */
+    public function exams(): BelongsToMany
+    {
+        return $this->belongsToMany(Exam::class, 'class_exam', 'class_id', 'exam_id');
+    }
 }

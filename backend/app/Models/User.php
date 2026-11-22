@@ -75,4 +75,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(ClassMembership::class, 'candidate_id');
     }
+
+    /** Exams this Examiner created. @return HasMany<Exam, $this> */
+    public function exams(): HasMany
+    {
+        return $this->hasMany(Exam::class, 'examiner_id');
+    }
 }

@@ -53,7 +53,12 @@ it('keeps join codes unique, one membership per candidate and class, and known s
 
     expectRefused(fn () => SchoolClass::factory()->create(['join_code' => 'K7Q-4MX']));
     expectRefused(fn () => ClassMembership::factory()->for($class, 'schoolClass')->for($candidate, 'candidate')->create());
-    expectRefused(fn () => ClassMembership::factory()->for($class, 'schoolClass')->create(['status' => 'invited']));
+    $another = User::factory()->create();
+    expectRefused(fn () => DB::table('class_memberships')->insert([
+        'class_id' => $class->id,
+        'candidate_id' => $another->id,
+        'status' => 'invited',
+    ]));
 
     expect(ClassMembership::first()->status)->toBe(MembershipStatus::Pending);
 });

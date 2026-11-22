@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** A named group of questions inside an Examiner's bank; Exam Items draw from it (D-041, D-043). */
 #[Fillable(['name'])]
@@ -26,5 +27,11 @@ class Pool extends Model
     public function questions(): BelongsToMany
     {
         return $this->belongsToMany(Question::class, 'pool_question');
+    }
+
+    /** Blueprint Items drawing from this pool (D-043). @return HasMany<ExamItem, $this> */
+    public function examItems(): HasMany
+    {
+        return $this->hasMany(ExamItem::class);
     }
 }

@@ -27,4 +27,10 @@ class Competence extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    /** @return HasMany<ExamItem, $this> */
+    public function examItems(): HasMany
+    {
+        return $this->hasMany(ExamItem::class);
+    }
 }

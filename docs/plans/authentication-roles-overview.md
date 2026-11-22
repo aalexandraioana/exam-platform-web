@@ -3,13 +3,13 @@
 ## Goal Description
 Implement full-stack authentication and role-based access control (RBAC) across the headless Laravel 11 REST API (`backend/`) and React + Vite SPA (`frontend/`), enforcing three authorization tiers defined in `README.md` and `ARCHITECTURE.md`:
 - **Candidate:** Self-registration (`POST /api/register`), email/password login, access to candidate dashboard (`DS-003`).
-- **Examiner:** Login with admin-approved credentials, access to examiner dashboard (`DS-006`), blocked if inactive/pending approval.
+- **Examiner:** Login with admin-approved credentials, access to examiner dashboard (`DS-006`), blocked if deactivated (accounts are created by an Administrator, D-020).
 - **Administrator:** Pre-seeded superuser login, platform oversight and user management access (`DS-011`).
 
 ## User Review Required
 > [!IMPORTANT]
-> - **Scaffolding prerequisite:** As `backend/` and `frontend/` directories do not yet exist, initial building will initialize the Laravel 11 project and React + Vite SPA skeletons strictly adhering to [D-002](file:///home/alexa/Work/exam-platform-web/docs/agents/DECISIONS.md#D-002) and [D-009](file:///home/alexa/Work/exam-platform-web/docs/agents/DECISIONS.md#D-009).
-> - **Examiner approval status:** Candidate accounts are active immediately upon registration; Examiner accounts require an `is_active` / approval flag set by Administrator before authenticating, as required by [README.md:66](file:///home/alexa/Work/exam-platform-web/README.md#L66).
+> - **Scaffolding prerequisite:** As `backend/` and `frontend/` directories do not yet exist, initial building will initialize the Laravel 11 project and React + Vite SPA skeletons strictly adhering to [D-002](../agents/DECISIONS.md#D-002) and [D-009](../agents/DECISIONS.md#D-009).
+> - **Examiner accounts:** Candidate accounts are active immediately upon registration; Examiner accounts are created by an Administrator (no self-registration, no approval step), and `is_active = false` means a deactivated account ([D-020](../agents/DECISIONS.md)).
 
 ## Open Questions
 - None blocking implementation. Candidate self-registers directly; initial Administrator and sample Examiner accounts will be provisioned via database seeders.
@@ -20,7 +20,7 @@ Implement full-stack authentication and role-based access control (RBAC) across 
 
 ### Backend REST API (`backend/`)
 #### [NEW] `docker-compose.yml` (Root)
-PostgreSQL 16 container definition with persistent volume and port mapping `5432:5432` per [D-003](file:///home/alexa/Work/exam-platform-web/docs/agents/DECISIONS.md#D-003).
+PostgreSQL 16 container definition with persistent volume and port mapping `5432:5432` per [D-003](../agents/DECISIONS.md#D-003).
 
 #### [NEW] `backend/database/migrations/xxxx_create_users_table.php`
 Schema migration defining:

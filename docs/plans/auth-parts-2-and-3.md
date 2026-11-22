@@ -15,7 +15,7 @@ Scaffolds React 19 + Vite SPA, Tailwind CSS with design tokens, HTTP client with
 ### Scope & Encompassed Components
 1. **Frontend Project Foundation (`frontend/`):**
    - React 19 + TypeScript + Vite initialized.
-   - Tailwind CSS configuration mapping all tokens from [`docs/design/DESIGN.md`](file:///home/alexa/Work/exam-platform-web/docs/design/DESIGN.md):
+   - Tailwind CSS configuration mapping all tokens from [`docs/design/DESIGN.md`](../design/DESIGN.md):
      - Colors: Teal accents (`teal-600` `#0F766E` light, `teal-400` `#2DD4BF` dark), Slate neutrals, Midnight dark background (`#0B132B`).
      - Fonts: Plus Jakarta Sans for UI text, JetBrains Mono for numeric/code.
      - Spacing scale: 4px grid (`space-1` = 4px, `space-2` = 8px, etc.).
@@ -61,7 +61,7 @@ Implements the user-facing screens for `DS-001` (`auth-login`) and `DS-002` (`au
 
 ### Scope & Encompassed Components
 1. **Design System Mocks (`docs/design/mocks/`):**
-   - `docs/design/mocks/DS-001.html`: Standalone interactive mock for Login screen featuring theme switcher (Light / Dark Midnight) and state switcher (Default, Loading, Validation Error, Account Pending Approval).
+   - `docs/design/mocks/DS-001.html`: Standalone interactive mock for Login screen featuring theme switcher (Light / Dark Midnight) and state switcher (Default, Loading, Validation Error, Account Deactivated).
    - `docs/design/mocks/DS-002.html`: Standalone interactive mock for Candidate Registration screen with theme and state switchers.
    - Registry update: `docs/design/registry.yaml` status updated for `DS-001` and `DS-002`.
 
@@ -71,7 +71,7 @@ Implements the user-facing screens for `DS-001` (`auth-login`) and `DS-002` (`au
    - States covered:
      - Default clean layout with calm, low-stress styling per D-007.
      - Loading: Button disabled with loading indicator during API call.
-     - Error: Inline field errors and banner alert for invalid credentials or inactive account ("Account pending administrator approval").
+     - Error: Inline field errors and banner alert for invalid credentials or a deactivated account ("This account is deactivated. Contact your administrator.") — no pending-approval state (D-020).
    - Role-based redirect upon login:
      - Candidate → `/candidate/dashboard`
      - Examiner → `/examiner/dashboard`

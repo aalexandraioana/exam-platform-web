@@ -15,7 +15,7 @@ designs:
   - id: DS-003
     name: candidate-dashboard
     kind: screen
-    status: approved
+    status: draft
     description: Candidate dashboard displaying available exams, ongoing attempts, and past published grades
   - id: DS-004
     name: exam-room
@@ -56,7 +56,7 @@ designs:
     name: admin-user-management
     kind: screen
     status: draft
-    description: Administrator portal for approving/creating examiner accounts, managing candidate profiles, and role assignments
+    description: Administrator portal for creating examiner accounts, managing candidate profiles, role assignments, and password resets (D-020)
   - id: DS-012
     name: admin-exam-supervision
     kind: screen

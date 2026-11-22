@@ -16,10 +16,22 @@
 - D-007 · Visual design tokens and calm anxiety-reducing UI system
 - D-008 · Pest PHP, Vitest, and Playwright as automated testing stack
 - D-009 · Two-folder monorepo layout (backend/ and frontend/)
-- D-010 · Two-step examiner feedback publication after full grading
 - D-011 · Subject 2 handwritten solution photo upload alongside text
 - D-012 · Configurable attempt limits and score aggregation policy
 - D-013 · Sandboxed PHP mathematical expression library for formula evaluation
+- D-014 · Production deployment on Render cloud platform
+- D-015 · Classes and Exam publication to classes
+- D-017 · Answer matching rules for numbers and text
+- D-019 · Results and feedback released only on publication
+- D-020 · Admin-created Examiner accounts and manual password reset
+- D-021 · Full duration per Attempt regardless of end_time
+- D-022 · Bilingual Romanian and English UI
+- D-025 · Exam blueprint with a random Variant per Item
+- D-026 · Subject 2 photo upload limits
+- D-027 · Private question pools with a shared library
+- D-028 · Examiner-created classes with join code and approval
+- D-029 · Database as question source, BANK.md as validation and pilot log
+- D-030 · Small fixed competence list
 
 ---
 
@@ -86,6 +98,7 @@
 ## D-007 · Visual design tokens and calm anxiety-reducing UI system
 - **Status:** approved
 - **Date:** 2026-11-18
+- **Confirmed:** 2026-11-19
 - **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: Muted Teal/Sage primary accent (`#0F766E` / `#2DD4BF`), midnight-tint dark theme (`#0B132B`), Plus Jakarta Sans for UI copy and headings, JetBrains Mono for formulas, equations, and timers, a 4px grid spacing scale, and subtle non-distracting elevation.
 - **Why:** Delivers a calm, low-stress assessment environment for 6th-grade candidates, inspired by Coursera, Quizlet, and Notion, while guaranteeing WCAG AAA/AA contrast.
 - **Rejected:** Flashy/overwhelming animations and high-saturation gamified colors; harsh pitch-black dark mode; raw uncurated monospace fonts.
@@ -112,16 +125,6 @@
 - **Evidence:** AGENTS.md:sections 2 & 3, README.md:section 3
 - **Source:** user · confidence high
 
-## D-010 · Two-step examiner feedback publication after full grading
-- **Status:** approved
-- **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
-- **Rule:** Feedback is published by the Examiner in two channels after full grading is complete: (1) a single global cohort note published all at once, visible to all candidates who took the exam; (2) private per-problem partial points and comments on each Subject 2 submission, released to each candidate only upon explicit publication by the Examiner.
-- **Why:** Confirmed by client interview and repository owner; matches Romanian classroom grading practices where general feedback on common errors is shared with the entire cohort, while detailed per-item proof feedback is individual.
-- **Rejected:** Real-time feedback before all submissions are graded; publishing partial grades piece-by-piece.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-005, INTERVIEW.md:Q16
-- **Source:** user · confidence high
-
 ## D-011 · Subject 2 handwritten solution photo upload alongside text
 - **Status:** approved
 - **Date:** 2026-11-18
@@ -145,8 +148,139 @@
 ## D-013 · Sandboxed PHP mathematical expression library for formula evaluation
 - **Status:** approved
 - **Date:** 2026-11-18
+- **Confirmed:** 2026-11-19
 - **Rule:** Parameterized question formulas are evaluated on the backend using a dedicated sandboxed PHP mathematical expression library with an operation whitelist, strictly avoiding native PHP eval().
 - **Why:** Meets the catalog security constraint requiring sandboxed formula parsing to prevent arbitrary code execution on dynamically evaluated expressions.
 - **Rejected:** Native PHP `eval()`; executing formulas in shell or unverified external processes.
 - **Evidence:** README.md:83, catalog-de-proiecte-web.md:905
+- **Source:** user · confidence high
+
+## D-014 · Production deployment on Render cloud platform
+- **Status:** approved
+- **Date:** 2026-11-19
+- **Confirmed:** 2026-11-19
+- **Rule:** The application is deployed to Render with a managed PostgreSQL 16 database, a containerized Laravel 11 REST API web service, and a static web service for the React 19 + Vite SPA.
+- **Why:** Delivers a reliable, production-ready HTTPS environment satisfying the course catalog requirement for public deployment and live pilot testing.
+- **Rejected:** Self-hosted unmanaged VPS; Fly.io (Render was chosen by the user for managed PostgreSQL and web services).
+- **Evidence:** User confirmation in plan gate 2026-11-19
+- **Source:** user · confidence high
+
+## D-015 · Classes and Exam publication to classes
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Candidates belong to classes. An Exam is published to one or more classes, and only Candidates of those classes see it. The cohort for feedback (D-019) is the Candidates of the classes the Exam was published to.
+- **Why:** Matches the classroom reality from the interview and the approved DS-003 mock ("Clasa a VI-a B", "pentru clasa ta").
+- **Rejected:** Published Exams visible to every Candidate; grade level as the only filter.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-007
+- **Source:** user · confidence high
+
+## D-017 · Answer matching rules for numbers and text
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Numeric answers accept both decimal separators ("2,5" and "2.5"); a fraction answer must be in the form the Examiner expects (an equal value in another form is wrong). Text answers are compared after ignoring case, extra whitespace and diacritics, against an Examiner-defined list of accepted answers. D-006 (tolerance 0) still holds.
+- **Why:** Romanian notation uses the decimal comma, and 6th-grade ratio work often expects a specific fraction form; short answers such as "se înjumătățesc" are often typed without diacritics.
+- **Rejected:** Accepting any equal-valued fraction; strict exact text matching; numeric-only short answers.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-008, Q-010; INTERVIEW.md:Q13
+- **Source:** user · confidence high
+
+## D-019 · Results and feedback released only on publication
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** After full grading the Examiner publishes, in two channels: (1) one cohort note, visible to the whole cohort (D-015); (2) private per-problem partial points and comments on each Subject 2 answer. No score, Subject 1 included, is visible to a Candidate before publication; until then the Candidate sees "submitted, awaiting grading".
+- **Why:** Keeps D-010's classroom practice and closes the gap about the instantly auto-graded Subject 1 score.
+- **Rejected:** Showing the Subject 1 score at Submission; publishing grades piece by piece.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-005, Q-009; INTERVIEW.md:Q16
+- **Source:** user · confidence high
+
+## D-020 · Admin-created Examiner accounts and manual password reset
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Only an Administrator creates Examiner accounts; there is no Examiner self-registration and no pending-approval state. There is no email password reset: an Administrator, or the Examiner for Candidates in their class, sets a new password.
+- **Why:** Keeps account control with the school and avoids a mail service.
+- **Rejected:** Examiner self-registration with approval; email reset links.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-012, Q-013
+- **Source:** user · confidence high
+
+## D-021 · Full duration per Attempt regardless of end_time
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Every Attempt gets the Exam's full duration from its own start, plus the Grace Period (D-004). The Exam's `end_time` only stops new Attempts from starting.
+- **Why:** The interview asks for the timer to start per device when the Candidate connects, for fairness.
+- **Rejected:** Cutting Attempts at `end_time`.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-014; INTERVIEW.md:Q14
+- **Source:** user · confidence high
+
+## D-022 · Bilingual Romanian and English UI
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** The UI is available in Romanian and English with a language toggle. CONTEXT.md holds the Romanian and English word for each term (words: Q-017).
+- **Why:** Romanian classroom users plus English project documentation and review.
+- **Rejected:** Romanian-only or English-only UI.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-015
+- **Source:** user · confidence high
+
+## D-025 · Exam blueprint with a random Variant per Item
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** An Exam is a blueprint: an ordered list of Items, each fixing section, competence (from the fixed list, Q-023), difficulty and points. Each Item holds one or more similar, equivalent questions (its Variants). When an Attempt starts, the server picks one Variant per Item at random, independently per Item; an Item with one question is the same for everyone. There are no letters, rows or manual assignment. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked questions, any drawn values and the expected answers are stored per Attempt (D-006, D-013), so the Examiner sees which Variant each Candidate got. Item Analysis reports per question and per Item.
+- **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), while similar questions are randomly assigned to different Candidates to make copying harder (INTERVIEW.md Q13).
+- **Rejected:** Free random draw by topic (D-016, no coverage guarantee); one letter per Attempt by alternation with Examiner override (D-024); a fixed list for everyone.
+- **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-016, Q-020, Q-023
+- **Source:** user · confidence high
+
+## D-026 · Subject 2 photo upload limits
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** A Candidate can upload up to 3 images per Subject 2 problem, 10 MB each, in JPG, PNG or HEIC. HEIC is converted to JPG on the server so the Examiner's browser can display it. D-011 still holds.
+- **Why:** Multi-page handwritten solutions from phones (often HEIC on iPhones) must reach the Examiner readable.
+- **Rejected:** 5 images per problem; 5 MB JPG/PNG only without HEIC conversion; 1 image per problem.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-018
+- **Source:** user · confidence high
+
+## D-027 · Private question pools with a shared library
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Each Examiner's questions are private to them. An Examiner can publish a question to a shared library; other Examiners copy it into their own pool, and the copy is theirs to edit.
+- **Why:** Keeps each Examiner in control of their questions while making it easier to fill blueprint Items with Variants.
+- **Rejected:** One shared pool where only the author edits; one shared pool anyone edits; fully private pools.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-019
+- **Source:** user · confidence high
+
+## D-028 · Examiner-created classes with join code and approval
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Examiners create their classes; each class has a short join code. A Candidate enters the code at registration or later from the dashboard and stays pending until the Examiner accepts them. D-015 still holds.
+- **Why:** Self-registered Candidates need a way into a class, and approval blocks strangers who got the code.
+- **Rejected:** Join code without approval; Examiner adds Candidates by email; Administrator-managed classes.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-021
+- **Source:** user · confidence high
+
+## D-029 · Database as question source, BANK.md as validation and pilot log
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** The database is the source of truth for questions. The initial pool is loaded by an insert-only seeder keyed on a stable, unique question code; it never updates or deletes, so questions added or edited in the UI are safe. BANK.md holds no question text: it is the validation and pilot log (per validated question: code, competence, the 2+ colleagues who validated it, when, what they corrected; plus the results of the pilot with 10+ Candidates).
+- **Why:** Avoids two sources of truth while meeting the catalog requirement to record peer validation and pilot results in BANK.md.
+- **Rejected:** BANK.md as the re-seeded question source; generating the question list into BANK.md.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-022; catalog-de-proiecte-web.md:882, 916
+- **Source:** user · confidence high
+
+## D-030 · Small fixed competence list
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Competences come from a small fixed list covering only the planned topics and scope (e.g. C1–C4 per chapter), not the full curriculum. Questions and blueprint Items are tagged from this list, and Item Analysis groups by it.
+- **Why:** Enough structure for blueprint coverage (D-025) and Item Analysis without loading and maintaining the full curriculum.
+- **Rejected:** The full official curriculum list; each Examiner's own list; free text per question.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-023
 - **Source:** user · confidence high

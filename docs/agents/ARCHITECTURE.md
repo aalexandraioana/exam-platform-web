@@ -43,7 +43,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 | Exam templates & question pools | PostgreSQL (`exams`, `questions`) | Backend | 60 questions pool with tags, difficulty, formula definitions |
 | Attempt state & parameters | PostgreSQL (`attempts`, `attempt_parameters`) | Backend | State machine (`started`, `in_progress`, `submitted`, `graded`), timer start, snapshot of concrete numbers |
 | Candidate responses & uploads | PostgreSQL (`responses`) & local disk (`storage/app/public`) | Backend | Selected options, numerical inputs, text steps, uploaded solution images |
-| Feedback & psychometrics | PostgreSQL (`feedback`, `item_statistics`) | Backend | Cohort notes, individual item feedback, difficulty/discrimination metrics |
+| Feedback & psychometrics | PostgreSQL (`exams.cohort_feedback`, `exams.feedback_published_at`, `responses.examiner_comment`, `item_statistics`) | Backend | Cohort note and its publication time on the exam, private per-problem comments on each response (D-019), difficulty/discrimination metrics |
 | Client UI state | React State & LocalStorage cache | Frontend SPA | Active question index, local autosave retry queues, theme preference |
 
 ## Configuration
@@ -57,7 +57,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 ## Build, deploy, runtime
 - **Local Dev:** `docker compose up -d` starts PostgreSQL 16. Backend runs via `composer install && php artisan migrate --seed && php artisan serve`. Frontend runs via `npm install && npm run dev`.
 - **Testing:** `./vendor/bin/pest` (backend), `npm run test` (frontend Vitest), `npx playwright test` (E2E & visual screenshot regression).
-- **Production Runtime:** Containerized deployment or public HTTPS cloud provider (Render/Railway/Fly.io) running PostgreSQL and web services.
+- **Production Runtime:** Render (D-014): managed PostgreSQL 16, a containerized Laravel 11 API web service, and a static web service for the React 19 + Vite SPA.
 
 ## Boundaries
 - **Client / Server Boundary:** The React SPA is untrusted; all total scores, timers, and formula validations are calculated strictly on the Laravel backend. Requests received after `duration + 30s grace` are rejected.

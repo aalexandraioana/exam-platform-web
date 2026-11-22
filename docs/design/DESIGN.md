@@ -112,7 +112,7 @@ them; a ticket with UI has a design subtask instead (team addon).
 | `bg-primary-subtle` | `#F0FDFA` | `#0F3238` | Selected option background, tag tint |
 | `text-primary` | `#0F172A` | `#F8FAFC` | High-contrast body text, headings |
 | `text-secondary` | `#475569` | `#94A3B8` | Subtitles, metadata, secondary labels |
-| `text-muted` | `#64748B` | `#64748B` | Placeholders, inactive indicators |
+| `text-muted` | `#64748B` | `#8291A8` | Placeholders, inactive indicators |
 | `text-primary-accent` | `#0F766E` | `#2DD4BF` | Interactive links, active tab labels |
 | `border-subtle` | `#E2E8F0` | `#1E3156` | Card dividers, question separators |
 | `border-strong` | `#CBD5E1` | `#2B436F` | Inputs, checkboxes, radio borders |

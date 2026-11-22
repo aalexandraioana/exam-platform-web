@@ -35,11 +35,11 @@
 - Q-024 · What happens when an Item has fewer Variants than the letter an Attempt got? · _answered_
 - Q-025 · What happens to the uncommitted backend/ scaffold, and where does Laravel run locally? · _answered_
 - Q-026 · Does the SPA authenticate with a Sanctum cookie session or a bearer token?
-- Q-027 · Where are Subject 2 photos stored in production?
-- Q-028 · How does the scheduled auto-submit job run on Render?
-- Q-029 · Are Items and answer options shown in random order per Attempt?
-- Q-030 · What happens when the Examiner corrects a Subject 1 answer key after Attempts were graded?
-- Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured?
+- Q-027 · Where are Subject 2 photos stored in production? · _answered_
+- Q-028 · How does the scheduled auto-submit job run on Render? · _answered_
+- Q-029 · Are Items and answer options shown in random order per Attempt? · _answered_
+- Q-030 · What happens when the Examiner corrects a Subject 1 answer key after Attempts were graded? · _answered_
+- Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured? · _answered_
 - Q-032 · How is mathematical notation shown in question text?
 - Q-033 · In which format is the API documented?
 - Q-034 · Which pages, if any, may search engines index?
@@ -181,34 +181,39 @@
 
 
 ## Q-027 · Where are Subject 2 photos stored in production?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P6 (attempt engine: uploads)
 - **Context:** D-011 says photos are "stored securely on server disk", but the Render web service's disk is wiped on every deploy (D-014), so uploads would be lost. Options: a Render persistent disk (paid plan) or object storage (e.g. S3, R2). The answer may need a change to D-011 (PROPOSAL).
+- **Answer:** S3-compatible object storage with a free tier in production (provider chosen in P6, e.g. Cloudflare R2 or Supabase Storage); local disk in development. Chosen over local disk on Render, where every deploy would delete the pilot's photos before grading. Changes D-011's wording (D-048, proposed). (Answered 2026-11-22.)
 
 ## Q-028 · How does the scheduled auto-submit job run on Render?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P6 (sealing expired Attempts)
 - **Context:** The catalog requires a scheduled job that submits expired Attempts even when the browser is closed. `php artisan schedule:run` needs a cron job or worker on Render (may be paid), and free web services sleep after 15 minutes idle. Options: a Render cron job, a background worker, or checking expiry whenever an Attempt is read plus an external ping.
+- **Answer:** Expired Attempts are sealed whenever a request touches or lists them, and a Laravel scheduled job seals the rest; a free external cron service triggers it every few minutes through a secret-protected endpoint, which also keeps the free API awake (D-044). (Answered 2026-11-22.)
 
 ## Q-029 · Are Items and answer options shown in random order per Attempt?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P5 (exam builder), P6 (attempt start)
 - **Context:** The catalog asks for random order of questions and of options ("ordine aleatoare a întrebărilor și a variantelor"). D-025 defines an ordered list of Items and says nothing about shuffling options in choice questions. INTERVIEW.md (parameter order matters in many exercises) is a reason not to assume.
+- **Answer:** Only the answer options of dual, single and multiple choice questions are shuffled per Attempt, and the order is stored with the Attempt; Items keep the blueprint order (D-045). (Answered 2026-11-22.)
 
 ## Q-030 · What happens when the Examiner corrects a Subject 1 answer key after Attempts were graded?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P8 (grading and publication)
 - **Context:** The catalog requires recalculation when the teacher corrects a question after the exam. D-031 covers barem edits for Subject 2 only (recalculated before publication, locked after). Open: are Subject 1 scores recalculated, and is that allowed after results are published?
+- **Answer:** Correcting a Subject I answer key recalculates that question's scores in every Attempt, with the change logged, until results are published; after publication the answer key is locked (D-046). (Answered 2026-11-22.)
 
 ## Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P10 (Item Analysis)
 - **Context:** The catalog requires weak items to be flagged and the DoD requires at least one weak item found in the pilot. Open: difficulty and discrimination thresholds, and how Subject 2 items with partial credit enter difficulty and point-biserial discrimination.
+- **Answer:** Standard thresholds: weak if difficulty p < 0.20 or > 0.90, or discrimination < 0.20; negative discrimination flagged as a likely faulty question; a distractor chosen by fewer than 5% flagged unused; fewer than 2 Attempts or no variation shows "not enough data" (D-047). (Answered 2026-11-22.)
 
 ## Q-032 · How is mathematical notation shown in question text?
 - **Status:** open
@@ -242,4 +247,3 @@
 - **Status:** answered
 - **Date:** 2026-11-22
 - **Answer:** No, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question (D-043).
-

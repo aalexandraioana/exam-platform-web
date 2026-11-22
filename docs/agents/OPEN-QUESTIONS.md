@@ -22,7 +22,7 @@
 - Q-011 · What does the "Feedback cadru didactic" column on the candidate dashboard (DS-003) show? · _answered_
 - Q-012 · How are Examiner accounts created? · _answered_
 - Q-013 · How is a forgotten password handled? · _answered_
-- Q-014 · What happens when an Attempt starts close to the Exam's end_time? · _answered_
+- Q-014 · What happens when an Attempt starts close to the Exam's end_time (`available_until`)? · _answered_
 - Q-015 · Which language is the UI in? · _answered_
 - Q-016 · How is an examiner-written Variant (A/B) assigned to an Attempt? · _answered_
 - Q-017 · Which Romanian and English UI words map to each CONTEXT.md term? · _answered_
@@ -46,6 +46,7 @@
 - Q-035 · Which curriculum topics are seeded? · _answered_
 - Q-036 · Must a question drawn for an Item match the Item? · _answered_
 - Q-037 · Can the same question appear twice in one Attempt? · _answered_
+- Q-038 · Can a class linked to a published Exam be deleted? · _answered_
 
 ---
 
@@ -114,10 +115,10 @@
 - **Date:** 2026-11-22
 - **Answer:** No email reset. An Administrator (or the Examiner, for their class) sets a new password. The "Forgot Password" screen leaves the README screen list.
 
-## Q-014 · What happens when an Attempt starts close to the Exam's end_time?
+## Q-014 · What happens when an Attempt starts close to the Exam's end_time (`available_until`)?
 - **Status:** answered
 - **Date:** 2026-11-22
-- **Answer:** Every Attempt gets the full duration from its own start (plus the Grace Period). `end_time` only stops new Attempts from starting.
+- **Answer:** Every Attempt gets the full duration from its own start (plus the Grace Period). `end_time` (the `available_until` column) only stops new Attempts from starting.
 
 ## Q-015 · Which language is the UI in?
 - **Status:** answered
@@ -247,3 +248,9 @@
 - **Status:** answered
 - **Date:** 2026-11-22
 - **Answer:** No, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question (D-043).
+
+## Q-038 · Can a class linked to a published Exam be deleted?
+- **Status:** answered
+- **Date:** 2026-11-22
+- **Answer:** No. Raised by the P1c security review: deleting a class removed its links silently, hiding a published Exam and its results from that class's Candidates. The database now refuses deleting a linked class, and P3 unlinks draft Exams first (D-049, proposed).
+

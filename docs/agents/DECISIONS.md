@@ -39,6 +39,11 @@
 - D-041 · One bank per Examiner, organised in pools
 - D-042 · Draft and Ready question status
 - D-043 · Exam blueprint drawing from pools
+- D-044 · Expired Attempts sealed on read and by a pinged scheduled job
+- D-045 · Answer options shuffled per Attempt
+- D-046 · Subject I answer-key corrections recalculate until publication
+- D-047 · Weak-item thresholds
+- D-048 · Subject II photos in object storage in production · _proposed_
 
 ---
 
@@ -360,4 +365,53 @@
 - **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), similar questions go to different Candidates (Q13), and it delivers the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
 - **Rejected:** Hand-listed Variants per Item (D-025); a blueprint row drawing N questions from a pool (weakens per-Item coverage); repeats within one Attempt.
 - **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/agents/OPEN-QUESTIONS.md:Q-036, Q-037; catalog-de-proiecte-web.md:893
+- **Source:** user · confidence high
+
+## D-044 · Expired Attempts sealed on read and by a pinged scheduled job
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Any request that touches an Attempt, or lists Attempts, first seals those past their duration plus the Grace Period (D-004, D-021). A Laravel scheduled job seals the rest; a free external cron service triggers it every few minutes through a secret-protected endpoint, which also keeps the free API awake. Correctness never depends on the job running on time.
+- **Why:** Render's cron jobs and workers are paid and the free API sleeps after 15 minutes idle, while the catalog requires a scheduled job that submits expired Attempts even when the browser is closed.
+- **Rejected:** A Render cron job or worker (paid); sealing only on read (no real scheduled job).
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-028; catalog-de-proiecte-web.md (P13 technical requirements)
+- **Source:** user · confidence high
+
+## D-045 · Answer options shuffled per Attempt
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** The options of dual, single and multiple choice questions are shuffled per Attempt, and the order is stored with the Attempt so review and contests show exactly what the Candidate saw. Items keep the blueprint order (D-043).
+- **Why:** Delivers the catalog's random order without changing item numbers in grading or the shared difficulty curve.
+- **Rejected:** Also shuffling Items within each Subject; no shuffling.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-029; catalog-de-proiecte-web.md:893
+- **Source:** user · confidence high
+
+## D-046 · Subject I answer-key corrections recalculate until publication
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Correcting a Subject I answer key after Attempts were submitted recalculates that question's scores in every Attempt and logs the change. Once results are published, the answer key is locked. Same rule as barem edits (D-031).
+- **Why:** The catalog requires recalculation when the teacher corrects a question after the exam; locking at publication keeps published grades stable.
+- **Rejected:** Recalculating after publication; no recalculation.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-030
+- **Source:** user · confidence high
+
+## D-047 · Weak-item thresholds
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Difficulty p = average score / maximum score (Subject II uses partial scores). Discrimination = correlation between the item score and the rest of the exam score (corrected item-total). An item is weak if p < 0.20 or p > 0.90, or discrimination < 0.20; negative discrimination is flagged as a likely faulty question. A distractor chosen by fewer than 5% of Candidates is flagged unused. With fewer than 2 Attempts, or no variation in the answers, the item shows "not enough data" instead of a value. Item Analysis groups by the Examiner's competences (D-039) and reports per question and per Item (D-043).
+- **Why:** The catalog requires weak items to be flagged, degenerate cases handled (everyone correct, one student) and at least one weak item found in the pilot.
+- **Rejected:** Flagging on discrimination only; stricter thresholds (p < 0.30 or > 0.80, discrimination < 0.30).
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-031; catalog-de-proiecte-web.md:907, 916
+- **Source:** user · confidence high
+
+## D-048 · Subject II photos in object storage in production
+- **Status:** proposed
+- **Date:** 2026-11-22
+- **Rule:** Subject II solutions keep their step-by-step text and up to 3 handwritten photos per problem (D-011, D-026). In production the photos are stored in S3-compatible object storage with a free tier (provider chosen in P6); in development they stay on the local disk. The Examiner's grading queue shows them either way. If approved, D-011 → superseded-by D-048.
+- **Why:** Render's free web service loses its disk on every deploy, so photos uploaded in the pilot would be deleted before grading (Q-027).
+- **Rejected:** Local disk on Render with no deploys between pilot and grading; a paid Render persistent disk.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-027; conversation 2026-11-22
 - **Source:** user · confidence high

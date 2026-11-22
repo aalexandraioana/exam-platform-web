@@ -47,11 +47,29 @@ In accordance with [catalog-de-proiecte-web.md](catalog-de-proiecte-web.md#L48-L
 - **Backend:** Laravel 13 providing a headless REST API, with Laravel Sanctum for authentication, Eloquent ORM for migrations and seeds, and scheduled tasks for automatic submission sealing.
 - **Frontend:** React + Vite building an interactive Single Page Application (SPA) for Candidates, Examiners, and Administrators.
 - **Database:** PostgreSQL 16 managing relational persistence with versioned Eloquent migrations and foreign key constraints across at least 6 core entities.
-- **Containerization & Local Dev:** Docker Compose (`docker compose up`) orchestrating PostgreSQL, caching, and local development services.
+- **Containerization & Local Dev:** Docker Compose (`docker compose up`) runs PostgreSQL and the Laravel API.
 - **API Contracts:** Fully documented REST endpoints with request/response payloads registered in [docs/agents/CONTRACTS.md](docs/agents/CONTRACTS.md).
 - **Styling:** Tailwind CSS adhering to the visual tokens and accessibility criteria in [docs/design/DESIGN.md](docs/design/DESIGN.md).
 - **Automated Testing Suite:** Pest PHP for backend tests, Vitest for frontend unit/integration tests, and Playwright for E2E user flows and automated visual regression screenshots.
 - **Repository Layout:** Two-folder monorepo structure (`backend/` for Laravel 13, `frontend/` for React + Vite SPA, root `docker-compose.yml`).
+
+
+### Run locally
+
+Needs Docker and Node (version in `frontend/.nvmrc`); no PHP on the host.
+
+```bash
+docker compose up -d                        # PostgreSQL + API on http://localhost:8000
+docker compose exec api ./vendor/bin/pest   # backend tests
+
+cd frontend
+cp .env.example .env                        # VITE_API_BASE_URL=http://localhost:8000/api
+npm install
+npm run dev                                 # SPA on http://localhost:5173
+npm run test                                # frontend tests
+```
+
+The first `docker compose up` installs the Composer packages, creates `backend/.env` with its own key and runs the migrations. Environment variables: `backend/.env.example`, `frontend/.env.example`.
 
 ---
 

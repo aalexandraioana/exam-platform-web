@@ -88,19 +88,21 @@ Runs in modern desktop and mobile browsers.
 - **End-to-End & Visual:** Playwright (`npx playwright test`).
 
 ```bash
-# Start local services
+# Start everything: PostgreSQL 16 and the Laravel API on http://localhost:8000
+# (first run installs Composer packages, creates backend/.env and migrates)
 docker compose up -d
 
-# Backend (backend/)
-composer install
-php artisan migrate --seed
-./vendor/bin/pest
+# Backend: commands run inside the api container (no PHP needed on the host)
+docker compose exec api ./vendor/bin/pest
+docker compose exec api php artisan migrate --seed
 
-# Frontend (frontend/)
+# Frontend (frontend/, Node from .nvmrc)
 npm install
 npm run dev
 npm run test
-npx playwright test
+npm run lint
+npm run build
+npx playwright test   # from P2 on, with the first DS screen
 
 # Ledger verification
 python3 docs/agents/tools/ledger-lint.py

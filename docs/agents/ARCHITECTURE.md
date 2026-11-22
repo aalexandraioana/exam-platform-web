@@ -50,14 +50,16 @@ exam-platform-web is an online mathematics assessment platform administering exa
 | Name | Where set | Used by | Notes |
 |---|---|---|---|
 | `VITE_API_BASE_URL` | `frontend/.env` | Frontend SPA | Target Laravel API base endpoint |
-| `APP_KEY`, `APP_ENV` | `backend/.env` | Backend API | Laravel application encryption key and environment |
-| `DB_CONNECTION`, `DB_HOST`, `DB_DATABASE` | `backend/.env`, `docker-compose.yml` | Backend API & DB | PostgreSQL connection settings |
+| `APP_KEY`, `APP_ENV` | `backend/.env` (local, generated on first run); Render dashboard (production) | Backend API | Laravel application encryption key and environment; never committed |
+| `DB_CONNECTION`, `DB_HOST`, `DB_DATABASE` | `backend/.env`, `docker-compose.yml` | Backend API & DB | PostgreSQL connection settings; tests use `exam_platform_test` (`backend/phpunit.xml`) |
+| `DB_URL` | Render (from the managed database) | Backend API | Production connection string (`render.yaml`) |
+| `PORT` | Render | Backend API | Port Apache listens on in production (`backend/docker/entrypoint.sh`) |
 | `SANCTUM_STATEFUL_DOMAINS` | `backend/.env` | Backend API | Allowed stateful client domains for Sanctum auth |
 
 ## Build, deploy, runtime
-- **Local Dev:** `docker compose up -d` starts PostgreSQL 16. Backend runs via `composer install && php artisan migrate --seed && php artisan serve`. Frontend runs via `npm install && npm run dev`.
-- **Testing:** `./vendor/bin/pest` (backend), `npm run test` (frontend Vitest), `npx playwright test` (E2E & visual screenshot regression).
-- **Production Runtime:** Render (D-014): managed PostgreSQL 16, a containerized Laravel 13 API web service, and a static web service for the React 19 + Vite SPA.
+- **Local Dev:** `docker compose up -d` starts PostgreSQL 16 (with a second database, `exam_platform_test`, from `docker/postgres/init-test-db.sql`) and the `api` service (`backend/Dockerfile`, `dev` stage, code mounted, `php artisan serve` on port 8000). Its entrypoint installs Composer packages, creates `backend/.env` with a fresh key and migrates on first run. Frontend runs on the host via `npm install && npm run dev`.
+- **Testing:** `docker compose exec api ./vendor/bin/pest` (backend, against PostgreSQL), `npm run test` (frontend Vitest), `npx playwright test` (E2E & visual screenshots, from P2). CI: `.github/workflows/ci.yml` runs Pest, the frontend lint/test/build and ledger-lint on every push (D-037).
+- **Production Runtime:** Render (D-014), described in `render.yaml`: managed PostgreSQL 16, the Laravel 13 API from the Dockerfile's `prod` stage (Apache, production dependencies, migrations on start), and a static site for the React 19 + Vite SPA (`/* → /index.html`).
 
 ## Boundaries
 - **Client / Server Boundary:** The React SPA is untrusted; all total scores, timers, and formula validations are calculated strictly on the Laravel backend. Requests received after `duration + 30s grace` are rejected.

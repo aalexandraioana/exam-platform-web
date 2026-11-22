@@ -1,1 +1,14 @@
-{}
+{
+  "app": {
+    "name": "Exam platform"
+  },
+  "status": {
+    "checking": "Checking the connection to the server…",
+    "connected": "Connected to the server",
+    "error": "The server is not responding"
+  },
+  "duration": {
+    "minutes_one": "{{count}} minute",
+    "minutes_other": "{{count}} minutes"
+  }
+}

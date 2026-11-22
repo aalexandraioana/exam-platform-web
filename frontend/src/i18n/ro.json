@@ -1,1 +1,15 @@
-{}
+{
+  "app": {
+    "name": "Platformă de examene"
+  },
+  "status": {
+    "checking": "Se verifică legătura cu serverul…",
+    "connected": "Conectat la server",
+    "error": "Serverul nu răspunde"
+  },
+  "duration": {
+    "minutes_one": "{{count}} minut",
+    "minutes_few": "{{count}} minute",
+    "minutes_other": "{{count}} de minute"
+  }
+}

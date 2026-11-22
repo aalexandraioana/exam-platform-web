@@ -8,7 +8,6 @@
 
 ## Index
 - D-001 · Agentic plan-then-build workflow
-- D-002 · Laravel 11 REST API backend with React + Vite SPA
 - D-003 · PostgreSQL 16 with local Docker Compose orchestration
 - D-004 · Authoritative server timer with 30-second expiration grace period
 - D-005 · Two-part assessment scoring architecture with zero negative marking
@@ -35,6 +34,9 @@
 - D-032 · Draft and Ready question status
 - D-033 · Lucide as the only icon set
 - D-035 · Warm, calm visual system with a fresh mint accent
+- D-036 · Laravel 13 REST API backend with React 19 + Vite SPA
+- D-037 · GitHub Actions CI on every push
+- D-038 · Romanian as the default UI language
 
 ---
 
@@ -46,16 +48,6 @@
 - **Why:** Inferred — ensures changes are validated against requirements, tests are authored first, and architectural drift is minimized.
 - **Rejected:** Ad-hoc unapproved code modifications without prior planning.
 - **Evidence:** AGENTS.md:23
-- **Source:** user · confidence high
-
-## D-002 · Laravel 11 REST API backend with React + Vite SPA
-- **Status:** approved
-- **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
-- **Rule:** The platform is built as a headless Laravel 11 REST API backend paired with a standalone React + Vite SPA frontend.
-- **Why:** Delivers clean separation of concerns, native queuing/scheduling for automated submission sealing, and strictly complies with the catalog requirement for a documented REST API.
-- **Rejected:** Monolithic Inertia.js without a standalone API; alternative language runtimes.
-- **Evidence:** README.md:40
 - **Source:** user · confidence high
 
 ## D-003 · PostgreSQL 16 with local Docker Compose orchestration
@@ -111,8 +103,7 @@
 ## D-009 · Two-folder monorepo layout (backend/ and frontend/)
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
-- **Rule:** The repository uses a two-folder monorepo structure: `backend/` for the Laravel 11 REST API and `frontend/` for the React + Vite SPA, with a shared root `docker-compose.yml` for PostgreSQL and local services.
+- **Rule:** The repository uses a two-folder monorepo structure: `backend/` for the Laravel 13 REST API and `frontend/` for the React + Vite SPA, with a shared root `docker-compose.yml` for PostgreSQL and local services.
 - **Why:** Provides clean separation of concerns between the API and the SPA, satisfies the catalog's decoupled REST API contract requirement, and ensures consistent agent navigation and CI path references.
 - **Rejected:** Single-folder layout with Laravel serving frontend views; Inertia.js monolith; nested frontend inside Laravel's public directory.
 - **Evidence:** AGENTS.md:sections 2 & 3, README.md:section 3
@@ -151,8 +142,7 @@
 ## D-014 · Production deployment on Render cloud platform
 - **Status:** approved
 - **Date:** 2026-11-19
-- **Confirmed:** 2026-11-19
-- **Rule:** The application is deployed to Render with a managed PostgreSQL 16 database, a containerized Laravel 11 REST API web service, and a static web service for the React 19 + Vite SPA.
+- **Rule:** The application is deployed to Render with a managed PostgreSQL 16 database, a containerized Laravel 13 REST API web service, and a static web service for the React 19 + Vite SPA.
 - **Why:** Delivers a reliable, production-ready HTTPS environment satisfying the course catalog requirement for public deployment and live pilot testing.
 - **Rejected:** Self-hosted unmanaged VPS; Fly.io (Render was chosen by the user for managed PostgreSQL and web services).
 - **Evidence:** User confirmation in plan gate 2026-11-19
@@ -316,4 +306,34 @@
 - **Why:** The user preferred mint green to teal. In light mode the mint is deep enough to carry white text (5.31:1) and links on cream (4.72:1); the bright mint shows in dark mode. Status colors keep their meaning through icons and text, since the accent is close to the success green.
 - **Rejected:** Teal accent (D-034); classic and soft sage-mint options; light mint in light mode (fails contrast).
 - **Evidence:** docs/design/design-review-2026-11-22.md; conversation 2026-11-22
+- **Source:** user · confidence high
+
+## D-036 · Laravel 13 REST API backend with React 19 + Vite SPA
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** The platform is built as a headless Laravel 13 (PHP 8.4) REST API backend paired with a standalone React 19 + Vite SPA frontend. Pest stays the backend test runner (D-008).
+- **Why:** Laravel 11 (D-002) is past its security-support window (March 2026); Laravel 13 is the current major. No backend code existed yet, so the switch cost nothing. The architecture reasons of D-002 still hold: clean API/SPA separation, native queues and scheduling for sealing expired Attempts, and the catalog's documented REST API.
+- **Rejected:** Staying on Laravel 11 (out of support); Laravel 12 (shorter remaining support than 13); monolithic Inertia.js without a standalone API.
+- **Evidence:** Packagist laravel/framework 13.43.0 (2026-11-17, requires PHP ^8.3); conversation 2026-11-22 (P0 plan gate)
+- **Source:** user · confidence high
+
+## D-037 · GitHub Actions CI on every push
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** A GitHub Actions workflow runs on every push: backend Pest tests against PostgreSQL, frontend Vitest, lint and build, and `python3 docs/agents/tools/ledger-lint.py`. A red run blocks merging.
+- **Why:** The catalog requires CI on GitHub Actions running the tests and the ledger lint on each push; the repo is already on GitHub.
+- **Rejected:** No CI (fails the catalog); other CI services (the catalog names GitHub Actions).
+- **Evidence:** catalog-de-proiecte-web.md:58; conversation 2026-11-22 (P0 plan gate, A1)
+- **Source:** user · confidence high
+
+## D-038 · Romanian as the default UI language
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** The UI opens in Romanian; English is available through the language toggle (D-022). The backend default locale is `ro` with `en` as fallback.
+- **Why:** The users are Romanian classrooms; the backend scaffold already set `APP_LOCALE=ro`, `APP_FALLBACK_LOCALE=en`.
+- **Rejected:** English as the default.
+- **Evidence:** backend/.env.example:7-8; conversation 2026-11-22 (P0 plan gate, A2)
 - **Source:** user · confidence high

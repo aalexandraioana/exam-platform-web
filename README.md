@@ -44,14 +44,14 @@ As required by the project specifications ([catalog-de-proiecte-web.md](catalog-
 
 In accordance with [catalog-de-proiecte-web.md](catalog-de-proiecte-web.md#L48-L67) and repository decisions:
 
-- **Backend:** Laravel 11 providing a headless REST API, with Laravel Sanctum for authentication, Eloquent ORM for migrations and seeds, and scheduled tasks for automatic submission sealing.
+- **Backend:** Laravel 13 providing a headless REST API, with Laravel Sanctum for authentication, Eloquent ORM for migrations and seeds, and scheduled tasks for automatic submission sealing.
 - **Frontend:** React + Vite building an interactive Single Page Application (SPA) for Candidates, Examiners, and Administrators.
 - **Database:** PostgreSQL 16 managing relational persistence with versioned Eloquent migrations and foreign key constraints across at least 6 core entities.
 - **Containerization & Local Dev:** Docker Compose (`docker compose up`) orchestrating PostgreSQL, caching, and local development services.
 - **API Contracts:** Fully documented REST endpoints with request/response payloads registered in [docs/agents/CONTRACTS.md](docs/agents/CONTRACTS.md).
 - **Styling:** Tailwind CSS adhering to the visual tokens and accessibility criteria in [docs/design/DESIGN.md](docs/design/DESIGN.md).
 - **Automated Testing Suite:** Pest PHP for backend tests, Vitest for frontend unit/integration tests, and Playwright for E2E user flows and automated visual regression screenshots.
-- **Repository Layout:** Two-folder monorepo structure (`backend/` for Laravel 11, `frontend/` for React + Vite SPA, root `docker-compose.yml`).
+- **Repository Layout:** Two-folder monorepo structure (`backend/` for Laravel 13, `frontend/` for React + Vite SPA, root `docker-compose.yml`).
 
 ---
 

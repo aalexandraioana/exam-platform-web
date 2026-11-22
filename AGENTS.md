@@ -82,7 +82,7 @@ Provides user interfaces for candidates to take exams and examiners to manage as
 Runs in modern desktop and mobile browsers.
 
 ## 2. Stack and commands
-- **Backend:** Laravel 11 (PHP 8.2+) REST API, Eloquent ORM, Pest PHP tests.
+- **Backend:** Laravel 13 (PHP 8.4) REST API, Eloquent ORM, Pest PHP tests.
 - **Frontend:** React + Vite (TypeScript) SPA, Tailwind CSS, Vitest.
 - **Database & Services:** PostgreSQL 16 via Docker Compose.
 - **End-to-End & Visual:** Playwright (`npx playwright test`).
@@ -108,7 +108,7 @@ python3 docs/agents/tools/ledger-lint.py
 
 ## 3. Layout
 Two-folder monorepo layout:
-- `backend/` — Laravel 11 REST API application, Eloquent migrations, Pest test suite.
+- `backend/` — Laravel 13 REST API application, Eloquent migrations, Pest test suite.
 - `frontend/` — React + Vite SPA, Tailwind CSS design tokens, Vitest and Playwright test suites.
 - `docker-compose.yml` — Local development orchestration for PostgreSQL database.
 - `docs/` — Agent memory ledgers (`docs/agents/`) and design system artifacts (`docs/design/`).

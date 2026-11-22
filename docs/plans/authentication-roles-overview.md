@@ -1,14 +1,14 @@
 # Implementation Plan — Authentication with Roles (Candidate, Examiner, Administrator)
 
 ## Goal Description
-Implement full-stack authentication and role-based access control (RBAC) across the headless Laravel 11 REST API (`backend/`) and React + Vite SPA (`frontend/`), enforcing three authorization tiers defined in `README.md` and `ARCHITECTURE.md`:
+Implement full-stack authentication and role-based access control (RBAC) across the headless Laravel 13 REST API (`backend/`) and React + Vite SPA (`frontend/`), enforcing three authorization tiers defined in `README.md` and `ARCHITECTURE.md`:
 - **Candidate:** Self-registration (`POST /api/register`), email/password login, access to candidate dashboard (`DS-003`).
 - **Examiner:** Login with admin-approved credentials, access to examiner dashboard (`DS-006`), blocked if deactivated (accounts are created by an Administrator, D-020).
 - **Administrator:** Pre-seeded superuser login, platform oversight and user management access (`DS-011`).
 
 ## User Review Required
 > [!IMPORTANT]
-> - **Scaffolding prerequisite:** As `backend/` and `frontend/` directories do not yet exist, initial building will initialize the Laravel 11 project and React + Vite SPA skeletons strictly adhering to [D-002](../agents/DECISIONS.md#D-002) and [D-009](../agents/DECISIONS.md#D-009).
+> - **Scaffolding prerequisite:** As `backend/` and `frontend/` directories do not yet exist, initial building will initialize the Laravel 13 project and React + Vite SPA skeletons strictly adhering to [D-036](../agents/DECISIONS.md#D-036) and [D-009](../agents/DECISIONS.md#D-009).
 > - **Examiner accounts:** Candidate accounts are active immediately upon registration; Examiner accounts are created by an Administrator (no self-registration, no approval step), and `is_active = false` means a deactivated account ([D-020](../agents/DECISIONS.md)).
 
 ## Open Questions

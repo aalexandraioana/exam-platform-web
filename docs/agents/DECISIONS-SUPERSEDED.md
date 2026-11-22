@@ -15,6 +15,7 @@
 - D-024 · Variants as slot alternatives, letters by alternation with Examiner override · _superseded-by D-025_
 - D-007 · Visual design tokens and calm anxiety-reducing UI system · _superseded-by D-034_
 - D-034 · Warm, calm visual system (cream light, espresso dark) · _superseded-by D-035_
+- D-002 · Laravel 11 REST API backend with React + Vite SPA · _superseded-by D-036_
 
 ---
 
@@ -79,4 +80,13 @@
 - **Why:** Keeps D-007's calm, low-stress intent while removing the clinical feel of cool slate neutrals and the midnight navy, as the user asked; every text and input-border pair still meets WCAG AA.
 - **Rejected:** Cool slate light theme and midnight navy dark theme (D-007, felt clinical); warm graphite and soft midnight dark options; flashy or gamified colors; pitch-black dark mode.
 - **Evidence:** docs/design/design-review-2026-11-22.md; conversation 2026-11-22
+- **Source:** user · confidence high
+
+## D-002 · Laravel 11 REST API backend with React + Vite SPA
+- **Status:** superseded-by D-036
+- **Date:** 2026-11-18
+- **Rule:** The platform is built as a headless Laravel 11 REST API backend paired with a standalone React + Vite SPA frontend.
+- **Why:** Delivers clean separation of concerns, native queuing/scheduling for automated submission sealing, and strictly complies with the catalog requirement for a documented REST API.
+- **Rejected:** Monolithic Inertia.js without a standalone API; alternative language runtimes.
+- **Evidence:** README.md:40
 - **Source:** user · confidence high

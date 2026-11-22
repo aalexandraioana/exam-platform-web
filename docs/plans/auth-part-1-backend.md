@@ -1,10 +1,10 @@
 # Plan — Part 1: Backend Foundation & Authentication REST API
 
 ## Size
-**M** — Scaffolds local PostgreSQL 16 (`docker-compose.yml`), backend Laravel 11 application (`backend/`), User model with roles, Sanctum API authentication, and Pest test suite.
+**M** — Scaffolds local PostgreSQL 16 (`docker-compose.yml`), backend Laravel 13 application (`backend/`), User model with roles, Sanctum API authentication, and Pest test suite.
 
 ## Approach
-Implement the headless REST API authentication layer in `backend/` following [D-002](../agents/DECISIONS.md#D-002) and [D-009](../agents/DECISIONS.md#D-009). The User schema defines three roles (`candidate`, `examiner`, `administrator`) and an `is_active` flag. Candidate self-registers directly via `POST /api/register`; Examiner and Administrator accounts are seeded or provisioned with admin approval. Sanctum issues plain text bearer tokens on login and verifies authenticated requests with `auth:sanctum` and a dedicated `role:` middleware. All endpoints are verified with automated Pest tests before any frontend work begins.
+Implement the headless REST API authentication layer in `backend/` following [D-036](../agents/DECISIONS.md#D-036) and [D-009](../agents/DECISIONS.md#D-009). The User schema defines three roles (`candidate`, `examiner`, `administrator`) and an `is_active` flag. Candidate self-registers directly via `POST /api/register`; Examiner and Administrator accounts are seeded or provisioned with admin approval. Sanctum issues plain text bearer tokens on login and verifies authenticated requests with `auth:sanctum` and a dedicated `role:` middleware. All endpoints are verified with automated Pest tests before any frontend work begins.
 
 ## Files
 | Action | Path | What |
@@ -51,7 +51,7 @@ one builder (sequential: Docker PostgreSQL → Laravel scaffold → Migration & 
 | Entry | What it says | Why it applies | Call |
 |---|---|---|---|
 | D-001 | Plan-then-build workflow | Mandates planning and test-first execution | confirm |
-| D-002 | Laravel 11 REST API backend with React + Vite SPA | Governs backend framework and REST API architecture | confirm |
+| D-036 | Laravel 13 REST API backend with React 19 + Vite SPA (supersedes D-002) | Governs backend framework and REST API architecture | confirm |
 | D-003 | PostgreSQL 16 with local Docker Compose orchestration | Defines database engine and local containerization | confirm |
 | D-008 | Pest PHP, Vitest, and Playwright as automated testing stack | Establishes Pest PHP as the backend test runner | confirm |
 | D-009 | Two-folder monorepo layout (backend/ and frontend/) | Places backend code cleanly in `backend/` | confirm |

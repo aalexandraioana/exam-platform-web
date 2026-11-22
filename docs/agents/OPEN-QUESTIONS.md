@@ -33,6 +33,8 @@
 - Q-022 · Where is the question pool of at least 60 verified questions kept? · _answered_
 - Q-023 · How is a question's specific competence identified? · _answered_
 - Q-024 · What happens when an Item has fewer Variants than the letter an Attempt got? · _answered_
+- Q-025 · What happens to the uncommitted backend/ scaffold, and where does Laravel run locally? · _answered_
+- Q-026 · Does the SPA authenticate with a Sanctum cookie session or a bearer token?
 
 ---
 
@@ -155,3 +157,14 @@
 - **Status:** answered
 - **Date:** 2026-11-22
 - **Answer:** Not applicable: D-025 removed letters; each Item picks its Variant at random, so no letter can be missing.
+
+## Q-025 · What happens to the uncommitted backend/ scaffold, and where does Laravel run locally?
+- **Status:** answered
+- **Date:** 2026-11-22
+- **Answer:** Generate a fresh official Laravel skeleton into `backend/`, keeping `docker-compose.yml`, `backend/.env.example` and the `/api/health` route; the 7 migrations from the outdated schema plan move to `docs/plans/legacy-migrations/` for P1 to consult (nothing deleted). Laravel runs in Docker: one `backend/Dockerfile` serves both an `api` service in docker-compose and Render.
+
+## Q-026 · Does the SPA authenticate with a Sanctum cookie session or a bearer token?
+- **Status:** open
+- **Date:** 2026-11-22
+- **Context:** The uncommitted scaffold chose cookie sessions (`SESSION_DRIVER=database`, `SANCTUM_STATEFUL_DOMAINS`, `$middleware->statefulApi()`), while the approved auth plans (docs/plans/auth-part-1-backend.md, auth-parts-2-and-3.md) issue a bearer token stored in localStorage. The SPA and API run on different Render domains (D-014), which affects cookie sessions. P0 leaves `statefulApi()` out; P2 needs the answer.
+

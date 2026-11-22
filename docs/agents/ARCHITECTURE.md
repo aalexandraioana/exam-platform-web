@@ -15,7 +15,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 [React 19 + Vite SPA (frontend/)]
            │ (HTTP / JSON REST API + Sanctum Auth)
            ▼
-[Laravel 11 REST API Application (backend/)]
+[Laravel 13 REST API Application (backend/)]
            │ (Sandboxed Math Parser / Scheduler)
            ▼
 [PostgreSQL 16 Relational Database (Docker Compose)]
@@ -25,7 +25,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 | Part | Path | Responsibility | Talks to |
 |---|---|---|---|
 | Frontend SPA | `frontend/` | React + Vite Single Page Application for Candidates, Examiners, and Administrators; renders exam room, question drawer, timer, and dashboards | Backend REST API |
-| Backend REST API | `backend/` | Laravel 11 headless API; handles authentication (Sanctum), business logic, validation, state machine transitions, sandboxed math parsing, and background jobs | Frontend SPA, PostgreSQL, Local Storage |
+| Backend REST API | `backend/` | Laravel 13 headless API; handles authentication (Sanctum), business logic, validation, state machine transitions, sandboxed math parsing, and background jobs | Frontend SPA, PostgreSQL, Local Storage |
 | Relational Database | `docker-compose.yml` (PostgreSQL 16) | Persists users, exams, questions, attempts, concrete variant snapshots, responses, and feedback with versioned Eloquent migrations | Backend REST API |
 
 ## Data flow
@@ -57,7 +57,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 ## Build, deploy, runtime
 - **Local Dev:** `docker compose up -d` starts PostgreSQL 16. Backend runs via `composer install && php artisan migrate --seed && php artisan serve`. Frontend runs via `npm install && npm run dev`.
 - **Testing:** `./vendor/bin/pest` (backend), `npm run test` (frontend Vitest), `npx playwright test` (E2E & visual screenshot regression).
-- **Production Runtime:** Render (D-014): managed PostgreSQL 16, a containerized Laravel 11 API web service, and a static web service for the React 19 + Vite SPA.
+- **Production Runtime:** Render (D-014): managed PostgreSQL 16, a containerized Laravel 13 API web service, and a static web service for the React 19 + Vite SPA.
 
 ## Boundaries
 - **Client / Server Boundary:** The React SPA is untrusted; all total scores, timers, and formula validations are calculated strictly on the Laravel backend. Requests received after `duration + 30s grace` are rejected.

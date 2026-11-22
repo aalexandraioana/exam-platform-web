@@ -13,13 +13,13 @@ Following the approval of **Part 1 (Backend Foundation & Authentication REST API
 Scaffolds React 19 + Vite SPA, Tailwind CSS with design tokens, HTTP client with interceptors, AuthContext, role guards, and Vitest test suite.
 
 ### Scope & Encompassed Components
-1. **Frontend Project Foundation (`frontend/`):**
+1. **Frontend Project Foundation (`frontend/`):** *Moved to P0 (`docs/plans/p0-foundations.md`): the scaffold, Tailwind tokens and Vitest setup are built there; Part 2 starts from that scaffold. Kept below for reference.*
    - React 19 + TypeScript + Vite initialized.
    - Tailwind CSS configuration mapping all tokens from [`docs/design/DESIGN.md`](../design/DESIGN.md):
      - Colors: all values from DESIGN.md per D-035: fresh mint accent (`#1F7A4F` light, `#7EE2A8` dark), warm cream light neutrals (canvas `#F5F1EA`), espresso dark neutrals (canvas `#1A1612`).
      - Fonts: Plus Jakarta Sans for UI text, JetBrains Mono for numeric/code.
      - Spacing scale: 4px grid (`space-1` = 4px, `space-2` = 8px, etc.).
-     - Radii: `rounded-lg` (8px), `rounded-md` (6px).
+     - Radii: `rounded-md` (10px), `rounded-lg` (16px) per D-035.
    - Setup React Router DOM for SPA routing.
    - Setup Vitest + `@testing-library/react` + `jsdom`.
 

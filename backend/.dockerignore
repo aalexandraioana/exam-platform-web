@@ -1,0 +1,9 @@
+# Keep host-only files out of the production image.
+vendor
+.env
+.phpunit.cache
+.phpunit.result.cache
+storage/logs/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*.php

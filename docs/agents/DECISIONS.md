@@ -210,6 +210,7 @@
 ## D-026 · Subject 2 photo upload limits
 - **Status:** approved
 - **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
 - **Rule:** A Candidate can upload up to 3 images per Subject 2 problem, 10 MB each, in JPG, PNG or HEIC. HEIC is converted to JPG on the server so the Examiner's browser can display it. D-048 still holds (photos in object storage in production).
 - **Why:** Multi-page handwritten solutions from phones (often HEIC on iPhones) must reach the Examiner readable.
 - **Rejected:** 5 images per problem; 5 MB JPG/PNG only without HEIC conversion; 1 image per problem.

@@ -34,6 +34,28 @@ P0 → P1a → P1b → P1c → P1d → P2, then parts with disjoint files may ru
 **P4b ∥ P3's screens**. **P6 starts as soon as P4a and P5 are done**; it is the critical path
 and the riskiest part. P7 ∥ P8 after P6. P9, P10, P11 in parallel after P8.
 
+## Schedule (final delivery 2026-12-03)
+Agreed 2026-11-22. The pilot date drives everything after it.
+
+| Day | Date | Build | The user, in parallel |
+|---|---|---|---|
+| 1 | Mon 23 Nov | Merge P1b; P1c + P1d as one plan (rest of the schema) | Answer Q-027–Q-031; start the 60 questions; ask 2 validators; book the pilot for 30 Nov |
+| 2 | Tue 24 Nov | P2 login/register + P3 classes (backend, minimal screens) | Write questions |
+| 3 | Wed 25 Nov | P4a math engine + P4b question bank (DS-007 fix, essential screen only) | Write questions; validators start |
+| 4 | Thu 26 Nov | P5 exam builder (DS-008 fix) | Finish the 60 |
+| 5 | Fri 27 Nov | P6 attempt engine: timer, grace, versioned autosave, auto-submit, draw (the twist) | Validations into BANK.md |
+| 6 | Sat 28 Nov | P7 exam room + Playwright refresh/disconnect test | — |
+| 7 | Sun 29 Nov | P4c seed the real questions, deploy, dry run with 1–2 people | Dry run |
+| 8 | Mon 30 Nov | **Pilot** with 10+ colleagues on the live site; fixes | Run the pilot |
+| 9 | Tue 1 Dec | P8 grading + publishing (DS-009 fix); P9 results as a simple page | Grade Subject II |
+| 10 | Wed 2 Dec | P10 Item Analysis on pilot data; BANK.md results; P12 README, API docs, SUBMISSION draft | Record the demo video |
+| 11 | Thu 3 Dec | Buffer, final checks, delivery | Deliver |
+
+**Cut list (decided now):** P9 becomes a simple page inside P8; P11 dashboards and admin
+supervision are minimal or listed as not done in SUBMISSION; the shared-library screens (D-040)
+may be postponed (schema stays; PARTIAL in SUBMISSION); draft mocks are drawn simply from the
+existing tokens and mocks; the three-reviewer pass runs only on P6.
+
 ## Live environment (Render, D-014)
 - Site: https://exam-platform-web-ip0s.onrender.com
 - API: https://exam-platform-api-hwy2.onrender.com (`/up`, `/api/health`)

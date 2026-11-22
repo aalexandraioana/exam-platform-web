@@ -28,4 +28,3 @@ function hasIndexOn(string $table, string $columns): bool
         ->where('indexdef', 'like', "%USING btree ({$columns})%")
         ->exists();
 }
-

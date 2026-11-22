@@ -39,3 +39,63 @@ Unealta: Antigravity (prompt liber).
 Ce am cerut (pe scurt): Verificarea completă a documentelor (README.md, CONTEXT.md, OPEN-QUESTIONS.md, mocks din docs/design) pentru contradicții, elemente lipsă sau neclare, și formularea întrebărilor rămase. Apoi, actualizarea ARCHITECTURE.md și răspunsul la întrebările legate de predarea Subiectului 2 (upload foto + text), politica încercărilor multiple și biblioteca de parsare matematică în PHP.
 Ce am primit: Corectarea neconcordanțelor de vocabular din README.md și DS-003.html, actualizarea completă a fișierului ARCHITECTURE.md (cu monorepo backend/ și frontend/, diagrame de flux, storage și securitate), închiderea Q-005 și D-010 (publicarea feedback-ului), și formularea propunerilor de decizie D-011–D-013.
 Ce am făcut cu ea: Am aprobat decizia D-010, am cerut actualizarea ARCHITECTURE.md, am confirmat opțiunea de upload foto pentru Subiectul 2, politica de încercări multiple și folosirea unei biblioteci dedicate de expresii matematice în PHP fără eval.
+
+## 2026-11-22 · Plan general al aplicației (roadmap P0–P12)
+Unealta: Claude Code (/plan).
+Ce am cerut (pe scurt): Un plan la nivelul întregii aplicații, pe care să-l împart apoi în planuri mai mici.
+Ce am primit: Un roadmap cu 13 părți (P0–P12) în ordinea dependențelor, cu deciziile acoperite de fiecare parte, ecranele, riscurile (stocarea fotografiilor și jobul programat pe Render) și 8 întrebări deschise. Asistentul a observat că planul vechi de schemă era depășit de decizii mai noi și că în backend/ exista un schelet necomis, construit după acel plan.
+Ce am făcut cu ea: Am pornit direct cu P0. Mai târziu am observat că roadmap-ul nu fusese salvat nicăieri și am cerut salvarea lui în docs/plans/application-roadmap.md, împreună cu întrebările deschise (Q-027–Q-034).
+
+## 2026-11-22 · P0: planul pentru fundație (Docker, CI, Render)
+Unealta: Claude Code (/plan).
+Ce am cerut (pe scurt): Planul pentru P0: schelet backend și frontend, CI și deploy.
+Ce am primit: Un plan cu trei întrebări blocante: ce fac cu folderul backend/ necomis, unde rulează PHP local (nu aveam PHP instalat) și faptul că Laravel 11 (D-002) nu mai are suport de securitate. Asistentul a propus D-036 (Laravel 13) și a corectat singur o afirmație exagerată despre suportul Laravel 11 după ce a verificat pe Packagist.
+Ce am făcut cu ea: Am ales schelet nou cu migrările vechi păstrate deoparte, Laravel rulat în Docker și propunerea pentru Laravel 13. Am întrebat ce înseamnă D-036 înainte să-l aprob. Am aprobat CI pe GitHub Actions (D-037) și româna ca limbă implicită (D-038), am cerut merge în main înainte de branch-ul P0 și am reconfirmat D-009 și D-014 după reformulare.
+
+## 2026-11-22 · P0: build, dovada testelor și deploy pe Render
+Unealta: Claude Code (/build), apoi ghidaj pas cu pas pentru Render.
+Ce am cerut (pe scurt): Construirea P0, apoi dovada că testele rulează local, confirmarea explicită că nu au apărut termeni sau întrebări noi și că nu s-au schimbat ecrane, apoi punerea aplicației online.
+Ce am primit: Backend Laravel 13 în Docker, frontend React 19 cu tokenii din DESIGN.md, română/engleză, CI și render.yaml, cu teste scrise înainte de cod. La verificare, asistentul a găsit și a reparat un avertisment de configurare Vite introdus chiar de el. La deploy, adresele ghicite (exam-platform-api.onrender.com) aparțineau altcuiva, așa că site-ul ar fi apelat serverul altei persoane.
+Ce am făcut cu ea: Am cerut o explicație pe înțeles pentru problema adreselor, am corectat VITE_API_BASE_URL în Render și am refăcut build-ul site-ului. Am verificat site-ul live („Conectat la server”). Am cerut să păstrez în minte expirarea bazei de date gratuite (~22 decembrie) și să decid mai târziu ce fac cu ea.
+
+## 2026-11-22 · Review cu trei sub-agenți pe P0 (performanță, securitate, SEO)
+Unealta: Claude Code (trei sub-agenți în paralel, doar raportare).
+Ce am cerut (pe scurt): Review al diff-ului P0 față de plan și README, cu probleme de corectitudine doar, cu fișier și linie.
+Ce am primit: 7 probleme confirmate (noindex lipsă, porturi Docker expuse în rețea, CI fără permisiuni limitate, APP_ENV, caching, sesiuni scrise în bază, build Docker lent) și 4 pentru P2. O constatare (OPcache „dezactivat”) a fost respinsă după verificarea imaginii: era activat.
+Ce am făcut cu ea: Am cerut aplicarea tuturor celor 7, inclusiv a celei opționale, și am lăsat deoparte ce ține de P2. Am verificat că CI trece.
+
+## 2026-11-22 · Verificare de conformitate și program până la predare
+Unealta: Claude Code (prompt liber).
+Ce am cerut (pe scurt): Dacă ce am făcut e conform cu cerințele și dacă am deraiat.
+Ce am primit: Direcția este conformă, dar ritmul e un risc: commit-uri în doar 4 zile din cele 8 cerute, AI_LOG cu 6 intrări din 10, twist-ul neînceput, nicio întrebare reală, niciun pilot. Plus lista abaterilor de la catalog care trebuie explicate (ordonare, punctaj negativ, toleranță 0).
+Ce am făcut cu ea: Am corectat termenul de predare (3 decembrie, nu 6). Am acceptat programul comprimat pe 11 zile, cu pilotul pe 30 noiembrie și o listă de tăieri hotărâtă de acum, adăugate în roadmap.
+
+## 2026-11-22 · P1: modelul de date pentru competențe, capitole și bănci
+Unealta: Claude Code (/plan).
+Ce am cerut (pe scurt): Planul schemei de bază de date (P1).
+Ce am primit: Un plan mare, cu o listă fixă de competențe (D-030), capitole fixe din programă și o propunere de topic-uri seedate.
+Ce am făcut cu ea: Am cerut împărțirea planului (P1a–P1d). L-am corectat de mai multe ori. „Mulțimi de numere” este un capitol, nu o competență. Competențele sunt stabilite de profesor, nu din listă fixă. Capitolele sunt doar etichete, nu structură. Seed-ul nu înseamnă „hardcodat”. Rezultatul a fost D-039, care înlocuiește D-030. Am observat apoi că „mai multe bănci” era de fapt ce catalogul numește „pool-uri” (banca cuprinde toate întrebările) și am ales ca itemii din examen să extragă din pool-uri (D-041, D-043).
+
+## 2026-11-22 · P1a: build și review cu sub-agenți (PR #1)
+Unealta: Claude Code (/build, apoi trei sub-agenți de review).
+Ce am cerut (pe scurt): Construirea P1a (roluri, competențe, clase), un pull request cu gh și apoi review-ul cu trei sub-agenți.
+Ce am primit: Tabelele și testele (8 teste trecute). Review-ul a găsit două chei străine fără index și câmpuri care ar fi putut fi setate din formular (statusul cererii de intrare în clasă, codul clasei), plus o neconcordanță în README.
+Ce am făcut cu ea: Am cerut o explicație pe înțeles pentru mass assignment înainte să decid. Am ales varianta mai strictă (modelul refuză complet completarea din formular) și am aprobat schimbarea testului care aștepta altceva. Am aprobat merge-ul PR-ului după ce CI a trecut.
+
+## 2026-11-22 · P1b: banca de întrebări, pool-uri, Draft și Ready
+Unealta: Claude Code (/plan, /build).
+Ce am cerut (pe scurt): Planul și construirea schemei pentru banca de întrebări.
+Ce am primit: Întrebări despre minimul pentru Draft și cerințele pentru Ready, propunerile D-040 (bibliotecă cu copii înghețate), D-041 (pool-uri) și D-042, apoi tabelele, constrângerile în Postgres și 12 teste noi.
+Ce am făcut cu ea: Am cerut ca Ready să ceară și clasa (anul de studiu) și dificultatea (D-042 înlocuiește D-032). Am întrebat dacă ideea de mai multe pool-uri respectă cerințele proiectului, ceea ce a clarificat diferența dintre bancă și pool. Am hotărât că o întrebare extrasă trebuie să aibă competența și dificultatea itemului și că nu se poate repeta în aceeași încercare (Q-036, Q-037).
+
+## 2026-11-22 · Răspunsuri la întrebările care blocau twist-ul (Q-027–Q-031)
+Unealta: Claude Code (prompt liber).
+Ce am cerut (pe scurt): Să răspund pe rând la întrebările deschise, cu o recomandare pentru fiecare.
+Ce am primit: Opțiuni cu recomandări pentru stocarea fotografiilor, predarea automată pe Render, ordinea aleatoare, recalcularea după corectarea baremului de răspuns și pragurile pentru itemi slabi. După primul meu răspuns, asistentul a observat că stocarea pe discul local s-ar ciocni cu programul: deploy-ul P8 de după pilot ar fi șters fotografiile pilotului înainte de corectare.
+Ce am făcut cu ea: Am ales inițial discul local, apoi am trecut la stocare de obiecte gratuită (D-048, care înlocuiește D-011) după ce am văzut conflictul. Am aprobat D-044–D-047: verificare la citire plus job declanșat extern, amestecarea variantelor de răspuns, recalculare până la publicare și praguri standard.
+
+## 2026-11-22 · Controlul operațiilor pe git (push, merge)
+Unealta: Claude Code (prompt liber).
+Ce am cerut (pe scurt): Să-mi arate comenzile și să aștepte aprobarea mea înainte de orice push sau merge.
+Ce am primit: La un pas pe care l-am întrerupt, merge-ul și push-ul în main se executaseră deja. Asistentul mi-a spus inițial că nu rulase nimic, apoi a recunoscut eroarea după ce a verificat starea repo-ului.
+Ce am făcut cu ea: Am verificat că rezultatul era exact ce aș fi aprobat (fast-forward, CI verde). De atunci am cerut ca fiecare push și merge să-mi fie arătate înainte și am aprobat fiecare pas separat.

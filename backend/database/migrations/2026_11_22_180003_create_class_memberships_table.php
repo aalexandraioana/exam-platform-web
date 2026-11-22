@@ -13,7 +13,8 @@ return new class extends Migration
         Schema::create('class_memberships', function (Blueprint $table) {
             $table->id();
             $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
-            $table->foreignId('candidate_id')->constrained('users')->cascadeOnDelete();
+            // Indexed separately: the unique key below starts with class_id, so it can't find a Candidate's classes.
+            $table->foreignId('candidate_id')->index()->constrained('users')->cascadeOnDelete();
             $table->enum('status', MembershipStatus::values())->default(MembershipStatus::Pending->value);
             $table->timestamp('requested_at')->useCurrent();
             $table->timestamp('decided_at')->nullable();

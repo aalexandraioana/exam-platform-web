@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Enums\MembershipStatus;
 use Database\Factories\ClassMembershipFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['status', 'requested_at', 'decided_at'])]
+/**
+ * Nothing here is mass-assignable: status and its dates decide who is in a class (D-028), so only
+ * trusted code sets them, e.g. `$membership->status = MembershipStatus::Accepted`.
+ */
 class ClassMembership extends Model
 {
     /** @use HasFactory<ClassMembershipFactory> */

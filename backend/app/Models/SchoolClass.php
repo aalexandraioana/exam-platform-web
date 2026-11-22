@@ -11,8 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/** A Class (CONTEXT.md); named SchoolClass because `class` is reserved in PHP. */
-#[Fillable(['name', 'join_code'])]
+/**
+ * A Class (CONTEXT.md); named SchoolClass because `class` is reserved in PHP. The join code is not
+ * fillable: the server generates it, so nobody can choose a short or guessable one.
+ */
+#[Fillable(['name'])]
 class SchoolClass extends Model
 {
     /** @use HasFactory<SchoolClassFactory> */

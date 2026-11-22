@@ -32,6 +32,8 @@
 - D-028 · Examiner-created classes with join code and approval
 - D-029 · Database as question source, BANK.md as validation and pilot log
 - D-030 · Small fixed competence list
+- D-031 · Optional barem for Subject 2 questions
+- D-032 · Draft and Ready question status
 
 ---
 
@@ -283,4 +285,24 @@
 - **Why:** Enough structure for blueprint coverage (D-025) and Item Analysis without loading and maintaining the full curriculum.
 - **Rejected:** The full official curriculum list; each Examiner's own list; free text per question.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-023
+- **Source:** user · confidence high
+
+## D-031 · Optional barem for Subject 2 questions
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** A Subject 2 question may have a barem; the Examiner chooses per question whether to use one. A barem is an ordered list of steps, each with a short description and points, summing to the question's points (each Variant has its own). With a barem, the Examiner ticks the steps a Candidate earned or gives part of a step's points (never more than the step is worth); the score is the sum plus an optional manual adjustment, kept between 0 and the question's points (D-005), with a private comment (D-019). The ticked steps and points are stored per answer. Without a barem, the Examiner enters one score between 0 and the question's points, plus the comment. A barem can be edited while grading: scores already given on that question are recalculated from their ticked steps (partial points capped at a step's new maximum, with the affected answers flagged for re-check). Once results are published, the barem is locked.
+- **Why:** Matches Romanian barem grading practice and makes grading consistent across Candidates, while leaving Examiners free to grade holistically when a barem does not fit.
+- **Rejected:** Mandatory barem for every Subject 2 question; locking the barem at the first graded answer; recalculating after publication.
+- **Evidence:** Conversation 2026-11-22; docs/design/research-quiz-platforms.md S-8
+- **Source:** user · confidence high
+
+## D-032 · Draft and Ready question status
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Each question is Draft or Ready. Only Ready questions can be picked for an Attempt; the Exam builder shows Draft Variants as "not ready", and an Exam cannot be published while an Item has no Ready Variant. A question can be marked Ready only when its required fields are complete: statement, points and competence for every question; an answer key for Subject 1; a complete barem for Subject 2 only if the Examiner chose to use one (D-031).
+- **Why:** Random picks (D-025) must never hand a Candidate a half-written question.
+- **Rejected:** Treating every saved question as usable.
+- **Evidence:** Conversation 2026-11-22; docs/design/research-quiz-platforms.md S-12
 - **Source:** user · confidence high

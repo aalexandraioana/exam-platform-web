@@ -11,7 +11,8 @@ return new class extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('examiner_id')->constrained('users')->restrictOnDelete();
+            // Indexed: Postgres doesn't index foreign keys, and an Examiner's classes are listed often.
+            $table->foreignId('examiner_id')->index()->constrained('users')->restrictOnDelete();
             $table->string('name');
             $table->string('join_code', 16)->unique();
             $table->timestamps();

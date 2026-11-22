@@ -6,6 +6,7 @@ use App\Models\ClassMembership;
 use App\Models\Competence;
 use App\Models\SchoolClass;
 use App\Models\User;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -94,15 +95,12 @@ it('navigates examiner, classes, memberships, candidates and competences', funct
 });
 
 it('never takes membership status, its dates or a join code from mass assignment', function () {
-    $membership = (new ClassMembership)->fill([
+    // A membership has no fillable fields, so Laravel refuses the whole fill instead of skipping fields.
+    expect(fn () => (new ClassMembership)->fill([
         'status' => 'accepted',
         'requested_at' => '2020-01-01 00:00:00',
         'decided_at' => '2020-01-02 00:00:00',
-    ]);
-
-    expect($membership->status)->toBe(MembershipStatus::Pending)
-        ->and($membership->requested_at)->toBeNull()
-        ->and($membership->decided_at)->toBeNull();
+    ]))->toThrow(MassAssignmentException::class);
 
     $class = (new SchoolClass)->fill(['name' => 'Clasa a VI-a A', 'join_code' => 'A']);
 

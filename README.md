@@ -85,7 +85,7 @@ The platform enforces three distinct authorization tiers:
 2. **Examiner (Teacher):**
    - Accounts are created by an Administrator; there is no Examiner self-registration (D-020).
    - Creates classes, shares their join codes, and accepts or declines joining **Candidates** (D-028).
-   - Manages their private Question Bank (questions tagged with a competence from the fixed list, difficulty, Variants and value bounds), and can publish questions to a shared library or copy others' into their own pool (D-027, D-030).
+   - Manages their private Question Bank (questions tagged with one of their own competences and any number of topic labels, a grade level, difficulty, Variants and value bounds (D-039)), and can publish questions to a shared library or copy others' into their own pool (D-027, D-030).
    - Configures **Exam** templates (question draw rules, timing, deadlines) and publishes them to classes.
    - Manages the **Manual Grading Queue** to review and score **Subject 2** submissions with partial credit.
    - Accesses the **Item Analysis & Analytics Dashboard** (facility index, discrimination, distractor analysis, class average/median).
@@ -106,7 +106,7 @@ The platform enforces three distinct authorization tiers:
 - **Problemă structurată (Multi-step Problem):** Step-by-step reasoning or mathematical proof submitted for manual grading (Subject 2), supporting up to 3 photos of handwritten solution work per problem (JPG, PNG or HEIC, 10 MB each, D-026) alongside a step summary text area.
 
 > [!NOTE]
-> The blueprint and Variant rules are decided in D-025 ([docs/agents/DECISIONS.md](docs/agents/DECISIONS.md)). Competences come from a small fixed list covering the planned topics (Q-023).
+> The blueprint and Variant rules are decided in D-025 ([docs/agents/DECISIONS.md](docs/agents/DECISIONS.md)). Each Examiner writes their own competences (a code and what is assessed); topics are only descriptive labels on questions (D-039).
 
 ---
 

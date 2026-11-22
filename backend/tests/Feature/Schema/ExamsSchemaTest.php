@@ -40,17 +40,20 @@ it('refuses impossible durations, attempts, grades, policies, windows and result
     expect(Exam::factory()->resultsPublished()->create()->results_published_at)->not->toBeNull();
 });
 
-it('publishes an Exam to several classes once each and only unlinks on delete', function () {
-    $exam = Exam::factory()->create();
+it('publishes an Exam to several classes once each and refuses to delete a class it is linked to', function () {
+    $exam = Exam::factory()->published()->create();
     [$classA, $classB] = SchoolClass::factory()->count(2)->create(['examiner_id' => $exam->examiner_id]);
     $exam->classes()->attach([$classA->id, $classB->id]);
 
     expect($exam->classes()->count())->toBe(2);
     expectRefused(fn () => $exam->classes()->attach($classA->id));
 
+    // Q-038: a class linked to an Exam can't be deleted; P3 unlinks draft Exams before deleting.
+    expectRefused(fn () => $classA->delete());
+
+    $exam->classes()->detach($classA->id);
     $classA->delete();
-    expect($exam->fresh())->not->toBeNull()
-        ->and($exam->classes()->pluck('classes.id')->all())->toBe([$classB->id]);
+    expect($exam->classes()->pluck('classes.id')->all())->toBe([$classB->id]);
 
     $exam->delete();
     expect($classB->fresh())->not->toBeNull()

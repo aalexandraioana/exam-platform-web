@@ -92,3 +92,30 @@ it('navigates examiner, classes, memberships, candidates and competences', funct
         ->and($candidate->memberships->first()->schoolClass->is($class))->toBeTrue()
         ->and($competence->examiner->is($examiner))->toBeTrue();
 });
+
+it('never takes membership status, its dates or a join code from mass assignment', function () {
+    $membership = (new ClassMembership)->fill([
+        'status' => 'accepted',
+        'requested_at' => '2020-01-01 00:00:00',
+        'decided_at' => '2020-01-02 00:00:00',
+    ]);
+
+    expect($membership->status)->toBe(MembershipStatus::Pending)
+        ->and($membership->requested_at)->toBeNull()
+        ->and($membership->decided_at)->toBeNull();
+
+    $class = (new SchoolClass)->fill(['name' => 'Clasa a VI-a A', 'join_code' => 'A']);
+
+    expect($class->name)->toBe('Clasa a VI-a A')
+        ->and($class->join_code)->toBeNull();
+});
+
+it('indexes the foreign keys used to find a candidate\'s memberships and an examiner\'s classes', function () {
+    $indexed = fn (string $table, string $column) => DB::table('pg_indexes')
+        ->where('tablename', $table)
+        ->where('indexdef', 'like', "%USING btree ({$column})%")
+        ->exists();
+
+    expect($indexed('class_memberships', 'candidate_id'))->toBeTrue()
+        ->and($indexed('classes', 'examiner_id'))->toBeTrue();
+});

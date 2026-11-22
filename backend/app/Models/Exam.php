@@ -58,4 +58,10 @@ class Exam extends Model
     {
         return $this->belongsToMany(SchoolClass::class, 'class_exam', 'exam_id', 'class_id');
     }
+
+    /** @return HasMany<Attempt, $this> */
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(Attempt::class);
+    }
 }

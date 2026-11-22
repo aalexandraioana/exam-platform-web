@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** One step of a Subject II barem: what earns the points (D-031). */
 #[Fillable(['position', 'description', 'points'])]
@@ -24,5 +25,11 @@ class BaremStep extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    /** @return HasMany<AnswerBaremScore, $this> */
+    public function answerScores(): HasMany
+    {
+        return $this->hasMany(AnswerBaremScore::class);
     }
 }

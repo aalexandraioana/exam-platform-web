@@ -82,4 +82,10 @@ class Question extends Model
     {
         return $this->hasMany(BaremStep::class)->orderBy('position');
     }
+
+    /** Every time this question was drawn (Item Analysis per question, D-043). @return HasMany<AttemptItem, $this> */
+    public function attemptItems(): HasMany
+    {
+        return $this->hasMany(AttemptItem::class);
+    }
 }

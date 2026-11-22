@@ -7,20 +7,10 @@ use App\Models\Competence;
 use App\Models\SchoolClass;
 use App\Models\User;
 use Illuminate\Database\Eloquent\MassAssignmentException;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
-
-/**
- * Runs a statement the database must refuse. The inner transaction becomes a savepoint, so the
- * test's own transaction stays usable after the expected error.
- */
-function expectRefused(callable $statement): void
-{
-    expect(fn () => DB::transaction($statement))->toThrow(QueryException::class);
-}
 
 it('defaults a new user to an active candidate and refuses an unknown role', function () {
     $id = DB::table('users')->insertGetId([

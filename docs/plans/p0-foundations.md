@@ -84,7 +84,7 @@ token (Q-026); HEIC (P6).
 
 ## Knowledge used
 Confirmed: D-001, D-003, D-008, D-022, D-035, D-036, D-037, D-038, PATTERN-001, Q-025.
-D-009 and D-014 were reworded to Laravel 13 after D-036 and await re-confirmation.
+D-009 and D-014 were reworded to Laravel 13 after D-036 and re-confirmed 2026-11-22.
 Open: Q-026 (P0 leaves `statefulApi()` out).
 Considered, not applied: domain decisions D-004–D-006, D-011–D-013, D-015–D-033; PATTERN-002.
 `docs/plans/auth-parts-2-and-3.md` Part 2 §1 (frontend scaffold) moved into this plan.

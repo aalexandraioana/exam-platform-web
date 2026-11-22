@@ -103,6 +103,7 @@
 ## D-009 · Two-folder monorepo layout (backend/ and frontend/)
 - **Status:** approved
 - **Date:** 2026-11-18
+- **Confirmed:** 2026-11-22
 - **Rule:** The repository uses a two-folder monorepo structure: `backend/` for the Laravel 13 REST API and `frontend/` for the React + Vite SPA, with a shared root `docker-compose.yml` for PostgreSQL and local services.
 - **Why:** Provides clean separation of concerns between the API and the SPA, satisfies the catalog's decoupled REST API contract requirement, and ensures consistent agent navigation and CI path references.
 - **Rejected:** Single-folder layout with Laravel serving frontend views; Inertia.js monolith; nested frontend inside Laravel's public directory.
@@ -142,6 +143,7 @@
 ## D-014 · Production deployment on Render cloud platform
 - **Status:** approved
 - **Date:** 2026-11-19
+- **Confirmed:** 2026-11-22
 - **Rule:** The application is deployed to Render with a managed PostgreSQL 16 database, a containerized Laravel 13 REST API web service, and a static web service for the React 19 + Vite SPA.
 - **Why:** Delivers a reliable, production-ready HTTPS environment satisfying the course catalog requirement for public deployment and live pilot testing.
 - **Rejected:** Self-hosted unmanaged VPS; Fly.io (Render was chosen by the user for managed PostgreSQL and web services).

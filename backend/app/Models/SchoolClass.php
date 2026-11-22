@@ -42,7 +42,12 @@ class SchoolClass extends Model
             ->wherePivot('status', MembershipStatus::Accepted->value);
     }
 
-    /** Exams published to this class (D-015). @return BelongsToMany<Exam, $this> */
+    /**
+     * Exams linked to this class, drafts included: the builder picks classes before publishing.
+     * Filter on `published_at` before showing them to Candidates (D-015).
+     *
+     * @return BelongsToMany<Exam, $this>
+     */
     public function exams(): BelongsToMany
     {
         return $this->belongsToMany(Exam::class, 'class_exam', 'class_id', 'exam_id');

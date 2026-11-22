@@ -29,7 +29,6 @@
 - D-027 · Private question pools with a shared library
 - D-028 · Examiner-created classes with join code and approval
 - D-029 · Database as question source, BANK.md as validation and pilot log
-- D-030 · Small fixed competence list
 - D-031 · Optional barem for Subject 2 questions
 - D-032 · Draft and Ready question status
 - D-033 · Lucide as the only icon set
@@ -37,6 +36,7 @@
 - D-036 · Laravel 13 REST API backend with React 19 + Vite SPA
 - D-037 · GitHub Actions CI on every push
 - D-038 · Romanian as the default UI language
+- D-039 · Examiner-defined competences and topic labels
 
 ---
 
@@ -213,8 +213,7 @@
 ## D-025 · Exam blueprint with a random Variant per Item
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
-- **Rule:** An Exam is a blueprint: an ordered list of Items, each fixing section, competence (from the fixed list, Q-023), difficulty and points. Each Item holds one or more similar, equivalent questions (its Variants). When an Attempt starts, the server picks one Variant per Item at random, independently per Item; an Item with one question is the same for everyone. There are no letters, rows or manual assignment. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked questions, any drawn values and the expected answers are stored per Attempt (D-006, D-013), so the Examiner sees which Variant each Candidate got. Item Analysis reports per question and per Item.
+- **Rule:** An Exam is a blueprint: an ordered list of Items, each fixing section, competence (the Examiner's own, D-039), difficulty and points. Each Item holds one or more similar, equivalent questions (its Variants). When an Attempt starts, the server picks one Variant per Item at random, independently per Item; an Item with one question is the same for everyone. There are no letters, rows or manual assignment. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked questions, any drawn values and the expected answers are stored per Attempt (D-006, D-013), so the Examiner sees which Variant each Candidate got. Item Analysis reports per question and per Item.
 - **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), while similar questions are randomly assigned to different Candidates to make copying harder (INTERVIEW.md Q13).
 - **Rejected:** Free random draw by topic (D-016, no coverage guarantee); one letter per Attempt by alternation with Examiner override (D-024); a fixed list for everyone.
 - **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-016, Q-020, Q-023
@@ -258,16 +257,6 @@
 - **Why:** Avoids two sources of truth while meeting the catalog requirement to record peer validation and pilot results in BANK.md.
 - **Rejected:** BANK.md as the re-seeded question source; generating the question list into BANK.md.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-022; catalog-de-proiecte-web.md:882, 916
-- **Source:** user · confidence high
-
-## D-030 · Small fixed competence list
-- **Status:** approved
-- **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
-- **Rule:** Competences come from a small fixed list covering only the planned topics and scope (e.g. C1–C4 per chapter), not the full curriculum. Questions and blueprint Items are tagged from this list, and Item Analysis groups by it.
-- **Why:** Enough structure for blueprint coverage (D-025) and Item Analysis without loading and maintaining the full curriculum.
-- **Rejected:** The full official curriculum list; each Examiner's own list; free text per question.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-023
 - **Source:** user · confidence high
 
 ## D-031 · Optional barem for Subject 2 questions
@@ -338,4 +327,14 @@
 - **Why:** The users are Romanian classrooms; the backend scaffold already set `APP_LOCALE=ro`, `APP_FALLBACK_LOCALE=en`.
 - **Rejected:** English as the default.
 - **Evidence:** backend/.env.example:7-8; conversation 2026-11-22 (P0 plan gate, A2)
+- **Source:** user · confidence high
+
+## D-039 · Examiner-defined competences and topic labels
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Each Examiner keeps their own list of competences: a short code (e.g. C1, unique for that Examiner) and a Romanian description of what is assessed (e.g. "knows that the angles of a triangle add up to 180°"). Questions and blueprint Items are tagged with one of the Examiner's competences, and Item Analysis groups by them. Topics are only descriptive labels from the Examiner's own list; a question can have several, and they don't structure anything. Questions and exams carry a grade level (5–8).
+- **Why:** Competences are what the teacher decides to assess, not a fixed list; topics (chapters such as Mulțimi de numere întregi, Drepte, Unghiuri) only describe questions, and a bank may mix them.
+- **Rejected:** A small fixed competence list (D-030); topics as a seeded curriculum structure that groups competences; competences tied to a topic.
+- **Evidence:** Conversation 2026-11-22 (P1 plan gate); INTERVIEW.md Q1 ("competentele specifice din respectiva unitate")
 - **Source:** user · confidence high

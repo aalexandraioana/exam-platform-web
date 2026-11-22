@@ -16,6 +16,7 @@
 - D-007 · Visual design tokens and calm anxiety-reducing UI system · _superseded-by D-034_
 - D-034 · Warm, calm visual system (cream light, espresso dark) · _superseded-by D-035_
 - D-002 · Laravel 11 REST API backend with React + Vite SPA · _superseded-by D-036_
+- D-030 · Small fixed competence list · _superseded-by D-039_
 
 ---
 
@@ -89,4 +90,13 @@
 - **Why:** Delivers clean separation of concerns, native queuing/scheduling for automated submission sealing, and strictly complies with the catalog requirement for a documented REST API.
 - **Rejected:** Monolithic Inertia.js without a standalone API; alternative language runtimes.
 - **Evidence:** README.md:40
+- **Source:** user · confidence high
+
+## D-030 · Small fixed competence list
+- **Status:** superseded-by D-039
+- **Date:** 2026-11-22
+- **Rule:** Competences come from a small fixed list covering only the planned topics and scope (e.g. C1–C4 per chapter), not the full curriculum. Questions and blueprint Items are tagged from this list, and Item Analysis groups by it.
+- **Why:** Enough structure for blueprint coverage (D-025) and Item Analysis without loading and maintaining the full curriculum.
+- **Rejected:** The full official curriculum list; each Examiner's own list; free text per question.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-023
 - **Source:** user · confidence high

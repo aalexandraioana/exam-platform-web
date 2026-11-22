@@ -14,7 +14,6 @@
 - D-006 · Exact-match numeric tolerance with concrete parameter persistence
 - D-008 · Pest PHP, Vitest, and Playwright as automated testing stack
 - D-009 · Two-folder monorepo layout (backend/ and frontend/)
-- D-011 · Subject 2 handwritten solution photo upload alongside text
 - D-012 · Configurable attempt limits and score aggregation policy
 - D-013 · Sandboxed PHP mathematical expression library for formula evaluation
 - D-014 · Production deployment on Render cloud platform
@@ -43,7 +42,7 @@
 - D-045 · Answer options shuffled per Attempt
 - D-046 · Subject I answer-key corrections recalculate until publication
 - D-047 · Weak-item thresholds
-- D-048 · Subject II photos in object storage in production · _proposed_
+- D-048 · Subject II photos in object storage in production
 
 ---
 
@@ -115,16 +114,6 @@
 - **Why:** Provides clean separation of concerns between the API and the SPA, satisfies the catalog's decoupled REST API contract requirement, and ensures consistent agent navigation and CI path references.
 - **Rejected:** Single-folder layout with Laravel serving frontend views; Inertia.js monolith; nested frontend inside Laravel's public directory.
 - **Evidence:** AGENTS.md:sections 2 & 3, README.md:section 3
-- **Source:** user · confidence high
-
-## D-011 · Subject 2 handwritten solution photo upload alongside text
-- **Status:** approved
-- **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
-- **Rule:** Subject 2 solutions allow candidates to submit step-by-step reasoning text alongside uploaded photos/images of their handwritten work (geometric drawings and algebraic proofs), stored securely on server disk and presented in the Examiner's manual grading queue.
-- **Why:** 6th-grade geometric proofs and complex calculations require natural handwritten sketches and intermediate steps that are impractical to type solely in text inputs.
-- **Rejected:** Plain text-only submissions; mandatory LaTeX code entry for 6th-grade students.
-- **Evidence:** README.md:84, docs/agents/ARCHITECTURE.md:24
 - **Source:** user · confidence high
 
 ## D-012 · Configurable attempt limits and score aggregation policy
@@ -408,9 +397,10 @@
 - **Source:** user · confidence high
 
 ## D-048 · Subject II photos in object storage in production
-- **Status:** proposed
+- **Status:** approved
 - **Date:** 2026-11-22
-- **Rule:** Subject II solutions keep their step-by-step text and up to 3 handwritten photos per problem (D-011, D-026). In production the photos are stored in S3-compatible object storage with a free tier (provider chosen in P6); in development they stay on the local disk. The Examiner's grading queue shows them either way. If approved, D-011 → superseded-by D-048.
+- **Confirmed:** 2026-11-22
+- **Rule:** Subject II solutions keep their step-by-step text and up to 3 handwritten photos per problem (D-011, D-026). In production the photos are stored in S3-compatible object storage with a free tier (provider chosen in P6); in development they stay on the local disk. The Examiner's grading queue shows them either way.
 - **Why:** Render's free web service loses its disk on every deploy, so photos uploaded in the pilot would be deleted before grading (Q-027).
 - **Rejected:** Local disk on Render with no deploys between pilot and grading; a paid Render persistent disk.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-027; conversation 2026-11-22

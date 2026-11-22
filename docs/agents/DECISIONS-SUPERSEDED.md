@@ -19,6 +19,7 @@
 - D-030 · Small fixed competence list · _superseded-by D-039_
 - D-025 · Exam blueprint with a random Variant per Item · _superseded-by D-043_
 - D-032 · Draft and Ready question status · _superseded-by D-042_
+- D-011 · Subject 2 handwritten solution photo upload alongside text · _superseded-by D-048_
 
 ---
 
@@ -119,4 +120,13 @@
 - **Why:** Random picks (D-025) must never hand a Candidate a half-written question.
 - **Rejected:** Treating every saved question as usable.
 - **Evidence:** Conversation 2026-11-22; docs/design/research-quiz-platforms.md S-12
+- **Source:** user · confidence high
+
+## D-011 · Subject 2 handwritten solution photo upload alongside text
+- **Status:** superseded-by D-048
+- **Date:** 2026-11-18
+- **Rule:** Subject 2 solutions allow candidates to submit step-by-step reasoning text alongside uploaded photos/images of their handwritten work (geometric drawings and algebraic proofs), stored securely on server disk and presented in the Examiner's manual grading queue.
+- **Why:** 6th-grade geometric proofs and complex calculations require natural handwritten sketches and intermediate steps that are impractical to type solely in text inputs.
+- **Rejected:** Plain text-only submissions; mandatory LaTeX code entry for 6th-grade students.
+- **Evidence:** README.md:84, docs/agents/ARCHITECTURE.md:24
 - **Source:** user · confidence high

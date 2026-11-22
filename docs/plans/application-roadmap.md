@@ -18,7 +18,7 @@
 | **P4b** | **Question bank**: pools, topic labels and competences managed in the app (D-039, D-041); a question's pools, labels and competence must belong to its Examiner (not enforced by the database); create/read/update/delete, Draft → Ready with required-field checks, barem definition, shared library (publish, copy), preview of drawn values | L | P1, P2, P4a | D-027, D-031, D-039, D-040, D-041, D-042, D-043 | DS-007 ✅ (needs a mock fix first: topics shown as competences; pools; grade and difficulty in "Ce lipsește pentru Finalizat") | Q-032 | to plan | |
 | **P4c** | **Seed & BANK.md**: insert-only seeder keyed on question code, creating the seeding Examiner's own competences and topic labels with the questions (D-039), BANK.md log structure. The question text is written by the user, never invented | S | P4b | D-029, D-039 | — | — | to plan | |
 | **P5** | **Exam builder & publication**: blueprint Items drawing from pools, attempt limits and score policy, availability window, publish to classes; publishing only if every Item can get its own distinct eligible question (D-043) | M | P3, P4b | D-012, D-015, D-021, D-042, D-043 | DS-008 ✅ (needs a mock fix first: topics shown as competences; Items pick a pool instead of listing Variants) | — | to plan | |
-| **P6** | **Attempt engine (the twist, backend)**: state machine with a test per invalid transition; one random eligible question per Item from its pool, never repeated within the Attempt (D-043), seed and snapshot at start; server timer with the 30 s Grace Period; idempotent versioned autosave; Subject 2 uploads (limits, HEIC→JPG: check Imagick + libheif in the image first) to S3-compatible object storage in production (D-048); Submission; expired Attempts sealed on read plus a scheduled job pinged by a free external cron (D-044); answer options shuffled and stored (D-045); Subject 1 auto-grading | L | P4a, P5 | D-004, D-005, D-006, D-012, D-021, D-026, D-043, D-044, D-045, D-048 (proposed) | — | — | to plan | |
+| **P6** | **Attempt engine (the twist, backend)**: state machine with a test per invalid transition; one random eligible question per Item from its pool, never repeated within the Attempt (D-043), seed and snapshot at start; server timer with the 30 s Grace Period; idempotent versioned autosave; Subject 2 uploads (limits, HEIC→JPG: check Imagick + libheif in the image first) to S3-compatible object storage in production (D-048); Submission; expired Attempts sealed on read plus a scheduled job pinged by a free external cron (D-044); answer options shuffled and stored (D-045); Subject 1 auto-grading | L | P4a, P5 | D-004, D-005, D-006, D-012, D-021, D-026, D-043, D-044, D-045, D-048 | — | — | to plan | |
 | **P7** | **Candidate exam experience**: dashboard, exam room (server-synced timer, local retry queue, resume after refresh or lost connection, uploads), "submitted, awaiting grading" status; Playwright test for refresh and lost connection | L | P6 | D-004, D-019, D-021, D-033 | DS-003 ✅, DS-004 ✅ | Q-032 | to plan | |
 | **P8** | **Grading & publication**: grading queue, barem ticking or one holistic score, recalculation on barem edit with flags, publish cohort note and private comments, barem locked after publication, score aggregation | L | P6 | D-005, D-012, D-019, D-031, D-046 | DS-009 ✅ (needs a mock fix first: topics shown as competences) | — | to plan | |
 | **P9** | **Results review**: the Candidate's read-only review after publication | M | P8 | D-019 | DS-005 *(draft)* | — | to plan | |
@@ -71,7 +71,7 @@ existing tokens and mocks; the three-reviewer pass runs only on P6.
 - **Catalog items the client ruled out** (negative marking, partial credit on multiple choice,
   ordering questions): the decisions win (D-005, README §7), and SUBMISSION.md says so
   honestly instead of claiming OK.
-- **Uploads and the scheduled job on Render** are settled without paid features (D-048 object storage, proposed; D-044 external ping); set both up early in P6 and check them on the live site.
+- **Uploads and the scheduled job on Render** are settled without paid features (D-048 object storage; D-044 external ping); set both up early in P6 and check them on the live site.
 
 ## Out of scope
 Everything in README §7 (proctoring, LMS integrations, plagiarism detection, offline mode,
@@ -82,6 +82,6 @@ answered.
 Approved and confirmed: D-001, D-003–D-006, D-008, D-009, D-011–D-015, D-017, D-019–D-022,
 D-026–D-029, D-031, D-033, D-035–D-043, PATTERN-001 (superseded: D-030 by D-039, D-032 by
 D-042, D-025 by D-043). Candidates: PATTERN-002 (styled native select),
-PATTERN-003 (tokens-only Tailwind theme). D-011 will be superseded by D-048 (object storage) once confirmed.
+PATTERN-003 (tokens-only Tailwind theme). D-011 is superseded by D-048 (object storage).
 Open questions per part: see the "Blocked by" column; Q-026 to Q-034 in
 [OPEN-QUESTIONS.md](../agents/OPEN-QUESTIONS.md).

@@ -252,5 +252,5 @@
 ## Q-038 · Can a class linked to a published Exam be deleted?
 - **Status:** answered
 - **Date:** 2026-11-22
-- **Answer:** No. Raised by the P1c security review: deleting a class removed its links silently, hiding a published Exam and its results from that class's Candidates. The database now refuses deleting a linked class, and P3 unlinks draft Exams first (D-049, proposed).
+- **Answer:** No. Raised by the P1c security review: deleting a class removed its links silently, hiding a published Exam and its results from that class's Candidates. The database now refuses deleting a linked class, and P3 unlinks draft Exams first (D-049).
 

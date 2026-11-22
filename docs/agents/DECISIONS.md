@@ -43,7 +43,7 @@
 - D-046 · Subject I answer-key corrections recalculate until publication
 - D-047 · Weak-item thresholds
 - D-048 · Subject II photos in object storage in production
-- D-049 · A class linked to an Exam can't be deleted · _proposed_
+- D-049 · A class linked to an Exam can't be deleted
 
 ---
 
@@ -190,6 +190,7 @@
 ## D-021 · Full duration per Attempt regardless of available_until
 - **Status:** approved
 - **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
 - **Rule:** Every Attempt gets the Exam's full duration from its own start, plus the Grace Period (D-004). The Exam's `available_until` only stops new Attempts from starting.
 - **Why:** The interview asks for the timer to start per device when the Candidate connects, for fairness.
 - **Rejected:** Cutting Attempts at `available_until`.
@@ -407,8 +408,9 @@
 - **Source:** user · confidence high
 
 ## D-049 · A class linked to an Exam can't be deleted
-- **Status:** proposed
+- **Status:** approved
 - **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
 - **Rule:** The database refuses to delete a class that is still linked to any Exam. Deleting a class first unlinks it from draft (unpublished) Exams; a class linked to a published Exam can't be deleted, so its Candidates keep seeing the Exam and its results (D-015, D-019).
 - **Why:** Deleting a class used to remove its links silently, hiding a published Exam and its results from that class's Candidates.
 - **Rejected:** Deleting the class and its links silently (the earlier P1c rule).

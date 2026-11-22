@@ -1,0 +1,202 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Question template for the initial pool (D-029)
+#
+# HOW TO USE
+#   1. Copy this file to `questions.yaml` in the same folder and write your real
+#      questions there. The seeder (P4c) reads ONLY `questions.yaml`; the examples
+#      below are illustrations and are never loaded.
+#   2. One block per question, under `questions:`. Keep the indentation (2 spaces).
+#   3. Validation (the 2+ colleagues, when, what they corrected) and pilot results
+#      go in BANK.md, keyed by the question `code` — not here.
+#
+# Loading is insert-only: a question whose `code` is already in the database is
+# skipped, never updated or deleted (D-029). So never reuse or rename a code once
+# it has been loaded; edit loaded questions in the app instead.
+#
+# FIELDS (required unless marked optional)
+#   code          Stable, unique code, e.g. M6-UG-001 (grade-topic-number).
+#   section       subject_1 (auto-graded, all or nothing) | subject_2 (graded by
+#                 you, partial points) — D-005.
+#   type          subject_1: dual_choice | single_choice | multiple_choice |
+#                            short_answer
+#                 subject_2: structured_problem   (the only Subject II type)
+#   grade_level   5–8.
+#   difficulty    easy | medium | hard.
+#   points        Points this question is worth (Subject I items are usually 5).
+#   competence    Your own competence (D-039): a short `code` and a `description`
+#                 of what is assessed. The seeder creates it in your list the first
+#                 time it sees the code; reuse the same code for other questions.
+#   topic_labels  Optional. Your descriptive labels, e.g. [Unghiuri, Triunghiuri].
+#   pools         Optional. Named pools the question goes into (D-041), e.g.
+#                 [Unghiuri – ușor]. Exam Items draw from pools (D-043).
+#   statement     The question text, in Romanian. Use {name} for a value drawn per
+#                 Attempt (see `parameters`). Use `|` for text on several lines.
+#   answer        The answer key; its shape depends on `type` (see the examples).
+#   parameters    Optional. Values drawn per Attempt (D-043): integer bounds,
+#                 simple conditions, values computed from them, and the formula of
+#                 the correct answer. Formulas use + - * / and parentheses only;
+#                 they are evaluated on the server, never with eval (D-013).
+#   explanation   Optional. Shown to the Candidate in the review after results are
+#                 published.
+#
+# ANSWER MATCHING (D-006, D-017)
+#   Numbers: exact match (tolerance 0); "2,5" and "2.5" are both accepted.
+#   Fractions: only the form you write is accepted (3/4 ≠ 6/8).
+#   Text: case, extra spaces and diacritics are ignored; list every accepted form.
+#
+# YAML TRAPS
+#   Wrap a text in double quotes if it contains ": " (colon + space), a " #", or
+#   starts with { [ * & ! | > ' " % @ — e.g. explanation: "48 : 4 = 12".
+#   Inside double quotes, write \" for a quote character.
+#
+# A question is Ready only if it has a statement, points, competence, grade level
+# and difficulty, plus an answer key (Subject I) or a complete barem when one is
+# used (D-042). Barem steps must add up to `points`.
+# ──────────────────────────────────────────────────────────────────────────────
+
+questions:
+
+  # ── EXAMPLE · dual_choice (true / false) ──────────────────────────────────
+  - code: EX-TR-001
+    section: subject_1
+    type: dual_choice
+    grade_level: 6
+    difficulty: easy
+    points: 5
+    competence:
+      code: C4
+      description: Știe că suma măsurilor unghiurilor unui triunghi este 180°.
+    topic_labels: [Triunghiuri]
+    pools: [Triunghiuri – ușor]
+    statement: Suma măsurilor unghiurilor unui triunghi este 180°.
+    answer:
+      correct: true            # true = Adevărat, false = Fals
+
+  # ── EXAMPLE · single_choice (one correct option) ──────────────────────────
+  - code: EX-RP-002
+    section: subject_1
+    type: single_choice
+    grade_level: 6
+    difficulty: easy
+    points: 5
+    competence:
+      code: C2
+      description: Calculează o fracție dintr-un număr.
+    topic_labels: [Rapoarte și proporții]
+    pools: [Rapoarte – ușor]
+    statement: Trei sferturi din numărul 48 reprezintă …
+    answer:
+      options: ["12", "36", "32", "64"]   # shown as a), b), c), d); shuffled per Attempt (D-045)
+      correct: 2                           # position of the correct option, counting from 1
+    explanation: "48 : 4 · 3 = 36."
+
+  # ── EXAMPLE · multiple_choice (all correct options, nothing else) ─────────
+  - code: EX-MN-003
+    section: subject_1
+    type: multiple_choice
+    grade_level: 6
+    difficulty: medium
+    points: 5
+    competence:
+      code: C1
+      description: Recunoaște numerele divizibile cu 3.
+    topic_labels: [Mulțimi de numere]
+    statement: Care dintre numerele următoare sunt divizibile cu 3?
+    answer:
+      options: ["12", "14", "21", "25"]
+      correct: [1, 3]                      # every correct position; all or nothing (D-005)
+
+  # ── EXAMPLE · short_answer, text with several accepted forms ──────────────
+  - code: EX-RP-004
+    section: subject_1
+    type: short_answer
+    grade_level: 6
+    difficulty: medium
+    points: 5
+    competence:
+      code: C3
+      description: Recunoaște mărimile invers proporționale.
+    topic_labels: [Rapoarte și proporții]
+    statement: Dacă viteza se dublează, timpul necesar pentru același drum …
+    answer:
+      kind: text
+      accepted: ["se înjumătățește", "scade de două ori"]
+
+  # ── EXAMPLE · short_answer, a number or a fraction in a fixed form ────────
+  - code: EX-RP-005
+    section: subject_1
+    type: short_answer
+    grade_level: 6
+    difficulty: medium
+    points: 5
+    competence:
+      code: C2
+      description: Scrie raportul a două numere ca fracție ireductibilă.
+    topic_labels: [Rapoarte și proporții]
+    statement: Raportul numerelor 6 și 8, scris ca fracție ireductibilă, este …
+    answer:
+      kind: fraction                       # number | fraction
+      value: "3/4"                         # only this form is accepted
+
+  # ── EXAMPLE · values drawn per Attempt (parameters) ───────────────────────
+  - code: EX-RP-006
+    section: subject_1
+    type: short_answer
+    grade_level: 6
+    difficulty: medium
+    points: 5
+    competence:
+      code: C2
+      description: Rezolvă probleme cu mărimi direct proporționale.
+    topic_labels: [Rapoarte și proporții]
+    pools: [Rapoarte – mediu]
+    statement: Numerele a și b sunt direct proporționale cu {p} și {q}, iar a + b = {s}. Numărul a este egal cu …
+    parameters:
+      variables:                           # whole numbers, drawn between min and max
+        p: { min: 2, max: 5 }
+        q: { min: 3, max: 9 }
+        k: { min: 2, max: 8 }
+      conditions: ["p < q"]                # simple comparisons only
+      computed:                            # values shown in the statement
+        s: "(p + q) * k"
+      answer: "p * k"                      # the correct answer, computed per Attempt
+    answer:
+      kind: number                         # the expected value comes from parameters.answer
+
+  # ── EXAMPLE · structured_problem with a barem (Subject II) ────────────────
+  - code: EX-TR-007
+    section: subject_2
+    type: structured_problem
+    grade_level: 6
+    difficulty: medium
+    points: 20
+    competence:
+      code: C5
+      description: Demonstrează proprietăți ale triunghiului isoscel.
+    topic_labels: [Triunghiuri]
+    pools: [Triunghiuri – probleme]
+    statement: |
+      În triunghiul ABC, AB = AC și ∢A = 40°.
+      a) Calculează ∢B.
+      b) Arată că bisectoarea din A este și mediană.
+    barem:                                 # optional (D-031); steps must add up to points
+      - { step: "Triunghi isoscel ⇒ ∢B = ∢C", points: 3 }
+      - { step: "∢B + ∢C = 140°", points: 3 }
+      - { step: "∢B = 70°", points: 2 }
+      - { step: "Bisectoarea AD, triunghiurile ABD și ACD", points: 4 }
+      - { step: "ΔABD ≅ ΔACD (LUL), cu justificare", points: 4 }
+      - { step: "BD = DC ⇒ AD mediană", points: 4 }
+
+  # ── EXAMPLE · structured_problem without a barem ──────────────────────────
+  - code: EX-UG-008
+    section: subject_2
+    type: structured_problem
+    grade_level: 6
+    difficulty: hard
+    points: 20
+    competence:
+      code: C6
+      description: Calculează măsuri de unghiuri folosind unghiuri adiacente suplementare.
+    topic_labels: [Unghiuri]
+    statement: Unghiurile AOB și BOC sunt adiacente suplementare, iar ∢AOB = 3 · ∢BOC. Calculează măsurile celor două unghiuri.
+    # no barem: you give one score between 0 and 20 when grading (D-031)

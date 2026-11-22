@@ -8,18 +8,21 @@
 | # | Part | Size | Depends on | Covers (entries) | Screens | Blocked by | Plan | Status |
 |---|---|---|---|---|---|---|---|---|
 | **P0** | **Foundations & pipeline**: Laravel 13 skeleton in Docker, Pest on Postgres, React 19 + Vite scaffold with tokens and RO/EN, GitHub Actions CI, Render blueprint | M | — | D-003, D-008, D-009, D-014, D-022, D-035, D-036, D-037, D-038 | — | — | [p0-foundations.md](p0-foundations.md) | ✅ done, merged, live |
-| **P1** | **Schema v2** (replaces the outdated [database-schema.md](database-schema.md)): users, classes and memberships, competences, questions (owner, status, code, shared-library source), exam Items and their Variants, exam↔class publication, attempts, one record per Item per Attempt (picked question, drawn values, expected answer), responses and their images (up to 3), barem steps and ticked steps, item statistics. Also fixes ARCHITECTURE.md and README to match | L | P0 | D-005, D-006, D-011, D-012, D-015, D-019, D-021, D-025–D-032 | — | — | to plan | next |
+| **P1a** | **Accounts, competences & classes**: `users` role and `is_active`, `competences` (each Examiner's own), `classes`, `class_memberships` | S | P0 | D-015, D-020, D-028, D-039 | — | — | [p1a-accounts-competences-classes.md](p1a-accounts-competences-classes.md) | 🔨 built, awaiting merge |
+| **P1b** | **Question bank schema**: `banks` and `bank_question` (several named banks per Examiner, a question in several or none), `topic_labels` and `question_topic_label` (the Examiner's own labels, several per question), `questions` (grade level, competence, status, library frozen copy), `barem_steps`. Proposals D-040 (library frozen copy) and D-041 (banks) | M | P1a | D-017, D-027, D-031, D-032, D-039 | — | — | to plan | next |
+| **P1c** | **Exams schema**: `exams` (grade level), `class_exam`, `exam_items`, `exam_item_question`; README §4–5 brought up to date | S | P1b | D-012, D-015, D-019, D-021, D-025 | — | Q-029 (order only) | to plan | |
+| **P1d** | **Attempts & answers schema**: `attempts`, `attempt_items` (picked question, drawn values, expected answer, snapshot), `answers`, `answer_images`, `answer_barem_scores` | M | P1c | D-004, D-005, D-006, D-011, D-019, D-026, D-031 | — | — | to plan | |
 | **P2** | **Auth & accounts**: [auth-part-1-backend.md](auth-part-1-backend.md), [auth-parts-2-and-3.md](auth-parts-2-and-3.md) (Part 2 §1 moved to P0), Administrator creates Examiners and sets passwords (D-020). Also: lock CORS to the frontend origin, Render trusted proxy, `<html lang>` and title follow the language switch (from the P0 review) | M | P0, P1 | D-020 | DS-001, DS-002, DS-011 *(draft)* | Q-026, Q-033, Q-034 | to plan | |
 | **P3** | **Classes**: join code, pending → accept/decline, roster, Examiner sets a new password for a Candidate | M | P2 | D-015, D-020, D-028 | DS-013 ✅ | — | to plan | |
 | **P4a** | **Math engine**: sandboxed evaluator, values drawn from min/max bounds with simple conditions, seeded and reproducible, answer matching (decimal comma, expected fraction form, text normalisation) | M | P0 | D-006, D-013, D-017, D-025 | — | — | to plan | |
-| **P4b** | **Question bank**: create/read/update/delete, Draft → Ready with required-field checks, barem definition, shared library (publish, copy), preview of drawn values | L | P1, P2, P4a | D-025, D-027, D-030, D-031, D-032 | DS-007 ✅ | Q-032 | to plan | |
-| **P4c** | **Seed & BANK.md**: insert-only seeder keyed on question code, the competence list, BANK.md log structure. The question text is written by the user, never invented | S | P4b | D-029, D-030 | — | — | to plan | |
-| **P5** | **Exam builder & publication**: blueprint Items, attempt limits and score policy, availability window, publish to classes, no publishing while an Item has no Ready Variant | M | P3, P4b | D-012, D-015, D-021, D-025, D-032 | DS-008 ✅ | Q-029 | to plan | |
+| **P4b** | **Question bank**: banks, topic labels and competences managed in the app (D-039, D-041); create/read/update/delete, Draft → Ready with required-field checks, barem definition, shared library (publish, copy), preview of drawn values | L | P1, P2, P4a | D-025, D-027, D-031, D-032, D-039 | DS-007 ✅ (needs a mock fix first: topics shown as competences; bank selector) | Q-032 | to plan | |
+| **P4c** | **Seed & BANK.md**: insert-only seeder keyed on question code, creating the seeding Examiner's own competences and topic labels with the questions (D-039), BANK.md log structure. The question text is written by the user, never invented | S | P4b | D-029, D-039 | — | — | to plan | |
+| **P5** | **Exam builder & publication**: blueprint Items, attempt limits and score policy, availability window, publish to classes, no publishing while an Item has no Ready Variant | M | P3, P4b | D-012, D-015, D-021, D-025, D-032 | DS-008 ✅ (needs a mock fix first: topics shown as competences) | Q-029 | to plan | |
 | **P6** | **Attempt engine (the twist, backend)**: state machine with a test per invalid transition; one random Variant per Item, seed and snapshot at start; server timer with the 30 s Grace Period; idempotent versioned autosave; Subject 2 uploads (limits, HEIC→JPG: check Imagick + libheif in the image first); Submission; scheduled auto-submit of expired Attempts; Subject 1 auto-grading | L | P4a, P5 | D-004, D-005, D-006, D-011, D-012, D-021, D-025, D-026 | — | Q-027, Q-028, Q-029 | to plan | |
 | **P7** | **Candidate exam experience**: dashboard, exam room (server-synced timer, local retry queue, resume after refresh or lost connection, uploads), "submitted, awaiting grading" status; Playwright test for refresh and lost connection | L | P6 | D-004, D-019, D-021, D-033 | DS-003 ✅, DS-004 ✅ | Q-032 | to plan | |
-| **P8** | **Grading & publication**: grading queue, barem ticking or one holistic score, recalculation on barem edit with flags, publish cohort note and private comments, barem locked after publication, score aggregation | L | P6 | D-005, D-012, D-019, D-031 | DS-009 ✅ | Q-030 | to plan | |
+| **P8** | **Grading & publication**: grading queue, barem ticking or one holistic score, recalculation on barem edit with flags, publish cohort note and private comments, barem locked after publication, score aggregation | L | P6 | D-005, D-012, D-019, D-031 | DS-009 ✅ (needs a mock fix first: topics shown as competences) | Q-030 | to plan | |
 | **P9** | **Results review**: the Candidate's read-only review after publication | M | P8 | D-019 | DS-005 *(draft)* | — | to plan | |
-| **P10** | **Item Analysis**: difficulty, point-biserial discrimination, distractor counts, per question / per Item / per competence, degenerate cases (all correct, one Candidate), weak-item flags | M | P8 | D-025, D-030 | DS-010 *(draft)* | Q-031 | to plan | |
+| **P10** | **Item Analysis**: difficulty, point-biserial discrimination, distractor counts, per question / per Item / per competence (the Examiner's own, D-039), degenerate cases (all correct, one Candidate), weak-item flags | M | P8 | D-025, D-039 | DS-010 *(draft)* | Q-031 | to plan | |
 | **P11** | **Overview screens**: Examiner dashboard, Administrator exam supervision | M | P5, P8 | D-020 | DS-006, DS-012 *(draft)* | — | to plan | |
 | **P12** | **Delivery**: API docs and C- entries checked, pilot with 10+ Candidates on the live site and results in BANK.md, final README (live URLs), SUBMISSION.md, AI_LOG. Decide the Render database expiry first (below) and back up the pilot data | M | all | — | — | — | to plan | |
 
@@ -27,7 +30,7 @@
 mocks in `docs/design/mocks/`.
 
 ## Sequencing
-P0 → P1 → P2, then parts with disjoint files may run in parallel: **P3 ∥ P4a**, then
+P0 → P1a → P1b → P1c → P1d → P2, then parts with disjoint files may run in parallel: **P3 ∥ P4a**, then
 **P4b ∥ P3's screens**. **P6 starts as soon as P4a and P5 are done**; it is the critical path
 and the riskiest part. P7 ∥ P8 after P6. P9, P10, P11 in parallel after P8.
 
@@ -56,7 +59,7 @@ answered.
 
 ## Knowledge used
 Approved and confirmed: D-001, D-003–D-006, D-008, D-009, D-011–D-015, D-017, D-019–D-022,
-D-025–D-033, D-035–D-038, PATTERN-001. Candidates: PATTERN-002 (styled native select),
+D-025–D-029, D-031–D-033, D-035–D-039, PATTERN-001 (D-030 superseded by D-039). Candidates: PATTERN-002 (styled native select),
 PATTERN-003 (tokens-only Tailwind theme). D-011 is flagged by Q-027 (server disk vs Render).
 Open questions per part: see the "Blocked by" column; Q-026 to Q-034 in
 [OPEN-QUESTIONS.md](../agents/OPEN-QUESTIONS.md).

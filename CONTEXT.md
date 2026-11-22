@@ -42,8 +42,11 @@ _Avoid_: overtime, extension.
 
 **Class** (noun) · RO: **Clasă** — A group of Candidates to which Exams are published; its Candidates form the cohort for feedback (D-015, D-019).
 
-**Item** (noun) · RO: **Item** — One slot of an Exam's blueprint, fixing section, specific competence, difficulty and points, filled by one Variant per Attempt (D-025).
+**Item** (noun) · RO: **Item** — One slot of an Exam's blueprint, fixing section, competence, difficulty and points, filled by one Variant per Attempt (D-025).
 _Avoid_: slot (in UI copy).
+
+**Competence** (noun) · RO: **Competență** — Something an Examiner wants to assess, written by that Examiner as a short code and a description (e.g. "C1 · knows that the angles of a triangle add up to 180°"); each question and Item is tagged with one (D-039).
+_Avoid_: skill, objective; topic (a topic is only a descriptive label on a question).
 
 **Draft** (noun, question status) · RO: **Ciornă** — A saved question that is not yet complete; it can't be picked for any Attempt (D-032).
 

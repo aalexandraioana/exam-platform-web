@@ -39,7 +39,9 @@ exam-platform-web is an online mathematics assessment platform administering exa
 ## State and storage
 | What | Where | Owner | Notes |
 |---|---|---|---|
-| User credentials & roles | PostgreSQL (`users` table) | Backend | Argon2id/bcrypt hashed passwords, RBAC (candidate, examiner, administrator) |
+| User credentials & roles | PostgreSQL (`users` table) | Backend | Hashed passwords; `role` (candidate, examiner, administrator; CHECK constraint, not mass-assignable) and `is_active` |
+| Competences | PostgreSQL (`competences`) | Backend | Each Examiner's own list: code unique per Examiner, description (D-039) |
+| Classes & memberships | PostgreSQL (`classes`, `class_memberships`) | Backend | Unique join code per class; membership status pending / accepted / rejected, one row per Candidate and class (D-015, D-028) |
 | Exam templates & question pools | PostgreSQL (`exams`, `questions`) | Backend | 60 questions pool with tags, difficulty, formula definitions |
 | Attempt state & parameters | PostgreSQL (`attempts`, `attempt_parameters`) | Backend | State machine (`started`, `in_progress`, `submitted`, `graded`), timer start, snapshot of concrete numbers |
 | Candidate responses & uploads | PostgreSQL (`responses`) & local disk (`storage/app/public`) | Backend | Selected options, numerical inputs, text steps, uploaded solution images |

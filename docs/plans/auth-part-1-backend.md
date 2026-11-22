@@ -10,7 +10,7 @@ Implement the headless REST API authentication layer in `backend/` following [D-
 | Action | Path | What |
 |---|---|---|
 | create | `docker-compose.yml` | PostgreSQL 16 container definition with persistent volume |
-| create | `backend/database/migrations/0001_01_01_000000_create_users_table.php` | Schema with `role` enum (`candidate`, `examiner`, `administrator`) and `is_active` |
+| done in P1a | `backend/database/migrations/2026_11_22_180000_add_role_and_is_active_to_users_table.php` | `role` and `is_active` were added in P1a ([p1a-accounts-competences-classes.md](p1a-accounts-competences-classes.md)); Part 1 builds on them |
 | create | `backend/app/Models/User.php` | User model with Sanctum `HasApiTokens` and role checks (`isCandidate()`, `isExaminer()`, `isAdministrator()`) |
 | create | `backend/app/Http/Controllers/AuthController.php` | API endpoints: `register`, `login`, `logout`, `user` |
 | create | `backend/app/Http/Requests/RegisterRequest.php` | Request validation for Candidate registration |

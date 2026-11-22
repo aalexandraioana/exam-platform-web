@@ -1,5 +1,7 @@
 # Plan — Relational Database Schema & Domain Models
 
+> **Superseded by P1 (schema v2), split into P1a–P1d** — see [application-roadmap.md](application-roadmap.md) and [p1a-accounts-competences-classes.md](p1a-accounts-competences-classes.md). Kept for history; do not build from it. It predates D-015, D-025–D-032 and D-039 and cites the superseded D-010.
+
 ## Size
 **M** — Scaffolds local PostgreSQL 16 via Docker Compose (`docker compose up`), 8 Eloquent schema migrations with strict foreign key constraints, indexes, and JSONB fields, 8 Eloquent models with bi-directional relationships, and Pest schema verification tests.
 

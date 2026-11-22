@@ -23,7 +23,12 @@ CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
 # Render: code baked into the image, production dependencies only, served by Apache.
 FROM base AS prod
+# Production regardless of the host's settings, so the entrypoint never takes the dev path.
+ENV APP_ENV=production
+# Dependencies first, so this layer is reused when only application code changes.
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-scripts --no-autoloader --no-interaction --no-progress
 COPY . .
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress \
+RUN composer dump-autoload --optimize --no-dev \
     && chown -R www-data:www-data storage bootstrap/cache
 CMD ["apache2-foreground"]

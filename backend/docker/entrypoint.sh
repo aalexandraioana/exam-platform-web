@@ -7,7 +7,7 @@ if [ "$APP_ENV" = "production" ]; then
         sed -ri "s/^Listen 80$/Listen ${PORT}/" /etc/apache2/ports.conf
         sed -ri "s/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-available/000-default.conf
     fi
-    php artisan config:cache
+    php artisan optimize
 else
     # Local first run: install dependencies and create a .env with its own key (never committed).
     [ -d vendor ] || composer install --no-interaction --no-progress

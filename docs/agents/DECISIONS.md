@@ -21,7 +21,7 @@
 - D-017 · Answer matching rules for numbers and text
 - D-019 · Results and feedback released only on publication
 - D-020 · Admin-created Examiner accounts and manual password reset
-- D-021 · Full duration per Attempt regardless of end_time
+- D-021 · Full duration per Attempt regardless of available_until
 - D-022 · Bilingual Romanian and English UI
 - D-026 · Subject 2 photo upload limits
 - D-027 · Private question pools with a shared library
@@ -43,6 +43,7 @@
 - D-046 · Subject I answer-key corrections recalculate until publication
 - D-047 · Weak-item thresholds
 - D-048 · Subject II photos in object storage in production
+- D-049 · A class linked to an Exam can't be deleted · _proposed_
 
 ---
 
@@ -186,13 +187,12 @@
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-012, Q-013
 - **Source:** user · confidence high
 
-## D-021 · Full duration per Attempt regardless of end_time
+## D-021 · Full duration per Attempt regardless of available_until
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
-- **Rule:** Every Attempt gets the Exam's full duration from its own start, plus the Grace Period (D-004). The Exam's `end_time` only stops new Attempts from starting.
+- **Rule:** Every Attempt gets the Exam's full duration from its own start, plus the Grace Period (D-004). The Exam's `available_until` only stops new Attempts from starting.
 - **Why:** The interview asks for the timer to start per device when the Candidate connects, for fairness.
-- **Rejected:** Cutting Attempts at `end_time`.
+- **Rejected:** Cutting Attempts at `available_until`.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-014; INTERVIEW.md:Q14
 - **Source:** user · confidence high
 
@@ -404,4 +404,13 @@
 - **Why:** Render's free web service loses its disk on every deploy, so photos uploaded in the pilot would be deleted before grading (Q-027).
 - **Rejected:** Local disk on Render with no deploys between pilot and grading; a paid Render persistent disk.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-027; conversation 2026-11-22
+- **Source:** user · confidence high
+
+## D-049 · A class linked to an Exam can't be deleted
+- **Status:** proposed
+- **Date:** 2026-11-22
+- **Rule:** The database refuses to delete a class that is still linked to any Exam. Deleting a class first unlinks it from draft (unpublished) Exams; a class linked to a published Exam can't be deleted, so its Candidates keep seeing the Exam and its results (D-015, D-019).
+- **Why:** Deleting a class used to remove its links silently, hiding a published Exam and its results from that class's Candidates.
+- **Rejected:** Deleting the class and its links silently (the earlier P1c rule).
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-038; P1c review 2026-11-22
 - **Source:** user · confidence high

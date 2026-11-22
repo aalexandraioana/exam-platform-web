@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS-013 · Examiner Classes Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+<style>
+  .classes { display: grid; grid-template-columns: 320px 1fr; gap: var(--space-4); align-items: start; }
+  .class-list { display: grid; gap: var(--space-2); }
+  .class-card { display: grid; gap: var(--space-2); padding: var(--space-4); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+    background: var(--bg-surface); text-decoration: none; color: inherit; }
+  .class-card[aria-current="true"] { border-color: var(--border-focus); background: var(--bg-primary-subtle); }
+  .join { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-4);
+    border: 1px dashed var(--border-strong); border-radius: var(--radius-md); }
+  .join-code { font-family: var(--font-mono); font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: 0.08em; }
+  .request { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-3);
+    padding: var(--space-3) 0; border-bottom: 1px solid var(--border-subtle); }
+  td .btn { white-space: nowrap; }
+  @media (max-width: 1023px) { .classes { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-013 · Examiner classes (mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-default">Clasă cu cereri</button>
+      <button type="button" class="mock-btn" data-state-btn="s-none">Fără cereri</button>
+      <button type="button" class="mock-btn" data-state-btn="s-new">Clasă nouă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-password">Parolă nouă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-empty">Nicio clasă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
+    </div>
+  </div>
+</aside>
+
+<header class="app-header">
+  <a href="#" class="brand">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    Evaluare Digitală
+  </a>
+  <nav class="nav" aria-label="Navigare examinator">
+    <a href="#">Tablou de bord</a><a href="#">Bancă de întrebări</a><a href="#">Examene</a>
+    <a href="#" aria-current="page">Clase</a><a href="#">Corectare</a><a href="#">Analiza itemilor</a>
+  </nav>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+    <div class="avatar" aria-label="Maria Popa, examinator">MP</div>
+    <button class="btn btn-icon menu-btn" data-menu aria-label="Deschide meniul"><i data-icon="menu"></i></button>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head">
+    <h1 class="t-display">Clase</h1>
+    <button type="button" class="btn btn-primary" data-show="s-default s-none s-new s-password s-error">+ Clasă nouă</button>
+  </div>
+
+  <div class="alert error" role="alert" data-show="s-error">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div class="row between" style="flex: 1;"><span><strong>Cererea lui Matei Radu nu a putut fi acceptată.</strong> Conexiunea s-a întrerupt. Cererea rămâne în așteptare; încearcă din nou.</span><button class="btn">Încearcă din nou</button></div>
+  </div>
+
+  <div class="classes" data-show="s-default s-none s-new s-password s-error">
+    <!-- Class list -->
+    <nav class="class-list" aria-label="Clasele mele">
+      <a href="#" class="class-card" aria-current="true">
+        <div class="row between"><span class="t-h3">Clasa a VI-a A</span><span class="badge warning" data-show="s-default s-new s-password s-error">3 cereri</span></div>
+        <span class="t-caption secondary">24 de candidați · 2 examene publicate</span>
+      </a>
+      <a href="#" class="class-card">
+        <div class="row between"><span class="t-h3">Clasa a VI-a B</span></div>
+        <span class="t-caption secondary">26 de candidați · 2 examene publicate</span>
+      </a>
+      <a href="#" class="class-card">
+        <div class="row between"><span class="t-h3 text-wrap">Clasa a V-a A · grupa de pregătire pentru olimpiada de matematică</span></div>
+        <span class="t-caption secondary">9 candidați · niciun examen</span>
+      </a>
+    </nav>
+
+    <!-- Selected class -->
+    <div class="stack">
+      <section class="card stack" aria-labelledby="cls-h">
+        <div class="row between"><h2 id="cls-h" class="t-h1">Clasa a VI-a A</h2><button class="btn btn-ghost">Redenumește</button></div>
+        <div class="join">
+          <div class="stack-sm" style="gap: 0; flex: 1;">
+            <span class="t-caption secondary">Cod de înscriere</span>
+            <span class="join-code" aria-label="Codul de înscriere: K 7 Q 4 M X">K7Q-4MX</span>
+          </div>
+          <button class="btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copiază
+          </button>
+          <button class="btn">Generează alt cod</button>
+        </div>
+        <p class="help">Candidații introduc codul la înregistrare sau din tabloul de bord. Intră în clasă doar după ce îi accepți. Un cod nou îl oprește pe cel vechi; cererile deja trimise rămân.</p>
+      </section>
+
+      <!-- Pending requests (D-028) -->
+      <section class="card stack" aria-labelledby="req-h" data-show="s-default s-new s-password s-error">
+        <h2 id="req-h" class="t-h2">Cereri în așteptare (3)</h2>
+        <div>
+          <div class="request"><div class="stack-sm" style="gap: 0;"><span class="t-body-m">Matei Radu</span><span class="t-caption secondary">matei.radu@exemplu.ro · acum 10 minute</span></div>
+            <div class="row"><button class="btn btn-ghost">Respinge</button><button class="btn"><i data-icon="check" class="sm"></i>Acceptă</button></div></div>
+          <div class="request"><div class="stack-sm" style="gap: 0;"><span class="t-body-m">Ioana Georgescu</span><span class="t-caption secondary">ioana.g@exemplu.ro · ieri</span></div>
+            <div class="row"><button class="btn btn-ghost">Respinge</button><button class="btn"><i data-icon="check" class="sm"></i>Acceptă</button></div></div>
+          <div class="request"><div class="stack-sm" style="gap: 0;"><span class="t-body-m">Alex Necunoscut</span><span class="t-caption secondary">xyz123@exemplu.com · acum 2 zile</span></div>
+            <div class="row"><button class="btn btn-ghost">Respinge</button><button class="btn"><i data-icon="check" class="sm"></i>Acceptă</button></div></div>
+        </div>
+      </section>
+      <section class="card" data-show="s-none"><p class="secondary">Nicio cerere în așteptare. Când un candidat introduce codul clasei, cererea lui apare aici.</p></section>
+
+      <!-- Roster -->
+      <section class="card stack" aria-labelledby="ros-h" style="padding: 0;">
+        <div class="row between" style="padding: var(--space-4) var(--space-6) 0;"><h2 id="ros-h" class="t-h2">Candidați (24)</h2>
+          <input class="input" placeholder="Caută un candidat" aria-label="Caută un candidat" style="max-width: 240px;"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nume</th><th class="hide-mobile">Email</th><th class="hide-mobile">În clasă din</th><th>Acțiuni</th></tr></thead>
+            <tbody>
+              <tr><td>Ana Dumitru</td><td class="hide-mobile">ana.d@exemplu.ro</td><td class="hide-mobile">12.09.2026</td>
+                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn"><i data-icon="key" class="sm"></i>Parolă nouă</button><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Ana Dumitru"><i data-icon="ellipsis"></i></button></div></td></tr>
+              <tr><td>Bogdan Ilie</td><td class="hide-mobile">bogdan.ilie@exemplu.ro</td><td class="hide-mobile">12.09.2026</td>
+                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn"><i data-icon="key" class="sm"></i>Parolă nouă</button><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Bogdan Ilie"><i data-icon="ellipsis"></i></button></div></td></tr>
+              <tr><td class="text-wrap">Elena-Alexandra Popescu-Vasilescu</td><td class="hide-mobile text-wrap">elena.alexandra.popescu.vasilescu@exemplu.ro</td><td class="hide-mobile">14.09.2026</td>
+                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn"><i data-icon="key" class="sm"></i>Parolă nouă</button><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Elena-Alexandra Popescu-Vasilescu"><i data-icon="ellipsis"></i></button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- New class dialog -->
+  <div class="backdrop" data-show="s-new">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="new-h">
+      <h2 id="new-h" class="t-h2">Clasă nouă</h2>
+      <div class="field"><label for="cname">Numele clasei</label><input id="cname" class="input" placeholder="De exemplu: Clasa a VII-a A"></div>
+      <p class="help">După ce o creezi, primești un cod de înscriere pe care îl dai candidaților.</p>
+      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Creează clasa</button></div>
+    </div>
+  </div>
+
+  <!-- Set new password dialog (D-020) -->
+  <div class="backdrop" data-show="s-password">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pw-h">
+      <h2 id="pw-h" class="t-h2">Parolă nouă pentru Bogdan Ilie</h2>
+      <p class="secondary">Folosește-o când un candidat și-a uitat parola. Parola veche nu va mai funcționa.</p>
+      <div class="field"><label for="pw">Parola nouă</label><input id="pw" class="input" type="text" value="lalea-verde-48" aria-describedby="pw-h2">
+        <span id="pw-h2" class="help">Cel puțin 8 caractere. Spune-i-o candidatului direct; nu o trimitem pe email.</span></div>
+      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Setează parola</button></div>
+    </div>
+  </div>
+
+  <!-- EMPTY -->
+  <div class="empty" data-show="s-empty">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <h2 class="t-h2">Încă nu ai nicio clasă</h2>
+    <p class="secondary" style="max-width: 480px;">Creează o clasă, dă-le candidaților codul de înscriere și acceptă-le cererile. Examenele se publică pentru clase.</p>
+    <button class="btn btn-primary">+ Creează prima clasă</button>
+  </div>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

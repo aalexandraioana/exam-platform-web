@@ -63,6 +63,10 @@ board or Figma.
 - Hit targets ≥ 44 × 44 px on touch, ≥ 24 × 24 px with a pointer.
 - Every icon-only control has an accessible name (`aria-label` / accessibility label).
 - Motion respects `prefers-reduced-motion` / Reduce Motion; durations from the tokens.
+- Disabled controls use 50% opacity and `cursor: not-allowed`, and say why they are disabled
+   (help text or tooltip) when the reason isn't obvious.
+- Icons come from **Lucide** only (`lucide-react` in code), 2px stroke, sized 16/20/24 px.
+   No Unicode symbols or emoji as icons.
 
 **Copy**
 - Plain, short, active voice. Buttons name the action ("Install", not "OK").
@@ -105,24 +109,30 @@ them; a ticket with UI has a design subtask instead (team addon).
 ### Color
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `bg-canvas` | `#F8FAFC` | `#0B132B` | Page canvas background (midnight tint in dark) |
-| `bg-surface` | `#FFFFFF` | `#111D38` | Cards, exam question containers, modals |
-| `bg-surface-subtle` | `#F1F5F9` | `#172545` | Secondary blocks, disabled items, table headers |
-| `bg-primary` | `#0F766E` | `#2DD4BF` | Primary button fill, active tab highlight (Muted Teal) |
-| `bg-primary-subtle` | `#F0FDFA` | `#0F3238` | Selected option background, tag tint |
-| `text-primary` | `#0F172A` | `#F8FAFC` | High-contrast body text, headings |
-| `text-secondary` | `#475569` | `#94A3B8` | Subtitles, metadata, secondary labels |
-| `text-muted` | `#64748B` | `#8291A8` | Placeholders, inactive indicators |
-| `text-primary-accent` | `#0F766E` | `#2DD4BF` | Interactive links, active tab labels |
-| `border-subtle` | `#E2E8F0` | `#1E3156` | Card dividers, question separators |
-| `border-strong` | `#CBD5E1` | `#2B436F` | Inputs, checkboxes, radio borders |
-| `border-focus` | `#0F766E` | `#2DD4BF` | Keyboard focus ring (≥ 3:1 contrast) |
+| `bg-canvas` | `#F5F1EA` | `#1A1612` | Page canvas background (cream light, espresso dark) |
+| `bg-surface` | `#FFFCF7` | `#241F1A` | Cards, exam question containers, modals |
+| `bg-surface-subtle` | `#ECE5DA` | `#2E2822` | Secondary blocks, disabled items, table headers |
+| `bg-primary` | `#1F7A4F` | `#7EE2A8` | Primary button fill, active tab highlight (fresh mint) |
+| `bg-primary-subtle` | `#E3F2E8` | `#1C3A28` | Selected option background, tag tint |
+| `text-primary` | `#231E18` | `#F6F0E6` | High-contrast body text, headings |
+| `text-secondary` | `#5A5248` | `#C2B8AA` | Subtitles, metadata, secondary labels |
+| `text-muted` | `#6E665B` | `#A0968A` | Placeholders, inactive indicators |
+| `text-primary-accent` | `#1F7A4F` | `#7EE2A8` | Interactive links, active tab labels |
+| `border-subtle` | `#E3DACB` | `#3A322A` | Card dividers, question separators |
+| `border-strong` | `#D5CAB8` | `#4A4137` | Decorative borders: card outlines, table lines, dashed boxes |
+| `border-input` | `#8C8273` | `#857A6C` | Inputs, selects, checkboxes, radios, answer options, chips (≥ 3:1) |
+| `border-focus` | `#1F7A4F` | `#7EE2A8` | Keyboard focus ring (≥ 3:1 contrast) |
 | `status-success` | `#15803D` | `#4ADE80` | Correct answer, completed submission |
 | `status-success-bg` | `#F0FDF4` | `#0F2E1E` | Correct answer highlight background |
 | `status-warning` | `#B45309` | `#FBBF24` | Time running low (< 5 min), unsaved changes |
 | `status-warning-bg` | `#FFFBEB` | `#332408` | Warning alert banner background |
 | `status-error` | `#B91C1C` | `#F87171` | Invalid input, expired attempt, errors |
 | `status-error-bg` | `#FEF2F2` | `#3A1212` | Error callout background |
+| `status-info` | `#1D4ED8` | `#60A5FA` | Neutral notices (preview, timer hidden) |
+| `status-info-bg` | `#EFF6FF` | `#10213F` | Info callout background |
+| `text-on-primary` | `#FFFFFF` | `#1A1612` | Text and icons on `bg-primary` / `bg-primary-hover` |
+| `bg-primary-hover` | `#17603D` | `#AFF0C9` | Primary button hover and pressed |
+| `overlay` | `rgba(15,23,42,0.5)` | `rgba(0,0,0,0.6)` | Backdrop behind dialogs |
 
 ### Typography
 | Token | Family | Size / line height | Weight | Use |
@@ -153,10 +163,10 @@ them; a ticket with UI has a design subtask instead (team addon).
 | Token | Value | Use |
 |---|---|---|
 | `radius-sm` | 4px | Small tags, badges, input inner corners |
-| `radius-md` | 8px | Buttons, inputs, option selection cards |
-| `radius-lg` | 12px | Exam question containers, modals, cards |
+| `radius-md` | 10px | Buttons, inputs, option selection cards |
+| `radius-lg` | 16px | Exam question containers, modals, cards |
 | `radius-full` | 9999px | Status pills, avatars, rounded radio inputs |
-| `shadow-subtle` | 0 1px 3px rgba(0,0,0,0.06) | Cards in light mode, floating headers |
+| `shadow-subtle` | 0 1px 2px rgba(60,40,20,0.06), 0 4px 14px rgba(60,40,20,0.06) | Cards in light mode, floating headers |
 | `shadow-modal` | 0 10px 25px -5px rgba(0,0,0,0.15) | Dialogs, dropdown menus, confirmation popups |
 | `motion-fast` | 100ms ease-out | Button hovers, toggle states, checkbox ticks |
 | `motion-normal` | 200ms ease-out | Drawer collapse, tab transitions, modal entry |

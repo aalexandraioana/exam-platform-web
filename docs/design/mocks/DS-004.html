@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS-004 · Exam Room Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+<style>
+  .exam-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3);
+    padding: var(--space-3) var(--space-6); background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle);
+    position: sticky; top: 0; z-index: 10; }
+  .timer { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4);
+    border: 1px solid var(--border-strong); border-radius: var(--radius-full); color: var(--text-primary); }
+  .timer.low { background: var(--status-warning-bg); border-color: var(--status-warning); color: var(--status-warning); }
+  .save { display: inline-flex; align-items: center; gap: var(--space-2); font-size: 13px; line-height: 18px; color: var(--text-secondary); }
+  .save.offline { color: var(--status-warning); }
+  .layout { max-width: 1200px; margin: 0 auto; padding: var(--space-6); display: grid; grid-template-columns: 320px 1fr; gap: var(--space-6); align-items: start; }
+  .navigator { position: sticky; top: 96px; display: grid; gap: var(--space-4); }
+  .nav-grid { display: grid; grid-template-columns: repeat(6, minmax(44px, 1fr)); gap: var(--space-1); }
+  .nav-item { position: relative; min-height: 44px; border-radius: var(--radius-md); border: 1px solid var(--border-input);
+    background: var(--bg-surface); display: grid; place-items: center; font-weight: 600; cursor: pointer; }
+  .nav-item.answered { background: var(--bg-primary-subtle); border-color: var(--border-focus); color: var(--text-primary-accent); }
+  .nav-item.answered::after { content: ""; position: absolute; right: 6px; bottom: 6px; width: 4px; height: 8px;
+    border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .nav-item.current { box-shadow: inset 0 -3px 0 var(--border-focus); font-weight: 700; }
+  .items-btn { display: none; }
+  .sheet-backdrop { display: none; }
+  .nav-item .flag { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: var(--radius-full);
+    background: var(--status-warning-bg); color: var(--status-warning); border: 1px solid var(--status-warning); display: grid; place-items: center; }
+  .legend { display: grid; gap: var(--space-1); }
+  .legend span { display: inline-flex; align-items: center; gap: var(--space-2); }
+  .section-label { display: flex; align-items: center; gap: var(--space-3); color: var(--text-secondary); }
+  .section-label::after { content: ""; flex: 1; border-top: 1px solid var(--border-subtle); }
+  .question { display: grid; gap: var(--space-4); }
+  .q-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-3); }
+  .num { display: inline-grid; place-items: center; min-width: var(--space-8); height: var(--space-8); border-radius: var(--radius-full);
+    background: var(--bg-surface-subtle); font-weight: 700; }
+  .options { display: grid; gap: var(--space-2); }
+  .option { display: flex; align-items: center; gap: var(--space-3); min-height: 48px; padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--border-input); border-radius: var(--radius-md); background: var(--bg-surface); cursor: pointer; }
+  .option input { width: 20px; height: 20px; accent-color: var(--bg-primary); }
+  .option.selected { background: var(--bg-primary-subtle); border-color: var(--border-focus); }
+  .val { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary-accent); }
+  .answer-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .answer-line .input { width: 160px; font-family: var(--font-mono); }
+  .photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+  .slot { aspect-ratio: 3 / 4; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--bg-surface-subtle);
+    display: grid; place-items: center; text-align: center; padding: var(--space-3); position: relative; overflow: hidden; }
+  .slot.empty { border-style: dashed; background: var(--bg-surface); cursor: pointer; }
+  .slot svg.paper { width: 100%; height: 100%; }
+  .slot .slot-actions { position: absolute; left: var(--space-2); right: var(--space-2); bottom: var(--space-2); display: flex; justify-content: space-between; }
+  .progress { width: 100%; height: var(--space-2); border-radius: var(--radius-full); background: var(--border-subtle); overflow: hidden; }
+  .progress > span { display: block; height: 100%; background: var(--bg-primary); }
+  .footer-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); }
+  @media (max-width: 1023px) {
+    .layout { grid-template-columns: 1fr; padding: var(--space-4); }
+    .items-btn { display: inline-flex; }
+    .navigator { display: none; }
+    .navigator.open { display: grid; position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 60; max-height: 75vh; overflow: auto;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: var(--shadow-modal); }
+    .navigator.open + .sheet-backdrop, .sheet-backdrop.open { display: block; position: fixed; inset: 0; background: var(--overlay); z-index: 55; }
+  }
+  @media (max-width: 639px) {
+    .exam-header { padding: var(--space-2) var(--space-4); }
+    .exam-header .subtitle, .exam-header .btn-text { display: none; }
+    .exam-header .t-h3 { font-size: 15px; line-height: 24px; }
+    .photos { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-004 · Exam room (mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-subj1">Subiectul I</button>
+      <button type="button" class="mock-btn" data-state-btn="s-subj2">Subiectul II + fotografii</button>
+      <button type="button" class="mock-btn" data-state-btn="s-navopen">Navigator deschis (mobil)</button>
+      <button type="button" class="mock-btn" data-state-btn="s-low">Sub 5 minute</button>
+      <button type="button" class="mock-btn" data-state-btn="s-offline">Fără conexiune</button>
+      <button type="button" class="mock-btn" data-state-btn="s-hidden">Cronometru ascuns</button>
+      <button type="button" class="mock-btn" data-state-btn="s-submit">Confirmare predare</button>
+      <button type="button" class="mock-btn" data-state-btn="s-sealed">Timp expirat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
+    </div>
+  </div>
+</aside>
+
+<!-- EXAM HEADER: title, server timer (S-1), save indicator (S-3) -->
+<header class="exam-header" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen">
+  <div class="stack-sm" style="gap: 0;">
+    <span class="t-h3 text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</span>
+    <span class="t-caption secondary subtitle">Încercarea 1 din 1 · 9 itemi · 90 puncte + 10 puncte din oficiu</span>
+  </div>
+  <div class="row">
+    <!-- Save indicator -->
+    <span class="save" role="status" data-show="s-subj1 s-subj2 s-low s-hidden s-submit s-navopen">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      Salvat · acum 5 s
+    </span>
+    <span class="save offline" role="status" data-show="s-offline">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.58 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+      Fără conexiune · 2 răspunsuri în așteptare
+    </span>
+    <!-- Timer: neutral by default -->
+    <span class="timer" aria-label="Timp rămas: 28 minute și 45 de secunde" data-show="s-subj1 s-subj2 s-offline s-submit s-navopen">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span class="t-timer">28:45</span>
+    </span>
+    <span class="timer low" aria-label="Timp rămas: 4 minute și 12 secunde" data-show="s-low">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span class="t-timer">04:12</span>
+    </span>
+    <button type="button" class="btn btn-ghost" data-show="s-subj1 s-subj2 s-low s-offline s-submit s-navopen" aria-label="Ascunde cronometrul"><i data-icon="eye-off" class="sm"></i><span class="btn-text">Ascunde</span></button>
+    <button type="button" class="btn items-btn" data-open-target="navigator" aria-controls="navigator" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen"><i data-icon="list" class="sm"></i>Itemi 7/9</button>
+    <button type="button" class="btn" data-show="s-hidden" aria-label="Arată cronometrul">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Arată cronometrul
+    </button>
+    <button type="button" class="btn btn-primary" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen">Predă examenul</button>
+  </div>
+</header>
+
+<!-- Banners -->
+<div style="max-width: 1200px; margin: 0 auto; padding: var(--space-4) var(--space-6) 0;" data-show="s-low s-offline s-hidden">
+  <div class="alert warning" role="alert" data-show="s-low">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <div><strong>Mai sunt sub 5 minute.</strong> Răspunsurile se salvează automat. La final, examenul se predă singur cu tot ce ai salvat.</div>
+  </div>
+  <div class="alert warning" role="alert" data-show="s-offline">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div><strong>Conexiunea s-a întrerupt.</strong> Poți continua: răspunsurile sunt păstrate pe acest dispozitiv și se trimit singure când revine conexiunea. Nu închide pagina. Cronometrul continuă pe server.</div>
+  </div>
+  <div class="alert info" role="status" data-show="s-hidden">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div>Cronometrul este ascuns. Te anunțăm când mai sunt 5 minute și când mai este 1 minut.</div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen">
+  <!-- Navigator (S-2) -->
+  <nav id="navigator" class="navigator card tight" aria-label="Navigator itemi" data-open-in="s-navopen">
+    <div class="row between"><span class="t-h3">Itemi</span><span class="t-caption secondary">7 din 9 cu răspuns</span>
+      <button class="btn btn-icon items-btn" data-open-target="navigator" aria-label="Închide lista de itemi"><i data-icon="x"></i></button></div>
+    <div class="stack-sm">
+      <span class="t-caption secondary">Subiectul I</span>
+      <div class="nav-grid">
+        <button class="nav-item answered" aria-label="Item 1, cu răspuns">1</button>
+        <button class="nav-item answered" aria-label="Item 2, cu răspuns">2</button>
+        <button class="nav-item answered current" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen" aria-current="true" aria-label="Item 3, cu răspuns, item curent">3</button>
+        <button class="nav-item answered" data-show="s-subj2" aria-label="Item 3, cu răspuns">3</button>
+        <button class="nav-item answered" aria-label="Item 4, cu răspuns, marcat pentru revizuire">4<span class="flag" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg></span></button>
+        <button class="nav-item" aria-label="Item 5, fără răspuns">5</button>
+        <button class="nav-item answered" aria-label="Item 6, cu răspuns">6</button>
+      </div>
+      <span class="t-caption secondary">Subiectul II</span>
+      <div class="nav-grid">
+        <button class="nav-item answered" aria-label="Item 7, cu răspuns">7</button>
+        <button class="nav-item answered current" data-show="s-subj2" aria-current="true" aria-label="Item 8, cu răspuns, item curent">8</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen" aria-label="Item 8, cu răspuns">8</button>
+        <button class="nav-item" aria-label="Item 9, fără răspuns">9</button>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="legend t-caption secondary">
+      <span><span class="nav-item answered" style="min-height: 24px; width: 24px;" aria-hidden="true"></span>Cu răspuns (bifat)</span>
+      <span><span class="nav-item" style="min-height: 24px; width: 24px;" aria-hidden="true"></span>Fără răspuns</span>
+      <span><span class="nav-item current" style="min-height: 24px; width: 24px;" aria-hidden="true"></span>Itemul curent (subliniat)</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--status-warning);" aria-hidden="true"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg>Marcat pentru revizuire</span>
+    </div>
+    <div class="chips" role="group" aria-label="Filtrează itemii">
+      <button class="chip" aria-pressed="true" data-toggle>Toți</button>
+      <button class="chip" aria-pressed="false" data-toggle>Fără răspuns (2)</button>
+      <button class="chip" aria-pressed="false" data-toggle>Marcați (1)</button>
+    </div>
+  </nav>
+  <div class="sheet-backdrop" data-open-in="s-navopen" aria-hidden="true"></div>
+
+  <!-- SUBIECTUL I -->
+  <main class="stack" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen">
+    <div class="section-label t-body-m">Subiectul I · 30 de puncte</div>
+    <article class="card question" aria-labelledby="q3">
+      <div class="q-head">
+        <div class="row"><span class="num">3</span><span class="badge">5 puncte</span></div>
+        <button type="button" class="btn btn-ghost" aria-pressed="false" data-toggle>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 22V4h12l-2 4 2 4H6"/></svg>
+          Marchează pentru revizuire
+        </button>
+      </div>
+      <p id="q3" class="t-body">Alege răspunsul corect. Trei sferturi din numărul <span class="val">48</span> reprezintă:</p>
+      <div class="options" role="radiogroup" aria-labelledby="q3">
+        <label class="option"><input type="radio" name="q3"> <span class="t-body-m">a)</span> <span class="t-math">12</span></label>
+        <label class="option selected"><input type="radio" name="q3" checked> <span class="t-body-m">b)</span> <span class="t-math">36</span></label>
+        <label class="option"><input type="radio" name="q3"> <span class="t-body-m">c)</span> <span class="t-math">32</span></label>
+        <label class="option"><input type="radio" name="q3"> <span class="t-body-m">d)</span> <span class="t-math">64</span></label>
+      </div>
+    </article>
+
+    <article class="card question" aria-labelledby="q4">
+      <div class="q-head">
+        <div class="row"><span class="num">4</span><span class="badge">5 puncte</span></div>
+        <button type="button" class="btn btn-ghost" aria-pressed="true" data-toggle style="color: var(--status-warning);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg>
+          Marcat pentru revizuire
+        </button>
+      </div>
+      <p id="q4" class="t-body">Completează spațiul punctat. Numerele <span class="val">a</span> și <span class="val">b</span> sunt direct proporționale cu <span class="val">3</span> și <span class="val">5</span>, iar <span class="val">a + b = 64</span>. Numărul <span class="val">a</span> este egal cu …</p>
+      <div class="answer-line">
+        <label for="a4" class="label-text">a =</label>
+        <input id="a4" class="input" inputmode="decimal" value="24" aria-describedby="h4">
+      </div>
+      <span id="h4" class="help">Poți scrie zecimalele cu virgulă sau cu punct (2,5 sau 2.5).</span>
+    </article>
+
+    <div class="footer-nav">
+      <button type="button" class="btn"><i data-icon="arrow-left" class="sm"></i>Itemul 2</button>
+      <button type="button" class="btn">Itemul 5<i data-icon="arrow-right" class="sm"></i></button>
+    </div>
+  </main>
+
+  <!-- SUBIECTUL II with photo tray (D-026) -->
+  <main class="stack" data-show="s-subj2">
+    <div class="section-label t-body-m">Subiectul II · 60 de puncte · scrie rezolvările complete</div>
+    <article class="card question" aria-labelledby="q8">
+      <div class="q-head">
+        <div class="row"><span class="num">8</span><span class="badge">20 de puncte</span></div>
+        <button type="button" class="btn btn-ghost" aria-pressed="false" data-toggle>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 22V4h12l-2 4 2 4H6"/></svg>
+          Marchează pentru revizuire
+        </button>
+      </div>
+      <p id="q8" class="t-body">În triunghiul <span class="val">ABC</span>, <span class="val">AB = AC</span> și <span class="val">∢A = 40°</span>.</p>
+      <ol class="t-body" style="margin: 0; padding-left: var(--space-6);">
+        <li>Calculează măsura unghiului <span class="val">B</span>. <span class="muted">(8 puncte)</span></li>
+        <li>Arată că bisectoarea unghiului <span class="val">A</span> este și mediana laturii <span class="val">BC</span>. <span class="muted">(12 puncte)</span></li>
+      </ol>
+      <div class="field">
+        <label for="t8">Pașii rezolvării</label>
+        <textarea id="t8" class="textarea" aria-describedby="h8">a) Triunghiul ABC este isoscel, deci ∢B = ∢C. Suma unghiurilor este 180°, deci ∢B + ∢C = 140°, ∢B = 70°.
+b) Fie AD bisectoarea. Triunghiurile ABD și ACD au AB = AC, ∢BAD = ∢CAD și AD latură comună…</textarea>
+        <span id="h8" class="help">Scrie pașii pe scurt. Desenul și calculele le poți fotografia mai jos.</span>
+      </div>
+      <div class="stack-sm">
+        <div class="row between">
+          <span class="label-text">Fotografii cu rezolvarea scrisă de mână</span>
+          <span class="t-caption secondary">2 din 3</span>
+        </div>
+        <div class="photos">
+          <div class="slot" aria-label="Fotografia 1, încărcată">
+            <svg class="paper" viewBox="0 0 120 160" aria-hidden="true">
+              <rect width="120" height="160" fill="var(--bg-surface)"/>
+              <path d="M20 120 L60 30 L100 120 Z" fill="none" stroke="var(--text-secondary)" stroke-width="2"/>
+              <path d="M60 30 L60 120" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <path d="M14 140 h60 M14 150 h80" stroke="var(--text-muted)" stroke-width="2"/>
+            </svg>
+            <div class="slot-actions">
+              <span class="badge success">Încărcată</span>
+              <button type="button" class="btn btn-icon" aria-label="Șterge fotografia 1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="slot" aria-label="Fotografia 2, se procesează">
+            <div class="stack-sm" style="justify-items: center; width: 100%;">
+              <span class="t-body-m">IMG_2041.HEIC</span>
+              <div class="progress" aria-hidden="true"><span style="width: 70%;"></span></div>
+              <span class="t-caption secondary">Se pregătește imaginea…</span>
+            </div>
+          </div>
+          <button type="button" class="slot empty" aria-label="Adaugă fotografia 3">
+            <div class="stack-sm" style="justify-items: center;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span class="t-body-m accent">Fotografiază sau alege</span>
+            </div>
+          </button>
+        </div>
+        <span class="help">Cel mult 3 fotografii pentru această problemă: JPG, PNG sau HEIC, până la 10 MB fiecare.</span>
+      </div>
+    </article>
+    <div class="footer-nav">
+      <button type="button" class="btn"><i data-icon="arrow-left" class="sm"></i>Itemul 7</button>
+      <button type="button" class="btn">Itemul 9<i data-icon="arrow-right" class="sm"></i></button>
+    </div>
+  </main>
+</div>
+
+<!-- Submission summary (S-4) -->
+<div class="backdrop" data-show="s-submit">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sub-title">
+    <h2 id="sub-title" class="t-h2">Predai examenul?</h2>
+    <p class="secondary">Ai răspuns la <strong>7 din 9</strong> itemi. După predare nu mai poți modifica răspunsurile.</p>
+    <div class="stack-sm">
+      <div class="alert warning"><span><strong>2 itemi fără răspuns:</strong> 5, 9</span></div>
+      <div class="alert"><span><strong>1 item marcat pentru revizuire:</strong> 4</span></div>
+    </div>
+    <p class="t-caption secondary">Rezultatele apar după ce examinatorul corectează și le publică.</p>
+    <div class="row" style="justify-content: flex-end;">
+      <button type="button" class="btn">Înapoi la examen</button>
+      <button type="button" class="btn btn-primary">Predă examenul</button>
+    </div>
+  </div>
+</div>
+
+<!-- Time expired, auto-sealed -->
+<main class="page" data-show="s-sealed">
+  <div class="card stack" style="max-width: 640px; margin: var(--space-12) auto; text-align: center; justify-items: center;">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--status-success);" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h1 class="t-h1">Timpul s-a încheiat</h1>
+    <p class="secondary">Examenul „Evaluare Unitatea 3: Rapoarte și proporții” a fost predat automat la <span class="t-math">12:15</span>, cu toate răspunsurile salvate (9 din 9 itemi au ajuns pe server).</p>
+    <p class="t-caption secondary">Rezultatele apar în tabloul de bord după ce examinatorul le publică.</p>
+    <a href="#" class="btn btn-primary">Mergi la tabloul de bord</a>
+  </div>
+</main>
+
+<!-- Loading -->
+<main class="layout" data-show="s-loading" aria-busy="true" aria-label="Se încarcă examenul">
+  <div class="card tight stack"><div class="skeleton" style="width: 50%;"></div><div class="skeleton" style="height: 120px;"></div></div>
+  <div class="stack">
+    <div class="skeleton" style="width: 30%;"></div>
+    <div class="card stack"><div class="skeleton" style="width: 20%;"></div><div class="skeleton"></div><div class="skeleton" style="width: 80%;"></div>
+      <div class="skeleton" style="height: 48px;"></div><div class="skeleton" style="height: 48px;"></div></div>
+  </div>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

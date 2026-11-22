@@ -13,7 +13,6 @@
 - D-004 · Authoritative server timer with 30-second expiration grace period
 - D-005 · Two-part assessment scoring architecture with zero negative marking
 - D-006 · Exact-match numeric tolerance with concrete parameter persistence
-- D-007 · Visual design tokens and calm anxiety-reducing UI system
 - D-008 · Pest PHP, Vitest, and Playwright as automated testing stack
 - D-009 · Two-folder monorepo layout (backend/ and frontend/)
 - D-011 · Subject 2 handwritten solution photo upload alongside text
@@ -34,6 +33,8 @@
 - D-030 · Small fixed competence list
 - D-031 · Optional barem for Subject 2 questions
 - D-032 · Draft and Ready question status
+- D-033 · Lucide as the only icon set
+- D-035 · Warm, calm visual system with a fresh mint accent
 
 ---
 
@@ -95,16 +96,6 @@
 - **Why:** Matches the precision needed for 6th-grade mathematics problems and guarantees exact auditability and problem reconstruction during grade contests.
 - **Rejected:** Loose floating-point percentage tolerance; storing only random seeds without snapshotting evaluated parameters.
 - **Evidence:** README.md:35
-- **Source:** user · confidence high
-
-## D-007 · Visual design tokens and calm anxiety-reducing UI system
-- **Status:** approved
-- **Date:** 2026-11-18
-- **Confirmed:** 2026-11-19
-- **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: Muted Teal/Sage primary accent (`#0F766E` / `#2DD4BF`), midnight-tint dark theme (`#0B132B`), Plus Jakarta Sans for UI copy and headings, JetBrains Mono for formulas, equations, and timers, a 4px grid spacing scale, and subtle non-distracting elevation.
-- **Why:** Delivers a calm, low-stress assessment environment for 6th-grade candidates, inspired by Coursera, Quizlet, and Notion, while guaranteeing WCAG AAA/AA contrast.
-- **Rejected:** Flashy/overwhelming animations and high-saturation gamified colors; harsh pitch-black dark mode; raw uncurated monospace fonts.
-- **Evidence:** docs/design/DESIGN.md:103
 - **Source:** user · confidence high
 
 ## D-008 · Pest PHP, Vitest, and Playwright as automated testing stack
@@ -305,4 +296,24 @@
 - **Why:** Random picks (D-025) must never hand a Candidate a half-written question.
 - **Rejected:** Treating every saved question as usable.
 - **Evidence:** Conversation 2026-11-22; docs/design/research-quiz-platforms.md S-12
+- **Source:** user · confidence high
+
+## D-033 · Lucide as the only icon set
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** All UI icons come from Lucide (`lucide-react` in the frontend, imported per icon), 2px stroke, at 16, 20 or 24 px. No Unicode symbols or emoji are used as icons. Icon-only controls keep an accessible name (DESIGN.md).
+- **Why:** Mixed hand-copied SVGs and Unicode glyphs render differently per device; Lucide matches the existing outline style (Feather), is free (ISC) and tree-shaken.
+- **Rejected:** Heroicons (smaller set), Phosphor (multiple weights invite drift), Tabler Icons (more technical look).
+- **Evidence:** docs/design/design-review-2026-11-22.md M6; conversation 2026-11-22
+- **Source:** user · confidence high
+
+## D-035 · Warm, calm visual system with a fresh mint accent
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: a fresh mint primary accent (`#1F7A4F` light / `#7EE2A8` dark, hover `#17603D` / `#AFF0C9`, tint `#E3F2E8` / `#1C3A28`); warm neutrals in both themes, a cream light theme (canvas `#F5F1EA`, surface `#FFFCF7`) and an espresso dark theme (canvas `#1A1612`, surface `#241F1A`); Plus Jakarta Sans for UI copy and headings; JetBrains Mono for formulas, equations and timers; a 4px grid spacing scale; soft rounded shapes (radius 10/16 px) and subtle, warm-tinted elevation.
+- **Why:** The user preferred mint green to teal. In light mode the mint is deep enough to carry white text (5.31:1) and links on cream (4.72:1); the bright mint shows in dark mode. Status colors keep their meaning through icons and text, since the accent is close to the success green.
+- **Rejected:** Teal accent (D-034); classic and soft sage-mint options; light mint in light mode (fails contrast).
+- **Evidence:** docs/design/design-review-2026-11-22.md; conversation 2026-11-22
 - **Source:** user · confidence high

@@ -66,7 +66,7 @@ React Context managing session state (`user`, `token`, `isAuthenticated`, `isLoa
 Route guard redirecting unauthenticated users to `/login`, and checking authorized roles redirecting unauthorized roles to their respective dashboards.
 
 #### [NEW] `frontend/src/pages/auth/LoginPage.tsx` (DS-001)
-Login view adhering to `docs/design/DESIGN.md` tokens (Plus Jakarta Sans, Muted Teal/Sage accent, calm low-stress layout, dark/light themes).
+Login view adhering to `docs/design/DESIGN.md` tokens (Plus Jakarta Sans, fresh mint accent (D-035), calm low-stress layout, dark/light themes).
 
 #### [NEW] `frontend/src/pages/auth/RegisterPage.tsx` (DS-002)
 Candidate registration view adhering to design system tokens with real-time validation and accessible controls.

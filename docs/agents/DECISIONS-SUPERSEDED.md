@@ -13,6 +13,8 @@
 - D-018 · Fixed questions by default, two parameterization forms · _superseded-by D-024_
 - D-023 · Exam blueprint with equivalent alternatives per slot · _superseded-by D-025_
 - D-024 · Variants as slot alternatives, letters by alternation with Examiner override · _superseded-by D-025_
+- D-007 · Visual design tokens and calm anxiety-reducing UI system · _superseded-by D-034_
+- D-034 · Warm, calm visual system (cream light, espresso dark) · _superseded-by D-035_
 
 ---
 
@@ -59,4 +61,22 @@
 - **Why:** One mechanism for written versions instead of two; an even automatic split with a manual override for classroom seating; a clear letter per Attempt helps spot copying while grading Subject 2 (INTERVIEW.md Q13).
 - **Rejected:** Variants inside a question alongside slot alternatives (D-018); random letter per question; Examiner-only assignment.
 - **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-004, Q-016
+- **Source:** user · confidence high
+
+## D-007 · Visual design tokens and calm anxiety-reducing UI system
+- **Status:** superseded-by D-034
+- **Date:** 2026-11-18
+- **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: Muted Teal/Sage primary accent (`#0F766E` / `#2DD4BF`), midnight-tint dark theme (`#0B132B`), Plus Jakarta Sans for UI copy and headings, JetBrains Mono for formulas, equations, and timers, a 4px grid spacing scale, and subtle non-distracting elevation.
+- **Why:** Delivers a calm, low-stress assessment environment for 6th-grade candidates, inspired by Coursera, Quizlet, and Notion, while guaranteeing WCAG AAA/AA contrast.
+- **Rejected:** Flashy/overwhelming animations and high-saturation gamified colors; harsh pitch-black dark mode; raw uncurated monospace fonts.
+- **Evidence:** docs/design/DESIGN.md:103
+- **Source:** user · confidence high
+
+## D-034 · Warm, calm visual system (cream light, espresso dark)
+- **Status:** superseded-by D-035
+- **Date:** 2026-11-22
+- **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: Muted Teal primary accent (`#0F766E` light / `#2DD4BF` dark); warm neutrals in both themes, a cream light theme (canvas `#F5F1EA`, surface `#FFFCF7`) and an espresso dark theme (canvas `#1A1612`, surface `#241F1A`); Plus Jakarta Sans for UI copy and headings; JetBrains Mono for formulas, equations and timers; a 4px grid spacing scale; soft rounded shapes (radius 10/16 px) and subtle, warm-tinted elevation.
+- **Why:** Keeps D-007's calm, low-stress intent while removing the clinical feel of cool slate neutrals and the midnight navy, as the user asked; every text and input-border pair still meets WCAG AA.
+- **Rejected:** Cool slate light theme and midnight navy dark theme (D-007, felt clinical); warm graphite and soft midnight dark options; flashy or gamified colors; pitch-black dark mode.
+- **Evidence:** docs/design/design-review-2026-11-22.md; conversation 2026-11-22
 - **Source:** user · confidence high

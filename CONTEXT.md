@@ -44,3 +44,8 @@ _Avoid_: overtime, extension.
 
 **Item** (noun) · RO: **Item** — One slot of an Exam's blueprint, fixing section, specific competence, difficulty and points, filled by one Variant per Attempt (D-025).
 _Avoid_: slot (in UI copy).
+
+**Draft** (noun, question status) · RO: **Ciornă** — A saved question that is not yet complete; it can't be picked for any Attempt (D-032).
+
+**Ready** (noun, question status) · RO: **Finalizat** — A question whose required fields are complete; only Ready questions can be picked for an Attempt (D-032).
+_Avoid_: RO: gata.

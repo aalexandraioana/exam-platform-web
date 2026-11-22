@@ -16,7 +16,7 @@ Scaffolds React 19 + Vite SPA, Tailwind CSS with design tokens, HTTP client with
 1. **Frontend Project Foundation (`frontend/`):**
    - React 19 + TypeScript + Vite initialized.
    - Tailwind CSS configuration mapping all tokens from [`docs/design/DESIGN.md`](../design/DESIGN.md):
-     - Colors: Teal accents (`teal-600` `#0F766E` light, `teal-400` `#2DD4BF` dark), Slate neutrals, Midnight dark background (`#0B132B`).
+     - Colors: all values from DESIGN.md per D-035: fresh mint accent (`#1F7A4F` light, `#7EE2A8` dark), warm cream light neutrals (canvas `#F5F1EA`), espresso dark neutrals (canvas `#1A1612`).
      - Fonts: Plus Jakarta Sans for UI text, JetBrains Mono for numeric/code.
      - Spacing scale: 4px grid (`space-1` = 4px, `space-2` = 8px, etc.).
      - Radii: `rounded-lg` (8px), `rounded-md` (6px).
@@ -61,13 +61,13 @@ Implements the user-facing screens for `DS-001` (`auth-login`) and `DS-002` (`au
 
 ### Scope & Encompassed Components
 1. **Design System Mocks (`docs/design/mocks/`):**
-   - `docs/design/mocks/DS-001.html`: Standalone interactive mock for Login screen featuring theme switcher (Light / Dark Midnight) and state switcher (Default, Loading, Validation Error, Account Deactivated).
+   - `docs/design/mocks/DS-001.html`: Standalone interactive mock for Login screen featuring theme switcher (Light / Dark) and state switcher (Default, Loading, Validation Error, Account Deactivated).
    - `docs/design/mocks/DS-002.html`: Standalone interactive mock for Candidate Registration screen with theme and state switchers.
    - Registry update: `docs/design/registry.yaml` status updated for `DS-001` and `DS-002`.
 
 2. **Login Screen (`DS-001` · `frontend/src/pages/auth/LoginPage.tsx`):**
    - Form with Email and Password inputs.
-   - Accessibility: Visible focus rings (Teal `#0F766E` / `#2DD4BF`), touch targets ≥ 44×44px, keyboard navigable.
+   - Accessibility: Visible focus rings (`border-focus`: mint `#1F7A4F` / `#7EE2A8`), touch targets ≥ 44×44px, keyboard navigable.
    - States covered:
      - Default clean layout with calm, low-stress styling per D-007.
      - Loading: Button disabled with loading indicator during API call.

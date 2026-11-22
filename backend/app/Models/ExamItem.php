@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** One blueprint Item: it fixes section, competence, difficulty and points, and draws from a pool (D-043). */
 #[Fillable(['position', 'section', 'competence_id', 'difficulty', 'points', 'pool_id'])]
@@ -43,5 +44,11 @@ class ExamItem extends Model
     public function pool(): BelongsTo
     {
         return $this->belongsTo(Pool::class);
+    }
+
+    /** The questions drawn for this Item across Attempts. @return HasMany<AttemptItem, $this> */
+    public function attemptItems(): HasMany
+    {
+        return $this->hasMany(AttemptItem::class);
     }
 }

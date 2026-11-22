@@ -6,9 +6,7 @@ use App\Models\AnswerBaremScore;
 use App\Models\AnswerImage;
 use App\Models\Attempt;
 use App\Models\AttemptItem;
-use App\Models\BaremStep;
 use App\Models\ExamItem;
-use App\Models\Question;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 

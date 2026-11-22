@@ -24,19 +24,21 @@
 - D-020 · Admin-created Examiner accounts and manual password reset
 - D-021 · Full duration per Attempt regardless of end_time
 - D-022 · Bilingual Romanian and English UI
-- D-025 · Exam blueprint with a random Variant per Item
 - D-026 · Subject 2 photo upload limits
 - D-027 · Private question pools with a shared library
 - D-028 · Examiner-created classes with join code and approval
 - D-029 · Database as question source, BANK.md as validation and pilot log
 - D-031 · Optional barem for Subject 2 questions
-- D-032 · Draft and Ready question status
 - D-033 · Lucide as the only icon set
 - D-035 · Warm, calm visual system with a fresh mint accent
 - D-036 · Laravel 13 REST API backend with React 19 + Vite SPA
 - D-037 · GitHub Actions CI on every push
 - D-038 · Romanian as the default UI language
 - D-039 · Examiner-defined competences and topic labels
+- D-040 · Library entries are frozen copies
+- D-041 · One bank per Examiner, organised in pools
+- D-042 · Draft and Ready question status
+- D-043 · Exam blueprint drawing from pools
 
 ---
 
@@ -210,16 +212,6 @@
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-015
 - **Source:** user · confidence high
 
-## D-025 · Exam blueprint with a random Variant per Item
-- **Status:** approved
-- **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
-- **Rule:** An Exam is a blueprint: an ordered list of Items, each fixing section, competence (the Examiner's own, D-039), difficulty and points. Each Item holds one or more similar, equivalent questions (its Variants). When an Attempt starts, the server picks one Variant per Item at random, independently per Item; an Item with one question is the same for everyone. There are no letters, rows or manual assignment. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked questions, any drawn values and the expected answers are stored per Attempt (D-006, D-013), so the Examiner sees which Variant each Candidate got. Item Analysis reports per question and per Item.
-- **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), while similar questions are randomly assigned to different Candidates to make copying harder (INTERVIEW.md Q13).
-- **Rejected:** Free random draw by topic (D-016, no coverage guarantee); one letter per Attempt by alternation with Examiner override (D-024); a fixed list for everyone.
-- **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-016, Q-020, Q-023
-- **Source:** user · confidence high
-
 ## D-026 · Subject 2 photo upload limits
 - **Status:** approved
 - **Date:** 2026-11-22
@@ -234,7 +226,7 @@
 - **Status:** approved
 - **Date:** 2026-11-22
 - **Confirmed:** 2026-11-22
-- **Rule:** Each Examiner's questions are private to them. An Examiner can publish a question to a shared library; other Examiners copy it into their own pool, and the copy is theirs to edit.
+- **Rule:** Each Examiner's questions are private to them. An Examiner can publish a question to a shared library; other Examiners copy it into their own bank, and the copy is theirs to edit.
 - **Why:** Keeps each Examiner in control of their questions while making it easier to fill blueprint Items with Variants.
 - **Rejected:** One shared pool where only the author edits; one shared pool anyone edits; fully private pools.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-019
@@ -268,16 +260,6 @@
 - **Why:** Matches Romanian barem grading practice and makes grading consistent across Candidates, while leaving Examiners free to grade holistically when a barem does not fit.
 - **Rejected:** Mandatory barem for every Subject 2 question; locking the barem at the first graded answer; recalculating after publication.
 - **Evidence:** Conversation 2026-11-22; docs/design/research-quiz-platforms.md S-8
-- **Source:** user · confidence high
-
-## D-032 · Draft and Ready question status
-- **Status:** approved
-- **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
-- **Rule:** Each question is Draft or Ready. Only Ready questions can be picked for an Attempt; the Exam builder shows Draft Variants as "not ready", and an Exam cannot be published while an Item has no Ready Variant. A question can be marked Ready only when its required fields are complete: statement, points and competence for every question; an answer key for Subject 1; a complete barem for Subject 2 only if the Examiner chose to use one (D-031).
-- **Why:** Random picks (D-025) must never hand a Candidate a half-written question.
-- **Rejected:** Treating every saved question as usable.
-- **Evidence:** Conversation 2026-11-22; docs/design/research-quiz-platforms.md S-12
 - **Source:** user · confidence high
 
 ## D-033 · Lucide as the only icon set
@@ -338,4 +320,44 @@
 - **Why:** Competences are what the teacher decides to assess, not a fixed list; topics (chapters such as Mulțimi de numere întregi, Drepte, Unghiuri) only describe questions, and a bank may mix them.
 - **Rejected:** A small fixed competence list (D-030); topics as a seeded curriculum structure that groups competences; competences tied to a topic.
 - **Evidence:** Conversation 2026-11-22 (P1 plan gate); INTERVIEW.md Q1 ("competentele specifice din respectiva unitate")
+- **Source:** user · confidence high
+
+## D-040 · Library entries are frozen copies
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Only Ready questions can be published to the shared library (D-027). Publishing makes a frozen copy with its own code, author and publish date; later edits to the author's question don't change it. Copying a library entry into another Examiner's bank creates an independent question that remembers which entry it came from, and also copies its competence and topic labels into the copier's own lists.
+- **Why:** Matches DS-007 (separate LIB- codes, "Copiată · M6-TR-011", "Doar întrebările finalizate pot fi publicate") and keeps every Examiner in control of their own questions.
+- **Rejected:** The library showing the author's live question; copies without the competence (the copier picks one).
+- **Evidence:** Conversation 2026-11-22 (P1 and P1b plan gates); docs/design/mocks/DS-007.html
+- **Source:** user · confidence high
+
+## D-041 · One bank per Examiner, organised in pools
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Each Examiner has one bank: all their questions, private to them (D-027). Inside it they can create named pools; a question can be in several pools or in none, and deleting a pool keeps its questions. Exam Items draw from pools (D-043).
+- **Why:** The bank is the storage place; pools are the groups an Examiner builds for exams, as in the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
+- **Rejected:** Several separate banks per Examiner; a question belonging to exactly one pool; pools only for organising.
+- **Evidence:** Conversation 2026-11-22 (P1b plan gate); catalog-de-proiecte-web.md:893
+- **Source:** user · confidence high
+
+## D-042 · Draft and Ready question status
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** Each question is Draft or Ready. A Draft needs only its Subject (I or II) and type. A question can be marked Ready only when its statement, points, competence, grade level and difficulty are set, plus an answer key for Subject I and a complete barem for Subject II if the Examiner chose to use one (D-031). Only Ready questions can be picked for an Attempt or published to the library (D-040); the Exam builder shows Draft questions as "not ready", and an Exam cannot be published unless D-043's publish check passes.
+- **Why:** Random picks (D-043) must never hand a Candidate a half-written question, and grade level and difficulty are needed to match questions to Items and filter the bank.
+- **Rejected:** Treating every saved question as usable; Ready without grade level and difficulty (D-032).
+- **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/design/research-quiz-platforms.md S-12
+- **Source:** user · confidence high
+
+## D-043 · Exam blueprint drawing from pools
+- **Status:** approved
+- **Date:** 2026-11-22
+- **Confirmed:** 2026-11-22
+- **Rule:** An Exam is a blueprint of ordered Items. Each Item fixes section, competence (the Examiner's own, D-039), difficulty and points, and draws from one of the Examiner's pools (D-041). When an Attempt starts, the server picks for each Item one random Ready question from that pool whose competence and difficulty match the Item's. No question appears twice in the same Attempt, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked question, any drawn values and the expected answer are stored per Attempt (D-006, D-013), so the Examiner sees which question each Candidate got. Item Analysis reports per question and per Item. "8 easy questions from pool A" = 8 Items on pool A.
+- **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), similar questions go to different Candidates (Q13), and it delivers the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
+- **Rejected:** Hand-listed Variants per Item (D-025); a blueprint row drawing N questions from a pool (weakens per-Item coverage); repeats within one Attempt.
+- **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/agents/OPEN-QUESTIONS.md:Q-036, Q-037; catalog-de-proiecte-web.md:893
 - **Source:** user · confidence high

@@ -17,6 +17,8 @@
 - D-034 · Warm, calm visual system (cream light, espresso dark) · _superseded-by D-035_
 - D-002 · Laravel 11 REST API backend with React + Vite SPA · _superseded-by D-036_
 - D-030 · Small fixed competence list · _superseded-by D-039_
+- D-025 · Exam blueprint with a random Variant per Item · _superseded-by D-043_
+- D-032 · Draft and Ready question status · _superseded-by D-042_
 
 ---
 
@@ -99,4 +101,22 @@
 - **Why:** Enough structure for blueprint coverage (D-025) and Item Analysis without loading and maintaining the full curriculum.
 - **Rejected:** The full official curriculum list; each Examiner's own list; free text per question.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-023
+- **Source:** user · confidence high
+
+## D-025 · Exam blueprint with a random Variant per Item
+- **Status:** superseded-by D-043
+- **Date:** 2026-11-22
+- **Rule:** An Exam is a blueprint: an ordered list of Items, each fixing section, competence (the Examiner's own, D-039), difficulty and points. Each Item holds one or more similar, equivalent questions (its Variants). When an Attempt starts, the server picks one Variant per Item at random, independently per Item; an Item with one question is the same for everyone. There are no letters, rows or manual assignment. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked questions, any drawn values and the expected answers are stored per Attempt (D-006, D-013), so the Examiner sees which Variant each Candidate got. Item Analysis reports per question and per Item.
+- **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), while similar questions are randomly assigned to different Candidates to make copying harder (INTERVIEW.md Q13).
+- **Rejected:** Free random draw by topic (D-016, no coverage guarantee); one letter per Attempt by alternation with Examiner override (D-024); a fixed list for everyone.
+- **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-016, Q-020, Q-023
+- **Source:** user · confidence high
+
+## D-032 · Draft and Ready question status
+- **Status:** superseded-by D-042
+- **Date:** 2026-11-22
+- **Rule:** Each question is Draft or Ready. Only Ready questions can be picked for an Attempt; the Exam builder shows Draft Variants as "not ready", and an Exam cannot be published while an Item has no Ready Variant. A question can be marked Ready only when its required fields are complete: statement, points and competence for every question; an answer key for Subject 1; a complete barem for Subject 2 only if the Examiner chose to use one (D-031).
+- **Why:** Random picks (D-025) must never hand a Candidate a half-written question.
+- **Rejected:** Treating every saved question as usable.
+- **Evidence:** Conversation 2026-11-22; docs/design/research-quiz-platforms.md S-12
 - **Source:** user · confidence high

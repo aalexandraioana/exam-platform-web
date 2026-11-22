@@ -43,6 +43,9 @@
 - Q-032 · How is mathematical notation shown in question text?
 - Q-033 · In which format is the API documented?
 - Q-034 · Which pages, if any, may search engines index?
+- Q-035 · Which curriculum topics are seeded? · _answered_
+- Q-036 · Must a question drawn for an Item match the Item? · _answered_
+- Q-037 · Can the same question appear twice in one Attempt? · _answered_
 
 ---
 
@@ -224,3 +227,19 @@
 - **Date:** 2026-11-22
 - **Blocks:** P2 (first public screens)
 - **Context:** Raised by the P0 SEO review. Everything is `noindex, nofollow` for now (frontend/index.html). Pages behind login (exams, attempts, grading, results) should stay out of indexes; open is whether any public page (e.g. login or a landing page) should be indexable.
+
+## Q-035 · Which curriculum topics are seeded?
+- **Status:** answered
+- **Date:** 2026-11-22
+- **Answer:** Not applicable. D-039 makes topics the Examiner's own descriptive labels, so there is no curriculum topic list to seed.
+
+## Q-036 · Must a question drawn for an Item match the Item?
+- **Status:** answered
+- **Date:** 2026-11-22
+- **Answer:** Yes. An Item draws only from the pool's Ready questions whose competence and difficulty match the Item's (D-043).
+
+## Q-037 · Can the same question appear twice in one Attempt?
+- **Status:** answered
+- **Date:** 2026-11-22
+- **Answer:** No, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question (D-043).
+

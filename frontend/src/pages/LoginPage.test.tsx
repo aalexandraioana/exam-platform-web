@@ -212,3 +212,17 @@ describe('LoginPage (DS-001)', () => {
     expect(await screen.findByText('candidate home')).toBeInTheDocument()
   })
 })
+
+describe('LoginPage focus after a failed submit', () => {
+  it('moves focus to the first invalid field', () => {
+    mockApi({})
+    renderAt()
+
+    submit()
+    expect(screen.getByLabelText('Email')).toHaveFocus()
+
+    fillIn('ana.dumitru@exemplu.ro', '')
+    submit()
+    expect(screen.getByLabelText('Parola')).toHaveFocus()
+  })
+})

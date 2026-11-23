@@ -159,6 +159,20 @@ them; a ticket with UI has a design subtask instead (team addon).
 | `space-12` | 48px |
 | `space-16` | 64px |
 
+### Sizes
+Approved 2026-11-23 (P2), from the values the approved mocks use.
+
+| Token | Value | Use |
+|---|---|---|
+| `size-hit` | 44px | Min height and width of buttons, inputs, toggles (the ≥ 44 px hit-target guardrail) |
+| `size-icon-sm` | 16px | Lucide icons inside buttons and chips |
+| `size-icon-md` | 20px | Default Lucide icon size; alert icons |
+| `size-icon-lg` | 24px | Brand icon, large icons |
+| `width-auth` | 440px | Login and registration card |
+| `focus-ring` | 2px | Focus outline width and offset |
+| `tracking-code` | 0.08em | Letter spacing of join codes |
+| `underline-offset` | 3px | Text links |
+
 ### Radius, shadow, motion
 | Token | Value | Use |
 |---|---|---|

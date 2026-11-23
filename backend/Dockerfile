@@ -19,7 +19,8 @@ ENTRYPOINT ["entrypoint.sh"]
 
 # Local: code is mounted from the host and served by `php artisan serve` (see docker-compose.yml).
 FROM base AS dev
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# --no-reload: without it, `serve` drops variables also set in .env (e.g. DB_HOST from docker-compose).
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--no-reload"]
 
 # Render: code baked into the image, production dependencies only, served by Apache.
 FROM base AS prod

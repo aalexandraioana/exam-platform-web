@@ -11,15 +11,17 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+     * Local demo accounts, one per role, with the factory password ("password"). Never in
+     * production: real Examiners and Administrators are created with `app:create-user`.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        if (app()->isProduction()) {
+            return;
+        }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        User::factory()->administrator()->create(['name' => 'Demo Administrator', 'email' => 'admin@example.test']);
+        User::factory()->examiner()->create(['name' => 'Demo Examiner', 'email' => 'examiner@example.test']);
+        User::factory()->candidate()->create(['name' => 'Demo Candidate', 'email' => 'candidate@example.test']);
     }
 }

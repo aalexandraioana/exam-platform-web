@@ -11,19 +11,38 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * Mirrors the database defaults, so a new user reads as an active candidate before it is
      * reloaded. `role` is deliberately not fillable: only trusted code may change it.
      */
     protected $attributes = ['role' => 'candidate', 'is_active' => true];
+
+    /**
+     * Deactivating a user or changing their password logs them out everywhere (D-050).
+     */
+    protected static function booted(): void
+    {
+        static::updated(function (User $user) {
+            if ($user->wasChanged('password') || ($user->wasChanged('is_active') && ! $user->is_active)) {
+                $user->tokens()->delete();
+            }
+        });
+    }
+
+    /** Emails are stored lower case, so the unique key and login ignore case. */
+    public function setEmailAttribute(string $value): void
+    {
+        $this->attributes['email'] = strtolower(trim($value));
+    }
 
     /**
      * Get the attributes that should be cast.

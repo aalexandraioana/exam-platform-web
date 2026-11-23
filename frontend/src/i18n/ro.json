@@ -18,6 +18,9 @@
     "email": "Scrie o adresă de email întreagă, de exemplu nume@exemplu.ro.",
     "passwordRequired": "Scrie parola."
   },
+  "session": {
+    "loading": "Se încarcă contul tău…"
+  },
   "login": {
     "title": "Intră în cont",
     "subtitle": "Pentru candidați, examinatori și administratori.",

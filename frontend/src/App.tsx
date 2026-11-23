@@ -6,11 +6,12 @@ import AppHeader from './components/AppHeader'
 import LoginPage from './pages/LoginPage'
 import PlaceholderHome from './pages/PlaceholderHome'
 import RegisterPage from './pages/RegisterPage'
+import SessionLoading from './components/SessionLoading'
 
 // "/" goes to the signed-in user's home, or to the login screen.
 function RootRedirect() {
   const { user, status } = useAuth()
-  if (status === 'loading') return null
+  if (status === 'loading') return <SessionLoading />
   return <Navigate to={user ? homePath(user.role) : '/login'} replace />
 }
 

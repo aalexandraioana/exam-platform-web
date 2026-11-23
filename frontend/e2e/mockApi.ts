@@ -3,7 +3,7 @@ import type { Page, Route } from '@playwright/test'
 export type Role = 'candidate' | 'examiner' | 'administrator'
 
 export function userWith(role: Role) {
-  return { id: 7, name: 'Ana Dumitru', email: 'ana.dumitru@exemplu.ro', role, is_active: true }
+  return { id: 7, first_name: 'Ana', last_name: 'Dumitru', name: 'Ana Dumitru', email: 'ana.dumitru@exemplu.ro', role, is_active: true }
 }
 
 function reply(route: Route, status: number, body?: unknown) {

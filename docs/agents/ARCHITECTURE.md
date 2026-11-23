@@ -39,7 +39,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 ## State and storage
 | What | Where | Owner | Notes |
 |---|---|---|---|
-| User credentials & roles | PostgreSQL (`users` table) | Backend | Hashed passwords; `role` (candidate, examiner, administrator; CHECK constraint, not mass-assignable) and `is_active` |
+| User credentials & roles | PostgreSQL (`users` table) | Backend | `first_name` and `last_name` (the API also returns `name`, "Prenume Nume"; P2b); hashed passwords; `role` (candidate, examiner, administrator; CHECK constraint, not mass-assignable) and `is_active` |
 | Competences | PostgreSQL (`competences`) | Backend | Each Examiner's own list: code unique per Examiner, description (D-039) |
 | Classes & memberships | PostgreSQL (`classes`, `class_memberships`) | Backend | Unique join code per class; membership status pending / accepted / rejected, one row per Candidate and class (D-015, D-028) |
 | Question bank | PostgreSQL (`questions`, `pools`, `pool_question`, `topic_labels`, `question_topic_label`, `barem_steps`) | Backend | Each Examiner's bank, pools and topic labels; Draft/Ready and other rules as CHECK constraints (D-031, D-040, D-041, D-042); library entries are frozen copies (`published_to_library_at`, `copied_from_id`); JSON answer key and parameters |

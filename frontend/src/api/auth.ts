@@ -8,6 +8,9 @@ export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export interface User {
   id: number
+  first_name: string
+  last_name: string
+  /** "Prenume Nume", for display. */
   name: string
   email: string
   role: Role
@@ -25,7 +28,8 @@ export interface LoginInput {
 }
 
 export interface RegisterInput {
-  name: string
+  first_name: string
+  last_name: string
   email: string
   password: string
   password_confirmation: string

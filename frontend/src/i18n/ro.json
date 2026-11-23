@@ -46,8 +46,6 @@
     "summary_few": "<strong>Mai sunt {{count}} câmpuri de corectat.</strong> Le găsești marcate mai jos.",
     "summary_other": "<strong>Mai sunt {{count}} de câmpuri de corectat.</strong> Le găsești marcate mai jos.",
     "offline": "<strong>Contul nu a fost creat.</strong> Nu ne-am putut conecta la server. Datele scrise rămân aici; încearcă din nou.",
-    "name": "Nume și prenume",
-    "nameRequired": "Scrie-ți numele, așa cum îl știe examinatorul clasei.",
     "email": "Email",
     "emailTaken": "Există deja un cont cu acest email. <link>Intră în cont</link> sau folosește alt email.",
     "password": "Parola",
@@ -65,7 +63,14 @@
     "submitting": "Se creează contul…",
     "haveAccount": "Ai deja cont?",
     "loginLink": "Intră în cont",
-    "examinerNote": "Ești examinator? Contul tău îl creează administratorul platformei."
+    "examinerNote": "Ești examinator? Contul tău îl creează administratorul platformei.",
+    "firstName": "Prenume",
+    "lastName": "Nume",
+    "firstNamePlaceholder": "Ana",
+    "lastNamePlaceholder": "Popescu",
+    "firstNameRequired": "Scrie-ți prenumele.",
+    "lastNameRequired": "Scrie-ți numele de familie.",
+    "nameTooLong": "Cel mult 100 de caractere."
   },
   "home": {
     "candidate": "Candidat",

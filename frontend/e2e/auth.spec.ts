@@ -27,7 +27,8 @@ test('registration lands on the Candidate home', async ({ page }) => {
   await mockAuthApi(page, 'candidate')
   await page.goto('/register')
 
-  await page.getByLabel('Nume și prenume').fill('Ana Dumitru')
+  await page.getByLabel('Prenume', { exact: true }).fill('Ana')
+  await page.getByLabel('Nume', { exact: true }).fill('Dumitru')
   await page.getByLabel('Email', { exact: true }).fill('ana.dumitru@exemplu.ro')
   await page.getByLabel('Parola', { exact: true }).fill('lalea-verde-48')
   await page.getByLabel('Scrie parola din nou').fill('lalea-verde-48')

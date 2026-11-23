@@ -13,12 +13,14 @@ export interface SchoolClass {
 
 export interface JoinRequest {
   id: number
-  candidate: { id: number; name: string; email: string }
+  candidate: { id: number; first_name: string; last_name: string; name: string; email: string }
   requested_at: string
 }
 
 export interface ClassCandidate {
   id: number
+  first_name: string
+  last_name: string
   name: string
   email: string
   joined_at: string

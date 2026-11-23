@@ -12,7 +12,7 @@ import TextField from '../components/TextField'
 import { linkClass } from '../components/styles'
 import { useFocusFirstInvalid } from '../components/useFocusFirstInvalid'
 
-type Field = 'name' | 'email' | 'password' | 'confirmation' | 'class_code'
+type Field = 'first_name' | 'last_name' | 'email' | 'password' | 'confirmation' | 'class_code'
 type Errors = Partial<Record<Field, string>>
 type Banner = 'offline' | 'throttled'
 
@@ -22,7 +22,8 @@ const strong = { strong: <strong /> }
 // The 422 codes of C-001 (docs/API.md, POST /api/register) on the field that shows them.
 function serverErrors(fields: Record<string, string[]>): Errors {
   const found: Errors = {}
-  if (fields.name) found.name = fields.name[0]
+  if (fields.first_name) found.first_name = fields.first_name[0]
+  if (fields.last_name) found.last_name = fields.last_name[0]
   if (fields.email) found.email = fields.email[0]
   const password = fields.password?.[0]
   if (password === 'mismatch') found.confirmation = password
@@ -35,7 +36,8 @@ function serverErrors(fields: Record<string, string[]>): Errors {
 export default function RegisterPage() {
   const { t } = useTranslation()
   const { user, register } = useAuth()
-  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
@@ -54,7 +56,8 @@ export default function RegisterPage() {
     const code = classCode.trim()
     try {
       await register({
-        name: name.trim(),
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
         email: email.trim(),
         password,
         password_confirmation: confirmation,
@@ -72,7 +75,8 @@ export default function RegisterPage() {
   function submit(event: FormEvent) {
     event.preventDefault()
     const found: Errors = {}
-    if (!name.trim()) found.name = 'required'
+    if (!firstName.trim()) found.first_name = 'required'
+    if (!lastName.trim()) found.last_name = 'required'
     if (!EMAIL_PATTERN.test(email.trim())) found.email = 'invalid'
     if (!password) found.password = 'required'
     else if (password.length < MIN_PASSWORD) found.password = 'too_short'
@@ -125,16 +129,31 @@ export default function RegisterPage() {
           ) : null}
 
           <form ref={formRef} noValidate onSubmit={submit} className="grid gap-4">
-            <TextField
-              id="name"
-              label={t('register.name')}
-              autoComplete="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              error={errors.name && t('register.nameRequired')}
-            />
+            <div className="grid gap-4 tablet:grid-cols-2">
+              <TextField
+                id="first_name"
+                label={t('register.firstName')}
+                autoComplete="given-name"
+                placeholder={t('register.firstNamePlaceholder')}
+                maxLength={100}
+                value={firstName}
+                onChange={(event) => setFirstName(event.target.value)}
+                error={errors.first_name && t(errors.first_name === 'invalid' ? 'register.nameTooLong' : 'register.firstNameRequired')}
+              />
+              <TextField
+                id="last_name"
+                label={t('register.lastName')}
+                autoComplete="family-name"
+                placeholder={t('register.lastNamePlaceholder')}
+                maxLength={100}
+                value={lastName}
+                onChange={(event) => setLastName(event.target.value)}
+                error={errors.last_name && t(errors.last_name === 'invalid' ? 'register.nameTooLong' : 'register.lastNameRequired')}
+              />
+            </div>
             <TextField
               id="email"
+              placeholder={t('login.emailPlaceholder')}
               type="email"
               label={t('register.email')}
               autoComplete="email"

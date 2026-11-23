@@ -45,8 +45,6 @@
     "summary_one": "<strong>{{count}} field still needs fixing.</strong> It's marked below.",
     "summary_other": "<strong>{{count}} fields still need fixing.</strong> They're marked below.",
     "offline": "<strong>Your account wasn't created.</strong> We couldn't connect to the server. What you typed is still here; try again.",
-    "name": "Full name",
-    "nameRequired": "Enter your name as your class's examiner knows it.",
     "email": "Email",
     "emailTaken": "An account with this email already exists. <link>Log in</link> or use another email.",
     "password": "Password",
@@ -63,7 +61,14 @@
     "submitting": "Creating your account…",
     "haveAccount": "Already have an account?",
     "loginLink": "Log in",
-    "examinerNote": "Are you an examiner? Your account is created by the platform administrator."
+    "examinerNote": "Are you an examiner? Your account is created by the platform administrator.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "firstNamePlaceholder": "Ana",
+    "lastNamePlaceholder": "Popescu",
+    "firstNameRequired": "Write your first name.",
+    "lastNameRequired": "Write your last name.",
+    "nameTooLong": "At most 100 characters."
   },
   "home": {
     "candidate": "Candidate",

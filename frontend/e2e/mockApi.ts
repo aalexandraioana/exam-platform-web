@@ -17,7 +17,8 @@ function reply(route: Route, status: number, body?: unknown) {
 // Mocks the auth endpoints of C-001 (docs/API.md) for a user with the given role.
 export async function mockAuthApi(page: Page, role: Role) {
   const user = userWith(role)
-  await page.route('**/api/**', (route) => {
+  // Only the API's origin: '**/api/**' would also catch Vite's /src/api/*.ts modules.
+  await page.route('http://localhost:8000/api/**', (route) => {
     const request = route.request()
     const path = new URL(request.url()).pathname
     const signedIn = Boolean(request.headers()['authorization'])

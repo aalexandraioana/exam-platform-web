@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\SchoolClass;
 use App\Models\User;
+use App\Support\JoinCode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,7 +17,7 @@ class SchoolClassFactory extends Factory
         return [
             'examiner_id' => User::factory()->examiner(),
             'name' => 'Clasa a VI-a '.fake()->randomLetter(),
-            'join_code' => fake()->unique()->regexify('[A-Z0-9]{3}-[A-Z0-9]{3}'),
+            'join_code' => JoinCode::generate(),
         ];
     }
 }

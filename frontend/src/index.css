@@ -52,6 +52,15 @@
     --motion-fast: 100ms;
     --motion-normal: 200ms;
 
+    --size-hit: 44px;
+    --size-icon-sm: 16px;
+    --size-icon-md: 20px;
+    --size-icon-lg: 24px;
+    --width-auth: 440px;
+    --focus-ring: 2px;
+    --tracking-code: 0.08em;
+    --underline-offset: 3px;
+
     color-scheme: light;
   }
 

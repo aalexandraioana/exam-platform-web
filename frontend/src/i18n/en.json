@@ -1,11 +1,70 @@
 {
   "app": {
-    "name": "Exam platform"
+    "name": "Digital Assessment"
   },
-  "status": {
-    "checking": "Checking the connection to the server…",
-    "connected": "Connected to the server",
-    "error": "The server is not responding"
+  "header": {
+    "language": "Language",
+    "theme": "Change theme",
+    "logout": "Log out"
+  },
+  "password": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "errors": {
+    "offline": "<strong>We couldn't connect to the server.</strong> Check your internet connection and try again.",
+    "throttled": "<strong>Too many tries.</strong> Wait a minute.",
+    "retry": "Try again",
+    "email": "Enter a full email address, for example name@example.com.",
+    "passwordRequired": "Enter your password."
+  },
+  "login": {
+    "title": "Log in",
+    "subtitle": "For candidates, examiners and administrators.",
+    "email": "Email",
+    "emailPlaceholder": "name@example.com",
+    "password": "Password",
+    "forgot": "Forgot your password?",
+    "forgotNote": "We don't send password reset links by email. Ask your class's examiner or the administrator for a new password.",
+    "submit": "Log in",
+    "submitting": "Checking…",
+    "wrong": "<strong>The email or password is not correct.</strong> Check them and try again.",
+    "inactive": "<strong>Your account is deactivated.</strong> Ask the platform administrator to reactivate it.",
+    "waking": "<strong>The server is starting.</strong> After a break, the first connection takes up to a minute. Don't close the page.",
+    "noAccount": "No account yet?",
+    "registerLink": "Register as a candidate",
+    "examinerNote": "Examiner accounts are created by the platform administrator."
+  },
+  "register": {
+    "title": "Create your candidate account",
+    "subtitle": "You need it to take the exams published for your class.",
+    "summary_one": "<strong>{{count}} field still needs fixing.</strong> It's marked below.",
+    "summary_other": "<strong>{{count}} fields still need fixing.</strong> They're marked below.",
+    "offline": "<strong>Your account wasn't created.</strong> We couldn't connect to the server. What you typed is still here; try again.",
+    "name": "Full name",
+    "nameRequired": "Enter your name as your class's examiner knows it.",
+    "email": "Email",
+    "emailTaken": "An account with this email already exists. <link>Log in</link> or use another email.",
+    "password": "Password",
+    "passwordHelp": "At least 8 characters.",
+    "passwordShort_one": "The password has {{count}} character; it needs at least 8.",
+    "passwordShort_other": "The password has {{count}} characters; it needs at least 8.",
+    "confirmation": "Enter the password again",
+    "mismatch": "The passwords don't match.",
+    "classCode": "Class code",
+    "optional": "(optional)",
+    "classCodeNotFound": "No class has this code. Check it with your class's examiner, or leave the field empty and add the code later.",
+    "classCodeHelp": "You get it from your class's examiner. You join the class once the examiner accepts your request. You can also add the code later, from your dashboard.",
+    "submit": "Create account",
+    "submitting": "Creating your account…",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Log in",
+    "examinerNote": "Are you an examiner? Your account is created by the platform administrator."
+  },
+  "home": {
+    "candidate": "Candidate",
+    "examiner": "Examiner",
+    "administrator": "Administrator"
   },
   "duration": {
     "minutes_one": "{{count}} minute",

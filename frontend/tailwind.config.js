@@ -83,7 +83,23 @@ export default {
     boxShadow: { none: 'none', subtle: v('shadow-subtle'), modal: v('shadow-modal') },
     transitionDuration: { fast: v('motion-fast'), normal: v('motion-normal') },
     transitionTimingFunction: { DEFAULT: 'ease-out' },
-    extend: {},
+    letterSpacing: { code: v('tracking-code') },
+    textUnderlineOffset: { link: v('underline-offset') },
+    outlineWidth: { 'focus-ring': v('focus-ring') },
+    outlineOffset: { 'focus-ring': v('focus-ring') },
+    // Sizes table: added to the spacing-based keys, so w-hit, min-h-hit, size-icon-md, max-w-auth.
+    extend: {
+      width: { hit: v('size-hit') },
+      minWidth: { hit: v('size-hit') },
+      minHeight: { hit: v('size-hit') },
+      maxWidth: { auth: v('width-auth') },
+      size: {
+        hit: v('size-hit'),
+        'icon-sm': v('size-icon-sm'),
+        'icon-md': v('size-icon-md'),
+        'icon-lg': v('size-icon-lg'),
+      },
+    },
   },
   plugins: [],
 }

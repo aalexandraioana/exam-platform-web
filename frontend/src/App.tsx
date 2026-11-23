@@ -1,38 +1,36 @@
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { getHealth } from './api/client'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { AuthProvider } from './auth/AuthProvider'
+import { homePath, useAuth } from './auth/context'
+import { ProtectedRoute } from './auth/ProtectedRoute'
+import AppHeader from './components/AppHeader'
+import LoginPage from './pages/LoginPage'
+import PlaceholderHome from './pages/PlaceholderHome'
+import RegisterPage from './pages/RegisterPage'
 
-type ApiStatus = 'checking' | 'connected' | 'error'
-
-const statusColor: Record<ApiStatus, string> = {
-  checking: 'text-secondary',
-  connected: 'text-success',
-  error: 'text-error',
+// "/" goes to the signed-in user's home, or to the login screen.
+function RootRedirect() {
+  const { user, status } = useAuth()
+  if (status === 'loading') return null
+  return <Navigate to={user ? homePath(user.role) : '/login'} replace />
 }
 
-// Temporary P0 page proving the SPA reaches the API; replaced by the first screens in P2.
 export default function App() {
-  const { t } = useTranslation()
-  const [status, setStatus] = useState<ApiStatus>('checking')
-
-  useEffect(() => {
-    let active = true
-    getHealth()
-      .then((health) => active && setStatus(health.status === 'healthy' ? 'connected' : 'error'))
-      .catch(() => active && setStatus('error'))
-    return () => {
-      active = false
-    }
-  }, [])
-
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-lg border border-subtle bg-surface p-8 shadow-subtle">
-        <h1 className="text-display text-primary">{t('app.name')}</h1>
-        <p role="status" className={`mt-4 text-body-medium ${statusColor[status]}`}>
-          {t(`status.${status}`)}
-        </p>
-      </div>
-    </main>
+    <BrowserRouter>
+      <AuthProvider>
+        <div className="flex min-h-screen flex-col">
+          <AppHeader />
+          <Routes>
+            <Route path="/" element={<RootRedirect />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/candidate" element={<ProtectedRoute role="candidate"><PlaceholderHome role="candidate" /></ProtectedRoute>} />
+            <Route path="/examiner" element={<ProtectedRoute role="examiner"><PlaceholderHome role="examiner" /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute role="administrator"><PlaceholderHome role="administrator" /></ProtectedRoute>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </AuthProvider>
+    </BrowserRouter>
   )
 }

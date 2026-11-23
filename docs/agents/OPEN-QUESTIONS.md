@@ -180,7 +180,7 @@
 - **Status:** answered
 - **Date:** 2026-11-22
 - **Context:** The uncommitted scaffold chose cookie sessions (`SESSION_DRIVER=database`, `SANCTUM_STATEFUL_DOMAINS`, `$middleware->statefulApi()`), while the approved auth plans (docs/plans/auth-part-1-backend.md, auth-parts-2-and-3.md) issue a bearer token stored in localStorage. The SPA and API run on different Render domains (D-014), which affects cookie sessions. P0 leaves `statefulApi()` out; P2 needs the answer.
-- **Answer:** A Sanctum bearer token: issued at login, kept by the SPA in localStorage and sent in the `Authorization` header; logout revokes it. Chosen over a cookie session because the site and the API are on different onrender.com domains, and onrender.com is a public suffix, so a session cookie would be cross-site (`SameSite=None`) and blocked by Safari. Matches the approved auth plans (D-050, proposed). (Answered 2026-11-23.)
+- **Answer:** A Sanctum bearer token: issued at login, kept by the SPA in localStorage and sent in the `Authorization` header; logout revokes it. Chosen over a cookie session because the site and the API are on different onrender.com domains, and onrender.com is a public suffix, so a session cookie would be cross-site (`SameSite=None`) and blocked by Safari. Matches the approved auth plans (D-050). (Answered 2026-11-23.)
 
 ## Q-027 · Where are Subject 2 photos stored in production?
 - **Status:** answered
@@ -228,14 +228,14 @@
 - **Date:** 2026-11-22
 - **Blocks:** P2 onward (each backend part adds a C- contract with a link to the docs)
 - **Context:** The catalog accepts OpenAPI/Swagger or an API.md with request/response examples.
-- **Answer:** A hand-written `docs/API.md` with a request and response example for each endpoint; C- entries link to its sections. No OpenAPI generator (no new dependency) (D-051, proposed). (Answered 2026-11-23.)
+- **Answer:** A hand-written `docs/API.md` with a request and response example for each endpoint; C- entries link to its sections. No OpenAPI generator (no new dependency) (D-051). (Answered 2026-11-23.)
 
 ## Q-034 · Which pages, if any, may search engines index?
 - **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P2 (first public screens)
 - **Context:** Raised by the P0 SEO review. Everything is `noindex, nofollow` for now (frontend/index.html). Pages behind login (exams, attempts, grading, results) should stay out of indexes; open is whether any public page (e.g. login or a landing page) should be indexable.
-- **Answer:** None. Every page stays `noindex, nofollow`, login and registration included: the platform is a pilot tool with no public landing page (D-052, proposed). (Answered 2026-11-23.)
+- **Answer:** None. Every page stays `noindex, nofollow`, login and registration included: the platform is a pilot tool with no public landing page (D-052). (Answered 2026-11-23.)
 
 ## Q-035 · Which curriculum topics are seeded?
 - **Status:** answered

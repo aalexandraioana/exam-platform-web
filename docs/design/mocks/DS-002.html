@@ -6,6 +6,10 @@
 <meta name="robots" content="noindex, nofollow">
 <title>DS-002 · Register Mock</title>
 <link rel="stylesheet" href="shared/mock.css">
+<style>
+  .name-row { display: grid; gap: var(--space-4); }
+  @media (min-width: 640px) { .name-row { grid-template-columns: 1fr 1fr; } }
+</style>
 </head>
 <body>
 <aside class="mock-controls" aria-label="Mock state switcher">
@@ -44,7 +48,7 @@
     <section class="card stack">
       <div class="alert error" role="alert" data-show="s-invalid">
         <i data-icon="circle-alert"></i>
-        <span><strong>Mai sunt 3 câmpuri de corectat.</strong> Le găsești marcate mai jos.</span>
+        <span><strong>Mai sunt 4 câmpuri de corectat.</strong> Le găsești marcate mai jos.</span>
       </div>
       <div class="alert error" role="alert" data-show="s-offline">
         <i data-icon="wifi-off"></i>
@@ -52,16 +56,25 @@
       </div>
 
       <form novalidate>
-        <div class="field">
-          <label for="name">Nume și prenume</label>
-          <input id="name" class="input" autocomplete="name" value="Ana Dumitru" data-show="s-default s-taken s-code s-loading s-offline">
-          <input class="input invalid" aria-label="Nume și prenume" aria-invalid="true" aria-describedby="name-err" value="" data-show="s-invalid">
-          <span id="name-err" class="help error" data-show="s-invalid">Scrie-ți numele, așa cum îl știe examinatorul clasei.</span>
+        <div class="name-row">
+          <div class="field">
+            <label for="first">Prenume</label>
+            <input id="first" class="input" autocomplete="given-name" placeholder="Ana" value="" data-show="s-default">
+            <input class="input" autocomplete="given-name" aria-label="Prenume" value="Ana" data-show="s-invalid s-taken s-code s-loading s-offline">
+          </div>
+          <div class="field">
+            <label for="last">Nume</label>
+            <input id="last" class="input" autocomplete="family-name" placeholder="Popescu" value="" data-show="s-default">
+            <input class="input" autocomplete="family-name" aria-label="Nume" value="Dumitru" data-show="s-taken s-code s-loading s-offline">
+            <input class="input invalid" aria-label="Nume" aria-invalid="true" aria-describedby="last-err" placeholder="Popescu" value="" data-show="s-invalid">
+            <span id="last-err" class="help error" data-show="s-invalid">Scrie-ți numele de familie.</span>
+          </div>
         </div>
 
         <div class="field">
           <label for="email">Email</label>
-          <input id="email" class="input" type="email" autocomplete="email" value="ana.dumitru@exemplu.ro" data-show="s-default s-code s-loading s-offline">
+          <input id="email" class="input" type="email" autocomplete="email" placeholder="nume@exemplu.ro" value="" data-show="s-default">
+          <input class="input" type="email" autocomplete="email" aria-label="Email" value="ana.dumitru@exemplu.ro" data-show="s-code s-loading s-offline">
           <input class="input invalid" type="email" aria-label="Email" aria-invalid="true" aria-describedby="email-err" value="ana.dumitru@" data-show="s-invalid">
           <span id="email-err" class="help error" data-show="s-invalid">Scrie o adresă de email întreagă, de exemplu nume@exemplu.ro.</span>
           <input class="input invalid" type="email" aria-label="Email" aria-invalid="true" aria-describedby="email-taken" value="ana.dumitru@exemplu.ro" data-show="s-taken">
@@ -71,7 +84,8 @@
         <div class="field">
           <label for="pw">Parola</label>
           <div class="pw-wrap">
-            <input id="pw" class="input" type="password" autocomplete="new-password" aria-describedby="pw-help" value="lalea-verde-48" data-show="s-default s-taken s-code s-loading s-offline">
+            <input id="pw" class="input" type="password" autocomplete="new-password" aria-describedby="pw-help" value="" data-show="s-default">
+            <input class="input" type="password" autocomplete="new-password" aria-label="Parola" aria-describedby="pw-help" value="lalea-verde-48" data-show="s-taken s-code s-loading s-offline">
             <input class="input invalid" type="password" aria-label="Parola" aria-invalid="true" aria-describedby="pw-err" value="abc12" data-show="s-invalid">
             <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
           </div>
@@ -82,7 +96,8 @@
         <div class="field">
           <label for="pw2">Scrie parola din nou</label>
           <div class="pw-wrap">
-            <input id="pw2" class="input" type="password" autocomplete="new-password" value="lalea-verde-48" data-show="s-default s-taken s-code s-loading s-offline">
+            <input id="pw2" class="input" type="password" autocomplete="new-password" value="" data-show="s-default">
+            <input class="input" type="password" autocomplete="new-password" aria-label="Scrie parola din nou" value="lalea-verde-48" data-show="s-taken s-code s-loading s-offline">
             <input class="input invalid" type="password" aria-label="Scrie parola din nou" aria-invalid="true" aria-describedby="pw2-err" value="abc123" data-show="s-invalid">
             <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
           </div>

@@ -18,19 +18,19 @@
 
 ## C-001 · Auth API: register, login, logout, current user
 - **Status:** approved
-- **Date:** 2026-11-23
+- **Date:** 2026-11-23 (names split per docs/plans/p2b-first-last-name.md)
 - **Provider:** `backend/` (routes/api.php, AuthController)
 - **Consumers:** `frontend/src/api/auth.ts`, `frontend/src/api/client.ts`
-- **Interface:** [docs/API.md → Users](../API.md#users) and [Errors](../API.md#errors-every-endpoint): `POST /api/register`, `POST /api/login`, `POST /api/logout`, `GET /api/user`; bearer token (D-050); 422 bodies carry error codes per field; 403 bodies carry `code` (`account_inactive`, `forbidden_role`).
+- **Interface:** [docs/API.md → Users](../API.md#users) and [Errors](../API.md#errors-every-endpoint): `POST /api/register` (`first_name`, `last_name`), `POST /api/login`, `POST /api/logout`, `GET /api/user`; the user object has `first_name`, `last_name` and `name` ("Prenume Nume"); bearer token (D-050); 422 bodies carry error codes per field; 403 bodies carry `code` (`account_inactive`, `forbidden_role`).
 - **Evidence:** docs/plans/p2-auth-accounts.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-23) · confidence high
 
 ## C-002 · Classes API: classes, join requests, new Candidate password
 - **Status:** approved
-- **Date:** 2026-11-23
+- **Date:** 2026-11-23 (names split per docs/plans/p2b-first-last-name.md)
 - **Provider:** `backend/` (routes/api.php, ClassController, MembershipController)
 - **Consumers:** `frontend/src/api/classes.ts`; P7's Candidate dashboard will consume `POST /api/memberships`
-- **Interface:** [docs/API.md → Classes](../API.md#classes) and [Joining a class](../API.md#joining-a-class-candidate): Examiner-only class routes (list, create, show, rename, new join code, delete, accept/decline, set password); Candidate `POST /api/memberships`; another Examiner's resources answer 404; 409 codes `already_decided`, `class_has_published_exam`.
+- **Interface:** [docs/API.md → Classes](../API.md#classes) and [Joining a class](../API.md#joining-a-class-candidate): Examiner-only class routes (list, create, show, rename, new join code, delete, accept/decline, set password); Candidate objects carry `first_name`, `last_name` and `name`, rosters sorted by last name; Candidate `POST /api/memberships`; another Examiner's resources answer 404; 409 codes `already_decided`, `class_has_published_exam`.
 - **Evidence:** docs/plans/p3-classes.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-23) · confidence high
 

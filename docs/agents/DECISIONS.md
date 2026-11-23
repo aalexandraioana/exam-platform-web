@@ -44,6 +44,9 @@
 - D-047 · Weak-item thresholds
 - D-048 · Subject II photos in object storage in production
 - D-049 · A class linked to an Exam can't be deleted
+- D-050 · The SPA authenticates with a Sanctum bearer token · _proposed_
+- D-051 · The API is documented in a hand-written docs/API.md · _proposed_
+- D-052 · No page may be indexed by search engines · _proposed_
 
 ---
 
@@ -416,3 +419,31 @@
 - **Rejected:** Deleting the class and its links silently (the earlier P1c rule).
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-038; P1c review 2026-11-22
 - **Source:** user · confidence high
+
+## D-050 · The SPA authenticates with a Sanctum bearer token
+- **Status:** proposed
+- **Date:** 2026-11-23
+- **Rule:** Login and registration return a Sanctum personal access token. The SPA stores it in localStorage and sends it as `Authorization: Bearer <token>` on every API request; protected routes use `auth:sanctum`. Logout revokes the current token. The API does not use `statefulApi()` or session cookies.
+- **Why:** The site and the API run on different onrender.com domains (D-014). onrender.com is a public suffix, so a session cookie would be cross-site (`SameSite=None`), which Safari blocks.
+- **Rejected:** Sanctum SPA cookie session (needs one custom domain for the site and the API).
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-026; docs/plans/auth-part-1-backend.md
+- **Source:** user · confidence high
+
+## D-051 · The API is documented in a hand-written docs/API.md
+- **Status:** proposed
+- **Date:** 2026-11-23
+- **Rule:** Every API endpoint has a section in `docs/API.md` with its method, path, auth and role, a request example, and response examples for success and for each error status. Each backend part updates it in the same change; C- entries link to the section.
+- **Why:** The catalog accepts an API.md with examples; it needs no new dependency.
+- **Rejected:** An OpenAPI spec with a generator such as Scribe (a new dependency).
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-033
+- **Source:** user · confidence high
+
+## D-052 · No page may be indexed by search engines
+- **Status:** proposed
+- **Date:** 2026-11-23
+- **Rule:** Every page, login and registration included, carries `noindex, nofollow`.
+- **Why:** The platform is a pilot tool with no public landing page; pages behind login must stay out of indexes.
+- **Rejected:** Letting the login and registration pages be indexed.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-034; frontend/index.html
+- **Source:** user · confidence high
+

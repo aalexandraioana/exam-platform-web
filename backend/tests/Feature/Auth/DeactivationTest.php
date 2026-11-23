@@ -20,7 +20,7 @@ it('deletes a user\'s tokens when the password changes, but not on other edits',
     $user = User::factory()->create();
     $user->createToken('spa');
 
-    $user->update(['name' => 'Alt nume']);
+    $user->update(['first_name' => 'Alt']);
     expect($user->tokens()->count())->toBe(1);
 
     $user->update(['password' => 'parola-noua-48']);

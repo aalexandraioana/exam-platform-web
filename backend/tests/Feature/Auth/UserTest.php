@@ -6,13 +6,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 it('returns the logged-in user', function () {
-    $user = User::factory()->examiner()->create(['name' => 'Maria Popa']);
+    $user = User::factory()->examiner()->create(['first_name' => 'Maria', 'last_name' => 'Popa']);
 
     $this->withToken($user->createToken('spa')->plainTextToken)
         ->getJson('/api/user')
         ->assertOk()
         ->assertExactJson(['user' => [
-            'id' => $user->id, 'name' => 'Maria Popa', 'email' => $user->email,
+            'id' => $user->id, 'first_name' => 'Maria', 'last_name' => 'Popa', 'name' => 'Maria Popa', 'email' => $user->email,
             'role' => 'examiner', 'is_active' => true,
         ]]);
 });

@@ -74,14 +74,14 @@ it('refuses a class without a name or with a too long name', function () {
 it('shows a class with its pending requests oldest first and its candidates by name', function () {
     $examiner = asExaminer();
     $class = SchoolClass::factory()->for($examiner, 'examiner')->create(['join_code' => 'K7Q4MX']);
-    $late = membership($class, MembershipStatus::Pending, User::factory()->candidate()->create(['name' => 'Matei Radu']));
+    $late = membership($class, MembershipStatus::Pending, User::factory()->candidate()->create(['first_name' => 'Matei', 'last_name' => 'Radu']));
     $late->requested_at = now();
     $late->save();
-    $early = membership($class, MembershipStatus::Pending, User::factory()->candidate()->create(['name' => 'Ioana G']));
+    $early = membership($class, MembershipStatus::Pending, User::factory()->candidate()->create(['first_name' => 'Ioana', 'last_name' => 'G']));
     $early->requested_at = now()->subDay();
     $early->save();
-    membership($class, MembershipStatus::Accepted, User::factory()->candidate()->create(['name' => 'Bogdan Ilie']));
-    membership($class, MembershipStatus::Accepted, User::factory()->candidate()->create(['name' => 'Ana Dumitru']));
+    membership($class, MembershipStatus::Accepted, User::factory()->candidate()->create(['first_name' => 'Bogdan', 'last_name' => 'Ilie']));
+    membership($class, MembershipStatus::Accepted, User::factory()->candidate()->create(['first_name' => 'Ana', 'last_name' => 'Dumitru']));
     membership($class, MembershipStatus::Rejected);
 
     $this->getJson("/api/classes/{$class->id}")
@@ -150,3 +150,20 @@ it('refuses to delete a class linked to a published exam (D-049)', function () {
     expect($class->fresh())->not->toBeNull()
         ->and($class->exams()->count())->toBe(2);
 });
+
+it('sorts the roster and the requests by last name, then first name', function () {
+    $examiner = asExaminer();
+    $class = SchoolClass::factory()->for($examiner, 'examiner')->create(['join_code' => 'K7Q4MX']);
+    foreach ([['Ana', 'Popescu'], ['Zoe', 'Albu'], ['bogdan', 'popescu']] as [$first, $last]) {
+        membership($class, MembershipStatus::Accepted, User::factory()->candidate()->create(['first_name' => $first, 'last_name' => $last]));
+    }
+
+    $this->getJson("/api/classes/{$class->id}")
+        ->assertOk()
+        ->assertJsonPath('candidates.0.name', 'Zoe Albu')
+        ->assertJsonPath('candidates.1.name', 'Ana Popescu')
+        ->assertJsonPath('candidates.2.name', 'bogdan popescu')
+        ->assertJsonPath('candidates.0.first_name', 'Zoe')
+        ->assertJsonPath('candidates.0.last_name', 'Albu');
+});
+

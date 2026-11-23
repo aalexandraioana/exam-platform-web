@@ -67,3 +67,14 @@ describe('ProtectedRoute', () => {
     expect(await screen.findByText('admin home')).toBeInTheDocument()
   })
 })
+
+describe('ProtectedRoute while the session is checked', () => {
+  it('shows the loading screen instead of a blank page (DS-016)', () => {
+    setToken('1|saved')
+    mockApi({ 'GET /user': () => new Promise<Response>(() => {}) })
+
+    renderAt('/candidate')
+
+    expect(screen.getByRole('status')).toHaveTextContent('Se încarcă contul tău…')
+  })
+})

@@ -66,7 +66,7 @@ export class ApiError extends Error {
 }
 
 interface ApiRequest {
-  method?: 'GET' | 'POST'
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
   body?: unknown
 }
 

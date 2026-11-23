@@ -4,6 +4,7 @@ import { homePath, useAuth } from './auth/context'
 import { ProtectedRoute } from './auth/ProtectedRoute'
 import AppHeader from './components/AppHeader'
 import LoginPage from './pages/LoginPage'
+import ClassesPage from './pages/examiner/ClassesPage'
 import PlaceholderHome from './pages/PlaceholderHome'
 import RegisterPage from './pages/RegisterPage'
 import SessionLoading from './components/SessionLoading'
@@ -26,7 +27,7 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/candidate" element={<ProtectedRoute role="candidate"><PlaceholderHome role="candidate" /></ProtectedRoute>} />
-            <Route path="/examiner" element={<ProtectedRoute role="examiner"><PlaceholderHome role="examiner" /></ProtectedRoute>} />
+            <Route path="/examiner" element={<ProtectedRoute role="examiner"><ClassesPage /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute role="administrator"><PlaceholderHome role="administrator" /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

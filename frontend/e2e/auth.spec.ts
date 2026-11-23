@@ -3,7 +3,8 @@ import { mockAuthApi, type Role } from './mockApi.ts'
 
 const homes: Array<{ role: Role; path: string; heading: string }> = [
   { role: 'candidate', path: '/candidate', heading: 'Candidat' },
-  { role: 'examiner', path: '/examiner', heading: 'Examinator' },
+  // P3: the Examiner's home is the classes screen (DS-013).
+  { role: 'examiner', path: '/examiner', heading: 'Clase' },
   { role: 'administrator', path: '/admin', heading: 'Administrator' },
 ]
 

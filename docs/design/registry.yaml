@@ -67,7 +67,8 @@ designs:
   - id: DS-013
     name: examiner-classes
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/pages/examiner/ClassesPage.tsx
     description: Examiner classes with join codes, pending join requests to accept or decline, roster, and setting a new password for a Candidate (D-015, D-020, D-028)
   - id: DS-014
     name: app-header
@@ -87,3 +88,10 @@ designs:
     status: implemented
     source: frontend/src/components/SessionLoading.tsx
     description: Shown while a saved session is checked at start-up (GET /api/user); spinner, then the server-waking notice after 5 s (Render free-tier cold start)
+  - id: DS-017
+    name: modal
+    kind: component
+    status: implemented
+    source: frontend/src/components/Modal.tsx
+    description: Dialog and right-side drawer (mock.css .modal, mock.js .drawer) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes
+

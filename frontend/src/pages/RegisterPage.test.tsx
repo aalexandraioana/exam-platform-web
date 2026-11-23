@@ -25,7 +25,8 @@ function type(label: string, value: string) {
 }
 
 function fillValid() {
-  type('Nume și prenume', 'Ana Dumitru')
+  type('Prenume', 'Ana')
+  type('Nume', 'Dumitru')
   type('Email', 'ana.dumitru@exemplu.ro')
   type('Parola', 'lalea-verde-48')
   type('Scrie parola din nou', 'lalea-verde-48')
@@ -55,17 +56,19 @@ describe('RegisterPage (DS-002)', () => {
     const fetchMock = mockApi({})
     renderPage()
 
+    type('Prenume', 'Ana')
     type('Email', 'ana.dumitru@')
     type('Parola', 'abc12')
     type('Scrie parola din nou', 'abc123')
     submit()
 
     expect(screen.getByRole('alert')).toHaveTextContent('Mai sunt 4 câmpuri de corectat. Le găsești marcate mai jos.')
-    expect(screen.getByText('Scrie-ți numele, așa cum îl știe examinatorul clasei.')).toBeInTheDocument()
+    expect(screen.getByText('Scrie-ți numele de familie.')).toBeInTheDocument()
     expect(screen.getByText('Scrie o adresă de email întreagă, de exemplu nume@exemplu.ro.')).toBeInTheDocument()
     expect(screen.getByText('Parola are 5 caractere; are nevoie de cel puțin 8.')).toBeInTheDocument()
     expect(screen.getByText('Parolele nu sunt la fel.')).toBeInTheDocument()
-    expect(screen.getByLabelText('Nume și prenume')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByLabelText('Nume')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByLabelText('Prenume')).not.toHaveAttribute('aria-invalid')
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
@@ -74,7 +77,7 @@ describe('RegisterPage (DS-002)', () => {
     renderPage()
 
     fillValid()
-    type('Nume și prenume', '')
+    type('Nume', '')
     submit()
 
     expect(screen.getByRole('alert')).toHaveTextContent('Mai este 1 câmp de corectat. Îl găsești marcat mai jos.')
@@ -91,7 +94,8 @@ describe('RegisterPage (DS-002)', () => {
     expect(await screen.findByText('candidate home')).toBeInTheDocument()
     expect(getToken()).toBe('14|new')
     expect(bodyOf(fetchMock)).toEqual({
-      name: 'Ana Dumitru',
+      first_name: 'Ana',
+      last_name: 'Dumitru',
       email: 'ana.dumitru@exemplu.ro',
       password: 'lalea-verde-48',
       password_confirmation: 'lalea-verde-48',
@@ -151,7 +155,7 @@ describe('RegisterPage (DS-002)', () => {
 
   it('maps server password codes to their fields', async () => {
     mockApi({
-      'POST /register': json(422, { message: 'Invalid.', errors: { password: ['mismatch'], name: ['required'] } }),
+      'POST /register': json(422, { message: 'Invalid.', errors: { password: ['mismatch'], first_name: ['required'] } }),
     })
     renderPage()
 
@@ -159,7 +163,7 @@ describe('RegisterPage (DS-002)', () => {
     submit()
 
     expect(await screen.findByText('Parolele nu sunt la fel.')).toBeInTheDocument()
-    expect(screen.getByText('Scrie-ți numele, așa cum îl știe examinatorul clasei.')).toBeInTheDocument()
+    expect(screen.getByText('Scrie-ți prenumele.')).toBeInTheDocument()
   })
 
   it('keeps the typed data when the server cannot be reached', async () => {
@@ -176,7 +180,8 @@ describe('RegisterPage (DS-002)', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Contul nu a fost creat. Nu ne-am putut conecta la server. Datele scrise rămân aici; încearcă din nou.',
     )
-    expect(screen.getByLabelText('Nume și prenume')).toHaveValue('Ana Dumitru')
+    expect(screen.getByLabelText('Prenume')).toHaveValue('Ana')
+    expect(screen.getByLabelText('Nume')).toHaveValue('Dumitru')
     expect(screen.getByLabelText('Email')).toHaveValue('ana.dumitru@exemplu.ro')
     expect(screen.getByRole('button', { name: 'Încearcă din nou' })).toBeInTheDocument()
   })
@@ -191,7 +196,7 @@ describe('RegisterPage focus after a failed submit', () => {
     type('Parola', 'abc12')
     submit()
 
-    expect(screen.getByLabelText('Nume și prenume')).toHaveFocus()
+    expect(screen.getByLabelText('Prenume')).toHaveFocus()
   })
 
   it('moves focus to the first field the server marks invalid, in form order', async () => {
@@ -208,3 +213,23 @@ describe('RegisterPage focus after a failed submit', () => {
     expect(screen.getByLabelText('Email')).toHaveFocus()
   })
 })
+
+describe('RegisterPage names and placeholders (P2b)', () => {
+  it('asks for first and last name separately, with example placeholders', () => {
+    mockApi({})
+    renderPage()
+
+    expect(screen.getByLabelText('Prenume')).toHaveAttribute('placeholder', 'Ana')
+    expect(screen.getByLabelText('Nume')).toHaveAttribute('placeholder', 'Popescu')
+    expect(screen.getByLabelText('Email')).toHaveAttribute('placeholder', 'nume@exemplu.ro')
+    expect(screen.getByLabelText('Parola')).not.toHaveAttribute('placeholder')
+    expect(screen.getByLabelText('Scrie parola din nou')).not.toHaveAttribute('placeholder')
+    expect(screen.queryByLabelText('Nume și prenume')).not.toBeInTheDocument()
+
+    submit()
+
+    expect(screen.getByText('Scrie-ți prenumele.')).toBeInTheDocument()
+    expect(screen.getByText('Scrie-ți numele de familie.')).toBeInTheDocument()
+  })
+})
+

@@ -4,6 +4,8 @@ type Handler = Response | ((init: RequestInit) => Response | Promise<Response>)
 
 export const candidate = {
   id: 7,
+  first_name: 'Ana',
+  last_name: 'Dumitru',
   name: 'Ana Dumitru',
   email: 'ana.dumitru@exemplu.ro',
   role: 'candidate',
@@ -12,6 +14,8 @@ export const candidate = {
 
 export const examiner = {
   id: 8,
+  first_name: 'Maria',
+  last_name: 'Popa',
   name: 'Maria Popa',
   email: 'maria.popa@exemplu.ro',
   role: 'examiner',

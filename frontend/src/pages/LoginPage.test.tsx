@@ -148,7 +148,7 @@ describe('LoginPage (DS-001)', () => {
     fillIn('ana.dumitru@exemplu.ro', 'parola-mea')
     submit()
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Prea multe încercări. Așteaptă un minut.')
+    expect(await screen.findByRole('alert')).toHaveTextContent('Prea multe autentificări eșuate. Așteaptă un minut și încearcă din nou.')
   })
 
   it('shows the offline banner and retries', async () => {

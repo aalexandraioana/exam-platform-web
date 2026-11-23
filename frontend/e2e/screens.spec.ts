@@ -32,3 +32,21 @@ for (const screen of screens) {
     }
   }
 }
+
+// DS-016: a saved token whose session check never answers, so the loading screen stays.
+for (const theme of ['light', 'dark'] as const) {
+  for (const width of [1440, 320]) {
+    test(`DS-016 ${theme} at ${width} px, after 5 s`, async ({ page }) => {
+      await page.route('http://localhost:8000/api/**', () => {})
+      await page.addInitScript((t) => {
+        localStorage.setItem('auth_token', '1|saved')
+        localStorage.setItem('theme', t)
+      }, theme)
+      await page.setViewportSize({ width, height: 900 })
+      await page.goto('/candidate')
+      await expect(page.getByText('Serverul pornește.', { exact: false })).toBeVisible({ timeout: 8000 })
+      const suffix = width === 320 ? '.320' : ''
+      await page.screenshot({ path: screenshotPath(`DS-016.${theme}${suffix}.png`), fullPage: true })
+    })
+  }
+}

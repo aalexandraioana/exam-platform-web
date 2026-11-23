@@ -84,5 +84,6 @@ designs:
   - id: DS-016
     name: session-loading
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/components/SessionLoading.tsx
     description: Shown while a saved session is checked at start-up (GET /api/user); spinner, then the server-waking notice after 5 s (Render free-tier cold start)

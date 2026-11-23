@@ -10,6 +10,7 @@ import Button from '../components/Button'
 import PasswordField from '../components/PasswordField'
 import TextField from '../components/TextField'
 import { linkClass } from '../components/styles'
+import { useFocusFirstInvalid } from '../components/useFocusFirstInvalid'
 
 // A free-tier server that slept takes up to a minute to answer (plan P2, assumption 4).
 const WAKING_AFTER_MS = 5000
@@ -27,6 +28,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<Errors>({})
+  const formRef = useFocusFirstInvalid(errors)
   const [banner, setBanner] = useState<Banner | null>(null)
   const [loading, setLoading] = useState(false)
   const [waking, setWaking] = useState(false)
@@ -94,7 +96,7 @@ export default function LoginPage() {
             </Alert>
           ) : null}
 
-          <form noValidate onSubmit={submit} className="grid gap-4">
+          <form ref={formRef} noValidate onSubmit={submit} className="grid gap-4">
             <TextField
               id="email"
               type="email"

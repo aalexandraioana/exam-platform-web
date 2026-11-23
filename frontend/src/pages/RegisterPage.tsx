@@ -10,6 +10,7 @@ import Button from '../components/Button'
 import PasswordField from '../components/PasswordField'
 import TextField from '../components/TextField'
 import { linkClass } from '../components/styles'
+import { useFocusFirstInvalid } from '../components/useFocusFirstInvalid'
 
 type Field = 'name' | 'email' | 'password' | 'confirmation' | 'class_code'
 type Errors = Partial<Record<Field, string>>
@@ -40,6 +41,7 @@ export default function RegisterPage() {
   const [confirmation, setConfirmation] = useState('')
   const [classCode, setClassCode] = useState('')
   const [errors, setErrors] = useState<Errors>({})
+  const formRef = useFocusFirstInvalid(errors)
   const [summary, setSummary] = useState(0)
   const [banner, setBanner] = useState<Banner | null>(null)
   const [loading, setLoading] = useState(false)
@@ -122,7 +124,7 @@ export default function RegisterPage() {
             </Alert>
           ) : null}
 
-          <form noValidate onSubmit={submit} className="grid gap-4">
+          <form ref={formRef} noValidate onSubmit={submit} className="grid gap-4">
             <TextField
               id="name"
               label={t('register.name')}

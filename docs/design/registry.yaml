@@ -81,4 +81,8 @@ designs:
     status: implemented
     source: frontend/src/components/ (Button.tsx, TextField.tsx, PasswordField.tsx, Alert.tsx)
     description: Button (primary, secondary, ghost, loading), text field and password field with label, help and error code text, and the alert banner (error, info) from mock.css
-
+  - id: DS-016
+    name: session-loading
+    kind: screen
+    status: approved
+    description: Shown while a saved session is checked at start-up (GET /api/user); spinner, then the server-waking notice after 5 s (Render free-tier cold start)

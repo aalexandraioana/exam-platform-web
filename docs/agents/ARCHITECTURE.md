@@ -29,7 +29,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 | Relational Database | `docker-compose.yml` (PostgreSQL 16) | Persists users, classes, competences, the question bank and pools, exams and their blueprints, attempts with their drawn questions and snapshots, answers, photos metadata and grading, with versioned Eloquent migrations | Backend REST API |
 
 ## Data flow
-1. **Authentication & Session:** Candidate self-registers or logs in; Examiner logs into an admin-approved account. Laravel Sanctum issues auth tokens / stateful cookies.
+1. **Authentication:** A Candidate self-registers (optionally with a class code, D-053) or logs in; Examiners and Administrators are created with `php artisan app:create-user` (D-020). Laravel Sanctum issues a bearer token that the SPA keeps in localStorage (D-050); routes check `auth:sanctum`, `active` and `role:<role>`. Endpoints: [docs/API.md](../API.md) (C-001).
 2. **Attempt Initialization:** Candidate launches an exam attempt. The backend validates availability, instantiates a state machine (`started` → `in_progress`), snapshots concrete evaluated parameters for that attempt, and initializes the authoritative server timer.
 3. **Interactive Taking & Autosave:** As the candidate answers Subject 1 and Subject 2 items, the React client fires idempotent autosave requests with versioning to persist progress and survive connection drops or page refreshes.
 4. **Subject 2 Solution Submission:** For complex mathematical problems and proofs in Subject 2, the candidate submits step-by-step reasoning and optionally uploads photos/images of their handwritten work.
@@ -57,7 +57,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 | `DB_CONNECTION`, `DB_HOST`, `DB_DATABASE` | `backend/.env`, `docker-compose.yml` | Backend API & DB | PostgreSQL connection settings; tests use `exam_platform_test` (`backend/phpunit.xml`) |
 | `DB_URL` | Render (from the managed database) | Backend API | Production connection string (`render.yaml`) |
 | `PORT` | Render | Backend API | Port Apache listens on in production (`backend/docker/entrypoint.sh`) |
-| `SANCTUM_STATEFUL_DOMAINS` | `backend/.env` | Backend API | Allowed stateful client domains for Sanctum auth |
+| `FRONTEND_URL` | `backend/.env` (default `http://localhost:5173`); `render.yaml` (production) | Backend API | The only origin CORS allows (`config/cors.php`); no cookie sessions (D-050) |
 
 ## Build, deploy, runtime
 - **Local Dev:** `docker compose up -d` starts PostgreSQL 16 (with a second database, `exam_platform_test`, from `docker/postgres/init-test-db.sql`) and the `api` service (`backend/Dockerfile`, `dev` stage, code mounted, `php artisan serve` on port 8000). Its entrypoint installs Composer packages, creates `backend/.env` with a fresh key and migrates on first run. Frontend runs on the host via `npm install && npm run dev`.

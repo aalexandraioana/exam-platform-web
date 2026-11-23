@@ -181,3 +181,30 @@ describe('RegisterPage (DS-002)', () => {
     expect(screen.getByRole('button', { name: 'Încearcă din nou' })).toBeInTheDocument()
   })
 })
+
+describe('RegisterPage focus after a failed submit', () => {
+  it('moves focus to the first invalid field of the client checks', () => {
+    mockApi({})
+    renderPage()
+
+    type('Email', 'ana.dumitru@exemplu.ro')
+    type('Parola', 'abc12')
+    submit()
+
+    expect(screen.getByLabelText('Nume și prenume')).toHaveFocus()
+  })
+
+  it('moves focus to the first field the server marks invalid, in form order', async () => {
+    mockApi({
+      'POST /register': json(422, { message: 'Invalid.', errors: { class_code: ['not_found'], email: ['taken'] } }),
+    })
+    renderPage()
+
+    fillValid()
+    type('Codul clasei (opțional)', 'K7Q-4NX')
+    submit()
+
+    await screen.findByText(/Există deja un cont cu acest email\./)
+    expect(screen.getByLabelText('Email')).toHaveFocus()
+  })
+})

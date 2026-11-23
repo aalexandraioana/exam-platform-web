@@ -60,7 +60,7 @@ exam-platform-web is an online mathematics assessment platform administering exa
 | `FRONTEND_URL` | `backend/.env` (default `http://localhost:5173`); `render.yaml` (production) | Backend API | The only origin CORS allows (`config/cors.php`); no cookie sessions (D-050) |
 
 ## Build, deploy, runtime
-- **Local Dev:** `docker compose up -d` starts PostgreSQL 16 (with a second database, `exam_platform_test`, from `docker/postgres/init-test-db.sql`) and the `api` service (`backend/Dockerfile`, `dev` stage, code mounted, `php artisan serve` on port 8000). Its entrypoint installs Composer packages, creates `backend/.env` with a fresh key and migrates on first run. Frontend runs on the host via `npm install && npm run dev`.
+- **Local Dev:** `docker compose up -d` starts PostgreSQL 16 (with a second database, `exam_platform_test`, from `docker/postgres/init-test-db.sql`) and the `api` service (`backend/Dockerfile`, `dev` stage, code mounted, `php artisan serve --no-reload` on port 8000, so the container's `DB_HOST` wins over `.env`). Its entrypoint installs Composer packages, creates `backend/.env` with a fresh key and migrates on first run. Frontend runs on the host via `npm install && npm run dev`.
 - **Testing:** `docker compose exec api ./vendor/bin/pest` (backend, against PostgreSQL), `npm run test` (frontend Vitest), `npx playwright test` (E2E & visual screenshots, from P2). CI: `.github/workflows/ci.yml` runs Pest, the frontend lint/test/build and ledger-lint on every push (D-037).
 - **Production Runtime:** Render (D-014), described in `render.yaml`: managed PostgreSQL 16, the Laravel 13 API from the Dockerfile's `prod` stage (Apache, production dependencies, migrations on start), and a static site for the React 19 + Vite SPA (`/* → /index.html`).
 

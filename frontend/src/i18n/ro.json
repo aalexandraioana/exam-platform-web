@@ -1,11 +1,72 @@
 {
   "app": {
-    "name": "Platformă de examene"
+    "name": "Evaluare Digitală"
   },
-  "status": {
-    "checking": "Se verifică legătura cu serverul…",
-    "connected": "Conectat la server",
-    "error": "Serverul nu răspunde"
+  "header": {
+    "language": "Limba",
+    "theme": "Schimbă tema",
+    "logout": "Ieși din cont"
+  },
+  "password": {
+    "show": "Arată parola",
+    "hide": "Ascunde parola"
+  },
+  "errors": {
+    "offline": "<strong>Nu ne-am putut conecta la server.</strong> Verifică internetul și încearcă din nou.",
+    "throttled": "<strong>Prea multe încercări.</strong> Așteaptă un minut.",
+    "retry": "Încearcă din nou",
+    "email": "Scrie o adresă de email întreagă, de exemplu nume@exemplu.ro.",
+    "passwordRequired": "Scrie parola."
+  },
+  "login": {
+    "title": "Intră în cont",
+    "subtitle": "Pentru candidați, examinatori și administratori.",
+    "email": "Email",
+    "emailPlaceholder": "nume@exemplu.ro",
+    "password": "Parola",
+    "forgot": "Ai uitat parola?",
+    "forgotNote": "Nu trimitem linkuri de resetare pe email. Cere-i examinatorului clasei tale sau administratorului o parolă nouă.",
+    "submit": "Intră în cont",
+    "submitting": "Se verifică…",
+    "wrong": "<strong>Emailul sau parola nu sunt corecte.</strong> Verifică-le și încearcă din nou.",
+    "inactive": "<strong>Contul tău este dezactivat.</strong> Cere-i administratorului platformei să îl reactiveze.",
+    "waking": "<strong>Serverul pornește.</strong> După o pauză, prima conectare durează până la un minut. Nu închide pagina.",
+    "noAccount": "Nu ai cont?",
+    "registerLink": "Înregistrează-te ca candidat",
+    "examinerNote": "Conturile de examinator le creează administratorul platformei."
+  },
+  "register": {
+    "title": "Creează-ți cont de candidat",
+    "subtitle": "Ai nevoie de el ca să susții examenele publicate pentru clasa ta.",
+    "summary_one": "<strong>Mai este {{count}} câmp de corectat.</strong> Îl găsești marcat mai jos.",
+    "summary_few": "<strong>Mai sunt {{count}} câmpuri de corectat.</strong> Le găsești marcate mai jos.",
+    "summary_other": "<strong>Mai sunt {{count}} de câmpuri de corectat.</strong> Le găsești marcate mai jos.",
+    "offline": "<strong>Contul nu a fost creat.</strong> Nu ne-am putut conecta la server. Datele scrise rămân aici; încearcă din nou.",
+    "name": "Nume și prenume",
+    "nameRequired": "Scrie-ți numele, așa cum îl știe examinatorul clasei.",
+    "email": "Email",
+    "emailTaken": "Există deja un cont cu acest email. <link>Intră în cont</link> sau folosește alt email.",
+    "password": "Parola",
+    "passwordHelp": "Cel puțin 8 caractere.",
+    "passwordShort_one": "Parola are {{count}} caracter; are nevoie de cel puțin 8.",
+    "passwordShort_few": "Parola are {{count}} caractere; are nevoie de cel puțin 8.",
+    "passwordShort_other": "Parola are {{count}} de caractere; are nevoie de cel puțin 8.",
+    "confirmation": "Scrie parola din nou",
+    "mismatch": "Parolele nu sunt la fel.",
+    "classCode": "Codul clasei",
+    "optional": "(opțional)",
+    "classCodeNotFound": "Niciun cod de clasă nu se potrivește. Verifică-l cu examinatorul clasei sau lasă câmpul gol și adaugă codul mai târziu.",
+    "classCodeHelp": "Îl primești de la examinatorul clasei. Intri în clasă după ce examinatorul îți acceptă cererea. Poți adăuga codul și mai târziu, din tabloul de bord.",
+    "submit": "Creează contul",
+    "submitting": "Se creează contul…",
+    "haveAccount": "Ai deja cont?",
+    "loginLink": "Intră în cont",
+    "examinerNote": "Ești examinator? Contul tău îl creează administratorul platformei."
+  },
+  "home": {
+    "candidate": "Candidat",
+    "examiner": "Examinator",
+    "administrator": "Administrator"
   },
   "duration": {
     "minutes_one": "{{count}} minut",

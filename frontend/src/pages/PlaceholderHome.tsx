@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import type { Role } from '../api/auth'
 import { useAuth } from '../auth/context'
 
-// TEMPORARY (P2): a role's home until its own part replaces it: P3 the Examiner's
-// classes screen, P7 the Candidate dashboard, P11 the Administrator screens. No mock,
+// TEMPORARY (P2): a role's home until its own part replaces it: P7 the Candidate
+// dashboard, P11 the Administrator screens. No mock,
 // no screenshot. Log-out is in the AppHeader above it.
 export default function PlaceholderHome({ role }: { role: Role }) {
   const { t } = useTranslation()

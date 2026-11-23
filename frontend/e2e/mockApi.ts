@@ -26,6 +26,7 @@ export async function mockAuthApi(page: Page, role: Role) {
     if (request.method() === 'POST' && path.endsWith('/register')) return reply(route, 201, { token: '1|e2e', user })
     if (request.method() === 'POST' && path.endsWith('/logout')) return reply(route, 204)
     if (path.endsWith('/user')) return signedIn ? reply(route, 200, { user }) : reply(route, 401, { message: 'Unauthenticated.' })
+    if (path.endsWith('/classes') && request.method() === 'GET') return reply(route, 200, { classes: [] })
     return reply(route, 404, { message: 'Not found.' })
   })
 }

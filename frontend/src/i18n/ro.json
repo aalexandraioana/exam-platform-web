@@ -13,7 +13,7 @@
   },
   "errors": {
     "offline": "<strong>Nu ne-am putut conecta la server.</strong> Verifică internetul și încearcă din nou.",
-    "throttled": "<strong>Prea multe încercări.</strong> Așteaptă un minut.",
+    "throttled": "<strong>Prea multe autentificări eșuate.</strong> Așteaptă un minut și încearcă din nou.",
     "retry": "Încearcă din nou",
     "email": "Scrie o adresă de email întreagă, de exemplu nume@exemplu.ro.",
     "passwordRequired": "Scrie parola."

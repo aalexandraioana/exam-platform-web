@@ -49,6 +49,7 @@
 - Q-038 · Can a class linked to a published Exam be deleted? · _answered_
 - Q-039 · Does the 30 Nov pilot include Subject 2? · _answered_
 - Q-040 · What happens when the class code entered at registration matches no class? · _answered_
+- Q-041 · What does the roster's "more options" menu on DS-013 contain, and can a declined Candidate ask to join again?
 
 ---
 
@@ -271,3 +272,9 @@
 - **Blocks:** P2 (registration, DS-002), P3 (join requests)
 - **Context:** D-028 lets a Candidate enter a class code at registration, but says nothing about a code that matches no class. Options: refuse the registration and show the error on the code field (nothing is created; the Candidate fixes the code or clears it), or create the account anyway and tell the Candidate the code was not found. The DS-002 mock shows it in its "Cod greșit" state.
 - **Answer:** The registration is refused: nothing is created, and the code field says the code matches no class. The Candidate fixes the code or clears the field (it stays optional) and submits again. Chosen so a typo is caught while the teacher's code is at hand, instead of leaving an account outside its class (D-053). (Answered 2026-11-23.)
+
+## Q-041 · What does the roster's "more options" menu on DS-013 contain, and can a declined Candidate ask to join again?
+- **Status:** open
+- **Date:** 2026-11-23
+- **Blocks:** P3 (roster menu; joining after a decline)
+- **Context:** DS-013 shows a "…" button per Candidate in the roster with no menu drawn (removing a Candidate from the class is a likely item). D-028 keeps a declined request's row, one per Candidate and class, and doesn't say whether that Candidate may send a new request. Until answered, the menu is not built and joining after a decline is refused as already decided.

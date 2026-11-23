@@ -5,12 +5,14 @@ designs:
   - id: DS-001
     name: auth-login
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/pages/LoginPage.tsx
     description: Login screen for candidates, examiners, and administrators with email and password
   - id: DS-002
     name: auth-register
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/pages/RegisterPage.tsx
     description: Candidate self-registration screen with email and password
   - id: DS-003
     name: candidate-dashboard
@@ -67,3 +69,16 @@ designs:
     kind: screen
     status: approved
     description: Examiner classes with join codes, pending join requests to accept or decline, roster, and setting a new password for a Candidate (D-015, D-020, D-028)
+  - id: DS-014
+    name: app-header
+    kind: component
+    status: implemented
+    source: frontend/src/components/AppHeader.tsx
+    description: Top bar with the brand, RO/EN toggle, theme toggle and log-out (signed in); the toggles stay visible on mobile auth screens (from DS-001/DS-002)
+  - id: DS-015
+    name: form-controls
+    kind: component
+    status: implemented
+    source: frontend/src/components/ (Button.tsx, TextField.tsx, PasswordField.tsx, Alert.tsx)
+    description: Button (primary, secondary, ghost, loading), text field and password field with label, help and error code text, and the alert banner (error, info) from mock.css
+

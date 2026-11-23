@@ -15,7 +15,7 @@
 
 ## PATTERN-001 · Plan-then-build execution
 - **Status:** approved
-- **Confirmed:** 2026-11-19
+- **Confirmed:** 2026-11-23
 - **Use when:** Implementing features, refactorings, or modifications spanning multiple files or logic boundaries.
 - **How:** Run `/plan` to define size, approach, tests, and files; confirm knowledge; execute via `/build`.
 - **Example:** AGENTS.md:23

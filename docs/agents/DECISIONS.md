@@ -54,7 +54,7 @@
 ## D-001 · Agentic plan-then-build workflow
 - **Status:** approved
 - **Date:** 2026-11-12
-- **Confirmed:** 2026-11-18
+- **Confirmed:** 2026-11-23
 - **Rule:** Any non-trivial modification, architectural change, or feature implementation must start with an approved plan via `/plan` before building via `/build`.
 - **Why:** Inferred — ensures changes are validated against requirements, tests are authored first, and architectural drift is minimized.
 - **Rejected:** Ad-hoc unapproved code modifications without prior planning.
@@ -64,7 +64,7 @@
 ## D-003 · PostgreSQL 16 with local Docker Compose orchestration
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
+- **Confirmed:** 2026-11-23
 - **Rule:** Relational persistence is provided by PostgreSQL 16 managed locally via Docker Compose (`docker compose up`), with schema changes governed by versioned Eloquent migrations.
 - **Why:** Meets the catalog constraint for a relational database with containerized local setup and relational integrity across at least 6 core entities.
 - **Rejected:** SQLite in production (forbidden by catalog); MySQL (user selected PostgreSQL).
@@ -104,7 +104,7 @@
 ## D-008 · Pest PHP, Vitest, and Playwright as automated testing stack
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
+- **Confirmed:** 2026-11-23
 - **Rule:** Backend tests are written with Pest PHP (`./vendor/bin/pest`); frontend unit and integration tests use Vitest (`npm run test`); E2E user flows and automated visual regression screenshots are run with Playwright (`npx playwright test`), saving outputs to `docs/design/screens/<DS-id>.<light|dark>.png`.
 - **Why:** Pest PHP is the modern Laravel testing choice; Vitest integrates natively with Vite; Playwright covers E2E and screenshot verification, satisfying the catalog requirement of ≥10 tests and Definition of Done visual checks.
 - **Rejected:** PHPUnit standalone (Pest wraps it and is more expressive); Jest (Vitest is Vite-native); Cypress (Playwright is preferred for multi-browser and screenshot automation).
@@ -114,7 +114,7 @@
 ## D-009 · Two-folder monorepo layout (backend/ and frontend/)
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** The repository uses a two-folder monorepo structure: `backend/` for the Laravel 13 REST API and `frontend/` for the React + Vite SPA, with a shared root `docker-compose.yml` for PostgreSQL and local services.
 - **Why:** Provides clean separation of concerns between the API and the SPA, satisfies the catalog's decoupled REST API contract requirement, and ensures consistent agent navigation and CI path references.
 - **Rejected:** Single-folder layout with Laravel serving frontend views; Inertia.js monolith; nested frontend inside Laravel's public directory.
@@ -144,7 +144,7 @@
 ## D-014 · Production deployment on Render cloud platform
 - **Status:** approved
 - **Date:** 2026-11-19
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** The application is deployed to Render with a managed PostgreSQL 16 database, a containerized Laravel 13 REST API web service, and a static web service for the React 19 + Vite SPA.
 - **Why:** Delivers a reliable, production-ready HTTPS environment satisfying the course catalog requirement for public deployment and live pilot testing.
 - **Rejected:** Self-hosted unmanaged VPS; Fly.io (Render was chosen by the user for managed PostgreSQL and web services).
@@ -154,7 +154,7 @@
 ## D-015 · Classes and Exam publication to classes
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** Candidates belong to classes. An Exam is published to one or more classes, and only Candidates of those classes see it. The cohort for feedback (D-019) is the Candidates of the classes the Exam was published to.
 - **Why:** Matches the classroom reality from the interview and the approved DS-003 mock ("Clasa a VI-a B", "pentru clasa ta").
 - **Rejected:** Published Exams visible to every Candidate; grade level as the only filter.
@@ -184,7 +184,7 @@
 ## D-020 · Admin-created Examiner accounts and manual password reset
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** Only an Administrator creates Examiner accounts; there is no Examiner self-registration and no pending-approval state. There is no email password reset: an Administrator, or the Examiner for Candidates in their class, sets a new password.
 - **Why:** Keeps account control with the school and avoids a mail service.
 - **Rejected:** Examiner self-registration with approval; email reset links.
@@ -204,7 +204,7 @@
 ## D-022 · Bilingual Romanian and English UI
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** The UI is available in Romanian and English with a language toggle. CONTEXT.md holds the Romanian and English word for each term (words: Q-017).
 - **Why:** Romanian classroom users plus English project documentation and review.
 - **Rejected:** Romanian-only or English-only UI.
@@ -234,7 +234,7 @@
 ## D-028 · Examiner-created classes with join code and approval
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** Examiners create their classes; each class has a short join code. A Candidate enters the code at registration or later from the dashboard and stays pending until the Examiner accepts them. D-015 still holds.
 - **Why:** Self-registered Candidates need a way into a class, and approval blocks strangers who got the code.
 - **Rejected:** Join code without approval; Examiner adds Candidates by email; Administrator-managed classes.
@@ -264,7 +264,7 @@
 ## D-033 · Lucide as the only icon set
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** All UI icons come from Lucide (`lucide-react` in the frontend, imported per icon), 2px stroke, at 16, 20 or 24 px. No Unicode symbols or emoji are used as icons. Icon-only controls keep an accessible name (DESIGN.md).
 - **Why:** Mixed hand-copied SVGs and Unicode glyphs render differently per device; Lucide matches the existing outline style (Feather), is free (ISC) and tree-shaken.
 - **Rejected:** Heroicons (smaller set), Phosphor (multiple weights invite drift), Tabler Icons (more technical look).
@@ -274,7 +274,7 @@
 ## D-035 · Warm, calm visual system with a fresh mint accent
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: a fresh mint primary accent (`#1F7A4F` light / `#7EE2A8` dark, hover `#17603D` / `#AFF0C9`, tint `#E3F2E8` / `#1C3A28`); warm neutrals in both themes, a cream light theme (canvas `#F5F1EA`, surface `#FFFCF7`) and an espresso dark theme (canvas `#1A1612`, surface `#241F1A`); Plus Jakarta Sans for UI copy and headings; JetBrains Mono for formulas, equations and timers; a 4px grid spacing scale; soft rounded shapes (radius 10/16 px) and subtle, warm-tinted elevation.
 - **Why:** The user preferred mint green to teal. In light mode the mint is deep enough to carry white text (5.31:1) and links on cream (4.72:1); the bright mint shows in dark mode. Status colors keep their meaning through icons and text, since the accent is close to the success green.
 - **Rejected:** Teal accent (D-034); classic and soft sage-mint options; light mint in light mode (fails contrast).
@@ -284,7 +284,7 @@
 ## D-036 · Laravel 13 REST API backend with React 19 + Vite SPA
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** The platform is built as a headless Laravel 13 (PHP 8.4) REST API backend paired with a standalone React 19 + Vite SPA frontend. Pest stays the backend test runner (D-008).
 - **Why:** Laravel 11 (D-002) is past its security-support window (March 2026); Laravel 13 is the current major. No backend code existed yet, so the switch cost nothing. The architecture reasons of D-002 still hold: clean API/SPA separation, native queues and scheduling for sealing expired Attempts, and the catalog's documented REST API.
 - **Rejected:** Staying on Laravel 11 (out of support); Laravel 12 (shorter remaining support than 13); monolithic Inertia.js without a standalone API.
@@ -294,7 +294,7 @@
 ## D-037 · GitHub Actions CI on every push
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** A GitHub Actions workflow runs on every push: backend Pest tests against PostgreSQL, frontend Vitest, lint and build, and `python3 docs/agents/tools/ledger-lint.py`. A red run blocks merging.
 - **Why:** The catalog requires CI on GitHub Actions running the tests and the ledger lint on each push; the repo is already on GitHub.
 - **Rejected:** No CI (fails the catalog); other CI services (the catalog names GitHub Actions).
@@ -304,7 +304,7 @@
 ## D-038 · Romanian as the default UI language
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** The UI opens in Romanian; English is available through the language toggle (D-022). The backend default locale is `ro` with `en` as fallback.
 - **Why:** The users are Romanian classrooms; the backend scaffold already set `APP_LOCALE=ro`, `APP_FALLBACK_LOCALE=en`.
 - **Rejected:** English as the default.
@@ -414,7 +414,7 @@
 ## D-049 · A class linked to an Exam can't be deleted
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-23
 - **Rule:** The database refuses to delete a class that is still linked to any Exam. Deleting a class first unlinks it from draft (unpublished) Exams; a class linked to a published Exam can't be deleted, so its Candidates keep seeing the Exam and its results (D-015, D-019).
 - **Why:** Deleting a class used to remove its links silently, hiding a published Exam and its results from that class's Candidates.
 - **Rejected:** Deleting the class and its links silently (the earlier P1c rule).

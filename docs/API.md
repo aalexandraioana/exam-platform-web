@@ -31,9 +31,9 @@ pending), `class_has_published_exam` (a class linked to a published Exam, D-049)
 
 A user in every response:
 ```json
-{ "id": 7, "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true }
+{ "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true }
 ```
-`role` is `candidate`, `examiner` or `administrator`. Emails are stored in lower case and
+`name` is always `first_name` and `last_name` joined with a space, for display. `role` is `candidate`, `examiner` or `administrator`. Emails are stored in lower case and
 compared without case.
 
 ### POST /api/register
@@ -41,10 +41,10 @@ Public. Creates a Candidate and logs them in. Throttled: 10 requests per minute 
 
 Request:
 ```json
-{ "name": "Ana Dumitru", "email": "Ana.Dumitru@exemplu.ro", "password": "lalea-verde-48",
+{ "first_name": "Ana", "last_name": "Dumitru", "email": "Ana.Dumitru@exemplu.ro", "password": "lalea-verde-48",
   "password_confirmation": "lalea-verde-48", "class_code": "k7q-4mx" }
 ```
-- `name`: required, up to 255 characters.
+- `first_name`, `last_name`: required, up to 100 characters each.
 - `email`: required, a valid email, not used by another account (any case).
 - `password`: required, at least 8 characters; `password_confirmation` must match.
 - `class_code`: optional. Case, spaces and hyphens are ignored. When given, it must match a
@@ -54,13 +54,13 @@ Request:
 
 `201 Created`:
 ```json
-{ "token": "12|q8Jx…", "user": { "id": 7, "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true } }
+{ "token": "12|q8Jx…", "user": { "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true } }
 ```
 `422`:
 ```json
 { "message": "The given data was invalid.", "errors": { "email": ["taken"], "class_code": ["not_found"] } }
 ```
-Codes per field: `name` (`required`), `email` (`required`, `invalid`, `taken`), `password`
+Codes per field: `first_name` and `last_name` (`required`, `invalid`), `email` (`required`, `invalid`, `taken`), `password`
 (`required`, `too_short`, `mismatch`), `class_code` (`not_found`).
 
 ### POST /api/login
@@ -93,7 +93,7 @@ Bearer token, active user. The logged-in user.
 
 `200 OK`:
 ```json
-{ "user": { "id": 7, "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true } }
+{ "user": { "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true } }
 ```
 `401` without a valid token; `403 account_inactive` if the account was deactivated.
 
@@ -122,10 +122,10 @@ Request: `{ "name": "Clasa a VII-a A" }`. A `join_code` in the body is ignored.
 `200 OK`:
 ```json
 { "class": { "id": 3, "name": "Clasa a VI-a A", "join_code": "K7Q-4MX", "pending_count": 1, "candidate_count": 1, "published_exam_count": 0 },
-  "requests": [ { "id": 41, "candidate": { "id": 7, "name": "Matei Radu", "email": "matei.radu@exemplu.ro" }, "requested_at": "2026-11-23T18:40:00+00:00" } ],
-  "candidates": [ { "id": 9, "name": "Ana Dumitru", "email": "ana.d@exemplu.ro", "joined_at": "2026-09-12T08:00:00+00:00" } ] }
+  "requests": [ { "id": 41, "candidate": { "id": 7, "first_name": "Matei", "last_name": "Radu", "name": "Matei Radu", "email": "matei.radu@exemplu.ro" }, "requested_at": "2026-11-23T18:40:00+00:00" } ],
+  "candidates": [ { "id": 9, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.d@exemplu.ro", "joined_at": "2026-09-12T08:00:00+00:00" } ] }
 ```
-`requests` are the pending ones, oldest first; `candidates` are the accepted ones, by name.
+`requests` are the pending ones, oldest first; `candidates` are the accepted ones, by last name, then first name.
 
 ### PATCH /api/classes/{id}
 Renames the class. Request: `{ "name": "Clasa a VI-a B" }`. `200 OK`: `{ "class": <class> }`. `422` as for creating.
@@ -176,6 +176,6 @@ earlier request (until Q-041 is answered).
 Examiners and Administrators have no endpoint yet (DS-011 comes in P11). They are created on
 the server with:
 ```bash
-php artisan app:create-user examiner maria.popa@exemplu.ro "Maria Popa"
+php artisan app:create-user examiner maria.popa@exemplu.ro Maria Popa
 ```
 The command asks for the password twice and never takes it as an argument.

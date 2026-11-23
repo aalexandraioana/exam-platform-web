@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getToken, setToken } from '../api/client'
@@ -63,5 +63,42 @@ describe('AppHeader', () => {
     expect(await screen.findByRole('link', { name: 'Evaluare Digitală' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Ieși din cont' })).not.toBeInTheDocument()
     expect(getToken()).toBeNull()
+  })
+})
+
+describe('AppHeader for an Examiner', () => {
+  it('shows the Examiner nav with the current screen marked', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'examiner' } }) })
+    render(
+      <MemoryRouter initialEntries={['/examiner']}>
+        <AuthProvider>
+          <AppHeader />
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+
+    const nav = await screen.findByRole('navigation', { name: 'Navigare examinator' })
+    expect(within(nav).getByRole('link', { name: 'Clase' })).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('opens the menu drawer with the nav, language, theme and log-out', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'examiner' } }) })
+    render(
+      <MemoryRouter initialEntries={['/examiner']}>
+        <AuthProvider>
+          <AppHeader />
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Deschide meniul' }))
+    const drawer = screen.getByRole('dialog', { name: 'Meniu' })
+    expect(within(drawer).getByRole('link', { name: 'Clase' })).toBeInTheDocument()
+    expect(within(drawer).getByRole('button', { name: 'Ieși din cont' })).toBeInTheDocument()
+
+    fireEvent.click(within(drawer).getByRole('button', { name: 'Închide meniul' }))
+    expect(screen.queryByRole('dialog', { name: 'Meniu' })).not.toBeInTheDocument()
   })
 })

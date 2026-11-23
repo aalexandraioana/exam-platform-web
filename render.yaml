@@ -30,6 +30,8 @@ services:
         value: array
       - key: DB_CONNECTION
         value: pgsql
+      - key: FRONTEND_URL
+        value: https://exam-platform-web-ip0s.onrender.com
       - key: DB_URL
         fromDatabase:
           name: exam-platform-db

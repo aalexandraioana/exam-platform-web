@@ -14,7 +14,8 @@ uses(RefreshDatabase::class);
 
 it('defaults a new user to an active candidate and refuses an unknown role', function () {
     $id = DB::table('users')->insertGetId([
-        'name' => 'Ana Dumitru',
+        'first_name' => 'Ana',
+        'last_name' => 'Dumitru',
         'email' => 'ana@example.test',
         'password' => 'hashed',
     ]);

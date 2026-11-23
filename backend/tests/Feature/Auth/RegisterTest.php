@@ -11,7 +11,8 @@ uses(RefreshDatabase::class);
 function registration(array $overrides = []): array
 {
     return array_merge([
-        'name' => 'Ana Dumitru',
+        'first_name' => 'Ana',
+        'last_name' => 'Dumitru',
         'email' => 'Ana.Dumitru@Exemplu.ro',
         'password' => 'lalea-verde-48',
         'password_confirmation' => 'lalea-verde-48',
@@ -25,7 +26,10 @@ it('creates an active candidate and returns a token, ignoring a role in the body
         ->assertJsonPath('user.email', 'ana.dumitru@exemplu.ro')
         ->assertJsonPath('user.role', 'candidate')
         ->assertJsonPath('user.is_active', true)
-        ->assertJsonStructure(['token', 'user' => ['id', 'name', 'email', 'role', 'is_active']]);
+        ->assertJsonPath('user.first_name', 'Ana')
+        ->assertJsonPath('user.last_name', 'Dumitru')
+        ->assertJsonPath('user.name', 'Ana Dumitru')
+        ->assertJsonStructure(['token', 'user' => ['id', 'first_name', 'last_name', 'name', 'email', 'role', 'is_active']]);
 
     $user = User::sole();
     expect($user->role)->toBe(Role::Candidate)
@@ -44,7 +48,9 @@ it('refuses invalid registrations with an error code per field', function (array
 
     expect(User::count())->toBe(1);
 })->with([
-    'missing name' => [['name' => ''], 'name', 'required'],
+    'missing first name' => [['first_name' => ''], 'first_name', 'required'],
+    'missing last name' => [['last_name' => ''], 'last_name', 'required'],
+    'too long first name' => [['first_name' => str_repeat('a', 101)], 'first_name', 'invalid'],
     'bad email' => [['email' => 'ana.dumitru@'], 'email', 'invalid'],
     'missing email' => [['email' => ''], 'email', 'required'],
     'short password' => [['password' => 'abc12', 'password_confirmation' => 'abc12'], 'password', 'too_short'],

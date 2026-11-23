@@ -47,6 +47,7 @@
 - D-050 · The SPA authenticates with a Sanctum bearer token
 - D-051 · The API is documented in a hand-written docs/API.md
 - D-052 · No page may be indexed by search engines
+- D-053 · A class code at registration that matches no class refuses the registration
 
 ---
 
@@ -448,5 +449,15 @@
 - **Why:** The platform is a pilot tool with no public landing page; pages behind login must stay out of indexes.
 - **Rejected:** Letting the login and registration pages be indexed.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-034; frontend/index.html
+- **Source:** user · confidence high
+
+## D-053 · A class code at registration that matches no class refuses the registration
+- **Status:** approved
+- **Date:** 2026-11-23
+- **Confirmed:** 2026-11-23
+- **Rule:** The class code at registration is optional. When one is entered and matches no class, the registration is refused with a validation error on the code field and no account is created. When it matches, the account is created with a pending join request for that class (D-028).
+- **Why:** A mistyped code is caught while the teacher's code is still at hand, so no Candidate ends up outside their class unnoticed.
+- **Rejected:** Creating the account anyway and telling the Candidate the code was not found.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-040; docs/design/mocks/DS-002.html
 - **Source:** user · confidence high
 

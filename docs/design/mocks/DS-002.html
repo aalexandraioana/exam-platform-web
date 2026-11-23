@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>DS-002 · Register Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-002 · Înregistrare candidat (mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-default">Implicit</button>
+      <button type="button" class="mock-btn" data-state-btn="s-invalid">Câmpuri greșite</button>
+      <button type="button" class="mock-btn" data-state-btn="s-taken">Email folosit</button>
+      <button type="button" class="mock-btn" data-state-btn="s-code">Cod greșit</button>
+      <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-offline">Fără conexiune</button>
+    </div>
+  </div>
+</aside>
+
+<header class="app-header auth-header">
+  <a href="#" class="brand"><i data-icon="book-open-text" class="lg"></i>Evaluare Digitală</a>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+  </div>
+</header>
+
+<main class="auth-page">
+  <div class="auth-card">
+    <div class="stack-sm">
+      <h1 class="t-display">Creează-ți cont de candidat</h1>
+      <p class="secondary">Ai nevoie de el ca să susții examenele publicate pentru clasa ta.</p>
+    </div>
+
+    <section class="card stack">
+      <div class="alert error" role="alert" data-show="s-invalid">
+        <i data-icon="circle-alert"></i>
+        <span><strong>Mai sunt 3 câmpuri de corectat.</strong> Le găsești marcate mai jos.</span>
+      </div>
+      <div class="alert error" role="alert" data-show="s-offline">
+        <i data-icon="wifi-off"></i>
+        <div class="row between"><span><strong>Contul nu a fost creat.</strong> Nu ne-am putut conecta la server. Datele scrise rămân aici; încearcă din nou.</span><button class="btn">Încearcă din nou</button></div>
+      </div>
+
+      <form novalidate>
+        <div class="field">
+          <label for="name">Nume și prenume</label>
+          <input id="name" class="input" autocomplete="name" value="Ana Dumitru" data-show="s-default s-taken s-code s-loading s-offline">
+          <input class="input invalid" aria-label="Nume și prenume" aria-invalid="true" aria-describedby="name-err" value="" data-show="s-invalid">
+          <span id="name-err" class="help error" data-show="s-invalid">Scrie-ți numele, așa cum îl știe profesorul.</span>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" class="input" type="email" autocomplete="email" value="ana.dumitru@exemplu.ro" data-show="s-default s-code s-loading s-offline">
+          <input class="input invalid" type="email" aria-label="Email" aria-invalid="true" aria-describedby="email-err" value="ana.dumitru@" data-show="s-invalid">
+          <span id="email-err" class="help error" data-show="s-invalid">Scrie o adresă de email întreagă, de exemplu nume@exemplu.ro.</span>
+          <input class="input invalid" type="email" aria-label="Email" aria-invalid="true" aria-describedby="email-taken" value="ana.dumitru@exemplu.ro" data-show="s-taken">
+          <span id="email-taken" class="help error" data-show="s-taken">Există deja un cont cu acest email. <a href="DS-001.html" class="link">Intră în cont</a> sau folosește alt email.</span>
+        </div>
+
+        <div class="field">
+          <label for="pw">Parola</label>
+          <div class="pw-wrap">
+            <input id="pw" class="input" type="password" autocomplete="new-password" aria-describedby="pw-help" value="lalea-verde-48" data-show="s-default s-taken s-code s-loading s-offline">
+            <input class="input invalid" type="password" aria-label="Parola" aria-invalid="true" aria-describedby="pw-err" value="abc12" data-show="s-invalid">
+            <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
+          </div>
+          <span id="pw-help" class="help" data-show="s-default s-taken s-code s-loading s-offline">Cel puțin 8 caractere.</span>
+          <span id="pw-err" class="help error" data-show="s-invalid">Parola are 5 caractere; are nevoie de cel puțin 8.</span>
+        </div>
+
+        <div class="field">
+          <label for="pw2">Scrie parola din nou</label>
+          <div class="pw-wrap">
+            <input id="pw2" class="input" type="password" autocomplete="new-password" value="lalea-verde-48" data-show="s-default s-taken s-code s-loading s-offline">
+            <input class="input invalid" type="password" aria-label="Scrie parola din nou" aria-invalid="true" aria-describedby="pw2-err" value="abc123" data-show="s-invalid">
+            <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
+          </div>
+          <span id="pw2-err" class="help error" data-show="s-invalid">Parolele nu sunt la fel.</span>
+        </div>
+
+        <hr class="divider">
+
+        <div class="field">
+          <label for="code">Codul clasei <span class="secondary" style="font-weight: 400;">(opțional)</span></label>
+          <input id="code" class="input code-input" autocomplete="off" aria-describedby="code-help" placeholder="K7Q-4MX" value="" data-show="s-default s-invalid s-taken s-loading s-offline">
+          <input class="input code-input invalid" aria-label="Codul clasei" aria-invalid="true" aria-describedby="code-err" value="K7Q-4NX" data-show="s-code">
+          <span id="code-err" class="help error" data-show="s-code">Niciun cod de clasă nu se potrivește. Verifică-l cu profesorul sau lasă câmpul gol și adaugă codul mai târziu.</span>
+          <span id="code-help" class="help">Îl primești de la profesor. Intri în clasă după ce profesorul îți acceptă cererea. Poți adăuga codul și mai târziu, din tabloul de bord.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" data-show="s-default s-invalid s-taken s-code s-offline">Creează contul</button>
+        <button type="submit" class="btn btn-primary" disabled aria-disabled="true" data-show="s-loading"><i data-icon="loader-circle" class="spin"></i>Se creează contul…</button>
+      </form>
+    </section>
+
+    <div class="auth-foot stack-sm">
+      <p>Ai deja cont? <a href="DS-001.html" class="link">Intră în cont</a></p>
+      <p class="t-caption secondary">Ești profesor? Contul de examinator îl creează administratorul platformei.</p>
+    </div>
+  </div>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

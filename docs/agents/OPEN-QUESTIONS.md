@@ -34,19 +34,20 @@
 - Q-023 · How is a question's specific competence identified? · _answered_
 - Q-024 · What happens when an Item has fewer Variants than the letter an Attempt got? · _answered_
 - Q-025 · What happens to the uncommitted backend/ scaffold, and where does Laravel run locally? · _answered_
-- Q-026 · Does the SPA authenticate with a Sanctum cookie session or a bearer token?
+- Q-026 · Does the SPA authenticate with a Sanctum cookie session or a bearer token? · _answered_
 - Q-027 · Where are Subject 2 photos stored in production? · _answered_
 - Q-028 · How does the scheduled auto-submit job run on Render? · _answered_
 - Q-029 · Are Items and answer options shown in random order per Attempt? · _answered_
 - Q-030 · What happens when the Examiner corrects a Subject 1 answer key after Attempts were graded? · _answered_
 - Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured? · _answered_
 - Q-032 · How is mathematical notation shown in question text?
-- Q-033 · In which format is the API documented?
-- Q-034 · Which pages, if any, may search engines index?
+- Q-033 · In which format is the API documented? · _answered_
+- Q-034 · Which pages, if any, may search engines index? · _answered_
 - Q-035 · Which curriculum topics are seeded? · _answered_
 - Q-036 · Must a question drawn for an Item match the Item? · _answered_
 - Q-037 · Can the same question appear twice in one Attempt? · _answered_
 - Q-038 · Can a class linked to a published Exam be deleted? · _answered_
+- Q-039 · Does the 30 Nov pilot include Subject 2? · _answered_
 
 ---
 
@@ -176,10 +177,10 @@
 - **Answer:** Generate a fresh official Laravel skeleton into `backend/`, keeping `docker-compose.yml`, `backend/.env.example` and the `/api/health` route; the 7 migrations from the outdated schema plan move to `docs/plans/legacy-migrations/` for P1 to consult (nothing deleted). Laravel runs in Docker: one `backend/Dockerfile` serves both an `api` service in docker-compose and Render.
 
 ## Q-026 · Does the SPA authenticate with a Sanctum cookie session or a bearer token?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Context:** The uncommitted scaffold chose cookie sessions (`SESSION_DRIVER=database`, `SANCTUM_STATEFUL_DOMAINS`, `$middleware->statefulApi()`), while the approved auth plans (docs/plans/auth-part-1-backend.md, auth-parts-2-and-3.md) issue a bearer token stored in localStorage. The SPA and API run on different Render domains (D-014), which affects cookie sessions. P0 leaves `statefulApi()` out; P2 needs the answer.
-
+- **Answer:** A Sanctum bearer token: issued at login, kept by the SPA in localStorage and sent in the `Authorization` header; logout revokes it. Chosen over a cookie session because the site and the API are on different onrender.com domains, and onrender.com is a public suffix, so a session cookie would be cross-site (`SameSite=None`) and blocked by Safari. Matches the approved auth plans (D-050, proposed). (Answered 2026-11-23.)
 
 ## Q-027 · Where are Subject 2 photos stored in production?
 - **Status:** answered
@@ -223,16 +224,18 @@
 - **Context:** Plain text with JetBrains Mono (DESIGN.md `font-math`), or rendered notation such as KaTeX (a new dependency).
 
 ## Q-033 · In which format is the API documented?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P2 onward (each backend part adds a C- contract with a link to the docs)
 - **Context:** The catalog accepts OpenAPI/Swagger or an API.md with request/response examples.
+- **Answer:** A hand-written `docs/API.md` with a request and response example for each endpoint; C- entries link to its sections. No OpenAPI generator (no new dependency) (D-051, proposed). (Answered 2026-11-23.)
 
 ## Q-034 · Which pages, if any, may search engines index?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P2 (first public screens)
 - **Context:** Raised by the P0 SEO review. Everything is `noindex, nofollow` for now (frontend/index.html). Pages behind login (exams, attempts, grading, results) should stay out of indexes; open is whether any public page (e.g. login or a landing page) should be indexable.
+- **Answer:** None. Every page stays `noindex, nofollow`, login and registration included: the platform is a pilot tool with no public landing page (D-052, proposed). (Answered 2026-11-23.)
 
 ## Q-035 · Which curriculum topics are seeded?
 - **Status:** answered
@@ -254,3 +257,9 @@
 - **Date:** 2026-11-22
 - **Answer:** No. Raised by the P1c security review: deleting a class removed its links silently, hiding a published Exam and its results from that class's Candidates. The database now refuses deleting a linked class, and P3 unlinks draft Exams first (D-049).
 
+## Q-039 · Does the 30 Nov pilot include Subject 2?
+- **Status:** answered
+- **Date:** 2026-11-23
+- **Blocks:** P4c (seeded questions), P8 (grading on 1 Dec), P12 (pilot)
+- **Context:** Subject 1 alone, auto-graded, already gives the pilot the weak-item data Item Analysis needs. Subject 2 adds photo uploads and Examiner grading with a barem to the pilot.
+- **Answer:** Yes. The pilot Exam has 6 Subject 1 Items and 2 Subject 2 problems, each with a barem: about 20–30 photographed answers, graded by the Examiner on 1 Dec (30–60 minutes). (Answered 2026-11-23.)

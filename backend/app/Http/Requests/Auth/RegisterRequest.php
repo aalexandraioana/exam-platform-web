@@ -13,6 +13,8 @@ class RegisterRequest extends FormRequest
         $code = JoinCode::normalise((string) $this->input('class_code', ''));
 
         $this->merge([
+            'first_name' => trim((string) $this->input('first_name', '')),
+            'last_name' => trim((string) $this->input('last_name', '')),
             'email' => strtolower(trim((string) $this->input('email', ''))),
             'class_code' => $code === '' ? null : $code,
         ]);
@@ -21,7 +23,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:100'],
+            'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             // D-053: a code that matches no class refuses the registration.
@@ -33,7 +36,8 @@ class RegisterRequest extends FormRequest
     {
         return [
             '*.required' => 'required',
-            'name.max' => 'invalid',
+            'first_name.max' => 'invalid',
+            'last_name.max' => 'invalid',
             'email.email' => 'invalid',
             'email.max' => 'invalid',
             'email.unique' => 'taken',

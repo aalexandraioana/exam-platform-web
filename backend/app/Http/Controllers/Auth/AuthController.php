@@ -28,7 +28,7 @@ class AuthController extends Controller
     {
         $user = DB::transaction(function () use ($request) {
             // Fillable only: `role` and `is_active` keep their defaults (an active Candidate).
-            $user = User::create($request->only('name', 'email', 'password'));
+            $user = User::create($request->only('first_name', 'last_name', 'email', 'password'));
 
             if ($code = $request->validated('class_code')) {
                 $membership = new ClassMembership;

@@ -166,4 +166,3 @@ it('sorts the roster and the requests by last name, then first name', function (
         ->assertJsonPath('candidates.0.first_name', 'Zoe')
         ->assertJsonPath('candidates.0.last_name', 'Albu');
 });
-

@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        User::factory()->administrator()->create(['name' => 'Demo Administrator', 'email' => 'admin@example.test']);
-        User::factory()->examiner()->create(['name' => 'Demo Examiner', 'email' => 'examiner@example.test']);
-        User::factory()->candidate()->create(['name' => 'Demo Candidate', 'email' => 'candidate@example.test']);
+        User::factory()->administrator()->create(['first_name' => 'Demo', 'last_name' => 'Administrator', 'email' => 'admin@example.test']);
+        User::factory()->examiner()->create(['first_name' => 'Demo', 'last_name' => 'Examiner', 'email' => 'examiner@example.test']);
+        User::factory()->candidate()->create(['first_name' => 'Demo', 'last_name' => 'Candidate', 'email' => 'candidate@example.test']);
     }
 }

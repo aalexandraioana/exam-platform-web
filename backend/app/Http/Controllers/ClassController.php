@@ -42,21 +42,22 @@ class ClassController extends Controller
     {
         $class = $this->reload($request, $id);
 
-        $requests = $class->memberships()->with('candidate:id,name,email')
+        $requests = $class->memberships()->with('candidate')
             ->where('status', MembershipStatus::Pending)->orderBy('requested_at')->orderBy('id')->get();
-        $candidates = $class->memberships()->with('candidate:id,name,email')
+        // As in a school register: by last name, then first name, ignoring case.
+        $candidates = $class->memberships()->with('candidate')
             ->where('status', MembershipStatus::Accepted)->get()
-            ->sortBy(fn ($membership) => mb_strtolower($membership->candidate->name))->values();
+            ->sortBy(fn ($m) => [mb_strtolower($m->candidate->last_name), mb_strtolower($m->candidate->first_name)])->values();
 
         return response()->json([
             'class' => new ClassResource($class),
             'requests' => $requests->map(fn ($m) => [
                 'id' => $m->id,
-                'candidate' => $m->candidate->only('id', 'name', 'email'),
+                'candidate' => $this->person($m->candidate),
                 'requested_at' => $m->requested_at->toIso8601String(),
             ]),
             'candidates' => $candidates->map(fn ($m) => [
-                ...$m->candidate->only('id', 'name', 'email'),
+                ...$this->person($m->candidate),
                 'joined_at' => ($m->decided_at ?? $m->requested_at)->toIso8601String(),
             ]),
         ]);
@@ -96,6 +97,18 @@ class ClassController extends Controller
         });
 
         return response()->noContent();
+    }
+
+    /** A Candidate in C-002: both names and the full name for display. */
+    private function person(User $candidate): array
+    {
+        return [
+            'id' => $candidate->id,
+            'first_name' => $candidate->first_name,
+            'last_name' => $candidate->last_name,
+            'name' => $candidate->name,
+            'email' => $candidate->email,
+        ];
     }
 
     private function reload(Request $request, int $id): SchoolClass

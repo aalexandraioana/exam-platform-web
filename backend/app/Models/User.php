@@ -7,13 +7,14 @@ use App\Enums\Role;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['first_name', 'last_name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -36,6 +37,12 @@ class User extends Authenticatable
                 $user->tokens()->delete();
             }
         });
+    }
+
+    /** "Prenume Nume", for display (P2b). Read-only: names are stored as `first_name` and `last_name`. */
+    protected function name(): Attribute
+    {
+        return Attribute::get(fn () => trim($this->first_name.' '.$this->last_name));
     }
 
     /** Emails are stored lower case, so the unique key and login ignore case. */

@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
  */
 class CreateUser extends Command
 {
-    protected $signature = 'app:create-user {role : examiner or administrator} {email} {name}';
+    protected $signature = 'app:create-user {role : examiner or administrator} {email} {first_name} {last_name}';
 
     protected $description = 'Create an Examiner or Administrator account';
 
@@ -50,7 +50,12 @@ class CreateUser extends Command
             return self::FAILURE;
         }
 
-        $user = new User(['name' => $this->argument('name'), 'email' => $email, 'password' => $password]);
+        $user = new User([
+            'first_name' => trim($this->argument('first_name')),
+            'last_name' => trim($this->argument('last_name')),
+            'email' => $email,
+            'password' => $password,
+        ]);
         $user->role = $role;
         $user->save();
 

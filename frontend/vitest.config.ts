@@ -7,6 +7,8 @@ export default mergeConfig(
     test: {
       environment: 'jsdom',
       setupFiles: ['./src/test/setup.ts'],
+      // e2e/ holds the Playwright specs, run with `npx playwright test`.
+      include: ['src/**/*.test.{ts,tsx}'],
     },
   }),
 )

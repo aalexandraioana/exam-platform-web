@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>DS-016 · Session Loading Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+<style>
+  .loading { min-height: calc(100vh - var(--space-16)); display: grid; place-items: start center; padding: var(--space-16) var(--space-4); }
+  .loading-box { width: min(440px, 100%); display: grid; gap: var(--space-4); justify-items: center; text-align: center; }
+  .loading-box .alert { text-align: left; width: 100%; }
+</style>
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-016 · Se încarcă sesiunea (mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-loading">Primele 5 secunde</button>
+      <button type="button" class="mock-btn" data-state-btn="s-wake">După 5 secunde</button>
+    </div>
+  </div>
+</aside>
+
+<!-- The user isn't known yet: brand and toggles only, no nav and no log-out. -->
+<header class="app-header auth-header">
+  <a href="#" class="brand"><i data-icon="book-open-text" class="lg"></i>Evaluare Digitală</a>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+  </div>
+</header>
+
+<main class="loading">
+  <div class="loading-box" role="status" aria-live="polite">
+    <i data-icon="loader-circle" class="lg spin accent"></i>
+    <p class="t-body-m">Se încarcă contul tău…</p>
+    <div class="alert info" data-show="s-wake">
+      <i data-icon="info"></i>
+      <span><strong>Serverul pornește.</strong> După o pauză, prima conectare durează până la un minut. Nu închide pagina.</span>
+    </div>
+  </div>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

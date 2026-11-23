@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>DS-001 · Login Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-001 · Autentificare (mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-default">Implicit</button>
+      <button type="button" class="mock-btn" data-state-btn="s-invalid">Câmpuri incomplete</button>
+      <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-wake">Serverul pornește</button>
+      <button type="button" class="mock-btn" data-state-btn="s-wrong">Date greșite</button>
+      <button type="button" class="mock-btn" data-state-btn="s-inactive">Cont dezactivat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-offline">Fără conexiune</button>
+      <button type="button" class="mock-btn" data-state-btn="s-forgot">Ai uitat parola</button>
+    </div>
+  </div>
+</aside>
+
+<header class="app-header auth-header">
+  <a href="#" class="brand"><i data-icon="book-open-text" class="lg"></i>Evaluare Digitală</a>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+  </div>
+</header>
+
+<main class="auth-page">
+  <div class="auth-card">
+    <div class="stack-sm">
+      <h1 class="t-display">Intră în cont</h1>
+      <p class="secondary">Pentru candidați, examinatori și administratori.</p>
+    </div>
+
+    <section class="card stack">
+      <!-- Banners: one at a time, above the form -->
+      <div class="alert error" role="alert" data-show="s-wrong">
+        <i data-icon="circle-alert"></i>
+        <span><strong>Emailul sau parola nu sunt corecte.</strong> Verifică-le și încearcă din nou.</span>
+      </div>
+      <div class="alert error" role="alert" data-show="s-inactive">
+        <i data-icon="circle-alert"></i>
+        <span><strong>Contul tău este dezactivat.</strong> Cere-i administratorului platformei să îl reactiveze.</span>
+      </div>
+      <div class="alert error" role="alert" data-show="s-offline">
+        <i data-icon="wifi-off"></i>
+        <div class="row between"><span><strong>Nu ne-am putut conecta la server.</strong> Verifică internetul și încearcă din nou.</span><button class="btn">Încearcă din nou</button></div>
+      </div>
+      <div class="alert info" role="status" data-show="s-wake">
+        <i data-icon="info"></i>
+        <span><strong>Serverul pornește.</strong> După o pauză, prima conectare durează până la un minut. Nu închide pagina.</span>
+      </div>
+
+      <form novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" class="input" type="email" autocomplete="username" placeholder="nume@exemplu.ro"
+            data-show="s-default s-loading s-wake s-wrong s-inactive s-offline s-forgot" value="">
+          <input class="input invalid" type="email" aria-invalid="true" aria-describedby="email-err" aria-label="Email" data-show="s-invalid" value="ana.dumitru@">
+          <span id="email-err" class="help error" data-show="s-invalid">Scrie o adresă de email întreagă, de exemplu nume@exemplu.ro.</span>
+        </div>
+
+        <div class="field">
+          <div class="row between"><label for="pw">Parola</label>
+            <button type="button" class="link link-btn t-caption" aria-expanded="false" data-show="s-default s-invalid s-loading s-wake s-wrong s-inactive s-offline">Ai uitat parola?</button>
+            <button type="button" class="link link-btn t-caption" aria-expanded="true" aria-controls="forgot" data-show="s-forgot">Ai uitat parola?</button>
+          </div>
+          <div class="pw-wrap">
+            <input id="pw" class="input" type="password" autocomplete="current-password" value="parola-mea"
+              data-show="s-default s-loading s-wake s-wrong s-inactive s-offline s-forgot">
+            <input class="input invalid" type="password" aria-invalid="true" aria-describedby="pw-err" aria-label="Parola" data-show="s-invalid" value="">
+            <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
+          </div>
+          <span id="pw-err" class="help error" data-show="s-invalid">Scrie parola.</span>
+        </div>
+
+        <div id="forgot" class="alert info" data-show="s-forgot">
+          <i data-icon="info"></i>
+          <span>Nu trimitem linkuri de resetare pe email. Cere-i profesorului tău (examinatorul clasei) sau administratorului o parolă nouă.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" data-show="s-default s-invalid s-wrong s-inactive s-offline s-forgot">Intră în cont</button>
+        <button type="submit" class="btn btn-primary" disabled aria-disabled="true" data-show="s-loading s-wake">
+          <i data-icon="loader-circle" class="spin"></i>Se verifică…
+        </button>
+      </form>
+    </section>
+
+    <div class="auth-foot stack-sm">
+      <p>Nu ai cont? <a href="DS-002.html" class="link">Înregistrează-te ca candidat</a></p>
+      <p class="t-caption secondary">Conturile de examinator le creează administratorul platformei.</p>
+    </div>
+  </div>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

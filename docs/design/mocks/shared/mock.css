@@ -230,3 +230,19 @@ tr.selected td { background: var(--bg-primary-subtle); }
   .menu-btn { display: inline-flex; }
   .header-tools .lang, .header-tools .theme-btn { display: none; }
 }
+
+/* ---- Auth screens (DS-001, DS-002): header without nav, centred card ---- */
+.auth-page { min-height: calc(100vh - var(--space-16)); display: grid; place-items: start center; padding: var(--space-12) var(--space-4); }
+.auth-card { width: min(440px, 100%); display: grid; gap: var(--space-6); }
+.auth-card form { display: grid; gap: var(--space-4); }
+.auth-foot { text-align: center; }
+.pw-wrap { position: relative; }
+.pw-wrap .input { padding-right: var(--space-12); }
+.pw-wrap .btn-icon { position: absolute; top: 0; right: 0; border-color: transparent; background: transparent; color: var(--text-secondary); }
+.link { color: var(--text-primary-accent); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.link-btn { border: 0; background: none; padding: 0; cursor: pointer; min-height: 24px; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+.input.code-input { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+@media (max-width: 639px) { .auth-page { padding: var(--space-6) var(--space-4); } .auth-header .header-tools .lang, .auth-header .header-tools .theme-btn { display: inline-flex; } }

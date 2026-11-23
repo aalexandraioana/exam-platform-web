@@ -38,8 +38,14 @@ export function mockApi(routes: Record<string, Handler>) {
   return fetchMock
 }
 
-export function bodyOf(fetchMock: ReturnType<typeof mockApi>, call = 0): Record<string, unknown> {
-  return JSON.parse(String(fetchMock.mock.calls[call][1]?.body))
+/** The JSON body of a call, by its index or by its "METHOD /path" key (the last such call). */
+export function bodyOf(fetchMock: ReturnType<typeof mockApi>, call: number | string = 0): Record<string, unknown> {
+  const calls = fetchMock.mock.calls
+  const index =
+    typeof call === 'number'
+      ? call
+      : calls.findLastIndex(([input, init]) => `${init?.method ?? 'GET'} ${new URL(input).pathname.replace(/^\/api/, '')}` === call)
+  return JSON.parse(String(calls[index][1]?.body))
 }
 
 export function headersOf(fetchMock: ReturnType<typeof mockApi>, call = 0): Headers {

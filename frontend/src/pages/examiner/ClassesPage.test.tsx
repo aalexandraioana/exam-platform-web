@@ -237,28 +237,12 @@ describe('ClassesPage (DS-013)', () => {
     expect(screen.getByRole('cell', { name: 'Bogdan Ilie' })).toBeInTheDocument()
   })
 
-  it('sets a new password for a candidate, checking its length first', async () => {
-    const fetchMock = mockApi({
-      ...base,
-      'GET /classes': json(200, { classes: [classA] }),
-      'PUT /classes/1/candidates/10/password': json(204),
-    })
+  it('has no new-password button in the roster (D-054: only the Administrator sets passwords)', async () => {
+    mockApi({ ...base, 'GET /classes': json(200, { classes: [classA] }) })
     renderPage()
 
-    fireEvent.click(await screen.findByRole('button', { name: 'Parolă nouă pentru Bogdan Ilie' }))
-    const dialog = screen.getByRole('dialog', { name: 'Parolă nouă pentru Bogdan Ilie' })
-    const input = within(dialog).getByLabelText('Parola nouă')
-    expect(input).toHaveValue('')
-
-    fireEvent.change(input, { target: { value: 'scurta' } })
-    fireEvent.click(within(dialog).getByRole('button', { name: 'Setează parola' }))
-    expect(within(dialog).getByText('Parola are 6 caractere; are nevoie de cel puțin 8.')).toBeInTheDocument()
-
-    fireEvent.change(input, { target: { value: 'lalea-verde-48' } })
-    fireEvent.click(within(dialog).getByRole('button', { name: 'Setează parola' }))
-
-    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-    expect(bodyOf(fetchMock, 'PUT /classes/1/candidates/10/password')).toEqual({ password: 'lalea-verde-48' })
+    expect(await screen.findByRole('cell', { name: 'Bogdan Ilie' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Parolă nouă/ })).not.toBeInTheDocument()
   })
 
   it('offers to try again when the classes cannot be loaded', async () => {

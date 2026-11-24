@@ -1,10 +1,10 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getToken, setToken } from '../api/client'
 import { AuthProvider } from '../auth/AuthProvider'
 import i18n from '../i18n'
-import { candidate, json, mockApi } from '../test/mockApi'
+import { administrator, candidate, json, mockApi } from '../test/mockApi'
 import AppHeader from './AppHeader'
 
 function renderHeader() {
@@ -102,3 +102,26 @@ describe('AppHeader for an Examiner', () => {
     expect(screen.queryByRole('dialog', { name: 'Meniu' })).not.toBeInTheDocument()
   })
 })
+
+describe('AppHeader for an Administrator', () => {
+  it('gives the Administrator the Utilizatori link (DS-011)', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: administrator }) })
+    renderHeader()
+
+    const nav = await screen.findByRole('navigation', { name: 'Navigare administrator' })
+    expect(within(nav).getByRole('link', { name: 'Utilizatori' })).toHaveAttribute('href', '/admin')
+  })
+
+  it('shows no navigation and no log-out button while the password is temporary (DS-018)', async () => {
+    setToken('1|t')
+    const fetchMock = mockApi({ 'GET /user': json(200, { user: { ...administrator, must_change_password: true } }) })
+    renderHeader()
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled())
+    await act(async () => {})
+    expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Ieși din cont' })).not.toBeInTheDocument()
+  })
+})
+

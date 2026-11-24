@@ -10,6 +10,7 @@ export const candidate = {
   email: 'ana.dumitru@exemplu.ro',
   role: 'candidate',
   is_active: true,
+  must_change_password: false,
 } as const
 
 export const examiner = {
@@ -20,6 +21,18 @@ export const examiner = {
   email: 'maria.popa@exemplu.ro',
   role: 'examiner',
   is_active: true,
+  must_change_password: false,
+} as const
+
+export const administrator = {
+  id: 1,
+  first_name: 'Radu',
+  last_name: 'Ionescu',
+  name: 'Radu Ionescu',
+  email: 'radu.ionescu@exemplu.ro',
+  role: 'administrator',
+  is_active: true,
+  must_change_password: false,
 } as const
 
 export function json(status: number, body?: unknown): Response {

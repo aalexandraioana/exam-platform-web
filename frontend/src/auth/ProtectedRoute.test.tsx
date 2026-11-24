@@ -18,6 +18,7 @@ function renderAt(path: string) {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginProbe />} />
+          <Route path="/change-password" element={<p>change password page</p>} />
           <Route path="/candidate" element={<ProtectedRoute role="candidate"><p>candidate home</p></ProtectedRoute>} />
           <Route path="/examiner" element={<ProtectedRoute role="examiner"><p>examiner home</p></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute role="administrator"><p>admin home</p></ProtectedRoute>} />
@@ -65,6 +66,17 @@ describe('ProtectedRoute', () => {
     renderAt('/examiner')
 
     expect(await screen.findByText('admin home')).toBeInTheDocument()
+  })
+})
+
+describe('ProtectedRoute with a temporary password (D-054)', () => {
+  it.each(['/candidate', '/examiner', '/admin'])('sends the user from %s to /change-password', async (path) => {
+    setToken('12|abc')
+    mockApi({ 'GET /user': json(200, { user: { ...candidate, must_change_password: true } }) })
+
+    renderAt(path)
+
+    expect(await screen.findByText('change password page')).toBeInTheDocument()
   })
 })
 

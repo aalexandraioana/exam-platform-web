@@ -40,7 +40,7 @@
 - Q-029 · Are Items and answer options shown in random order per Attempt? · _answered_
 - Q-030 · What happens when the Examiner corrects a Subject 1 answer key after Attempts were graded? · _answered_
 - Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured? · _answered_
-- Q-032 · How is mathematical notation shown in question text?
+- Q-032 · How is mathematical notation shown in question text? · _answered_
 - Q-033 · In which format is the API documented? · _answered_
 - Q-034 · Which pages, if any, may search engines index? · _answered_
 - Q-035 · Which curriculum topics are seeded? · _answered_
@@ -232,10 +232,11 @@
 - **Answer:** Standard thresholds: weak if difficulty p < 0.20 or > 0.90, or discrimination < 0.20; negative discrimination flagged as a likely faulty question; a distractor chosen by fewer than 5% flagged unused; fewer than 2 Attempts or no variation shows "not enough data" (D-047). (Answered 2026-11-22.)
 
 ## Q-032 · How is mathematical notation shown in question text?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-22
 - **Blocks:** P4b (question bank), P7 (exam room)
 - **Context:** Plain text with JetBrains Mono (DESIGN.md `font-math`), or rendered notation such as KaTeX (a new dependency).
+- **Answer:** Plain text in JetBrains Mono (DESIGN.md `font-math`), with Unicode symbols typed in the text (∢, °, ², ·, :, ≤); no rendering library. (Answered 2026-11-24.)
 
 ## Q-033 · In which format is the API documented?
 - **Status:** answered

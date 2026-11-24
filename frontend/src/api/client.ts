@@ -55,13 +55,16 @@ export class ApiError extends Error {
   readonly status: number
   readonly code?: string
   readonly fields: Record<string, string[]>
+  /** The whole error body, for answers that carry more than codes (e.g. C-004 `problems`). */
+  readonly body: Record<string, unknown>
 
-  constructor(status: number, code?: string, fields: Record<string, string[]> = {}) {
+  constructor(status: number, code?: string, fields: Record<string, string[]> = {}, body: Record<string, unknown> = {}) {
     super(`API request failed with status ${status}${code ? ` (${code})` : ''}`)
     this.name = 'ApiError'
     this.status = status
     this.code = code
     this.fields = fields
+    this.body = body
   }
 }
 
@@ -94,7 +97,7 @@ export async function apiFetch<T>(path: string, { method = 'GET', body }: ApiReq
   }
   if (!response.ok) {
     const data = await response.json().catch(() => ({}))
-    throw new ApiError(response.status, data.code, data.errors ?? {})
+    throw new ApiError(response.status, data.code, data.errors ?? {}, data)
   }
   if (response.status === 204) return undefined as T
   return response.json()

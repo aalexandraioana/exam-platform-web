@@ -37,7 +37,8 @@ designs:
   - id: DS-007
     name: question-bank-manager
     kind: screen
-    status: draft
+    status: implemented
+    source: frontend/src/pages/examiner/QuestionBankPage.tsx (+ questions/)
     description: Examiner question bank: filters (competence, topic, pool, type, grade, difficulty, status), editor with every field an Item matches on, named values (fixed, random with exclusions, calculated), Draft/Ready checklist, shared library (D-057, D-058, D-059, D-040)
   - id: DS-008
     name: exam-builder
@@ -81,8 +82,8 @@ designs:
     name: form-controls
     kind: component
     status: implemented
-    source: frontend/src/components/ (Button.tsx, TextField.tsx, PasswordField.tsx, Alert.tsx)
-    description: Button (primary, secondary, danger, ghost, loading), text field and password field with label, help and error code text, and the alert banner (error, info, success) from mock.css
+    source: frontend/src/components/ (Button.tsx, TextField.tsx, PasswordField.tsx, SelectField.tsx, Alert.tsx)
+    description: Button (primary, secondary, danger, ghost, loading), text field, password field and select (native, theme chevron, PATTERN-002) with label, help and error code text, and the alert banner (error, info, success) from mock.css
   - id: DS-016
     name: session-loading
     kind: screen

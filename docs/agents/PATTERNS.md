@@ -28,7 +28,7 @@
 - **Status:** candidate
 - **Use when:** Any dropdown choice (filters, form fields).
 - **How:** Keep the native `<select>` (accessible, phone-friendly popup) but set `appearance: none`; draw the Lucide chevron-down in `text-secondary` as a background icon (a theme-level `--icon-chevron`); same height, padding, radius and `border-input` as text inputs; hover tints the background; disabled at 50% opacity. Set `color-scheme: dark` in the dark theme so the open list and native controls follow it.
-- **Example:** docs/design/mocks/shared/mock.css (`.select`, `--icon-chevron`); DS-007 filters, DS-008 settings
+- **Example:** docs/design/mocks/shared/mock.css (`.select`, `--icon-chevron`); frontend/src/components/SelectField.tsx (`select-native` in index.css); DS-007 filters and editor
 - **Why:** Native selects looked out of place in the warm theme and stayed light in dark mode; user feedback 2026-11-22.
 - **Source:** user · confidence medium
 

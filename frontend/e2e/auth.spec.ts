@@ -5,7 +5,8 @@ const homes: Array<{ role: Role; path: string; heading: string }> = [
   { role: 'candidate', path: '/candidate', heading: 'Candidat' },
   // P3: the Examiner's home is the classes screen (DS-013).
   { role: 'examiner', path: '/examiner', heading: 'Clase' },
-  { role: 'administrator', path: '/admin', heading: 'Administrator' },
+  // P3b: the Administrator's home is the users screen (DS-011).
+  { role: 'administrator', path: '/admin', heading: 'Utilizatori' },
 ]
 
 for (const { role, path, heading } of homes) {

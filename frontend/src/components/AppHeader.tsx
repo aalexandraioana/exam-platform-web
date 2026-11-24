@@ -11,9 +11,10 @@ import { focusRing } from './styles'
 
 const languages = ['ro', 'en'] as const
 
-// The screens each role can open. Only built screens are listed (P3: the Examiner's classes).
-const navigation: Partial<Record<Role, { to: string; label: string }[]>> = {
-  examiner: [{ to: '/examiner', label: 'nav.classes' }],
+// The screens each role can open. Only built screens are listed (DS-013, DS-011).
+const navigation: Partial<Record<Role, { label: string; links: { to: string; label: string }[] }>> = {
+  examiner: { label: 'nav.examiner', links: [{ to: '/examiner', label: 'nav.classes' }] },
+  administrator: { label: 'nav.administrator', links: [{ to: '/admin', label: 'nav.users' }] },
 }
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -23,10 +24,14 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 // nav (DS-013) the nav, toggles and log-out move into the menu drawer below tablet width.
 export default function AppHeader() {
   const { t, i18n } = useTranslation()
-  const { user, logout } = useAuth()
+  const { user: signedIn, logout } = useAuth()
+  // DS-018: while the password is temporary the header is the auth screens' one; the page
+  // itself offers the log-out.
+  const user = signedIn?.must_change_password ? null : signedIn
   const [theme, setThemeState] = useState<Theme>(currentTheme)
   const [menuOpen, setMenuOpen] = useState(false)
-  const links = user ? (navigation[user.role] ?? []) : []
+  const nav = user ? navigation[user.role] : undefined
+  const links = nav?.links ?? []
   const hasNav = links.length > 0
   const desktopOnly = hasNav ? 'hidden tablet:inline-flex' : ''
 
@@ -66,7 +71,7 @@ export default function AppHeader() {
           {t('app.name')}
         </Link>
         {hasNav && (
-          <nav aria-label={t('nav.examiner')} className="hidden gap-1 tablet:flex">
+          <nav aria-label={t(nav!.label)} className="hidden gap-1 tablet:flex">
             {navLinks}
           </nav>
         )}
@@ -99,7 +104,7 @@ export default function AppHeader() {
             </Button>
           }
         >
-          <nav aria-label={t('nav.examiner')} className="grid gap-1">
+          <nav aria-label={t(nav!.label)} className="grid gap-1">
             {navLinks}
           </nav>
           <hr className="border-subtle" />

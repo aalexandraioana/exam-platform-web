@@ -33,6 +33,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback((input: api.LoginInput) => api.login(input).then(signIn), [signIn])
   const register = useCallback((input: api.RegisterInput) => api.register(input).then(signIn), [signIn])
+  const changePassword = useCallback(
+    (password: string, confirmation: string) => api.changePassword(password, confirmation).then(signIn),
+    [signIn],
+  )
 
   const logout = useCallback(async () => {
     try {
@@ -45,7 +49,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const value = useMemo(() => ({ user, status, login, register, logout }), [user, status, login, register, logout])
+  const value = useMemo(
+    () => ({ user, status, login, register, logout, changePassword }),
+    [user, status, login, register, logout, changePassword],
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

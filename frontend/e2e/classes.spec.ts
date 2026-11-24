@@ -67,13 +67,3 @@ for (const theme of ['light', 'dark'] as const) {
     })
   }
 }
-
-test('DS-013 new password dialog, light', async ({ page }) => {
-  await mockClassesApi(page, classes)
-  await page.addInitScript(() => localStorage.setItem('auth_token', '1|e2e'))
-  await page.setViewportSize({ width: 1440, height: 900 })
-  await page.goto('/examiner')
-  await page.getByRole('button', { name: 'Parolă nouă pentru Bogdan Ilie' }).click()
-  await expect(page.getByRole('dialog', { name: 'Parolă nouă pentru Bogdan Ilie' })).toBeVisible()
-  await page.screenshot({ path: screenshotPath('DS-013.password.light.png') })
-})

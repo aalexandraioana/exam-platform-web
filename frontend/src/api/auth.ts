@@ -15,6 +15,8 @@ export interface User {
   email: string
   role: Role
   is_active: boolean
+  /** The password is temporary (D-054): only DS-018 is shown until it is changed. */
+  must_change_password: boolean
 }
 
 export interface AuthResult {
@@ -46,6 +48,11 @@ export function login(input: LoginInput): Promise<AuthResult> {
 
 export function logout(): Promise<void> {
   return apiFetch('/logout', { method: 'POST' })
+}
+
+/** Replaces a temporary password; the answer carries a new token (D-050, D-054). */
+export function changePassword(password: string, password_confirmation: string): Promise<AuthResult> {
+  return apiFetch('/user/password', { method: 'PUT', body: { password, password_confirmation } })
 }
 
 export async function me(): Promise<User> {

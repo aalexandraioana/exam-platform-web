@@ -3,7 +3,7 @@ import type { Page, Route } from '@playwright/test'
 export type Role = 'candidate' | 'examiner' | 'administrator'
 
 export function userWith(role: Role) {
-  return { id: 7, first_name: 'Ana', last_name: 'Dumitru', name: 'Ana Dumitru', email: 'ana.dumitru@exemplu.ro', role, is_active: true }
+  return { id: 7, first_name: 'Ana', last_name: 'Dumitru', name: 'Ana Dumitru', email: 'ana.dumitru@exemplu.ro', role, is_active: true, must_change_password: false }
 }
 
 function reply(route: Route, status: number, body?: unknown) {
@@ -27,6 +27,7 @@ export async function mockAuthApi(page: Page, role: Role) {
     if (request.method() === 'POST' && path.endsWith('/logout')) return reply(route, 204)
     if (path.endsWith('/user')) return signedIn ? reply(route, 200, { user }) : reply(route, 401, { message: 'Unauthenticated.' })
     if (path.endsWith('/classes') && request.method() === 'GET') return reply(route, 200, { classes: [] })
+    if (path.endsWith('/admin/users') && request.method() === 'GET') return reply(route, 200, { users: [user] })
     return reply(route, 404, { message: 'Not found.' })
   })
 }

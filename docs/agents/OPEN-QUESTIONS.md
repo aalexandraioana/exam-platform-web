@@ -282,6 +282,7 @@
 - **Date:** 2026-11-23
 - **Blocks:** P3 (roster menu; joining after a decline)
 - **Context:** DS-013 shows a "…" button per Candidate in the roster with no menu drawn (removing a Candidate from the class is a likely item). D-028 keeps a declined request's row, one per Candidate and class, and doesn't say whether that Candidate may send a new request. Until answered, the menu is not built and joining after a decline is refused as already decided.
+- **Note:** 2026-11-24: the "…" button and the empty "Acțiuni" column left the DS-013 mock and roster (P3b); they come back with the menu once this is answered.
 
 ## Q-042 · Who resets a forgotten password, and is the new password temporary?
 - **Status:** answered

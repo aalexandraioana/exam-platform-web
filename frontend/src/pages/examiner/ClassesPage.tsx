@@ -1,4 +1,4 @@
-import { Check, CircleAlert, Copy, KeyRound, LoaderCircle, Plus, Users, WifiOff } from 'lucide-react'
+import { Check, CircleAlert, Copy, LoaderCircle, Plus, Users, WifiOff } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router'
@@ -9,7 +9,6 @@ import {
   listClasses,
   newJoinCode,
   renameClass,
-  setCandidatePassword,
   type ClassCandidate,
   type ClassDetail,
   type JoinRequest,
@@ -25,10 +24,10 @@ const strong = { strong: <strong /> }
 const card = 'rounded-lg border border-subtle bg-surface shadow-subtle'
 
 type Decision = 'accept' | 'decline'
-type Dialog = { kind: 'new' } | { kind: 'rename' } | { kind: 'password'; candidate: ClassCandidate }
+type Dialog = { kind: 'new' } | { kind: 'rename' }
 
-// DS-013: the Examiner's classes (D-015, D-028), join requests and a new password for a
-// Candidate (D-020). The selected class is in the URL (?class=<id>).
+// DS-013: the Examiner's classes (D-015, D-028), join requests and the roster. New passwords are
+// the Administrator's (D-054, DS-011). The selected class is in the URL (?class=<id>).
 export default function ClassesPage() {
   const { t } = useTranslation()
   const [params, setParams] = useSearchParams()
@@ -166,7 +165,7 @@ export default function ClassesPage() {
                 onNewCode={async () => replaceClass(await newJoinCode(selected.class.id))}
               />
               <RequestsCard requests={selected.requests} onDecide={decide} />
-              <Roster candidates={selected.candidates} onNewPassword={(candidate) => setDialog({ kind: 'password', candidate })} />
+              <Roster candidates={selected.candidates} />
             </div>
           )}
         </div>
@@ -192,13 +191,6 @@ export default function ClassesPage() {
           initial={selected.class.name}
           onClose={() => setDialog(null)}
           onSubmit={async (name) => replaceClass(await renameClass(selected.class.id, name))}
-        />
-      )}
-      {dialog?.kind === 'password' && selected && (
-        <PasswordDialog
-          candidate={dialog.candidate}
-          onClose={() => setDialog(null)}
-          onSubmit={(password) => setCandidatePassword(selected.class.id, dialog.candidate.id, password)}
         />
       )}
     </main>
@@ -306,7 +298,7 @@ function RequestsCard({ requests, onDecide }: { requests: JoinRequest[]; onDecid
   )
 }
 
-function Roster({ candidates, onNewPassword }: { candidates: ClassCandidate[]; onNewPassword: (candidate: ClassCandidate) => void }) {
+function Roster({ candidates }: { candidates: ClassCandidate[] }) {
   const { t, i18n } = useTranslation()
   const [query, setQuery] = useState('')
   const needle = query.trim().toLowerCase()
@@ -344,7 +336,6 @@ function Roster({ candidates, onNewPassword }: { candidates: ClassCandidate[]; o
                 <th className={head}>{t('classes.colName')}</th>
                 <th className={`${head} hidden tablet:table-cell`}>{t('classes.colEmail')}</th>
                 <th className={`${head} hidden tablet:table-cell`}>{t('classes.colSince')}</th>
-                <th className={`${head} text-right`}>{t('classes.colActions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -353,12 +344,6 @@ function Roster({ candidates, onNewPassword }: { candidates: ClassCandidate[]; o
                   <td className={`${cell} [overflow-wrap:anywhere]`}>{candidate.name}</td>
                   <td className={`${cell} hidden [overflow-wrap:anywhere] tablet:table-cell`}>{candidate.email}</td>
                   <td className={`${cell} hidden tablet:table-cell`}>{date.format(new Date(candidate.joined_at))}</td>
-                  <td className={`${cell} text-right`}>
-                    <Button aria-label={t('classes.newPasswordLabel', { name: candidate.name })} onClick={() => onNewPassword(candidate)} className="whitespace-nowrap">
-                      <KeyRound className="size-icon-sm" aria-hidden="true" />
-                      {t('classes.newPassword')}
-                    </Button>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -429,51 +414,6 @@ function NameDialog({ title, submitLabel, help, initial = '', onClose, onSubmit 
           <Button onClick={onClose}>{t('classes.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>
             {submitLabel}
-          </Button>
-        </div>
-      </form>
-    </Modal>
-  )
-}
-
-function PasswordDialog({ candidate, onClose, onSubmit }: { candidate: ClassCandidate; onClose: () => void; onSubmit: (password: string) => Promise<void> }) {
-  const { t } = useTranslation()
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-
-  async function submit(event: FormEvent) {
-    event.preventDefault()
-    if (!password) return setError(t('errors.passwordRequired'))
-    if (password.length < 8) return setError(t('register.passwordShort', { count: password.length }))
-    setBusy(true)
-    try {
-      await onSubmit(password)
-      onClose()
-    } catch {
-      setBusy(false)
-      setError(t('errors.offlineShort'))
-    }
-  }
-
-  return (
-    <Modal title={t('classes.passwordTitle', { name: candidate.name })} onClose={onClose}>
-      <p className="text-secondary">{t('classes.passwordIntro')}</p>
-      <form noValidate onSubmit={submit} className="grid gap-4">
-        <TextField
-          id="new-password"
-          type="text"
-          autoComplete="off"
-          label={t('classes.passwordField')}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          error={error}
-          help={t('classes.passwordHelp')}
-        />
-        <div className="flex flex-wrap justify-end gap-3">
-          <Button onClick={onClose}>{t('classes.cancel')}</Button>
-          <Button type="submit" variant="primary" disabled={busy}>
-            {t('classes.setPassword')}
           </Button>
         </div>
       </form>

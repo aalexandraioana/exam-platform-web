@@ -8,6 +8,8 @@ export interface AuthState {
   login: (input: LoginInput) => Promise<User>
   register: (input: RegisterInput) => Promise<User>
   logout: () => Promise<void>
+  /** Replaces a temporary password and keeps the session with the new token (D-054). */
+  changePassword: (password: string, confirmation: string) => Promise<User>
 }
 
 export const AuthContext = createContext<AuthState | null>(null)
@@ -18,9 +20,14 @@ export function useAuth(): AuthState {
   return auth
 }
 
-// Each role's home; temporary placeholders until P3 (examiner), P7 (candidate), P11 (admin).
+// Each role's home; the Candidate's is a placeholder until P7.
 const homes: Record<Role, string> = { candidate: '/candidate', examiner: '/examiner', administrator: '/admin' }
 
 export function homePath(role: Role): string {
   return homes[role]
+}
+
+/** Where a signed-in user goes: DS-018 while the password is temporary (D-054), else their home. */
+export function landingPath(user: User): string {
+  return user.must_change_password ? '/change-password' : homePath(user.role)
 }

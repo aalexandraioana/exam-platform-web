@@ -59,7 +59,3 @@ export async function newJoinCode(id: number): Promise<SchoolClass> {
 export function decideRequest(id: number, decision: 'accept' | 'decline'): Promise<unknown> {
   return apiFetch(`/memberships/${id}/${decision}`, { method: 'POST' })
 }
-
-export function setCandidatePassword(classId: number, candidateId: number, password: string): Promise<void> {
-  return apiFetch(`/classes/${classId}/candidates/${candidateId}/password`, { method: 'PUT', body: { password } })
-}

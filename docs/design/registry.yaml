@@ -57,7 +57,8 @@ designs:
   - id: DS-011
     name: admin-user-management
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/pages/admin/UsersPage.tsx
     description: Administrator users list with search; sets a temporary password, creates Examiner accounts, deactivates users (D-054, D-055, D-056)
   - id: DS-012
     name: admin-exam-supervision
@@ -69,7 +70,7 @@ designs:
     kind: screen
     status: implemented
     source: frontend/src/pages/examiner/ClassesPage.tsx
-    description: Examiner classes with join codes, pending join requests to accept or decline, and the roster (D-015, D-028); new passwords moved to DS-011 (D-054)
+    description: Examiner classes with join codes, pending join requests to accept or decline, and the roster without an actions column until Q-041 (D-015, D-028); new passwords moved to DS-011 (D-054)
   - id: DS-014
     name: app-header
     kind: component
@@ -81,7 +82,7 @@ designs:
     kind: component
     status: implemented
     source: frontend/src/components/ (Button.tsx, TextField.tsx, PasswordField.tsx, Alert.tsx)
-    description: Button (primary, secondary, ghost, loading), text field and password field with label, help and error code text, and the alert banner (error, info) from mock.css
+    description: Button (primary, secondary, danger, ghost, loading), text field and password field with label, help and error code text, and the alert banner (error, info, success) from mock.css
   - id: DS-016
     name: session-loading
     kind: screen
@@ -93,9 +94,10 @@ designs:
     kind: component
     status: implemented
     source: frontend/src/components/Modal.tsx
-    description: Dialog and right-side drawer (mock.css .modal, mock.js .drawer) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes
+    description: Dialog (or alertdialog for a confirmation that can't be undone) and right-side drawer (mock.css .modal, mock.js .drawer) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes, scrolls when taller than the screen
   - id: DS-018
     name: auth-change-password
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/pages/ChangePasswordPage.tsx
     description: Forced new-password screen after sign-in while the password is temporary; two hidden fields, must differ from the temporary one; sign-out link (D-054)

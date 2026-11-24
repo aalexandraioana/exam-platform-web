@@ -11,6 +11,7 @@
 - PATTERN-003 · Tokens-only Tailwind theme · candidate
 - PATTERN-004 · Fixed data rules as Postgres constraints, tested by refusal · candidate
 - PATTERN-005 · Validation errors as codes, not sentences · candidate
+- PATTERN-006 · An account state that blocks the app: one API refusal code, one SPA screen · candidate
 
 ---
 
@@ -53,5 +54,13 @@
 - **How:** `messages()` maps each rule to a code from docs/API.md → Errors (`required`, `invalid`, `too_short`, `mismatch`, `taken`, `not_found`, `credentials`); `bootstrap/app.php` renders every API `ValidationException` as `{"message": "The given data was invalid.", "errors": {field: [code]}}`. The SPA turns codes into RO/EN text. A new code is added to docs/API.md in the same change. Tests assert the code (`assertJsonPath('errors.email.0', 'taken')`).
 - **Example:** backend/app/Http/Requests/Auth/RegisterRequest.php; backend/tests/Feature/Auth/RegisterTest.php
 - **Why:** The UI is bilingual (D-022) and its texts live in the SPA; codes keep the API language-neutral and the contract testable.
+- **Source:** agent · confidence medium
+
+## PATTERN-006 · An account state that blocks the app: one API refusal code, one SPA screen
+- **Status:** candidate
+- **Use when:** A user must do one thing before using the app (e.g. replace a temporary password, D-054).
+- **How:** A boolean on `users`, set only by trusted code and exposed on the user object. A route middleware (`EnsurePasswordCurrent`, alias `password.current`) wraps every route except `GET /user`, `POST /logout` and the one action, and answers `403` with its own `code` (docs/API.md → Errors). The SPA reads the flag: `ProtectedRoute` and `RootRedirect` send the user to the single screen (`landingPath`), and `AppHeader` shows the signed-out header there. Tests: each role is refused elsewhere with the code; the screen is reached from any protected path.
+- **Example:** backend/app/Http/Middleware/EnsurePasswordCurrent.php; backend/tests/Feature/Auth/ChangePasswordTest.php; frontend/src/auth/ProtectedRoute.tsx; frontend/src/pages/ChangePasswordPage.tsx
+- **Why:** The server enforces the state even for a client that ignores it, and the SPA needs one check, not one per page.
 - **Source:** agent · confidence medium
 

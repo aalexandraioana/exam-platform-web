@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes } from 'react'
 import { focusRing } from './styles'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'danger'
   /** A square icon-only button (mock.css `.btn-icon`); give it an aria-label. */
   iconOnly?: boolean
 }
@@ -10,9 +10,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variants = {
   primary: 'border-transparent bg-primary font-semibold text-on-primary hover:bg-primary-hover',
   secondary: 'border-strong bg-surface font-medium text-primary hover:bg-surface-subtle',
+  danger: 'border-error bg-surface font-medium text-error hover:bg-error-bg',
 }
 
-// mock.css `.btn`, `.btn-primary`, `.btn-icon`.
+// mock.css `.btn`, `.btn-primary`, `.btn-danger`, `.btn-icon`.
 export default function Button({ variant = 'secondary', iconOnly = false, type = 'button', className = '', ...props }: ButtonProps) {
   const shape = iconOnly ? 'w-hit p-0' : 'px-4 py-2'
   return (

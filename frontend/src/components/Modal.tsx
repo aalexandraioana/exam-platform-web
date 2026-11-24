@@ -10,11 +10,13 @@ interface ModalProps {
   variant?: 'dialog' | 'drawer'
   /** Shown next to the title, e.g. the drawer's close button. */
   titleAction?: ReactNode
+  /** `alertdialog` for a confirmation of something that can't be undone. */
+  role?: 'dialog' | 'alertdialog'
 }
 
 // mock.css `.backdrop` + `.modal`: focus moves into the dialog, Tab stays inside, Escape
 // closes it, and focus goes back to what opened it.
-export default function Modal({ title, onClose, children, variant = 'dialog', titleAction }: ModalProps) {
+export default function Modal({ title, onClose, children, variant = 'dialog', titleAction, role = 'dialog' }: ModalProps) {
   const titleId = useId()
   const dialogRef = useRef<HTMLDivElement>(null)
 
@@ -57,14 +59,14 @@ export default function Modal({ title, onClose, children, variant = 'dialog', ti
     >
       <div
         ref={dialogRef}
-        role="dialog"
+        role={role}
         aria-modal="true"
         aria-labelledby={titleId}
         onKeyDown={onKeyDown}
         className={
           drawer
             ? 'grid h-full w-full max-w-auth content-start gap-4 overflow-y-auto bg-surface p-4 shadow-modal'
-            : 'grid w-full max-w-auth gap-4 rounded-lg bg-surface p-6 shadow-modal'
+            : 'grid max-h-full w-full max-w-auth gap-4 overflow-y-auto rounded-lg bg-surface p-6 shadow-modal'
         }
       >
         {titleAction ? (

@@ -53,6 +53,10 @@
 - Q-042 · Who resets a forgotten password, and is the new password temporary? · _answered_
 - Q-043 · Can the Administrator reactivate a deactivated user? · _answered_
 - Q-044 · Who can be deactivated on DS-011: other Administrators, and the Administrator themselves? · _answered_
+- Q-045 · Does an Item still draw from a pool once it also matches type and topic? · _answered_
+- Q-046 · How does an Item match a question's topics? · _answered_
+- Q-047 · Are fixed values in a parameterised question marked too? · _answered_
+- Q-048 · What can a value domain be? · _answered_
 
 ---
 
@@ -305,3 +309,30 @@
 - **Context:** Deactivating one's own account would lock the only Administrator out; deactivating another Administrator may or may not be wanted. Until answered, the Deactivate action is drawn only on Candidate and Examiner rows.
 - **Answer:** No Administrator account can be deactivated on DS-011, neither another Administrator's nor one's own. Only Candidates and Examiners can. (Answered 2026-11-24.)
 
+## Q-045 · Does an Item still draw from a pool once it also matches type and topic?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P5 (exam builder, DS-008), P6 (draw)
+- **Context:** The user said Items draw questions "from the pool based on selected difficulty, type, topic and competence". D-043 has each Item pick one of the Examiner's pools and match competence and difficulty inside it. Options: keep the pool and add type and topic to the match, or drop the pool from Items and draw from the whole bank (pools then only organise the bank, D-041).
+- **Answer:** The Item keeps its pool and matches inside it. (Answered 2026-11-24.)
+
+## Q-046 · How does an Item match a question's topics?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4b (question editor), P5, P6
+- **Context:** D-039 lets a question carry several topic labels, which "don't structure anything". If Items match on topic: does a question keep several topics (it matches when the Item's topic is one of them) or get exactly one; is a topic required before Ready (D-042); and may an Item leave topic or type as "any"?
+- **Answer:** Exactly one topic per question. An Item may leave topic or type as "any". (Answered 2026-11-24.)
+
+## Q-047 · Are fixed values in a parameterised question marked too?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4a (math engine), P4b (DS-007 editor)
+- **Context:** DS-007 marks values that change with {braces} in the statement: each is either drawn from an interval ("Intervale") or calculated from the drawn ones ("Valori calculate"); a fixed number is plain text. The user said fixed, random and calculated values "need to be marked". Option: fixed values are named too ({k} with one value), so all three kinds are listed and visible in the editor.
+- **Answer:** Left to Claude's choice by the user: fixed values are named too ({k} with one value), so the editor lists fixed, random and calculated values side by side. (Answered 2026-11-24.)
+
+## Q-048 · What can a value domain be?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4a (math engine), P4b (DS-007 editor)
+- **Context:** D-043 allows min/max bounds with simple conditions (e.g. `a > b`), and DS-007 draws whole numbers. Open: whole numbers only, or also decimals (how many places) or a step (e.g. multiples of 5); a list of allowed values; excluded values (e.g. not 0).
+- **Answer:** Whole numbers only, between min and max, with optional excluded values (e.g. not 0); simple conditions stay (D-043). (Answered 2026-11-24.)

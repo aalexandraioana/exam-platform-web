@@ -21,6 +21,9 @@
 - D-032 · Draft and Ready question status · _superseded-by D-042_
 - D-011 · Subject 2 handwritten solution photo upload alongside text · _superseded-by D-048_
 - D-020 · Admin-created Examiner accounts and manual password reset · _superseded-by D-054_
+- D-039 · Examiner-defined competences and topic labels · _superseded-by D-058_
+- D-042 · Draft and Ready question status · _superseded-by D-059_
+- D-043 · Exam blueprint drawing from pools · _superseded-by D-057_
 
 ---
 
@@ -139,4 +142,31 @@
 - **Why:** Keeps account control with the school and avoids a mail service.
 - **Rejected:** Examiner self-registration with approval; email reset links.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-012, Q-013
+- **Source:** user · confidence high
+
+## D-039 · Examiner-defined competences and topic labels
+- **Status:** superseded-by D-058
+- **Date:** 2026-11-22
+- **Rule:** Each Examiner keeps their own list of competences: a short code (e.g. C1, unique for that Examiner) and a Romanian description of what is assessed (e.g. "knows that the angles of a triangle add up to 180°"). Questions and blueprint Items are tagged with one of the Examiner's competences, and Item Analysis groups by them. Topics are only descriptive labels from the Examiner's own list; a question can have several, and they don't structure anything. Questions and exams carry a grade level (5–8).
+- **Why:** Competences are what the teacher decides to assess, not a fixed list; topics (chapters such as Mulțimi de numere întregi, Drepte, Unghiuri) only describe questions, and a bank may mix them.
+- **Rejected:** A small fixed competence list (D-030); topics as a seeded curriculum structure that groups competences; competences tied to a topic.
+- **Evidence:** Conversation 2026-11-22 (P1 plan gate); INTERVIEW.md Q1 ("competentele specifice din respectiva unitate")
+- **Source:** user · confidence high
+
+## D-042 · Draft and Ready question status
+- **Status:** superseded-by D-059
+- **Date:** 2026-11-22
+- **Rule:** Each question is Draft or Ready. A Draft needs only its Subject (I or II) and type. A question can be marked Ready only when its statement, points, competence, grade level and difficulty are set, plus an answer key for Subject I and a complete barem for Subject II if the Examiner chose to use one (D-031). Only Ready questions can be picked for an Attempt or published to the library (D-040); the Exam builder shows Draft questions as "not ready", and an Exam cannot be published unless D-043's publish check passes.
+- **Why:** Random picks (D-043) must never hand a Candidate a half-written question, and grade level and difficulty are needed to match questions to Items and filter the bank.
+- **Rejected:** Treating every saved question as usable; Ready without grade level and difficulty (D-032).
+- **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/design/research-quiz-platforms.md S-12
+- **Source:** user · confidence high
+
+## D-043 · Exam blueprint drawing from pools
+- **Status:** superseded-by D-057
+- **Date:** 2026-11-22
+- **Rule:** An Exam is a blueprint of ordered Items. Each Item fixes section, competence (the Examiner's own, D-039), difficulty and points, and draws from one of the Examiner's pools (D-041). When an Attempt starts, the server picks for each Item one random Ready question from that pool whose competence and difficulty match the Item's. No question appears twice in the same Attempt, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked question, any drawn values and the expected answer are stored per Attempt (D-006, D-013), so the Examiner sees which question each Candidate got. Item Analysis reports per question and per Item. "8 easy questions from pool A" = 8 Items on pool A.
+- **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), similar questions go to different Candidates (Q13), and it delivers the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
+- **Rejected:** Hand-listed Variants per Item (D-025); a blueprint row drawing N questions from a pool (weakens per-Item coverage); repeats within one Attempt.
+- **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/agents/OPEN-QUESTIONS.md:Q-036, Q-037; catalog-de-proiecte-web.md:893
 - **Source:** user · confidence high

@@ -17,23 +17,28 @@ each error status. Each backend part updates this file in the same change; contr
 | 401 | `{"message": "Unauthenticated."}` | no token, or a revoked one |
 | 403 | `{"code": "account_inactive", "message": "This account is deactivated."}` | the user has `is_active = false` |
 | 403 | `{"code": "forbidden_role", "message": "This action is not available for your role."}` | the route is for another role |
+| 403 | `{"code": "password_change_required", "message": "Choose a new password first."}` | the password is temporary (D-054); only `GET /user`, `POST /logout` and `PUT /user/password` answer until it is changed |
 | 422 | `{"message": "…", "errors": {"<field>": ["<code>"]}}` | validation failed; each field lists **error codes** (below), not sentences, so the SPA shows its own RO/EN text |
 | 429 | `{"message": "Too Many Attempts."}` + `Retry-After` header | throttled |
 
 **Validation error codes:** `required`, `invalid` (wrong format), `too_short`, `mismatch`
 (confirmation differs), `taken` (already used), `not_found` (no such class code),
-`credentials` (login: email or password wrong, always the same for both).
+`credentials` (login: email or password wrong, always the same for both), `same_as_temporary`
+(the new password is the temporary one, D-054).
 
 **409 codes** (`{"code": "…", "message": "…"}`): `already_decided` (a join request that is no longer
-pending), `class_has_published_exam` (a class linked to a published Exam, D-049).
+pending), `class_has_published_exam` (a class linked to a published Exam, D-049), `already_deactivated`
+(the account is deactivated, D-056).
 
 ## Users
 
 A user in every response:
 ```json
-{ "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true }
+{ "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true, "must_change_password": false }
 ```
-`name` is always `first_name` and `last_name` joined with a space, for display. `role` is `candidate`, `examiner` or `administrator`. Emails are stored in lower case and
+`name` is always `first_name` and `last_name` joined with a space, for display. `role` is `candidate`, `examiner` or `administrator`
+and never changes (D-055). `must_change_password` is `true` while the password is temporary: set by an
+Administrator or by `app:create-user` (D-054); the SPA then shows only DS-018. Emails are stored in lower case and
 compared without case.
 
 ### POST /api/register
@@ -54,7 +59,7 @@ Request:
 
 `201 Created`:
 ```json
-{ "token": "12|q8Jx…", "user": { "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true } }
+{ "token": "12|q8Jx…", "user": { "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true, "must_change_password": false } }
 ```
 `422`:
 ```json
@@ -93,9 +98,19 @@ Bearer token, active user. The logged-in user.
 
 `200 OK`:
 ```json
-{ "user": { "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true } }
+{ "user": { "id": 7, "first_name": "Ana", "last_name": "Dumitru", "name": "Ana Dumitru", "email": "ana.dumitru@exemplu.ro", "role": "candidate", "is_active": true, "must_change_password": false } }
 ```
 `401` without a valid token; `403 account_inactive` if the account was deactivated.
+
+### PUT /api/user/password
+Bearer token, active user with a **temporary password** (D-054). The user chooses their own password.
+Every token is revoked (D-050), so the answer carries a new one that replaces the token used here.
+
+Request: `{ "password": "soare-albastru-7", "password_confirmation": "soare-albastru-7" }`.
+
+`200 OK`: the same body as login (`token`, `user` with `must_change_password: false`).
+`422`: `password` (`required`, `too_short`, `mismatch`, `same_as_temporary`).
+`403 password_change_not_required` when the password is not temporary.
 
 ## Classes
 
@@ -150,13 +165,6 @@ The Examiner decides a pending join request. `200 OK`:
 ```
 `409 already_decided` when the request is no longer pending.
 
-### PUT /api/classes/{id}/candidates/{userId}/password
-The Examiner sets a new password for an accepted Candidate of this class (D-020), e.g. after a
-forgotten password. The Candidate's old password and all their tokens stop working.
-
-Request: `{ "password": "lalea-verde-48" }`. `204 No Content`. `422`: `password` (`required`,
-`too_short`). `404` when the user isn't an accepted Candidate of this class.
-
 ## Joining a class (Candidate)
 
 ### POST /api/memberships
@@ -172,10 +180,43 @@ accepted (nothing changes):
 `422`: `class_code` (`required`, `not_found`). `409 already_decided` when the Examiner declined an
 earlier request (until Q-041 is answered).
 
+## Administrator
+
+Bearer token of an **active Administrator** with a current password; other roles get `403 forbidden_role`.
+C-003, screen DS-011.
+
+### GET /api/admin/users
+Every user, sorted by last name, then first name. `200 OK`: `{ "users": [ <user>, … ] }`.
+
+### POST /api/admin/examiners
+Creates an Examiner (D-055) with a temporary password (D-054).
+
+Request: `{ "first_name": "Maria", "last_name": "Popa", "email": "maria.popa@exemplu.ro", "password": "tei-inflorit-21" }`.
+Any `role` or `is_active` in the body is ignored.
+
+`201 Created`: `{ "user": <user> }` with `role: "examiner"` and `must_change_password: true`. No token.
+`422`: `first_name`, `last_name` (`required`, `invalid`), `email` (`required`, `invalid`, `taken`),
+`password` (`required`, `too_short`).
+
+### PUT /api/admin/users/{id}/password
+Sets a temporary password for any other active user (D-054). Their old password and all their tokens
+stop working, and at the next sign-in they must choose their own.
+
+Request: `{ "password": "lalea-verde-48" }`. `204 No Content`. `422`: `password` (`required`, `too_short`).
+`403 forbidden_target` for the Administrator's own account; `409 already_deactivated`; `404` for an unknown user.
+
+### PATCH /api/admin/users/{id}
+Deactivates a Candidate or an Examiner (D-056). It is permanent: the user is signed out everywhere and
+refused at login; their data stays.
+
+Request: `{ "is_active": false }`. `200 OK`: `{ "user": <user> }`.
+`422`: `is_active` (`required`; `invalid` for anything but `false`, so no reactivation).
+`403 forbidden_target` for an Administrator (including oneself); `409 already_deactivated`; `404` for an unknown user.
+
 ## Accounts created by the operator
-Examiners and Administrators have no endpoint yet (DS-011 comes in P11). They are created on
-the server with:
+Administrators have no endpoint (D-055). They, and Examiners if needed, are created on the server with:
 ```bash
 php artisan app:create-user examiner maria.popa@exemplu.ro Maria Popa
 ```
-The command asks for the password twice and never takes it as an argument.
+The command asks for the password twice and never takes it as an argument. The password is temporary
+(D-054): the new user chooses their own at the first sign-in.

@@ -23,9 +23,10 @@ class User extends Authenticatable
 
     /**
      * Mirrors the database defaults, so a new user reads as an active candidate before it is
-     * reloaded. `role` is deliberately not fillable: only trusted code may change it.
+     * reloaded. `role` and `must_change_password` are deliberately not fillable: only trusted
+     * code may change them.
      */
-    protected $attributes = ['role' => 'candidate', 'is_active' => true];
+    protected $attributes = ['role' => 'candidate', 'is_active' => true, 'must_change_password' => false];
 
     /**
      * Deactivating a user or changing their password logs them out everywhere (D-050).
@@ -63,6 +64,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => Role::class,
             'is_active' => 'boolean',
+            'must_change_password' => 'boolean',
         ];
     }
 

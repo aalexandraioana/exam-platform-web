@@ -4,16 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Enums\MembershipStatus;
 use App\Http\Requests\Classes\JoinRequest;
-use App\Http\Requests\Classes\SetPasswordRequest;
 use App\Models\ClassMembership;
 use App\Models\SchoolClass;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 /**
- * C-002: a Candidate asks to join with a code; the Examiner decides (D-028) and can set a new
- * password for a Candidate of their class (D-020). Status and dates are set only here.
+ * C-002: a Candidate asks to join with a code; the Examiner decides (D-028). Status and dates
+ * are set only here.
  */
 class MembershipController extends Controller
 {
@@ -54,21 +52,6 @@ class MembershipController extends Controller
     public function decline(Request $request, int $id): JsonResponse
     {
         return $this->decide($request, $id, MembershipStatus::Rejected);
-    }
-
-    public function setPassword(SetPasswordRequest $request, int $classId, int $userId): Response
-    {
-        $membership = $this->ownMemberships($request)
-            ->where('class_id', $classId)
-            ->where('candidate_id', $userId)
-            ->where('status', MembershipStatus::Accepted)
-            ->with('candidate')
-            ->firstOrFail();
-
-        // The User model revokes the Candidate's tokens when the password changes.
-        $membership->candidate->update(['password' => $request->validated('password')]);
-
-        return response()->noContent();
     }
 
     private function decide(Request $request, int $id, MembershipStatus $status): JsonResponse

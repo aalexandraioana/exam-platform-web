@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Classes;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** A temporary password the Administrator types (D-054). */
 class SetPasswordRequest extends FormRequest
 {
     public function rules(): array

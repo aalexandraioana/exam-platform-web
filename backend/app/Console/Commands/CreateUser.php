@@ -7,7 +7,8 @@ use App\Models\User;
 use Illuminate\Console\Command;
 
 /**
- * Creates an Examiner or Administrator (D-020) until the Administrator screen exists (P11).
+ * Creates an Examiner or Administrator (D-055). The password is temporary (D-054): the new user
+ * chooses their own at the first sign-in. Examiners can also be created on DS-011.
  * The password is asked twice and never taken as an argument, so it stays out of shell history.
  */
 class CreateUser extends Command
@@ -57,6 +58,7 @@ class CreateUser extends Command
             'password' => $password,
         ]);
         $user->role = $role;
+        $user->must_change_password = true;
         $user->save();
 
         $this->info("Created {$role->value} {$email}.");

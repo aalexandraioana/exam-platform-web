@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
@@ -81,6 +82,24 @@ class AuthController extends Controller
     public function user(Request $request): JsonResponse
     {
         return response()->json(['user' => new UserResource($request->user())]);
+    }
+
+    /**
+     * D-054: replaces a temporary password with the user's own. The change revokes every token
+     * (D-050), so a new one keeps this session signed in.
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        if (! $user->must_change_password) {
+            return response()->json(['code' => 'password_change_not_required', 'message' => 'The password is not temporary.'], 403);
+        }
+
+        $user->password = $request->validated('password');
+        $user->must_change_password = false;
+        $user->save();
+
+        return $this->tokenResponse($user);
     }
 
     private function tokenResponse(User $user, int $status = 200): JsonResponse

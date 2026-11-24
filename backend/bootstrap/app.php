@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureActive;
+use App\Http\Middleware\EnsurePasswordCurrent;
 use App\Http\Middleware\EnsureRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Render terminates TLS at its proxy; trust it so URLs and client IPs are right.
         $middleware->trustProxies(at: '*');
-        $middleware->alias(['active' => EnsureActive::class, 'role' => EnsureRole::class]);
+        $middleware->alias(['active' => EnsureActive::class, 'role' => EnsureRole::class, 'password.current' => EnsurePasswordCurrent::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

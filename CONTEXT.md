@@ -38,7 +38,7 @@ _Avoid_: question stats.
 **Grace Period** (noun) · RO: **Perioadă de toleranță** — The 30-second server buffer accepting in-flight submissions delayed by network latency after timer expiration.
 _Avoid_: overtime, extension.
 
-**Administrator** (noun) · RO: **Administrator** — A platform user who creates Examiner accounts, manages Candidates and sets new passwords (D-020).
+**Administrator** (noun) · RO: **Administrator** — A platform user who creates Examiner accounts, deactivates Candidates and Examiners, and sets temporary passwords (D-054, D-055, D-056).
 
 **Class** (noun) · RO: **Clasă** — A group of Candidates to which Exams are published; its Candidates form the cohort for feedback (D-015, D-019).
 

@@ -32,7 +32,6 @@
       <button type="button" class="mock-btn active" data-state-btn="s-default">Clasă cu cereri</button>
       <button type="button" class="mock-btn" data-state-btn="s-none">Fără cereri</button>
       <button type="button" class="mock-btn" data-state-btn="s-new">Clasă nouă</button>
-      <button type="button" class="mock-btn" data-state-btn="s-password">Parolă nouă</button>
       <button type="button" class="mock-btn" data-state-btn="s-empty">Nicio clasă</button>
       <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
     </div>
@@ -59,7 +58,7 @@
 <main class="page">
   <div class="page-head">
     <h1 class="t-display">Clase</h1>
-    <button type="button" class="btn btn-primary" data-show="s-default s-none s-new s-password s-error">+ Clasă nouă</button>
+    <button type="button" class="btn btn-primary" data-show="s-default s-none s-new s-error">+ Clasă nouă</button>
   </div>
 
   <div class="alert error" role="alert" data-show="s-error">
@@ -67,11 +66,11 @@
     <div class="row between" style="flex: 1;"><span><strong>Cererea lui Matei Radu nu a putut fi acceptată.</strong> Conexiunea s-a întrerupt. Cererea rămâne în așteptare; încearcă din nou.</span><button class="btn">Încearcă din nou</button></div>
   </div>
 
-  <div class="classes" data-show="s-default s-none s-new s-password s-error">
+  <div class="classes" data-show="s-default s-none s-new s-error">
     <!-- Class list -->
     <nav class="class-list" aria-label="Clasele mele">
       <a href="#" class="class-card" aria-current="true">
-        <div class="row between"><span class="t-h3">Clasa a VI-a A</span><span class="badge warning" data-show="s-default s-new s-password s-error">3 cereri</span></div>
+        <div class="row between"><span class="t-h3">Clasa a VI-a A</span><span class="badge warning" data-show="s-default s-new s-error">3 cereri</span></div>
         <span class="t-caption secondary">24 de candidați · 2 examene publicate</span>
       </a>
       <a href="#" class="class-card">
@@ -103,7 +102,7 @@
       </section>
 
       <!-- Pending requests (D-028) -->
-      <section class="card stack" aria-labelledby="req-h" data-show="s-default s-new s-password s-error">
+      <section class="card stack" aria-labelledby="req-h" data-show="s-default s-new s-error">
         <h2 id="req-h" class="t-h2">Cereri în așteptare (3)</h2>
         <div>
           <div class="request"><div class="stack-sm" style="gap: 0;"><span class="t-body-m">Matei Radu</span><span class="t-caption secondary">matei.radu@exemplu.ro · acum 10 minute</span></div>
@@ -125,11 +124,11 @@
             <thead><tr><th>Nume</th><th class="hide-mobile">Email</th><th class="hide-mobile">În clasă din</th><th>Acțiuni</th></tr></thead>
             <tbody>
               <tr><td>Ana Dumitru</td><td class="hide-mobile">ana.d@exemplu.ro</td><td class="hide-mobile">12.09.2026</td>
-                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn"><i data-icon="key" class="sm"></i>Parolă nouă</button><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Ana Dumitru"><i data-icon="ellipsis"></i></button></div></td></tr>
+                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Ana Dumitru"><i data-icon="ellipsis"></i></button></div></td></tr>
               <tr><td>Bogdan Ilie</td><td class="hide-mobile">bogdan.ilie@exemplu.ro</td><td class="hide-mobile">12.09.2026</td>
-                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn"><i data-icon="key" class="sm"></i>Parolă nouă</button><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Bogdan Ilie"><i data-icon="ellipsis"></i></button></div></td></tr>
+                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Bogdan Ilie"><i data-icon="ellipsis"></i></button></div></td></tr>
               <tr><td class="text-wrap">Elena-Alexandra Popescu-Vasilescu</td><td class="hide-mobile text-wrap">elena.alexandra.popescu.vasilescu@exemplu.ro</td><td class="hide-mobile">14.09.2026</td>
-                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn"><i data-icon="key" class="sm"></i>Parolă nouă</button><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Elena-Alexandra Popescu-Vasilescu"><i data-icon="ellipsis"></i></button></div></td></tr>
+                <td><div class="row" style="justify-content: flex-end; flex-wrap: nowrap;"><button class="btn btn-icon" aria-label="Mai multe opțiuni pentru Elena-Alexandra Popescu-Vasilescu"><i data-icon="ellipsis"></i></button></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -144,17 +143,6 @@
       <div class="field"><label for="cname">Numele clasei</label><input id="cname" class="input" placeholder="De exemplu: Clasa a VII-a A"></div>
       <p class="help">După ce o creezi, primești un cod de înscriere pe care îl dai candidaților.</p>
       <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Creează clasa</button></div>
-    </div>
-  </div>
-
-  <!-- Set new password dialog (D-020) -->
-  <div class="backdrop" data-show="s-password">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pw-h">
-      <h2 id="pw-h" class="t-h2">Parolă nouă pentru Bogdan Ilie</h2>
-      <p class="secondary">Folosește-o când un candidat și-a uitat parola. Parola veche nu va mai funcționa.</p>
-      <div class="field"><label for="pw">Parola nouă</label><input id="pw" class="input" type="text" value="lalea-verde-48" aria-describedby="pw-h2">
-        <span id="pw-h2" class="help">Cel puțin 8 caractere. Spune-i-o candidatului direct; nu o trimitem pe email.</span></div>
-      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Setează parola</button></div>
     </div>
   </div>
 

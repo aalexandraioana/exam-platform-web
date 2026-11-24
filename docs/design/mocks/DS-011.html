@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>DS-011 · Administrator Users Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+<style>
+  .name-row { display: grid; gap: var(--space-4); }
+  @media (min-width: 640px) { .name-row { grid-template-columns: 1fr 1fr; } }
+  td .btn { white-space: nowrap; }
+  .actions { display: flex; justify-content: flex-start; flex-wrap: nowrap; gap: var(--space-2); }
+  .actions .btn-ghost { padding-left: var(--space-2); padding-right: var(--space-2); }
+  .who { display: grid; gap: 0; }
+  .users-card { overflow: hidden; }
+  .users .th-actions, .users .td-actions { width: 1%; white-space: nowrap; }
+  .users tbody tr:last-child td { border-bottom: 0; }
+  /* Small screens: each user is a stacked row; role and status move under the name. */
+  .meta-mobile { display: none; }
+  @media (max-width: 639px) {
+    .users thead { display: none; }
+    .users tr { display: grid; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle); }
+    .users td { display: block; padding: 0; border: 0; }
+    .users .actions { flex-wrap: wrap; }
+    .users .td-actions { width: auto; }
+    .meta-mobile { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-top: var(--space-1); }
+  }
+</style>
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-011 · Utilizatori (administrator, mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-default">Listă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-search">Căutare fără rezultat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-password">Parolă temporară</button>
+      <button type="button" class="mock-btn" data-state-btn="s-pw-invalid">Parolă: erori</button>
+      <button type="button" class="mock-btn" data-state-btn="s-pw-done">Parolă setată</button>
+      <button type="button" class="mock-btn" data-state-btn="s-new">Examinator nou</button>
+      <button type="button" class="mock-btn" data-state-btn="s-taken">Email folosit</button>
+      <button type="button" class="mock-btn" data-state-btn="s-new-done">Examinator creat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-deactivate">Dezactivare</button>
+      <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
+    </div>
+  </div>
+</aside>
+
+<header class="app-header">
+  <a href="#" class="brand"><i data-icon="book-open-text" class="lg"></i>Evaluare Digitală</a>
+  <nav class="nav" aria-label="Navigare administrator">
+    <a href="#" aria-current="page">Utilizatori</a>
+  </nav>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+    <div class="avatar" aria-label="Radu Ionescu, administrator">RI</div>
+    <button class="btn btn-icon menu-btn" data-menu aria-label="Deschide meniul"><i data-icon="menu"></i></button>
+  </div>
+</header>
+
+<main class="page">
+  <div class="page-head">
+    <h1 class="t-display">Utilizatori</h1>
+    <button type="button" class="btn btn-primary" data-show="s-default s-search s-password s-pw-invalid s-pw-done s-new s-taken s-new-done s-deactivate s-loading"><i data-icon="user-plus" class="sm"></i>Examinator nou</button>
+  </div>
+
+  <!-- Success notices (role="status") -->
+  <div class="alert success" role="status" data-show="s-pw-done">
+    <i data-icon="circle-check"></i>
+    <span><strong>Parola temporară pentru Bogdan Ilie a fost setată.</strong> Spune-i-o direct; nu o trimitem pe email. La următoarea intrare în cont își alege una nouă.</span>
+  </div>
+  <div class="alert success" role="status" data-show="s-new-done">
+    <i data-icon="circle-check"></i>
+    <span><strong>Contul examinatorului Maria Popa a fost creat.</strong> Spune-i parola temporară direct. La prima intrare în cont își alege una nouă.</span>
+  </div>
+
+  <!-- Load error -->
+  <div class="alert error" role="alert" data-show="s-error">
+    <i data-icon="wifi-off"></i>
+    <div class="row between"><span><strong>Lista de utilizatori nu s-a încărcat.</strong> Nu ne-am putut conecta la server. Încearcă din nou.</span><button class="btn">Încearcă din nou</button></div>
+  </div>
+
+  <section class="card stack users-card" aria-label="Utilizatori" style="padding: 0;" data-show="s-default s-search s-password s-pw-invalid s-pw-done s-new s-taken s-new-done s-deactivate s-loading">
+    <div class="row" style="padding: var(--space-4) var(--space-6) 0;">
+      <input class="input" placeholder="Caută după nume sau email" aria-label="Caută după nume sau email" value="" style="max-width: 320px;" data-show="s-default s-password s-pw-invalid s-pw-done s-new s-taken s-new-done s-deactivate s-loading">
+      <input class="input" aria-label="Caută după nume sau email" value="zamfir" style="max-width: 320px;" data-show="s-search">
+    </div>
+
+    <!-- Loading: skeleton rows keep the table layout -->
+    <div class="stack" style="padding: var(--space-4) var(--space-6) var(--space-6);" data-show="s-loading" aria-busy="true" aria-label="Se încarcă utilizatorii">
+      <div class="skeleton" style="width: 60%;"></div><div class="skeleton" style="width: 80%;"></div><div class="skeleton" style="width: 50%;"></div>
+    </div>
+
+    <p class="secondary" style="padding: var(--space-4) var(--space-6) var(--space-6);" data-show="s-search">Niciun utilizator nu se potrivește cu „zamfir”. Verifică numele sau emailul.</p>
+
+    <div class="table-wrap" data-show="s-default s-password s-pw-invalid s-pw-done s-new s-taken s-new-done s-deactivate">
+      <table class="users">
+        <thead><tr><th>Nume</th><th class="hide-mobile">Rol</th><th class="hide-mobile">Stare</th><th class="th-actions">Acțiuni</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="who"><span class="t-body-m">Ana Dumitru</span><span class="t-caption secondary text-wrap">ana.d@exemplu.ro</span><span class="meta-mobile t-caption secondary">Candidat <span class="badge success">Activ</span></span></div></td>
+            <td class="hide-mobile">Candidat</td>
+            <td class="hide-mobile"><span class="badge success">Activ</span></td>
+            <td class="td-actions"><div class="actions">
+              <button class="btn"><i data-icon="key" class="sm"></i>Parolă temporară</button>
+              <button class="btn btn-ghost" aria-label="Dezactivează contul lui Ana Dumitru"><i data-icon="user-x" class="sm"></i>Dezactivează</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><div class="who"><span class="t-body-m">Bogdan Ilie</span><span class="t-caption secondary text-wrap">bogdan.ilie@exemplu.ro</span><span class="meta-mobile t-caption secondary">Candidat <span class="badge success">Activ</span></span></div></td>
+            <td class="hide-mobile">Candidat</td>
+            <td class="hide-mobile"><span class="badge success">Activ</span></td>
+            <td class="td-actions"><div class="actions">
+              <button class="btn"><i data-icon="key" class="sm"></i>Parolă temporară</button>
+              <button class="btn btn-ghost" aria-label="Dezactivează contul lui Bogdan Ilie"><i data-icon="user-x" class="sm"></i>Dezactivează</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><div class="who"><span class="t-body-m">Radu Ionescu <span class="secondary">(tu)</span></span><span class="t-caption secondary text-wrap">radu.ionescu@exemplu.ro</span><span class="meta-mobile t-caption secondary">Administrator <span class="badge success">Activ</span></span></div></td>
+            <td class="hide-mobile">Administrator</td>
+            <td class="hide-mobile"><span class="badge success">Activ</span></td>
+            <td class="td-actions"></td>
+          </tr>
+          <tr>
+            <td><div class="who"><span class="t-body-m">Ioana Marin</span><span class="t-caption secondary text-wrap">ioana.marin@exemplu.ro</span><span class="meta-mobile t-caption secondary">Administrator <span class="badge success">Activ</span></span></div></td>
+            <td class="hide-mobile">Administrator</td>
+            <td class="hide-mobile"><span class="badge success">Activ</span></td>
+            <td class="td-actions"><div class="actions">
+              <button class="btn"><i data-icon="key" class="sm"></i>Parolă temporară</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><div class="who"><span class="t-body-m">Maria Popa</span><span class="t-caption secondary text-wrap">maria.popa@exemplu.ro</span><span class="meta-mobile t-caption secondary">Examinator <span class="badge success">Activ</span></span></div></td>
+            <td class="hide-mobile">Examinator</td>
+            <td class="hide-mobile"><span class="badge success">Activ</span></td>
+            <td class="td-actions"><div class="actions">
+              <button class="btn"><i data-icon="key" class="sm"></i>Parolă temporară</button>
+              <button class="btn btn-ghost" aria-label="Dezactivează contul lui Maria Popa"><i data-icon="user-x" class="sm"></i>Dezactivează</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><div class="who"><span class="t-body-m text-wrap">Elena-Alexandra Popescu-Vasilescu</span><span class="t-caption secondary text-wrap">elena.alexandra.popescu.vasilescu@exemplu.ro</span><span class="meta-mobile t-caption secondary">Candidat <span class="badge">Dezactivat</span></span></div></td>
+            <td class="hide-mobile">Candidat</td>
+            <td class="hide-mobile"><span class="badge">Dezactivat</span></td>
+            <td class="td-actions"><div class="actions"><span class="t-caption secondary">Cont dezactivat</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Temporary password dialog (D-054) -->
+  <div class="backdrop" data-show="s-password s-pw-invalid">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pw-h">
+      <h2 id="pw-h" class="t-h2">Parolă temporară pentru Bogdan Ilie</h2>
+      <p class="secondary">Parola veche nu va mai funcționa și Bogdan Ilie iese din cont pe toate dispozitivele. La următoarea intrare în cont își alege o parolă nouă.</p>
+      <form novalidate class="stack">
+        <div class="field">
+          <label for="pw">Parola temporară</label>
+          <div class="pw-wrap">
+            <input id="pw" class="input" type="password" autocomplete="new-password" aria-describedby="pw-help" value="" data-show="s-password">
+            <input class="input invalid" type="password" autocomplete="new-password" aria-label="Parola temporară" aria-invalid="true" aria-describedby="pw-err" value="lalea" data-show="s-pw-invalid">
+            <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
+          </div>
+          <span id="pw-help" class="help" data-show="s-password">Cel puțin 8 caractere. Spune-i-o direct; nu o trimitem pe email.</span>
+          <span id="pw-err" class="help error" data-show="s-pw-invalid">Parola are 5 caractere; are nevoie de cel puțin 8.</span>
+        </div>
+        <div class="field">
+          <label for="pw2">Scrie parola din nou</label>
+          <div class="pw-wrap">
+            <input id="pw2" class="input" type="password" autocomplete="new-password" value="" data-show="s-password">
+            <input class="input invalid" type="password" autocomplete="new-password" aria-label="Scrie parola din nou" aria-invalid="true" aria-describedby="pw2-err" value="lalea-verde" data-show="s-pw-invalid">
+            <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
+          </div>
+          <span id="pw2-err" class="help error" data-show="s-pw-invalid">Parolele nu sunt la fel.</span>
+        </div>
+        <div class="row" style="justify-content: flex-end;"><button type="button" class="btn">Anulează</button><button type="submit" class="btn btn-primary">Setează parola temporară</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- New Examiner dialog (D-054, D-055: role fixed as Examiner) -->
+  <div class="backdrop" data-show="s-new s-taken">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="new-h">
+      <h2 id="new-h" class="t-h2">Examinator nou</h2>
+      <p class="secondary">Contul primește o parolă temporară. La prima intrare în cont, examinatorul își alege una nouă.</p>
+      <form novalidate class="stack">
+        <div class="name-row">
+          <div class="field"><label for="first">Prenume</label><input id="first" class="input" autocomplete="off" placeholder="Maria" value="" data-show="s-new"><input class="input" aria-label="Prenume" value="Maria" data-show="s-taken"></div>
+          <div class="field"><label for="last">Nume</label><input id="last" class="input" autocomplete="off" placeholder="Popa" value="" data-show="s-new"><input class="input" aria-label="Nume" value="Popa" data-show="s-taken"></div>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" class="input" type="email" autocomplete="off" placeholder="nume@exemplu.ro" value="" data-show="s-new">
+          <input class="input invalid" type="email" aria-label="Email" aria-invalid="true" aria-describedby="email-taken" value="maria.popa@exemplu.ro" data-show="s-taken">
+          <span id="email-taken" class="help error" data-show="s-taken">Există deja un cont cu acest email. Folosește alt email.</span>
+        </div>
+        <div class="field">
+          <label for="npw">Parola temporară</label>
+          <div class="pw-wrap">
+            <input id="npw" class="input" type="password" autocomplete="new-password" aria-describedby="npw-help" value="" data-show="s-new">
+            <input class="input" type="password" autocomplete="new-password" aria-label="Parola temporară" aria-describedby="npw-help" value="tei-inflorit-21" data-show="s-taken">
+            <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
+          </div>
+          <span id="npw-help" class="help">Cel puțin 8 caractere. Spune-i-o direct; nu o trimitem pe email.</span>
+        </div>
+        <div class="field">
+          <label for="npw2">Scrie parola din nou</label>
+          <div class="pw-wrap">
+            <input id="npw2" class="input" type="password" autocomplete="new-password" value="" data-show="s-new">
+            <input class="input" type="password" autocomplete="new-password" aria-label="Scrie parola din nou" value="tei-inflorit-21" data-show="s-taken">
+            <button type="button" class="btn btn-icon" aria-label="Arată parola" aria-pressed="false"><i data-icon="eye"></i></button>
+          </div>
+        </div>
+        <div class="row" style="justify-content: flex-end;"><button type="button" class="btn">Anulează</button><button type="submit" class="btn btn-primary">Creează contul</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Deactivate confirmation (destructive) -->
+  <div class="backdrop" data-show="s-deactivate">
+    <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="off-h" aria-describedby="off-d">
+      <h2 id="off-h" class="t-h2">Dezactivezi contul lui Bogdan Ilie?</h2>
+      <p id="off-d" class="secondary">Bogdan Ilie iese din cont pe toate dispozitivele și nu mai poate intra. Contul nu mai poate fi reactivat. Rezultatele și încercările lui rămân salvate.</p>
+      <div class="row" style="justify-content: flex-end;"><button type="button" class="btn">Anulează</button><button type="button" class="btn btn-danger"><i data-icon="user-x" class="sm"></i>Dezactivează contul</button></div>
+    </div>
+  </div>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

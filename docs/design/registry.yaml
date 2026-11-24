@@ -57,8 +57,8 @@ designs:
   - id: DS-011
     name: admin-user-management
     kind: screen
-    status: draft
-    description: Administrator portal for creating examiner accounts, managing candidate profiles, role assignments, and password resets (D-020)
+    status: approved
+    description: Administrator users list with search; sets a temporary password, creates Examiner accounts, deactivates users (D-054, D-055, D-056)
   - id: DS-012
     name: admin-exam-supervision
     kind: screen
@@ -69,7 +69,7 @@ designs:
     kind: screen
     status: implemented
     source: frontend/src/pages/examiner/ClassesPage.tsx
-    description: Examiner classes with join codes, pending join requests to accept or decline, roster, and setting a new password for a Candidate (D-015, D-020, D-028)
+    description: Examiner classes with join codes, pending join requests to accept or decline, and the roster (D-015, D-028); new passwords moved to DS-011 (D-054)
   - id: DS-014
     name: app-header
     kind: component
@@ -94,4 +94,8 @@ designs:
     status: implemented
     source: frontend/src/components/Modal.tsx
     description: Dialog and right-side drawer (mock.css .modal, mock.js .drawer) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes
-
+  - id: DS-018
+    name: auth-change-password
+    kind: screen
+    status: approved
+    description: Forced new-password screen after sign-in while the password is temporary; two hidden fields, must differ from the temporary one; sign-out link (D-054)

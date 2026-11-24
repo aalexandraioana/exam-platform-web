@@ -20,6 +20,7 @@
 - D-025 · Exam blueprint with a random Variant per Item · _superseded-by D-043_
 - D-032 · Draft and Ready question status · _superseded-by D-042_
 - D-011 · Subject 2 handwritten solution photo upload alongside text · _superseded-by D-048_
+- D-020 · Admin-created Examiner accounts and manual password reset · _superseded-by D-054_
 
 ---
 
@@ -129,4 +130,13 @@
 - **Why:** 6th-grade geometric proofs and complex calculations require natural handwritten sketches and intermediate steps that are impractical to type solely in text inputs.
 - **Rejected:** Plain text-only submissions; mandatory LaTeX code entry for 6th-grade students.
 - **Evidence:** README.md:84, docs/agents/ARCHITECTURE.md:24
+- **Source:** user · confidence high
+
+## D-020 · Admin-created Examiner accounts and manual password reset
+- **Status:** superseded-by D-054
+- **Date:** 2026-11-22
+- **Rule:** Only an Administrator creates Examiner accounts; there is no Examiner self-registration and no pending-approval state. There is no email password reset: an Administrator, or the Examiner for Candidates in their class, sets a new password.
+- **Why:** Keeps account control with the school and avoids a mail service.
+- **Rejected:** Examiner self-registration with approval; email reset links.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-012, Q-013
 - **Source:** user · confidence high

@@ -50,6 +50,9 @@
 - Q-039 · Does the 30 Nov pilot include Subject 2? · _answered_
 - Q-040 · What happens when the class code entered at registration matches no class? · _answered_
 - Q-041 · What does the roster's "more options" menu on DS-013 contain, and can a declined Candidate ask to join again?
+- Q-042 · Who resets a forgotten password, and is the new password temporary? · _answered_
+- Q-043 · Can the Administrator reactivate a deactivated user? · _answered_
+- Q-044 · Who can be deactivated on DS-011: other Administrators, and the Administrator themselves? · _answered_
 
 ---
 
@@ -117,6 +120,7 @@
 - **Status:** answered
 - **Date:** 2026-11-22
 - **Answer:** No email reset. An Administrator (or the Examiner, for their class) sets a new password. The "Forgot Password" screen leaves the README screen list.
+- **Note:** 2026-11-24: only the Administrator sets a new password now, and it is temporary (Q-042, D-054).
 
 ## Q-014 · What happens when an Attempt starts close to the Exam's end_time (`available_until`)?
 - **Status:** answered
@@ -278,3 +282,25 @@
 - **Date:** 2026-11-23
 - **Blocks:** P3 (roster menu; joining after a decline)
 - **Context:** DS-013 shows a "…" button per Candidate in the roster with no menu drawn (removing a Candidate from the class is a likely item). D-028 keeps a declined request's row, one per Candidate and class, and doesn't say whether that Candidate may send a new request. Until answered, the menu is not built and joining after a decline is refused as already decided.
+
+## Q-042 · Who resets a forgotten password, and is the new password temporary?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P3 (DS-013 password dialog), P11 (DS-011 Administrator screen)
+- **Context:** D-020 let the Examiner set a new password for a Candidate in their class, in a dialog that showed it in plain text and asked for it once. The user moved resets to the Administrator, with a temporary password, while no Administrator screen exists yet.
+- **Answer:** Only the Administrator resets passwords, on an Administrator screen built now (the Administrator screens leave the cut list). The Administrator types the password, hidden and twice. It is temporary for every user whose password an Administrator sets, and for new Examiner accounts: at the next sign-in they must choose a new one, different from the temporary one. A temporary password does not expire. The Examiner's "Parolă nouă" button on DS-013 goes away (D-054). (Answered 2026-11-24.)
+
+## Q-043 · Can the Administrator reactivate a deactivated user?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P3b (DS-011 row actions)
+- **Context:** DS-011 deactivates users (existing `is_active`: tokens revoked, login refused). Nothing says whether that can be undone. Until answered, DS-011 has no reactivate action and the mock shows a deactivated user's row without one.
+- **Answer:** No. Deactivation is permanent. (Answered 2026-11-24.)
+
+## Q-044 · Who can be deactivated on DS-011: other Administrators, and the Administrator themselves?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P3b (DS-011 row actions, admin endpoint)
+- **Context:** Deactivating one's own account would lock the only Administrator out; deactivating another Administrator may or may not be wanted. Until answered, the Deactivate action is drawn only on Candidate and Examiner rows.
+- **Answer:** No Administrator account can be deactivated on DS-011, neither another Administrator's nor one's own. Only Candidates and Examiners can. (Answered 2026-11-24.)
+

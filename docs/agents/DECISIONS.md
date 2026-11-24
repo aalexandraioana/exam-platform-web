@@ -20,7 +20,6 @@
 - D-015 · Classes and Exam publication to classes
 - D-017 · Answer matching rules for numbers and text
 - D-019 · Results and feedback released only on publication
-- D-020 · Admin-created Examiner accounts and manual password reset
 - D-021 · Full duration per Attempt regardless of available_until
 - D-022 · Bilingual Romanian and English UI
 - D-026 · Subject 2 photo upload limits
@@ -48,6 +47,9 @@
 - D-051 · The API is documented in a hand-written docs/API.md
 - D-052 · No page may be indexed by search engines
 - D-053 · A class code at registration that matches no class refuses the registration
+- D-054 · Only the Administrator sets a new password, and it is temporary
+- D-055 · A user's role is fixed when the account is created
+- D-056 · Deactivation is permanent and never applies to Administrators
 
 ---
 
@@ -181,16 +183,6 @@
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-005, Q-009; INTERVIEW.md:Q16
 - **Source:** user · confidence high
 
-## D-020 · Admin-created Examiner accounts and manual password reset
-- **Status:** approved
-- **Date:** 2026-11-22
-- **Confirmed:** 2026-11-23
-- **Rule:** Only an Administrator creates Examiner accounts; there is no Examiner self-registration and no pending-approval state. There is no email password reset: an Administrator, or the Examiner for Candidates in their class, sets a new password.
-- **Why:** Keeps account control with the school and avoids a mail service.
-- **Rejected:** Examiner self-registration with approval; email reset links.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-012, Q-013
-- **Source:** user · confidence high
-
 ## D-021 · Full duration per Attempt regardless of available_until
 - **Status:** approved
 - **Date:** 2026-11-22
@@ -204,7 +196,7 @@
 ## D-022 · Bilingual Romanian and English UI
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-24
 - **Rule:** The UI is available in Romanian and English with a language toggle. CONTEXT.md holds the Romanian and English word for each term (words: Q-017).
 - **Why:** Romanian classroom users plus English project documentation and review.
 - **Rejected:** Romanian-only or English-only UI.
@@ -264,7 +256,7 @@
 ## D-033 · Lucide as the only icon set
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-24
 - **Rule:** All UI icons come from Lucide (`lucide-react` in the frontend, imported per icon), 2px stroke, at 16, 20 or 24 px. No Unicode symbols or emoji are used as icons. Icon-only controls keep an accessible name (DESIGN.md).
 - **Why:** Mixed hand-copied SVGs and Unicode glyphs render differently per device; Lucide matches the existing outline style (Feather), is free (ISC) and tree-shaken.
 - **Rejected:** Heroicons (smaller set), Phosphor (multiple weights invite drift), Tabler Icons (more technical look).
@@ -274,7 +266,7 @@
 ## D-035 · Warm, calm visual system with a fresh mint accent
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-24
 - **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: a fresh mint primary accent (`#1F7A4F` light / `#7EE2A8` dark, hover `#17603D` / `#AFF0C9`, tint `#E3F2E8` / `#1C3A28`); warm neutrals in both themes, a cream light theme (canvas `#F5F1EA`, surface `#FFFCF7`) and an espresso dark theme (canvas `#1A1612`, surface `#241F1A`); Plus Jakarta Sans for UI copy and headings; JetBrains Mono for formulas, equations and timers; a 4px grid spacing scale; soft rounded shapes (radius 10/16 px) and subtle, warm-tinted elevation.
 - **Why:** The user preferred mint green to teal. In light mode the mint is deep enough to carry white text (5.31:1) and links on cream (4.72:1); the bright mint shows in dark mode. Status colors keep their meaning through icons and text, since the accent is close to the success green.
 - **Rejected:** Teal accent (D-034); classic and soft sage-mint options; light mint in light mode (fails contrast).
@@ -424,7 +416,7 @@
 ## D-050 · The SPA authenticates with a Sanctum bearer token
 - **Status:** approved
 - **Date:** 2026-11-23
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-24
 - **Rule:** Login and registration return a Sanctum personal access token. The SPA stores it in localStorage and sends it as `Authorization: Bearer <token>` on every API request; protected routes use `auth:sanctum`. Logout revokes the current token. The API does not use `statefulApi()` or session cookies.
 - **Why:** The site and the API run on different onrender.com domains (D-014). onrender.com is a public suffix, so a session cookie would be cross-site (`SameSite=None`), which Safari blocks.
 - **Rejected:** Sanctum SPA cookie session (needs one custom domain for the site and the API).
@@ -459,5 +451,34 @@
 - **Why:** A mistyped code is caught while the teacher's code is still at hand, so no Candidate ends up outside their class unnoticed.
 - **Rejected:** Creating the account anyway and telling the Candidate the code was not found.
 - **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-040; docs/design/mocks/DS-002.html
+- **Source:** user · confidence high
+
+## D-054 · Only the Administrator sets a new password, and it is temporary
+- **Status:** approved
+- **Date:** 2026-11-24
+- **Rule:** Only an Administrator creates Examiner accounts (no self-registration, no pending approval) and only an Administrator sets a new password, for any user, on the Administrator screen (DS-011). There is no email reset. The Administrator types the password twice, hidden, with show/hide. A password set by the Administrator, including the first password of an account created with `app:create-user`, is temporary: at the next sign-in the user must choose a new password, different from the temporary one, before doing anything else. A temporary password does not expire. Examiners no longer set passwords for Candidates.
+- **Why:** Keeps password resets with one role, and a password someone else knows does not stay in use.
+- **Rejected:** Examiner sets a Candidate's password (D-020); a password generated by the system; expiring temporary passwords; email reset links.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-042, Q-013
+- **Source:** user · confidence high
+
+## D-055 · A user's role is fixed when the account is created
+- **Status:** approved
+- **Date:** 2026-11-24
+- **Confirmed:** 2026-11-24
+- **Rule:** A user's role never changes after the account is created. Candidates register themselves; an Administrator creates Examiners (DS-011 or `app:create-user`); Administrators are created only with `app:create-user`. No screen or endpoint changes a role.
+- **Why:** The user fixed roles while scoping the Administrator screen (P3b).
+- **Rejected:** A role control on DS-011.
+- **Evidence:** docs/plans/p3b-admin-password-reset.md; backend/app/Models/User.php (`role` not fillable)
+- **Source:** user · confidence high
+
+## D-056 · Deactivation is permanent and never applies to Administrators
+- **Status:** approved
+- **Date:** 2026-11-24
+- **Confirmed:** 2026-11-24
+- **Rule:** An Administrator can deactivate Candidates and Examiners only. A deactivated account can't be reactivated: it is signed out everywhere and refused at login, and its data stays. The API refuses deactivating an Administrator (403) and reactivating anyone.
+- **Why:** The user's answers to Q-043 and Q-044.
+- **Rejected:** Reactivation; deactivating Administrators, including oneself.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-043, Q-044; docs/design/mocks/DS-011.html
 - **Source:** user · confidence high
 

@@ -217,7 +217,7 @@
 ## D-027 · Private question pools with a shared library
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** Each Examiner's questions are private to them. An Examiner can publish a question to a shared library; other Examiners copy it into their own bank, and the copy is theirs to edit.
 - **Why:** Keeps each Examiner in control of their questions while making it easier to fill blueprint Items with Variants.
 - **Rejected:** One shared pool where only the author edits; one shared pool anyone edits; fully private pools.
@@ -247,7 +247,7 @@
 ## D-031 · Optional barem for Subject 2 questions
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** A Subject 2 question may have a barem; the Examiner chooses per question whether to use one. A barem is an ordered list of steps, each with a short description and points, summing to the question's points (each Variant has its own). With a barem, the Examiner ticks the steps a Candidate earned or gives part of a step's points (never more than the step is worth); the score is the sum plus an optional manual adjustment, kept between 0 and the question's points (D-005), with a private comment (D-019). The ticked steps and points are stored per answer. Without a barem, the Examiner enters one score between 0 and the question's points, plus the comment. A barem can be edited while grading: scores already given on that question are recalculated from their ticked steps (partial points capped at a step's new maximum, with the affected answers flagged for re-check). Once results are published, the barem is locked.
 - **Why:** Matches Romanian barem grading practice and makes grading consistent across Candidates, while leaving Examiners free to grade holistically when a barem does not fit.
 - **Rejected:** Mandatory barem for every Subject 2 question; locking the barem at the first graded answer; recalculating after publication.
@@ -307,7 +307,7 @@
 ## D-040 · Library entries are frozen copies
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** Only Ready questions can be published to the shared library (D-027). Publishing makes a frozen copy with its own code, author and publish date; later edits to the author's question don't change it. Copying a library entry into another Examiner's bank creates an independent question that remembers which entry it came from, and also copies its competence and topic labels into the copier's own lists.
 - **Why:** Matches DS-007 (separate LIB- codes, "Copiată · M6-TR-011", "Doar întrebările finalizate pot fi publicate") and keeps every Examiner in control of their own questions.
 - **Rejected:** The library showing the author's live question; copies without the competence (the copier picks one).
@@ -317,7 +317,7 @@
 ## D-041 · One bank per Examiner, organised in pools
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** Each Examiner has one bank: all their questions, private to them (D-027). Inside it they can create named pools; a question can be in several pools or in none, and deleting a pool keeps its questions. Exam Items draw from pools (D-043).
 - **Why:** The bank is the storage place; pools are the groups an Examiner builds for exams, as in the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
 - **Rejected:** Several separate banks per Examiner; a question belonging to exactly one pool; pools only for organising.

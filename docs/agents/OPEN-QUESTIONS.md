@@ -61,6 +61,12 @@
 - Q-050 · Which question types can use named values? · _answered_
 - Q-051 · Can the answer of a parameterised question be a fraction? · _answered_
 - Q-052 · Which operations can formulas use? · _answered_
+- Q-053 · Where does an Examiner create competences, topics and pools? · _answered_
+- Q-054 · Who sets the code of a question created in the app? · _answered_
+- Q-055 · What replaces DS-007's "Folosită în" column? · _answered_
+- Q-056 · Can a question be deleted? · _answered_
+- Q-057 · What happens when a Ready question is edited so it is no longer complete? · _answered_
+- Q-058 · Can an Examiner take back an entry they published to the library? · _answered_
 
 ---
 
@@ -369,3 +375,45 @@
 - **Blocks:** P4a (whitelist, D-013)
 - **Context:** The seed template says + - * / and parentheses. 6th-grade problems may also want powers (2³), the remainder of a division, or the absolute value.
 - **Answer:** + − · : and parentheses only (`*`, `×` and `/` also accepted as the same operations). No powers, remainder or absolute value. (Answered 2026-11-24.)
+
+## Q-053 · Where does an Examiner create competences, topics and pools?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4b
+- **Context:** DS-007 shows only dropdowns and "+ Adaugă într-un set".
+- **Answer:** Inline: each dropdown ends with "+ Competență nouă…" / "+ Temă nouă…" / "+ Set nou…", opening a small dialog. Renaming and deleting come later. (Answered 2026-11-24.)
+
+## Q-054 · Who sets the code of a question created in the app?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4b
+- **Context:** Seeded questions get the code written in questions.yaml (D-029).
+- **Answer:** The Examiner types it when creating the question; it must be unique and can't be changed once saved. (Answered 2026-11-24.)
+
+## Q-055 · What replaces DS-007's "Folosită în" column?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4b
+- **Context:** Under D-057 exams draw from pools, not listed questions, so "used in N exams" is no longer a simple fact.
+- **Answer:** The question's pools; a usage count may come back with P5. (Answered 2026-11-24.)
+
+## Q-056 · Can a question be deleted?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4b
+- **Context:** DS-007 has no delete action; attempt_items reference questions (restrict on delete).
+- **Answer:** Yes, after a confirmation, as long as no Attempt has drawn it. (Answered 2026-11-24.)
+
+## Q-057 · What happens when a Ready question is edited so it is no longer complete?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4b
+- **Context:** D-059 lists what Ready needs.
+- **Answer:** Saving is refused and the checklist shows what is missing; the Examiner moves it back to Draft explicitly ("Mută în ciorne"). (Answered 2026-11-24.)
+
+## Q-058 · Can an Examiner take back an entry they published to the library?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4b
+- **Context:** D-040: publishing makes a frozen copy; copies others made are theirs.
+- **Answer:** Not in P4b. (Answered 2026-11-24.)

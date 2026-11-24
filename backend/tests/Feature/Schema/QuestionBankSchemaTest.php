@@ -5,7 +5,7 @@ use App\Models\BaremStep;
 use App\Models\Competence;
 use App\Models\Pool;
 use App\Models\Question;
-use App\Models\TopicLabel;
+use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -28,8 +28,8 @@ it('saves a Draft with only its subject and type', function () {
         ->and($question->uses_barem)->toBeFalse();
 });
 
-it('refuses Ready unless statement, points, competence, grade level and difficulty are set', function () {
-    foreach (['statement', 'points', 'competence_id', 'grade_level', 'difficulty'] as $field) {
+it('refuses Ready unless statement, points, competence, topic, grade level and difficulty are set (D-059)', function () {
+    foreach (['statement', 'points', 'competence_id', 'topic_id', 'grade_level', 'difficulty'] as $field) {
         expectRefused(fn () => Question::factory()->ready()->create([$field => null]));
     }
 
@@ -95,21 +95,15 @@ it('lets a question sit in several pools, once each, and keeps it when a pool is
         ->and($question->pools()->pluck('pools.id')->all())->toBe([$revision->id]);
 });
 
-it('gives a question several labels, unique per examiner ignoring case, and only detaches deleted ones', function () {
+it('gives a question one topic, unique per examiner ignoring case, and refuses deleting a topic in use (D-058)', function () {
     $examiner = User::factory()->examiner()->create();
-    $question = Question::factory()->for($examiner, 'examiner')->create();
-    $angles = TopicLabel::factory()->for($examiner, 'examiner')->create(['name' => 'Unghiuri']);
-    $lines = TopicLabel::factory()->for($examiner, 'examiner')->create(['name' => 'Drepte']);
-    $question->topicLabels()->attach([$angles->id, $lines->id]);
+    $angles = Topic::factory()->for($examiner, 'examiner')->create(['name' => 'Unghiuri']);
+    $question = Question::factory()->for($examiner, 'examiner')->create(['topic_id' => $angles->id]);
 
-    expect($question->topicLabels()->count())->toBe(2);
-    expectRefused(fn () => TopicLabel::factory()->for($examiner, 'examiner')->create(['name' => 'unghiuri']));
-    expect(TopicLabel::factory()->create(['name' => 'Unghiuri'])->name)->toBe('Unghiuri');
-
-    $angles->delete();
-
-    expect($question->fresh())->not->toBeNull()
-        ->and($question->topicLabels()->pluck('topic_labels.id')->all())->toBe([$lines->id]);
+    expect($question->topic->is($angles))->toBeTrue();
+    expectRefused(fn () => Topic::factory()->for($examiner, 'examiner')->create(['name' => 'unghiuri']));
+    expect(Topic::factory()->create(['name' => 'Unghiuri'])->name)->toBe('Unghiuri');
+    expectRefused(fn () => $angles->delete());
 });
 
 it('keeps barem step positions unique, points non-negative, and deletes steps with their question', function () {
@@ -129,22 +123,20 @@ it('refuses to delete a competence a question uses', function () {
     expectRefused(fn () => $question->competence->delete());
 });
 
-it('navigates examiner, pools, questions, labels, barem, competence and library source', function () {
+it('navigates examiner, pools, questions, topic, barem, competence and library source', function () {
     $examiner = User::factory()->examiner()->create();
     $competence = Competence::factory()->for($examiner, 'examiner')->create();
     $question = Question::factory()->subjectTwo()->withBarem()->ready()
         ->for($examiner, 'examiner')->create(['competence_id' => $competence->id]);
     $pool = Pool::factory()->for($examiner, 'examiner')->create();
     $pool->questions()->attach($question);
-    $label = TopicLabel::factory()->for($examiner, 'examiner')->create();
-    $question->topicLabels()->attach($label);
     $step = BaremStep::factory()->for($question)->create();
     $entry = Question::factory()->subjectTwo()->ready()->inLibrary()
         ->for($examiner, 'examiner')->create(['competence_id' => $competence->id, 'copied_from_id' => $question->id]);
 
     expect($examiner->pools->first()->questions->first()->is($question))->toBeTrue()
         ->and($examiner->questions()->count())->toBe(2)
-        ->and($examiner->topicLabels->first()->questions->first()->is($question))->toBeTrue()
+        ->and($examiner->topics->first()->questions->first()->is($question))->toBeTrue()
         ->and($question->baremSteps->first()->is($step))->toBeTrue()
         ->and($question->competence->is($competence))->toBeTrue()
         ->and($competence->questions()->count())->toBe(2)
@@ -156,5 +148,5 @@ it('indexes the foreign keys that no unique key covers', function () {
         ->and(hasIndexOn('questions', 'competence_id'))->toBeTrue()
         ->and(hasIndexOn('questions', 'copied_from_id'))->toBeTrue()
         ->and(hasIndexOn('pool_question', 'question_id'))->toBeTrue()
-        ->and(hasIndexOn('question_topic_label', 'topic_label_id'))->toBeTrue();
+        ->and(hasIndexOn('questions', 'topic_id'))->toBeTrue();
 });

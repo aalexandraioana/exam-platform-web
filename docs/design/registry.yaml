@@ -37,7 +37,7 @@ designs:
   - id: DS-007
     name: question-bank-manager
     kind: screen
-    status: approved
+    status: draft
     description: Examiner question bank: filters (competence, topic, pool, type, grade, difficulty, status), editor with every field an Item matches on, named values (fixed, random with exclusions, calculated), Draft/Ready checklist, shared library (D-057, D-058, D-059, D-040)
   - id: DS-008
     name: exam-builder

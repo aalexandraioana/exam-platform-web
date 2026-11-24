@@ -17,6 +17,9 @@
   .grid-2 .span-2 { grid-column: 1 / -1; }
   .comp { display: grid; gap: var(--space-1); justify-items: start; }
   .accepted { display: grid; gap: var(--space-2); }
+  .options { display: grid; gap: var(--space-2); }
+  .option { display: grid; grid-template-columns: 24px 20px minmax(0, 1fr) auto; gap: var(--space-2); align-items: center; }
+  .option input[type=radio], .option input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--bg-primary); }
   .accepted .row .input { flex: 1; }
   .test-box { display: grid; gap: var(--space-2); padding: var(--space-3); border: 1px dashed var(--border-strong); border-radius: var(--radius-md); }
   .values { display: grid; gap: var(--space-3); }
@@ -55,9 +58,18 @@
       <button type="button" class="mock-btn active" data-state-btn="s-short">Răspuns scurt</button>
       <button type="button" class="mock-btn" data-state-btn="s-param">Valori fixe, aleatoare, calculate</button>
       <button type="button" class="mock-btn" data-state-btn="s-param-missing">Valoare nedefinită</button>
+      <button type="button" class="mock-btn" data-state-btn="s-single">Alegere unică</button>
+      <button type="button" class="mock-btn" data-state-btn="s-multi">Alegere multiplă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-dual">Adevărat / Fals</button>
+      <button type="button" class="mock-btn" data-state-btn="s-number">Număr / fracție</button>
       <button type="button" class="mock-btn" data-state-btn="s-s2">Subiectul II cu barem</button>
       <button type="button" class="mock-btn" data-state-btn="s-draft">Ciornă incompletă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-refused">Salvare refuzată</button>
+      <button type="button" class="mock-btn" data-state-btn="s-new">Întrebare nouă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-new-comp">Competență nouă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-delete">Ștergere</button>
       <button type="button" class="mock-btn" data-state-btn="s-library">Bibliotecă comună</button>
+      <button type="button" class="mock-btn" data-state-btn="s-copy">Copiere din bibliotecă</button>
       <button type="button" class="mock-btn" data-state-btn="s-empty">Bancă goală</button>
       <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
     </div>
@@ -84,62 +96,66 @@
 <main class="page">
   <div class="page-head">
     <div class="stack-sm"><h1 class="t-display">Bancă de întrebări</h1>
-      <span class="t-caption secondary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error">64 de întrebări · 58 finalizate · 6 ciorne</span></div>
-    <button type="button" class="btn btn-primary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-empty">+ Întrebare nouă</button>
+      <span class="t-caption secondary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete">64 de întrebări · 58 finalizate · 6 ciorne</span></div>
+    <button type="button" class="btn btn-primary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-empty s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete">+ Întrebare nouă</button>
   </div>
 
   <div class="tabs" role="tablist">
-    <a href="#" role="tab" aria-selected="true" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error">Întrebările mele</a>
-    <a href="#" role="tab" aria-selected="false" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error">Bibliotecă comună</a>
-    <a href="#" role="tab" aria-selected="false" data-show="s-library">Întrebările mele</a>
-    <a href="#" role="tab" aria-selected="true" data-show="s-library">Bibliotecă comună</a>
+    <a href="#" role="tab" aria-selected="true" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete">Întrebările mele</a>
+    <a href="#" role="tab" aria-selected="false" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete">Bibliotecă comună</a>
+    <a href="#" role="tab" aria-selected="false" data-show="s-library s-copy">Întrebările mele</a>
+    <a href="#" role="tab" aria-selected="true" data-show="s-library s-copy">Bibliotecă comună</a>
   </div>
 
   <!-- Filters (S-14) -->
-  <div class="filters" data-show="s-short s-param s-param-missing s-s2 s-draft s-library">
+  <div class="filters" data-show="s-short s-param s-param-missing s-s2 s-draft s-library s-copy">
     <div class="filter-row">
       <input class="input search" placeholder="Caută după cod sau text" aria-label="Caută întrebări">
       <select class="select" aria-label="Competență"><option>Toate competențele</option><option>C1 · Compară numere întregi</option><option>C2 · Folosește proporțiile directe</option><option>C3 · Recunoaște unghiuri opuse la vârf</option><option>C4 · Folosește proprietățile triunghiului isoscel</option></select>
       <select class="select" aria-label="Temă"><option>Toate temele</option><option>Mulțimi de numere întregi</option><option>Rapoarte și proporții</option><option>Unghiuri</option><option>Triunghiuri</option></select>
-      <select class="select" aria-label="Set de întrebări"><option>Toate seturile</option><option>Unghiuri – ușor</option><option>Proporții – mediu</option><option>Fără set</option></select>
+      <select data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete" class="select" aria-label="Set de întrebări"><option>Toate seturile</option><option>Unghiuri – ușor</option><option>Proporții – mediu</option><option>Fără set</option></select>
       <select class="select" aria-label="Tip"><option>Toate tipurile</option><option>Adevărat / Fals</option><option>Alegere unică</option><option>Alegere multiplă</option><option>Completare</option><option>Problemă</option></select>
       <select class="select" aria-label="Clasa"><option>Toate clasele</option><option>Clasa a V-a</option><option>Clasa a VI-a</option><option>Clasa a VII-a</option><option>Clasa a VIII-a</option></select>
       <select class="select" aria-label="Dificultate"><option>Orice dificultate</option><option>Ușor</option><option>Mediu</option><option>Dificil</option></select>
-      <select class="select" aria-label="Stare"><option>Toate stările</option><option>Doar finalizate</option><option>Doar ciorne</option></select>
+      <select data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete" class="select" aria-label="Stare"><option>Toate stările</option><option>Doar finalizate</option><option>Doar ciorne</option></select>
     </div>
   </div>
 
   <!-- ===== MY QUESTIONS: list + editor ===== -->
-  <div class="bank" data-show="s-short s-param s-param-missing s-s2 s-draft">
+  <div class="bank" data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete">
     <div class="card" style="padding: 0;">
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Cod</th><th>Enunț</th><th>Competență · temă</th><th>Stare</th><th>Folosită în</th></tr></thead>
+          <thead><tr><th>Cod</th><th>Enunț</th><th>Competență · temă</th><th>Stare</th><th>Seturi</th></tr></thead>
           <tbody>
-            <tr data-show="s-short" class="selected"><td class="code">M6-UG-012</td><td><span class="stmt" title="Diagonalele paralelogramului …">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>2 examene</td></tr>
-            <tr data-show="s-param s-param-missing s-s2 s-draft"><td class="code">M6-UG-012</td><td><span class="stmt">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>2 examene</td></tr>
-            <tr data-show="s-param s-param-missing" class="selected"><td class="code">M6-RP-014</td><td><span class="stmt" title="Numerele a și b sunt direct proporționale cu 3 și 5 …">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-short s-s2 s-draft"><td class="code">M6-RP-014</td><td><span class="stmt">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-s2" class="selected"><td class="code">M6-TR-004</td><td><span class="stmt" title="În triunghiul ABC, AB = AC și ∢A = 40° …">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-short s-param s-param-missing s-draft"><td class="code">M6-TR-004</td><td><span class="stmt">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-draft" class="selected"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td>1 examen (exclusă)</td></tr>
-            <tr data-show="s-short s-param s-param-missing s-s2"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td>1 examen (exclusă)</td></tr>
-            <tr><td class="code">M6-MN-003</td><td><span class="stmt" title="Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …">Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …</span></td><td><div class="comp"><span class="tag">C1</span><span class="t-caption secondary">Mulțimi de numere întregi</span></div></td><td><span class="badge success">Finalizat</span></td><td>—</td></tr>
+            <tr data-show="s-short s-refused s-new s-new-comp s-delete" class="selected"><td class="code">M6-UG-012</td><td><span class="stmt" title="Diagonalele paralelogramului …">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Unghiuri – ușor</td></tr>
+            <tr data-show="s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number"><td class="code">M6-UG-012</td><td><span class="stmt">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Unghiuri – ușor</td></tr>
+            <tr data-show="s-param s-param-missing" class="selected"><td class="code">M6-RP-014</td><td><span class="stmt" title="Numerele a și b sunt direct proporționale cu 3 și 5 …">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Proporții – mediu</td></tr>
+            <tr data-show="s-short s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete"><td class="code">M6-RP-014</td><td><span class="stmt">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Proporții – mediu</td></tr>
+            <tr data-show="s-s2" class="selected"><td class="code">M6-TR-004</td><td><span class="stmt" title="În triunghiul ABC, AB = AC și ∢A = 40° …">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Triunghiuri – probleme</td></tr>
+            <tr data-show="s-short s-param s-param-missing s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete"><td class="code">M6-TR-004</td><td><span class="stmt">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Triunghiuri – probleme</td></tr>
+            <tr data-show="s-draft" class="selected"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td class="t-caption">—</td></tr>
+            <tr data-show="s-short s-param s-param-missing s-s2 s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td class="t-caption">—</td></tr>
+            <tr data-show="s-single s-multi s-dual s-number" class="selected"><td class="code">M6-MN-007</td><td><span class="stmt">Cât face −3 + 8?</span></td><td><div class="comp"><span class="tag">C1</span><span class="t-caption secondary">Mulțimi de numere întregi</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Numere întregi – ușor</td></tr>
+            <tr><td class="code">M6-MN-003</td><td><span class="stmt" title="Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …">Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …</span></td><td><div class="comp"><span class="tag">C1</span><span class="t-caption secondary">Mulțimi de numere întregi</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Numere întregi – ușor</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <!-- Editor: short answer with accepted answers + test box (S-13) -->
-    <section class="card editor" aria-labelledby="e1" data-show="s-short">
+    <section class="card editor" aria-labelledby="e1" data-show="s-short s-refused s-new s-new-comp s-delete">
       <div class="row between"><h2 id="e1" class="t-h2">M6-UG-012</h2><span class="badge success">Finalizat</span></div>
+      <div class="alert error t-caption" role="alert" data-show="s-refused"><span><strong>Nu am salvat modificările.</strong> O întrebare finalizată trebuie să rămână completă: lipsește tema. Alege o temă sau mută întrebarea în ciorne și salvează din nou.</span></div>
       <div class="grid-2">
         <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>
         <div class="field"><label>Tip</label><select class="select"><option>Completare</option></select></div>
         <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
         <div class="field"><label>Dificultate</label><select class="select"><option>Ușor</option></select></div>
-        <div class="field span-2"><label>Competență</label><select class="select"><option>C3 · Recunoaște unghiuri opuse la vârf</option></select></div>
-        <div class="field span-2"><label>Temă</label><select class="select"><option>Unghiuri</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C3 · Recunoaște unghiuri opuse la vârf</option><option>C1 · Compară numere întregi</option><option>+ Competență nouă…</option></select>
+          <span class="help">Ultima opțiune din fiecare listă creează una nouă: „+ Competență nouă…”, „+ Temă nouă…”, „+ Set nou…”.</span></div>
+        <div class="field span-2" data-show="s-short s-new s-new-comp s-delete"><label>Temă</label><select class="select"><option>Unghiuri</option><option>Triunghiuri</option><option>+ Temă nouă…</option></select></div>
+        <div class="field span-2" data-show="s-refused"><label>Temă</label><select class="select invalid" aria-invalid="true" aria-describedby="t1-err"><option>Alege o temă</option></select><span id="t1-err" class="help error">Alege tema întrebării.</span></div>
         <div class="field"><label>Puncte</label><input class="input t-math" value="5"></div>
       </div>
       <div class="stack-sm"><span class="label-text">Seturi de întrebări</span>
@@ -160,10 +176,115 @@
         <input id="try" class="input" value="Se injumatatesc ">
         <div class="alert success t-caption"><span><strong>Acceptat.</strong> Se potrivește cu „se înjumătățesc” după ce ignorăm literele mari, spațiile și diacriticele.</span></div>
       </div>
-      <div class="row between">
+      <div class="field"><label for="ex1">Explicație <span class="secondary" style="font-weight: 400;">(opțional)</span></label>
+        <textarea id="ex1" class="textarea" style="min-height: 72px;">Diagonalele paralelogramului au același mijloc.</textarea>
+        <span class="help">O vede candidatul după publicarea rezultatelor.</span></div>
+      <div class="row" style="gap: var(--space-1); border-top: 1px solid var(--border-subtle); padding-top: var(--space-3);">
         <button type="button" class="btn btn-ghost">Publică în biblioteca comună</button>
+        <button type="button" class="btn btn-ghost">Mută în ciorne</button>
+        <button type="button" class="btn btn-ghost" style="color: var(--status-error);"><i data-icon="trash" class="sm"></i>Șterge</button>
+      </div>
+      <div class="row" style="justify-content: flex-end;">
         <button type="button" class="btn btn-primary">Salvează</button>
       </div>
+    </section>
+
+    <!-- Editor: single choice (one correct option, D-045 shuffles them) -->
+    <section class="card editor" aria-label="M6-MN-007, alegere unică" data-show="s-single">
+      <div class="row between"><h2 class="t-h2">M6-MN-007</h2><span class="badge success">Finalizat</span></div>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Alegere unică</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
+        <div class="field"><label>Dificultate</label><select class="select"><option>Ușor</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C1 · Compară numere întregi</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select"><option>Mulțimi de numere întregi</option></select></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="5"></div>
+      </div>
+      <div class="field"><label for="st5">Enunț</label><textarea id="st5" class="textarea t-math" style="min-height: 72px;">Cât face −3 + 8?</textarea></div>
+      <fieldset class="stack-sm" style="border: 0; padding: 0; margin: 0;"><legend class="label-text">Variante</legend>
+        <div class="options">
+          <div class="option"><input type="radio" name="c-radio" checked aria-label="Varianta a este corectă"><span class="t-caption secondary">a)</span><input class="input t-math" value="5" aria-label="Varianta a"><button class="btn btn-icon" aria-label="Șterge varianta a"><i data-icon="x"></i></button></div>
+          <div class="option"><input type="radio" name="c-radio" aria-label="Varianta b este corectă"><span class="t-caption secondary">b)</span><input class="input t-math" value="−5" aria-label="Varianta b"><button class="btn btn-icon" aria-label="Șterge varianta b"><i data-icon="x"></i></button></div>
+          <div class="option"><input type="radio" name="c-radio" aria-label="Varianta c este corectă"><span class="t-caption secondary">c)</span><input class="input t-math" value="11" aria-label="Varianta c"><button class="btn btn-icon" aria-label="Șterge varianta c"><i data-icon="x"></i></button></div>
+          <div class="option"><input type="radio" name="c-radio" aria-label="Varianta d este corectă"><span class="t-caption secondary">d)</span><input class="input t-math" value="−11" aria-label="Varianta d"><button class="btn btn-icon" aria-label="Șterge varianta d"><i data-icon="x"></i></button></div>
+        </div>
+        <button class="btn btn-ghost" style="justify-self: start;">+ Adaugă variantă</button>
+        <span class="help">Bifează varianta corectă. Ordinea variantelor se amestecă pentru fiecare candidat.</span>
+      </fieldset>
+      <div class="row" style="justify-content: flex-end;"><button type="button" class="btn btn-primary">Salvează</button></div>
+    </section>
+
+    <!-- Editor: multiple choice (every correct option, all or nothing, D-005) -->
+    <section class="card editor" aria-label="M6-MN-007, alegere multiplă" data-show="s-multi">
+      <div class="row between"><h2 class="t-h2">M6-MN-007</h2><span class="badge success">Finalizat</span></div>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Alegere multiplă</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
+        <div class="field"><label>Dificultate</label><select class="select"><option>Ușor</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C1 · Compară numere întregi</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select"><option>Mulțimi de numere întregi</option></select></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="5"></div>
+      </div>
+      <div class="field"><label for="st6">Enunț</label><textarea id="st6" class="textarea t-math" style="min-height: 72px;">Care dintre numerele următoare sunt mai mari decât −2?</textarea></div>
+      <fieldset class="stack-sm" style="border: 0; padding: 0; margin: 0;"><legend class="label-text">Variante</legend>
+        <div class="options">
+          <div class="option"><input type="checkbox" name="c-checkbox" checked aria-label="Varianta a este corectă"><span class="t-caption secondary">a)</span><input class="input t-math" value="−1" aria-label="Varianta a"><button class="btn btn-icon" aria-label="Șterge varianta a"><i data-icon="x"></i></button></div>
+          <div class="option"><input type="checkbox" name="c-checkbox" aria-label="Varianta b este corectă"><span class="t-caption secondary">b)</span><input class="input t-math" value="−5" aria-label="Varianta b"><button class="btn btn-icon" aria-label="Șterge varianta b"><i data-icon="x"></i></button></div>
+          <div class="option"><input type="checkbox" name="c-checkbox" checked aria-label="Varianta c este corectă"><span class="t-caption secondary">c)</span><input class="input t-math" value="0" aria-label="Varianta c"><button class="btn btn-icon" aria-label="Șterge varianta c"><i data-icon="x"></i></button></div>
+          <div class="option"><input type="checkbox" name="c-checkbox" aria-label="Varianta d este corectă"><span class="t-caption secondary">d)</span><input class="input t-math" value="−3" aria-label="Varianta d"><button class="btn btn-icon" aria-label="Șterge varianta d"><i data-icon="x"></i></button></div>
+        </div>
+        <button class="btn btn-ghost" style="justify-self: start;">+ Adaugă variantă</button>
+        <span class="help">Bifează toate variantele corecte. Răspunsul e corect doar dacă le alege pe toate și numai pe ele.</span>
+      </fieldset>
+      <div class="row" style="justify-content: flex-end;"><button type="button" class="btn btn-primary">Salvează</button></div>
+    </section>
+
+    <!-- Editor: true / false -->
+    <section class="card editor" aria-label="M6-MN-007, adevărat sau fals" data-show="s-dual">
+      <div class="row between"><h2 class="t-h2">M6-MN-007</h2><span class="badge success">Finalizat</span></div>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Adevărat / Fals</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
+        <div class="field"><label>Dificultate</label><select class="select"><option>Ușor</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C1 · Compară numere întregi</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select"><option>Mulțimi de numere întregi</option></select></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="5"></div>
+      </div>
+      <div class="field"><label for="st7">Afirmația</label><textarea id="st7" class="textarea t-math" style="min-height: 72px;">Orice număr întreg negativ este mai mic decât 0.</textarea></div>
+      <fieldset class="stack-sm" style="border: 0; padding: 0; margin: 0;"><legend class="label-text">Afirmația este</legend>
+        <div class="seg" role="group" aria-label="Afirmația este"><button aria-pressed="true">Adevărată</button><button aria-pressed="false">Falsă</button></div>
+        <span class="help">Întrebările adevărat / fals nu pot folosi valori care se schimbă: adevărul afirmației s-ar putea schimba odată cu ele.</span>
+      </fieldset>
+      <div class="row" style="justify-content: flex-end;"><button type="button" class="btn btn-primary">Salvează</button></div>
+    </section>
+
+    <!-- Editor: short answer, number or fraction (D-017) -->
+    <section class="card editor" aria-label="M6-MN-007, răspuns număr" data-show="s-number">
+      <div class="row between"><h2 class="t-h2">M6-MN-007</h2><span class="badge success">Finalizat</span></div>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Completare</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
+        <div class="field"><label>Dificultate</label><select class="select"><option>Ușor</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C1 · Compară numere întregi</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select"><option>Mulțimi de numere întregi</option></select></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="5"></div>
+      </div>
+      <div class="field"><label for="st8">Enunț</label><textarea id="st8" class="textarea t-math" style="min-height: 72px;">Raportul numerelor 6 și 8, scris ca fracție ireductibilă, este …</textarea></div>
+      <fieldset class="stack-sm" style="border: 0; padding: 0; margin: 0;"><legend class="label-text">Răspunsul este</legend>
+        <div class="seg" role="group" aria-label="Răspunsul este"><button aria-pressed="false">Text</button><button aria-pressed="false">Număr</button><button aria-pressed="true">Fracție</button></div>
+      </fieldset>
+      <div class="field"><label for="frac">Răspunsul corect</label><input id="frac" class="input t-math" value="3/4" aria-describedby="frac-h">
+        <span id="frac-h" class="help">Se acceptă doar forma scrisă aici: 3/4, nu 6/8 sau 0,75. La „Număr”, se acceptă și virgula, și punctul: 2,5 = 2.5.</span></div>
+      <div class="test-box">
+        <label for="try2" class="label-text">Testează un răspuns</label>
+        <input id="try2" class="input t-math" value="6/8">
+        <div class="alert error t-caption"><span><strong>Nu este acceptat.</strong> Fracția trebuie scrisă exact ca 3/4.</span></div>
+      </div>
+      <div class="row" style="justify-content: flex-end;"><button type="button" class="btn btn-primary">Salvează</button></div>
     </section>
 
     <!-- Editor: parameterized values: fixed, random, calculated (D-057) -->
@@ -278,7 +399,7 @@
     <!-- Editor: draft that cannot become Ready yet (D-059) -->
     <section class="card editor" aria-labelledby="e4" data-show="s-draft">
       <div class="row between"><h2 id="e4" class="t-h2">M6-UG-025</h2><span class="badge">Ciornă</span></div>
-      <div class="alert warning t-caption"><span>Este o ciornă: nu poate fi dată niciunui candidat. Examenul „Evaluare Unitatea 4” o arată ca „nefinalizată”.</span></div>
+      <div class="alert warning t-caption"><span>Este o ciornă: nu poate fi extrasă pentru niciun candidat până nu o marchezi „Finalizat”.</span></div>
       <div class="grid-2">
         <div class="field"><label>Subiect</label><select class="select"><option>Subiectul II</option></select></div>
         <div class="field"><label>Tip</label><select class="select"><option>Problemă</option></select></div>
@@ -311,7 +432,7 @@
   </div>
 
   <!-- ===== SHARED LIBRARY (D-027) ===== -->
-  <div class="card" style="padding: 0;" data-show="s-library">
+  <div class="card" style="padding: 0;" data-show="s-library s-copy">
     <div class="table-wrap">
       <table>
         <thead><tr><th>Cod</th><th>Enunț</th><th>Competență · temă</th><th>Tip</th><th>Autor</th><th>Acțiuni</th></tr></thead>
@@ -323,6 +444,52 @@
       </table>
     </div>
     <p class="t-caption secondary" style="padding: var(--space-3) var(--space-4);">Copia devine întrebarea ta: o poți modifica fără să schimbi originalul. Doar întrebările finalizate pot fi publicate în bibliotecă.</p>
+  </div>
+
+  <!-- New question (Q-054: the code is typed once) -->
+  <div class="backdrop" data-show="s-new">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="nq-h">
+      <h2 id="nq-h" class="t-h2">Întrebare nouă</h2>
+      <div class="field"><label for="nq-code">Cod</label><input id="nq-code" class="input t-math" placeholder="M6-UG-031" aria-describedby="nq-code-h">
+        <span id="nq-code-h" class="help">Unic în bancă. Litere, cifre și liniuță. Nu se mai poate schimba după ce creezi întrebarea.</span></div>
+      <div class="grid-2">
+        <div class="field"><label for="nq-s">Subiect</label><select id="nq-s" class="select"><option>Subiectul I</option><option>Subiectul II</option></select></div>
+        <div class="field"><label for="nq-t">Tip</label><select id="nq-t" class="select"><option>Alegere unică</option><option>Alegere multiplă</option><option>Adevărat / Fals</option><option>Completare</option></select></div>
+      </div>
+      <p class="help">Se salvează ca ciornă. Restul câmpurilor le completezi în editor.</p>
+      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Creează ciorna</button></div>
+    </div>
+  </div>
+
+  <!-- New competence (Q-053); a new topic or pool is the same dialog with one "Nume" field -->
+  <div class="backdrop" data-show="s-new-comp">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="nc-h">
+      <h2 id="nc-h" class="t-h2">Competență nouă</h2>
+      <div class="field"><label for="nc-code">Cod</label><input id="nc-code" class="input t-math" value="C5" style="max-width: 160px;"></div>
+      <div class="field"><label for="nc-d">Ce evaluează</label><textarea id="nc-d" class="textarea" style="min-height: 72px;">Calculează măsuri de unghiuri folosind unghiuri adiacente suplementare.</textarea></div>
+      <p class="help">Apare în lista ta de competențe și este aleasă pentru întrebarea deschisă.</p>
+      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Adaugă competența</button></div>
+    </div>
+  </div>
+
+  <!-- Delete (Q-056) -->
+  <div class="backdrop" data-show="s-delete">
+    <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="del-h" aria-describedby="del-d">
+      <h2 id="del-h" class="t-h2">Ștergi întrebarea M6-UG-012?</h2>
+      <p id="del-d" class="secondary">Nu mai poate fi recuperată. Iese din toate seturile; copia din biblioteca comună rămâne. O întrebare deja extrasă pentru un candidat nu se mai poate șterge.</p>
+      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-danger"><i data-icon="trash" class="sm"></i>Șterge întrebarea</button></div>
+    </div>
+  </div>
+
+  <!-- Copy from the library (Q-054: a new code) -->
+  <div class="backdrop" data-show="s-copy">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cp-h">
+      <h2 id="cp-h" class="t-h2">Copiază LIB-RP-044 în banca ta</h2>
+      <div class="field"><label for="cp-code">Codul copiei</label><input id="cp-code" class="input t-math invalid" value="M6-RP-014" aria-invalid="true" aria-describedby="cp-err">
+        <span id="cp-err" class="help error">Ai deja o întrebare cu acest cod. Alege altul.</span></div>
+      <p class="help">Copia devine întrebarea ta. Competența C2 și tema „Rapoarte și proporții” se adaugă în listele tale dacă nu le ai.</p>
+      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Copiază</button></div>
+    </div>
   </div>
 
   <!-- EMPTY -->

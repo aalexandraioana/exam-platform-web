@@ -19,7 +19,8 @@ it('creates an examiner or administrator with a password asked twice', function 
         ->and($user->first_name)->toBe('Maria')
         ->and($user->last_name)->toBe('Popa')
         ->and($user->is_active)->toBeTrue()
-        ->and(Hash::check('parola-mea-48', $user->password))->toBeTrue();
+        ->and(Hash::check('parola-mea-48', $user->password))->toBeTrue()
+        ->and($user->must_change_password)->toBeTrue(); // D-054: the first password is temporary
 })->with(['examiner', 'administrator']);
 
 it('refuses the candidate role', function () {

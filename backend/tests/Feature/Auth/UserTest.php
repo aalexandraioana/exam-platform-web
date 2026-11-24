@@ -13,7 +13,7 @@ it('returns the logged-in user', function () {
         ->assertOk()
         ->assertExactJson(['user' => [
             'id' => $user->id, 'first_name' => 'Maria', 'last_name' => 'Popa', 'name' => 'Maria Popa', 'email' => $user->email,
-            'role' => 'examiner', 'is_active' => true,
+            'role' => 'examiner', 'is_active' => true, 'must_change_password' => false,
         ]]);
 });
 

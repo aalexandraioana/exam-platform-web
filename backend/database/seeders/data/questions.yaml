@@ -1,0 +1,28 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# The initial question pool (D-029). The seeder (P4c) loads this file once:
+# a question whose `code` is already in the database is skipped, never updated.
+# Every field, the answer format of each type and full examples are in
+# questions.template.yaml (same folder). Validation goes in BANK.md, by `code`.
+#
+# Copy the skeleton below for each question (remove the `#` and keep the
+# 2-space indentation), or copy a whole example from the template.
+#
+#  - code: M6-UG-001
+#    section: subject_1            # subject_1 | subject_2
+#    type: single_choice           # dual_choice | single_choice | multiple_choice | short_answer | structured_problem
+#    grade_level: 6
+#    difficulty: easy              # easy | medium | hard
+#    points: 5
+#    competence:
+#      code: C1
+#      description: …
+#    topic: Unghiuri
+#    pools: [Unghiuri – ușor]      # optional
+#    statement: …
+#    answer:
+#      options: ["…", "…", "…", "…"]
+#      correct: 1
+# ──────────────────────────────────────────────────────────────────────────────
+
+questions:
+

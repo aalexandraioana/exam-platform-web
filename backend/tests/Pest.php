@@ -28,3 +28,14 @@ function hasIndexOn(string $table, string $columns): bool
         ->where('indexdef', 'like', "%USING btree ({$columns})%")
         ->exists();
 }
+
+/** A Ready short answer in $pool, matching the defaults of blueprintItem(). */
+function poolQuestion(\App\Models\User $examiner, \App\Models\Pool $pool, array $attributes = []): \App\Models\Question
+{
+    $question = \App\Models\Question::factory()->ready()->for($examiner, 'examiner')->create(array_merge([
+        'difficulty' => 'easy', 'grade_level' => 6, 'answer_key' => ['kind' => 'number', 'value' => '1'],
+    ], $attributes));
+    $pool->questions()->attach($question);
+
+    return $question;
+}

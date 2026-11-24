@@ -127,7 +127,7 @@
 ## D-012 · Configurable attempt limits and score aggregation policy
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
+- **Confirmed:** 2026-11-24
 - **Rule:** The platform supports configurable attempt limits per Exam (single or multiple attempts) defined by the Examiner, with score aggregation policy (e.g., highest score or latest score).
 - **Why:** Satisfies the catalog requirement for configurable attempts, providing flexibility for both summative graded exams (1 attempt) and formative practice modules.
 - **Rejected:** Hardcoded single-attempt restriction across all exams.
@@ -157,7 +157,7 @@
 ## D-015 · Classes and Exam publication to classes
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-24
 - **Rule:** Candidates belong to classes. An Exam is published to one or more classes, and only Candidates of those classes see it. The cohort for feedback (D-019) is the Candidates of the classes the Exam was published to.
 - **Why:** Matches the classroom reality from the interview and the approved DS-003 mock ("Clasa a VI-a B", "pentru clasa ta").
 - **Rejected:** Published Exams visible to every Candidate; grade level as the only filter.
@@ -177,7 +177,7 @@
 ## D-019 · Results and feedback released only on publication
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** After full grading the Examiner publishes, in two channels: (1) one cohort note, visible to the whole cohort (D-015); (2) private per-problem partial points and comments on each Subject 2 answer. No score, Subject 1 included, is visible to a Candidate before publication; until then the Candidate sees "submitted, awaiting grading".
 - **Why:** Keeps D-010's classroom practice and closes the gap about the instantly auto-graded Subject 1 score.
 - **Rejected:** Showing the Subject 1 score at Submission; publishing grades piece by piece.
@@ -187,7 +187,7 @@
 ## D-021 · Full duration per Attempt regardless of available_until
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** Every Attempt gets the Exam's full duration from its own start, plus the Grace Period (D-004). The Exam's `available_until` only stops new Attempts from starting.
 - **Why:** The interview asks for the timer to start per device when the Candidate connects, for fairness.
 - **Rejected:** Cutting Attempts at `available_until`.
@@ -377,7 +377,7 @@
 ## D-049 · A class linked to an Exam can't be deleted
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-24
 - **Rule:** The database refuses to delete a class that is still linked to any Exam. Deleting a class first unlinks it from draft (unpublished) Exams; a class linked to a published Exam can't be deleted, so its Candidates keep seeing the Exam and its results (D-015, D-019).
 - **Why:** Deleting a class used to remove its links silently, hiding a published Exam and its results from that class's Candidates.
 - **Rejected:** Deleting the class and its links silently (the earlier P1c rule).

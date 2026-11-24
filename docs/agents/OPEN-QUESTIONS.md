@@ -67,6 +67,11 @@
 - Q-056 · Can a question be deleted? · _answered_
 - Q-057 · What happens when a Ready question is edited so it is no longer complete? · _answered_
 - Q-058 · Can an Examiner take back an entry they published to the library? · _answered_
+- Q-059 · Where does an Examiner see their exams? · _answered_
+- Q-060 · What can change after an Exam is published? · _answered_
+- Q-061 · Can an Exam be unpublished or deleted? · _answered_
+- Q-062 · What is the "departajare" label on DS-008's Item 9? · _answered_
+- Q-063 · Which competences should an Exam cover (DS-008 coverage warning)? · _answered_
 
 ---
 
@@ -417,3 +422,38 @@
 - **Blocks:** P4b
 - **Context:** D-040: publishing makes a frozen copy; copies others made are theirs.
 - **Answer:** Not in P4b. (Answered 2026-11-24.)
+
+## Q-059 · Where does an Examiner see their exams?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P5
+- **Context:** DS-008 is the builder of one exam ("← Examene"); no mock shows the list, and DS-006 (dashboard) is a draft for P11.
+- **Answer:** A simple Examene list drawn as an extra DS-008 state: title, status, classes, availability window, "+ Examen nou". (Answered 2026-11-24.)
+
+## Q-060 · What can change after an Exam is published?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P5
+- **Context:** The roadmap locks the Items and classes once published.
+- **Answer:** Only the title, the description and the end of the window (available_until). Duration, attempts and score policy are locked too. (Answered 2026-11-24.)
+
+## Q-061 · Can an Exam be unpublished or deleted?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P5
+- **Context:** Results and Attempts point to a published Exam.
+- **Answer:** A draft can be deleted after a confirmation; a published Exam can't be unpublished or deleted. (Answered 2026-11-24.)
+
+## Q-062 · What is the "departajare" label on DS-008's Item 9?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P5
+- **Context:** Nothing in the ledger defines it.
+- **Answer:** Dropped; difficulty already shows "Dificil". (Answered 2026-11-24.)
+
+## Q-063 · Which competences should an Exam cover (DS-008 coverage warning)?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P5
+- **Context:** DS-008 warns about a competence with no Item.
+- **Answer:** Every competence of the Examiner that has at least one Ready question for the Exam's grade level; a missing one is a warning, not a block. (Answered 2026-11-24.)

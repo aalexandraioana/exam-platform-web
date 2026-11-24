@@ -84,6 +84,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .avatar { width: var(--space-8); height: var(--space-8); border-radius: var(--radius-full); background: var(--bg-primary-subtle);
   color: var(--text-primary-accent); display: grid; place-items: center; font-size: 13px; font-weight: 600; }
 .page { max-width: 1200px; margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-16); display: grid; gap: var(--space-6); }
+/* Page sections may shrink below their content (a wide table scrolls inside its card). */
+.page > * { min-width: 0; }
 .page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--space-4); }
 
 /* Surfaces */

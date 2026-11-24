@@ -8,16 +8,26 @@
 <style>
   .bank { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: var(--space-4); align-items: start; }
   .filters { display: grid; gap: var(--space-3); }
-  .filter-row { display: grid; grid-template-columns: 1.6fr 1.4fr repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+  .filter-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--space-3); }
+  .filter-row .search { grid-column: span 2; }
   td.code { white-space: nowrap; }
   .stmt { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
   .editor { position: sticky; top: 80px; display: grid; gap: var(--space-4); }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+  .grid-2 .span-2 { grid-column: 1 / -1; }
+  .comp { display: grid; gap: var(--space-1); justify-items: start; }
   .accepted { display: grid; gap: var(--space-2); }
   .accepted .row .input { flex: 1; }
   .test-box { display: grid; gap: var(--space-2); padding: var(--space-3); border: 1px dashed var(--border-strong); border-radius: var(--radius-md); }
-  .bounds { display: grid; grid-template-columns: auto 1fr 1fr; gap: var(--space-2); align-items: center; }
-  .bounds .input { font-family: var(--font-mono); }
+  .values { display: grid; gap: var(--space-3); }
+  .value { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: var(--space-2); align-items: start; padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-subtle); }
+  .value .select { max-width: 200px; }
+  .value:last-of-type { border-bottom: 0; padding-bottom: 0; }
+  .value .name { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary-accent); min-height: 44px; display: flex; align-items: center; }
+  .value .def { grid-column: 2 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .value .def .wide { grid-column: 1 / -1; }
+  .value .input { font-family: var(--font-mono); }
+  .value .sub { font-size: 13px; line-height: 18px; color: var(--text-secondary); }
   .samples { display: grid; gap: var(--space-1); font-family: var(--font-mono); font-size: 13px; line-height: 18px; }
   .samples div { padding: var(--space-1) var(--space-2); background: var(--bg-surface-subtle); border-radius: var(--radius-sm); }
   .step-edit { display: grid; grid-template-columns: auto 1fr 64px auto; gap: var(--space-2); align-items: start; }
@@ -25,10 +35,12 @@
   .step-edit .input.pts { font-family: var(--font-mono); text-align: right; }
   .checklist { display: grid; gap: var(--space-1); }
   .checklist li { display: flex; gap: var(--space-2); align-items: center; }
+  .select.invalid { border-color: var(--status-error); }
+  .chip { display: inline-flex; align-items: center; gap: var(--space-1); }
   .ok { color: var(--status-success); } .no { color: var(--status-error); }
   .val { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary-accent); }
-  @media (max-width: 1023px) { .bank { grid-template-columns: 1fr; } .editor { position: static; } .filter-row { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 639px) { .filter-row, .grid-2 { grid-template-columns: 1fr; } .step-edit { grid-template-columns: auto 1fr 64px; } }
+  @media (max-width: 1023px) { .bank { grid-template-columns: minmax(0, 1fr); } .editor { position: static; } .filter-row { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 639px) { .filter-row, .grid-2 { grid-template-columns: 1fr; } .filter-row .search { grid-column: auto; } .step-edit { grid-template-columns: auto 1fr 64px; } }
 </style>
 </head>
 <body>
@@ -41,7 +53,8 @@
     </div>
     <div class="mock-group">
       <button type="button" class="mock-btn active" data-state-btn="s-short">Răspuns scurt</button>
-      <button type="button" class="mock-btn" data-state-btn="s-param">Valori din intervale</button>
+      <button type="button" class="mock-btn" data-state-btn="s-param">Valori fixe, aleatoare, calculate</button>
+      <button type="button" class="mock-btn" data-state-btn="s-param-missing">Valoare nedefinită</button>
       <button type="button" class="mock-btn" data-state-btn="s-s2">Subiectul II cu barem</button>
       <button type="button" class="mock-btn" data-state-btn="s-draft">Ciornă incompletă</button>
       <button type="button" class="mock-btn" data-state-btn="s-library">Bibliotecă comună</button>
@@ -71,44 +84,47 @@
 <main class="page">
   <div class="page-head">
     <div class="stack-sm"><h1 class="t-display">Bancă de întrebări</h1>
-      <span class="t-caption secondary" data-show="s-short s-param s-s2 s-draft s-error">64 de întrebări · 58 finalizate · 6 ciorne</span></div>
-    <button type="button" class="btn btn-primary" data-show="s-short s-param s-s2 s-draft s-error s-empty">+ Întrebare nouă</button>
+      <span class="t-caption secondary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error">64 de întrebări · 58 finalizate · 6 ciorne</span></div>
+    <button type="button" class="btn btn-primary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-empty">+ Întrebare nouă</button>
   </div>
 
   <div class="tabs" role="tablist">
-    <a href="#" role="tab" aria-selected="true" data-show="s-short s-param s-s2 s-draft s-empty s-error">Întrebările mele</a>
-    <a href="#" role="tab" aria-selected="false" data-show="s-short s-param s-s2 s-draft s-empty s-error">Bibliotecă comună</a>
+    <a href="#" role="tab" aria-selected="true" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error">Întrebările mele</a>
+    <a href="#" role="tab" aria-selected="false" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error">Bibliotecă comună</a>
     <a href="#" role="tab" aria-selected="false" data-show="s-library">Întrebările mele</a>
     <a href="#" role="tab" aria-selected="true" data-show="s-library">Bibliotecă comună</a>
   </div>
 
   <!-- Filters (S-14) -->
-  <div class="filters" data-show="s-short s-param s-s2 s-draft s-library">
+  <div class="filters" data-show="s-short s-param s-param-missing s-s2 s-draft s-library">
     <div class="filter-row">
-      <input class="input" placeholder="Caută după cod sau text" aria-label="Caută întrebări">
-      <select class="select" aria-label="Competență"><option>Toate competențele</option><option>C1 · Mulțimi de numere</option><option>C2 · Rapoarte și proporții</option><option>C3 · Unghiuri</option><option>C4 · Triunghiuri</option></select>
-      <select class="select" aria-label="Subiect"><option>Subiectul I și II</option><option>Subiectul I</option><option>Subiectul II</option></select>
+      <input class="input search" placeholder="Caută după cod sau text" aria-label="Caută întrebări">
+      <select class="select" aria-label="Competență"><option>Toate competențele</option><option>C1 · Compară numere întregi</option><option>C2 · Folosește proporțiile directe</option><option>C3 · Recunoaște unghiuri opuse la vârf</option><option>C4 · Folosește proprietățile triunghiului isoscel</option></select>
+      <select class="select" aria-label="Temă"><option>Toate temele</option><option>Mulțimi de numere întregi</option><option>Rapoarte și proporții</option><option>Unghiuri</option><option>Triunghiuri</option></select>
+      <select class="select" aria-label="Set de întrebări"><option>Toate seturile</option><option>Unghiuri – ușor</option><option>Proporții – mediu</option><option>Fără set</option></select>
+      <select class="select" aria-label="Tip"><option>Toate tipurile</option><option>Adevărat / Fals</option><option>Alegere unică</option><option>Alegere multiplă</option><option>Completare</option><option>Problemă</option></select>
+      <select class="select" aria-label="Clasa"><option>Toate clasele</option><option>Clasa a V-a</option><option>Clasa a VI-a</option><option>Clasa a VII-a</option><option>Clasa a VIII-a</option></select>
       <select class="select" aria-label="Dificultate"><option>Orice dificultate</option><option>Ușor</option><option>Mediu</option><option>Dificil</option></select>
       <select class="select" aria-label="Stare"><option>Toate stările</option><option>Doar finalizate</option><option>Doar ciorne</option></select>
     </div>
   </div>
 
   <!-- ===== MY QUESTIONS: list + editor ===== -->
-  <div class="bank" data-show="s-short s-param s-s2 s-draft">
+  <div class="bank" data-show="s-short s-param s-param-missing s-s2 s-draft">
     <div class="card" style="padding: 0;">
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Cod</th><th>Enunț</th><th>Competență</th><th>Stare</th><th>Folosită în</th></tr></thead>
+          <thead><tr><th>Cod</th><th>Enunț</th><th>Competență · temă</th><th>Stare</th><th>Folosită în</th></tr></thead>
           <tbody>
-            <tr data-show="s-short" class="selected"><td class="code">M6-UG-012</td><td><span class="stmt" title="Diagonalele paralelogramului …">Diagonalele paralelogramului …</span></td><td><span class="tag">C3</span></td><td><span class="badge success">Finalizat</span></td><td>2 examene</td></tr>
-            <tr data-show="s-param s-s2 s-draft"><td class="code">M6-UG-012</td><td><span class="stmt">Diagonalele paralelogramului …</span></td><td><span class="tag">C3</span></td><td><span class="badge success">Finalizat</span></td><td>2 examene</td></tr>
-            <tr data-show="s-param" class="selected"><td class="code">M6-RP-014</td><td><span class="stmt" title="Numerele a și b sunt direct proporționale cu 3 și 5 …">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><span class="tag">C2</span></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-short s-s2 s-draft"><td class="code">M6-RP-014</td><td><span class="stmt">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><span class="tag">C2</span></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-s2" class="selected"><td class="code">M6-TR-004</td><td><span class="stmt" title="În triunghiul ABC, AB = AC și ∢A = 40° …">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><span class="tag">C4</span></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-short s-param s-draft"><td class="code">M6-TR-004</td><td><span class="stmt">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><span class="tag">C4</span></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
-            <tr data-show="s-draft" class="selected"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><span class="tag">C3</span></td><td><span class="badge">Ciornă</span></td><td>1 examen (exclusă)</td></tr>
-            <tr data-show="s-short s-param s-s2"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><span class="tag">C3</span></td><td><span class="badge">Ciornă</span></td><td>1 examen (exclusă)</td></tr>
-            <tr><td class="code">M6-MN-003</td><td><span class="stmt" title="Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …">Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …</span></td><td><span class="tag">C1</span></td><td><span class="badge success">Finalizat</span></td><td>—</td></tr>
+            <tr data-show="s-short" class="selected"><td class="code">M6-UG-012</td><td><span class="stmt" title="Diagonalele paralelogramului …">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>2 examene</td></tr>
+            <tr data-show="s-param s-param-missing s-s2 s-draft"><td class="code">M6-UG-012</td><td><span class="stmt">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>2 examene</td></tr>
+            <tr data-show="s-param s-param-missing" class="selected"><td class="code">M6-RP-014</td><td><span class="stmt" title="Numerele a și b sunt direct proporționale cu 3 și 5 …">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
+            <tr data-show="s-short s-s2 s-draft"><td class="code">M6-RP-014</td><td><span class="stmt">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
+            <tr data-show="s-s2" class="selected"><td class="code">M6-TR-004</td><td><span class="stmt" title="În triunghiul ABC, AB = AC și ∢A = 40° …">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
+            <tr data-show="s-short s-param s-param-missing s-draft"><td class="code">M6-TR-004</td><td><span class="stmt">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td>1 examen</td></tr>
+            <tr data-show="s-draft" class="selected"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td>1 examen (exclusă)</td></tr>
+            <tr data-show="s-short s-param s-param-missing s-s2"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td>1 examen (exclusă)</td></tr>
+            <tr><td class="code">M6-MN-003</td><td><span class="stmt" title="Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …">Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …</span></td><td><div class="comp"><span class="tag">C1</span><span class="t-caption secondary">Mulțimi de numere întregi</span></div></td><td><span class="badge success">Finalizat</span></td><td>—</td></tr>
           </tbody>
         </table>
       </div>
@@ -120,10 +136,16 @@
       <div class="grid-2">
         <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>
         <div class="field"><label>Tip</label><select class="select"><option>Completare</option></select></div>
-        <div class="field"><label>Competență</label><select class="select"><option>C3 · Unghiuri</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
         <div class="field"><label>Dificultate</label><select class="select"><option>Ușor</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C3 · Recunoaște unghiuri opuse la vârf</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select"><option>Unghiuri</option></select></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="5"></div>
       </div>
-      <div class="field"><label for="st1">Enunț</label><textarea id="st1" class="textarea" style="min-height: 72px;">Diagonalele paralelogramului …</textarea></div>
+      <div class="stack-sm"><span class="label-text">Seturi de întrebări</span>
+        <div class="chips"><button type="button" class="chip" aria-pressed="true" aria-label="Scoate din setul Unghiuri – ușor">Unghiuri – ușor <i data-icon="x" class="sm"></i></button><button class="btn btn-ghost">+ Adaugă într-un set</button></div>
+        <span class="help">Itemii unui examen aleg întrebări dintr-un set. O întrebare poate fi în mai multe seturi.</span></div>
+      <div class="field"><label for="st1">Enunț</label><textarea id="st1" class="textarea" style="min-height: 96px;">Diagonalele paralelogramului …</textarea></div>
       <div class="stack-sm">
         <span class="label-text">Răspunsuri acceptate</span>
         <div class="accepted">
@@ -144,33 +166,82 @@
       </div>
     </section>
 
-    <!-- Editor: parameterized values (D-025) -->
-    <section class="card editor" aria-labelledby="e2" data-show="s-param">
-      <div class="row between"><h2 id="e2" class="t-h2">M6-RP-014</h2><span class="badge success">Finalizat</span></div>
-      <div class="field"><label for="st2">Enunț</label><textarea id="st2" class="textarea t-math" style="min-height: 72px;">Numerele a și b sunt direct proporționale cu {p} și {q}, iar a + b = {s}. Numărul a este egal cu …</textarea>
-        <span class="help">Scrie valorile care se schimbă între acolade, de exemplu {p}.</span></div>
+    <!-- Editor: parameterized values: fixed, random, calculated (D-057) -->
+    <section class="card editor" aria-labelledby="e2" data-show="s-param s-param-missing">
+      <div class="row between"><h2 id="e2" class="t-h2">M6-RP-014</h2>
+        <span class="badge success" data-show="s-param">Finalizat</span><span class="badge" data-show="s-param-missing">Ciornă</span></div>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Completare</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
+        <div class="field"><label>Dificultate</label><select class="select"><option>Mediu</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C2 · Folosește proporțiile directe</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select"><option>Rapoarte și proporții</option></select></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="5"></div>
+      </div>
+      <div class="stack-sm"><span class="label-text">Seturi de întrebări</span>
+        <div class="chips"><button type="button" class="chip" aria-pressed="true" aria-label="Scoate din setul Proporții – mediu">Proporții – mediu <i data-icon="x" class="sm"></i></button><button class="btn btn-ghost">+ Adaugă într-un set</button></div>
+        <span class="help">Itemii unui examen aleg întrebări dintr-un set. O întrebare poate fi în mai multe seturi.</span></div>
+      <div class="field"><label for="st2">Enunț</label>
+        <textarea id="st2" class="textarea t-math" style="min-height: 96px;" data-show="s-param">Numerele a și b sunt direct proporționale cu {p} și {q}, iar a + b = {s}. Numărul a este egal cu …</textarea>
+        <textarea class="textarea t-math invalid" aria-label="Enunț" aria-invalid="true" aria-describedby="st2-err" style="min-height: 96px;" data-show="s-param-missing">Numerele a și b sunt direct proporționale cu {p} și {q}, iar a + b = {s}. Câte unități are a mai mult decât {r}?</textarea>
+        <span class="help" data-show="s-param">Scrie între acolade valorile pe care le definești mai jos, de exemplu {p}.</span>
+        <span id="st2-err" class="help error" data-show="s-param-missing">{r} apare în enunț, dar nu are o valoare. Definește-o mai jos sau scoate-o din enunț.</span></div>
       <label class="switch"><input type="checkbox" checked> <span>Valori diferite pentru fiecare candidat</span></label>
       <div class="stack-sm">
-        <span class="label-text">Intervale</span>
-        <div class="bounds">
-          <span></span><span class="t-caption secondary">Minim</span><span class="t-caption secondary">Maxim</span>
-          <span class="t-math">p</span><input class="input" value="2" aria-label="p minim"><input class="input" value="5" aria-label="p maxim">
-          <span class="t-math">q</span><input class="input" value="3" aria-label="q minim"><input class="input" value="9" aria-label="q maxim">
-          <span class="t-math">k</span><input class="input" value="2" aria-label="k minim"><input class="input" value="8" aria-label="k maxim">
+        <span class="label-text">Valori</span>
+        <div class="values">
+          <div class="value">
+            <span class="name">p</span>
+            <select class="select" aria-label="Tipul valorii p"><option>Aleatoare</option><option>Fixă</option><option>Calculată</option></select>
+            <div class="def">
+              <div class="field"><span class="sub">Minim</span><input class="input" value="2" aria-label="p minim"></div>
+              <div class="field"><span class="sub">Maxim</span><input class="input" value="5" aria-label="p maxim"></div>
+              <div class="field wide"><span class="sub">Exceptând (opțional)</span><input class="input" value="" placeholder="de exemplu 0, 1" aria-label="p exceptând"></div>
+            </div>
+          </div>
+          <div class="value">
+            <span class="name">q</span>
+            <select class="select" aria-label="Tipul valorii q"><option>Aleatoare</option><option>Fixă</option><option>Calculată</option></select>
+            <div class="def">
+              <div class="field"><span class="sub">Minim</span><input class="input" value="3" aria-label="q minim"></div>
+              <div class="field"><span class="sub">Maxim</span><input class="input" value="9" aria-label="q maxim"></div>
+              <div class="field wide"><span class="sub">Exceptând (opțional)</span><input class="input" value="6" aria-label="q exceptând"></div>
+            </div>
+          </div>
+          <div class="value">
+            <span class="name">k</span>
+            <select class="select" aria-label="Tipul valorii k"><option>Fixă</option><option>Aleatoare</option><option>Calculată</option></select>
+            <div class="def"><div class="field wide"><span class="sub">Valoare</span><input class="input" value="4" aria-label="k valoare"></div></div>
+          </div>
+          <div class="value">
+            <span class="name">s</span>
+            <select class="select" aria-label="Tipul valorii s"><option>Calculată</option><option>Fixă</option><option>Aleatoare</option></select>
+            <div class="def"><div class="field wide"><span class="sub">Formulă</span><input class="input" value="(p + q) · k" aria-label="s formulă"></div></div>
+          </div>
+          <div class="value" data-show="s-param-missing">
+            <span class="name">r</span>
+            <select class="select invalid" aria-label="Tipul valorii r" aria-invalid="true"><option>Alege tipul</option><option>Fixă</option><option>Aleatoare</option><option>Calculată</option></select>
+            <div class="def"><span class="help error wide">Alege dacă r este fixă, aleatoare sau calculată.</span></div>
+          </div>
         </div>
-        <div class="field"><label for="cond">Condiții simple</label><input id="cond" class="input t-math" value="p < q"></div>
-        <div class="field"><label for="calc">Valori calculate</label><input id="calc" class="input t-math" value="s = (p + q) · k"></div>
-        <div class="field"><label for="ans">Răspunsul corect</label><input id="ans" class="input t-math" value="a = p · k"></div>
+        <span class="help">Valorile aleatoare sunt numere întregi între minim și maxim. Cele calculate folosesc celelalte valori.</span>
+        <div class="field"><label for="cond">Condiții simple <span class="secondary" style="font-weight: 400;">(opțional)</span></label><input id="cond" class="input t-math" value="p < q"></div>
+        <div class="field"><label for="ans">Răspunsul corect</label><input id="ans" class="input t-math" value="p · k"></div>
       </div>
-      <div class="stack-sm">
+      <div class="stack-sm" data-show="s-param">
         <div class="row between"><span class="label-text">Exemple de valori</span><button class="btn">Alte exemple</button></div>
         <div class="samples">
-          <div>p = 3, q = 5, k = 8 → s = 64 · a = 24</div>
-          <div>p = 2, q = 7, k = 4 → s = 36 · a = 8</div>
-          <div>p = 4, q = 9, k = 3 → s = 39 · a = 12</div>
+          <div>p = 3, q = 5, k = 4 → s = 32 · răspuns 12</div>
+          <div>p = 2, q = 7, k = 4 → s = 36 · răspuns 8</div>
+          <div>p = 4, q = 9, k = 4 → s = 52 · răspuns 16</div>
         </div>
       </div>
-      <div class="row" style="justify-content: flex-end;"><button type="button" class="btn btn-primary">Salvează</button></div>
+      <div class="row" style="justify-content: flex-end;" data-show="s-param"><button type="button" class="btn btn-primary">Salvează</button></div>
+      <div class="row between" data-show="s-param-missing">
+        <button type="button" class="btn">Salvează ciorna</button>
+        <button type="button" class="btn btn-primary" aria-disabled="true" aria-describedby="st2-err">Marchează ca finalizat</button>
+      </div>
     </section>
 
     <!-- Editor: Subject 2 with optional barem (D-031) -->
@@ -178,9 +249,17 @@
       <div class="row between"><h2 id="e3" class="t-h2">M6-TR-004</h2><span class="badge success">Finalizat</span></div>
       <div class="grid-2">
         <div class="field"><label>Subiect</label><select class="select"><option>Subiectul II</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Problemă</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
+        <div class="field"><label>Dificultate</label><select class="select"><option>Dificil</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C4 · Folosește proprietățile triunghiului isoscel</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select"><option>Triunghiuri</option></select></div>
         <div class="field"><label>Puncte</label><input class="input t-math" value="20"></div>
       </div>
-      <div class="field"><label for="st3">Enunț</label><textarea id="st3" class="textarea" style="min-height: 72px;">În triunghiul ABC, AB = AC și ∢A = 40°. a) Calculează ∢B. b) Arată că bisectoarea din A este și mediană.</textarea></div>
+      <div class="stack-sm"><span class="label-text">Seturi de întrebări</span>
+        <div class="chips"><button type="button" class="chip" aria-pressed="true" aria-label="Scoate din setul Triunghiuri – probleme">Triunghiuri – probleme <i data-icon="x" class="sm"></i></button><button class="btn btn-ghost">+ Adaugă într-un set</button></div>
+        <span class="help">Itemii unui examen aleg întrebări dintr-un set. O întrebare poate fi în mai multe seturi.</span></div>
+      <div class="field"><label for="st3">Enunț</label><textarea id="st3" class="textarea" style="min-height: 96px;">În triunghiul ABC, AB = AC și ∢A = 40°. a) Calculează ∢B. b) Arată că bisectoarea din A este și mediană.</textarea></div>
       <label class="switch"><input type="checkbox" checked> <span>Folosește barem</span></label>
       <div class="stack-sm">
         <div class="step-edit t-caption secondary"><span>#</span><span>Pas</span><span>Puncte</span><span></span></div>
@@ -196,20 +275,33 @@
       <div class="row" style="justify-content: flex-end;"><button type="button" class="btn btn-primary">Salvează</button></div>
     </section>
 
-    <!-- Editor: draft that cannot become Ready yet (D-032) -->
+    <!-- Editor: draft that cannot become Ready yet (D-059) -->
     <section class="card editor" aria-labelledby="e4" data-show="s-draft">
       <div class="row between"><h2 id="e4" class="t-h2">M6-UG-025</h2><span class="badge">Ciornă</span></div>
       <div class="alert warning t-caption"><span>Este o ciornă: nu poate fi dată niciunui candidat. Examenul „Evaluare Unitatea 4” o arată ca „nefinalizată”.</span></div>
-      <div class="field"><label for="st4">Enunț</label><textarea id="st4" class="textarea" style="min-height: 72px;">Unghiurile AOB și BOC sunt opuse la vârf …</textarea></div>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul II</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Problemă</option></select></div>
+        <div class="field"><label>Clasa</label><select class="select"><option>Clasa a VI-a</option></select></div>
+        <div class="field"><label>Dificultate</label><select class="select"><option>Mediu</option></select></div>
+        <div class="field span-2"><label>Competență</label><select class="select"><option>C3 · Recunoaște unghiuri opuse la vârf</option></select></div>
+        <div class="field span-2"><label>Temă</label><select class="select invalid" aria-invalid="true"><option>Alege o temă</option></select><span class="help error">Alege tema întrebării.</span></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="20"></div>
+      </div>
+      <div class="stack-sm"><span class="label-text">Seturi de întrebări</span>
+        <div class="chips"><button class="btn btn-ghost">+ Adaugă într-un set</button></div>
+        <span class="help">Itemii unui examen aleg întrebări dintr-un set. O întrebare poate fi în mai multe seturi.</span></div>
+      <div class="field"><label for="st4">Enunț</label><textarea id="st4" class="textarea" style="min-height: 96px;">Unghiurile AOB și BOC sunt opuse la vârf …</textarea></div>
       <label class="switch"><input type="checkbox" checked> <span>Folosește barem</span></label>
       <div class="stack-sm">
         <span class="label-text">Ce lipsește pentru „Finalizat”</span>
         <ul class="checklist" style="margin: 0; padding: 0; list-style: none;">
-          <li><span class="ok"><i data-icon="check" class="sm"></i></span> Enunț</li>
-          <li><span class="ok"><i data-icon="check" class="sm"></i></span> Puncte (20) și competență (C3)</li>
+          <li><span class="ok"><i data-icon="check" class="sm"></i></span> Enunț și puncte (20)</li>
+          <li><span class="ok"><i data-icon="check" class="sm"></i></span> Competență (C3), clasa a VI-a, dificultate medie</li>
+          <li><span class="no"><i data-icon="x" class="sm"></i></span> Temă <span class="sr-only">(lipsește)</span></li>
           <li><span class="no"><i data-icon="x" class="sm"></i></span> Baremul însumează 14 din 20 de puncte <span class="sr-only">(incomplet)</span></li>
         </ul>
-        <span class="help">Completează baremul sau dezactivează „Folosește barem”.</span>
+        <span class="help">Alege tema și completează baremul sau dezactivează „Folosește barem”.</span>
       </div>
       <div class="row between">
         <button type="button" class="btn">Salvează ciorna</button>
@@ -222,11 +314,11 @@
   <div class="card" style="padding: 0;" data-show="s-library">
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Cod</th><th>Enunț</th><th>Competență</th><th>Tip</th><th>Autor</th><th>Acțiuni</th></tr></thead>
+        <thead><tr><th>Cod</th><th>Enunț</th><th>Competență · temă</th><th>Tip</th><th>Autor</th><th>Acțiuni</th></tr></thead>
         <tbody>
-          <tr><td class="code">LIB-UG-102</td><td><span class="stmt" title="Măsura suplementului unghiului de 35° este …">Măsura suplementului unghiului de 35° este …</span></td><td><span class="tag">C3</span></td><td>Completare</td><td>Ion Marin</td><td><button class="btn">Copiază în banca mea</button></td></tr>
-          <tr><td class="code">LIB-RP-044</td><td><span class="stmt" title="Un produs costă 240 de lei. După o reducere de 15%, prețul devine …">Un produs costă 240 de lei. După o reducere de 15%, prețul devine …</span></td><td><span class="tag">C2</span></td><td>Numeric · valori</td><td>Ion Marin</td><td><button class="btn">Copiază în banca mea</button></td></tr>
-          <tr><td class="code">LIB-TR-017</td><td><span class="stmt">Arătați că în orice triunghi isoscel, mediana din vârf este și înălțime.</span></td><td><span class="tag">C4</span></td><td>Problemă</td><td>Ana Rusu</td><td><span class="badge success">Copiată · M6-TR-011</span></td></tr>
+          <tr><td class="code">LIB-UG-102</td><td><span class="stmt" title="Măsura suplementului unghiului de 35° este …">Măsura suplementului unghiului de 35° este …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td>Completare</td><td>Ion Marin</td><td><button class="btn">Copiază în banca mea</button></td></tr>
+          <tr><td class="code">LIB-RP-044</td><td><span class="stmt" title="Un produs costă 240 de lei. După o reducere de 15%, prețul devine …">Un produs costă 240 de lei. După o reducere de 15%, prețul devine …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td>Completare · valori</td><td>Ion Marin</td><td><button class="btn">Copiază în banca mea</button></td></tr>
+          <tr><td class="code">LIB-TR-017</td><td><span class="stmt">Arătați că în orice triunghi isoscel, mediana din vârf este și înălțime.</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td>Problemă</td><td>Ana Rusu</td><td><span class="badge success">Copiată · M6-TR-011</span></td></tr>
         </tbody>
       </table>
     </div>

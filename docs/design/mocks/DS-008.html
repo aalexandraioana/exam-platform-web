@@ -13,22 +13,24 @@
   .check.bad { background: var(--status-error-bg); color: var(--status-error); }
   .check .t-caption { color: var(--text-secondary); }
   .coverage { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .item { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-4); align-items: start;
+  .coverage .badge { white-space: normal; }
+  .item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-4); align-items: start;
     padding: var(--space-4); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-surface); }
   .item.error { border-color: var(--status-error); }
   .item-num { display: grid; place-items: center; width: var(--space-8); height: var(--space-8); border-radius: var(--radius-full);
     background: var(--bg-surface-subtle); font-weight: 700; }
-  .variants { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .variant { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3);
-    border: 1px solid var(--border-strong); border-radius: var(--radius-md); font-size: 13px; line-height: 18px; }
-  .variant.draft { border-style: dashed; color: var(--text-muted); }
+  .criteria { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); font-size: 13px; line-height: 18px; color: var(--text-secondary); margin: 0; }
+  .criteria div { display: flex; flex-wrap: wrap; gap: var(--space-1); } .criteria dt { margin: 0; } .criteria dd { margin: 0; color: var(--text-primary); font-weight: 500; }
+  .criteria dd.any { color: var(--text-muted); font-weight: 400; font-style: italic; }
+  .matches { font-size: 13px; line-height: 18px; display: flex; gap: var(--space-1); align-items: center; }
+  .matches.ok { color: var(--status-success); } .matches.bad { color: var(--status-error); }
   .item-actions { display: flex; gap: var(--space-1); }
   .preview-q { padding: var(--space-4); border-left: 2px solid var(--border-focus); background: var(--bg-surface-subtle); border-radius: var(--radius-sm); }
   .val { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary-accent); }
   @media (max-width: 1023px) { .checks { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 639px) {
     .grid-2, .checks { grid-template-columns: 1fr; }
-    .item { grid-template-columns: auto 1fr; }
+    .item { grid-template-columns: auto minmax(0, 1fr); }
     .item-actions { grid-column: 1 / -1; justify-content: flex-end; }
   }
 </style>
@@ -44,6 +46,7 @@
     <div class="mock-group">
       <button type="button" class="mock-btn active" data-state-btn="s-valid">Se poate publica</button>
       <button type="button" class="mock-btn" data-state-btn="s-errors">Cu probleme</button>
+      <button type="button" class="mock-btn" data-state-btn="s-item">Editează un item</button>
       <button type="button" class="mock-btn" data-state-btn="s-preview">Previzualizare candidat</button>
       <button type="button" class="mock-btn" data-state-btn="s-empty">Examen nou (gol)</button>
       <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
@@ -69,7 +72,7 @@
 </header>
 
 <!-- ============ BUILDER (valid + errors) ============ -->
-<main class="page" data-show="s-valid s-errors">
+<main class="page" data-show="s-valid s-errors s-item">
   <div class="page-head">
     <div class="stack-sm">
       <a href="#" class="t-caption accent row" style="gap: var(--space-1);"><i data-icon="arrow-left" class="sm"></i>Examene</a>
@@ -78,7 +81,7 @@
     </div>
     <div class="row">
       <button type="button" class="btn">Previzualizează ca un candidat</button>
-      <button type="button" class="btn btn-primary" data-show="s-valid">Publică pentru clase</button>
+      <button type="button" class="btn btn-primary" data-show="s-valid s-item">Publică pentru clase</button>
       <button type="button" class="btn btn-primary" data-show="s-errors" aria-disabled="true" aria-describedby="publish-why">Publică pentru clase</button>
     </div>
   </div>
@@ -86,36 +89,37 @@
   <!-- Checks (S-10) -->
   <section class="card stack" aria-labelledby="checks-h">
     <h2 id="checks-h" class="t-h2">Verificări înainte de publicare</h2>
-    <div class="checks" data-show="s-valid">
+    <div class="checks" data-show="s-valid s-item">
       <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Subiectul I: 30 / 30</strong><div class="t-caption">6 itemi × 5 puncte</div></div></div>
       <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Subiectul II: 60 / 60</strong><div class="t-caption">3 probleme</div></div></div>
       <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Total: 100</strong><div class="t-caption">90 + 10 puncte din oficiu</div></div></div>
-      <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Toți itemii au variante finalizate</strong><div class="t-caption">16 variante finalizate, 1 ciornă</div></div></div>
+      <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Fiecare item are o întrebare proprie</strong><div class="t-caption">Între 2 și 6 întrebări finalizate potrivite pe item</div></div></div>
     </div>
     <div class="checks" data-show="s-errors">
       <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Subiectul I: 30 / 30</strong><div class="t-caption">6 itemi × 5 puncte</div></div></div>
       <div class="check bad"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><div><strong>Subiectul II: 45 / 60</strong><div class="t-caption">Lipsesc 15 puncte</div></div></div>
       <div class="check bad"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><div><strong>Total: 85</strong><div class="t-caption">75 + 10 puncte din oficiu</div></div></div>
-      <div class="check bad"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><div><strong>Itemul 8 nu are nicio variantă finalizată</strong><div class="t-caption">Singura variantă este ciornă</div></div></div>
+      <div class="check bad"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><div><strong>Itemul 8 nu are nicio întrebare potrivită</strong><div class="t-caption">Itemii 2 și 5 au nevoie de 2 întrebări diferite, dar se potrivește doar una</div></div></div>
     </div>
     <div class="stack-sm">
       <span class="label-text">Competențe acoperite</span>
-      <div class="coverage" data-show="s-valid">
-        <span class="badge success"><i data-icon="check" class="sm"></i>C1 · Mulțimi de numere</span><span class="badge success"><i data-icon="check" class="sm"></i>C2 · Rapoarte și proporții</span>
-        <span class="badge success"><i data-icon="check" class="sm"></i>C3 · Unghiuri</span><span class="badge success"><i data-icon="check" class="sm"></i>C4 · Triunghiuri</span>
+      <div class="coverage" data-show="s-valid s-item">
+        <span class="badge success"><i data-icon="check" class="sm"></i>C1 · Compară numere întregi</span><span class="badge success"><i data-icon="check" class="sm"></i>C2 · Folosește proporțiile directe</span>
+        <span class="badge success"><i data-icon="check" class="sm"></i>C3 · Recunoaște unghiuri opuse la vârf</span><span class="badge success"><i data-icon="check" class="sm"></i>C4 · Folosește proprietățile triunghiului isoscel</span>
       </div>
       <div class="coverage" data-show="s-errors">
-        <span class="badge success"><i data-icon="check" class="sm"></i>C1 · Mulțimi de numere</span><span class="badge success"><i data-icon="check" class="sm"></i>C2 · Rapoarte și proporții</span>
-        <span class="badge success"><i data-icon="check" class="sm"></i>C3 · Unghiuri</span><span class="badge warning"><i data-icon="minus" class="sm"></i>C4 · Triunghiuri — niciun item (avertisment)</span>
+        <span class="badge success"><i data-icon="check" class="sm"></i>C1 · Compară numere întregi</span><span class="badge success"><i data-icon="check" class="sm"></i>C2 · Folosește proporțiile directe</span>
+        <span class="badge success"><i data-icon="check" class="sm"></i>C3 · Recunoaște unghiuri opuse la vârf</span><span class="badge warning"><i data-icon="minus" class="sm"></i>C4 · Folosește proprietățile triunghiului isoscel — niciun item (avertisment)</span>
       </div>
     </div>
-    <p id="publish-why" class="help error" data-show="s-errors">Nu poți publica încă: rezolvă cele 3 probleme marcate cu roșu. Competența C4 lipsă este doar un avertisment și nu blochează publicarea.</p>
+    <p id="publish-why" class="help error" data-show="s-errors">Nu poți publica încă: rezolvă cele 4 probleme marcate cu roșu. Competența C4 lipsă este doar un avertisment și nu blochează publicarea.</p>
   </section>
 
   <!-- Settings -->
   <section class="card stack" aria-labelledby="set-h">
     <h2 id="set-h" class="t-h2">Setări</h2>
     <div class="grid-2">
+      <div class="field"><label for="lvl">Nivel</label><select id="lvl" class="select"><option>Clasa a VI-a</option><option>Clasa a V-a</option><option>Clasa a VII-a</option><option>Clasa a VIII-a</option></select><span class="help">Itemii extrag doar întrebări pentru acest nivel.</span></div>
       <div class="field"><label for="dur">Durată (minute)</label><input id="dur" class="input" value="50" inputmode="numeric"><span class="help">Fiecare încercare are durata completă de la pornire.</span></div>
       <div class="field"><label>Clase</label>
         <div class="chips" role="group" aria-label="Clase">
@@ -133,11 +137,11 @@
     </div>
   </section>
 
-  <!-- Blueprint -->
+  <!-- Blueprint (D-057): each Item draws one Ready question from a pool by competence, difficulty, type and topic -->
   <section class="card stack" aria-labelledby="bp-h">
     <div class="row between">
       <div class="stack-sm" style="gap: 0;"><h2 id="bp-h" class="t-h2">Structura examenului</h2>
-        <span class="t-caption secondary">Fiecare item testează o competență. Fiecare candidat primește la întâmplare una dintre variantele finalizate.</span></div>
+        <span class="t-caption secondary">Fiecare item extrage pentru fiecare candidat o întrebare finalizată din setul ales, potrivită după competență, dificultate, tip și temă. Nicio întrebare nu apare de două ori în aceeași încercare.</span></div>
       <button type="button" class="btn">+ Adaugă item</button>
     </div>
 
@@ -145,27 +149,20 @@
     <div class="item">
       <span class="item-num">1</span>
       <div class="stack-sm">
-        <div class="row"><span class="t-body-m">C1 · Mulțimi de numere</span><span class="badge">Ușor</span><span class="badge accent">5 puncte</span></div>
-        <div class="variants"><span class="variant">M6-MN-003 · Finalizat</span><span class="variant">M6-MN-007 · Finalizat</span></div>
+        <div class="row"><span class="t-body-m">C1 · Compară numere întregi</span><span class="badge accent">5 puncte</span></div>
+        <dl class="criteria"><div><dt>Set:</dt><dd>Numere întregi – ușor</dd></div><div><dt>Dificultate:</dt><dd>Ușor</dd></div><div><dt>Tip:</dt><dd class="any">orice tip</dd></div><div><dt>Temă:</dt><dd class="any">orice temă</dd></div></dl>
+        <span class="matches ok"><i data-icon="check" class="sm"></i>4 întrebări finalizate se potrivesc</span>
       </div>
-      <div class="item-actions">
-        <button class="btn btn-icon" aria-label="Mută itemul 1 mai jos"><i data-icon="arrow-down"></i></button>
-        <button class="btn btn-icon" aria-label="Opțiuni item 1"><i data-icon="ellipsis"></i></button>
-      </div>
+      <div class="item-actions"><button class="btn btn-icon" aria-label="Mută itemul 1 mai jos"><i data-icon="arrow-down"></i></button><button class="btn btn-icon" aria-label="Editează itemul 1"><i data-icon="ellipsis"></i></button></div>
     </div>
     <div class="item">
       <span class="item-num">4</span>
       <div class="stack-sm">
-        <div class="row"><span class="t-body-m">C2 · Rapoarte și proporții</span><span class="badge">Ușor</span><span class="badge accent">5 puncte</span></div>
-        <div class="variants">
-          <span class="variant">M6-RP-014 · Finalizat · <span class="code">valori din intervale</span></span>
-        </div>
-        <span class="t-caption secondary">O singură variantă, cu valori extrase pentru fiecare candidat (<span class="code">p</span> între 2 și 5, <span class="code">q</span> între 3 și 9, <span class="code">k</span> între 2 și 8, cu <span class="code">p &lt; q</span>).</span>
+        <div class="row"><span class="t-body-m">C2 · Folosește proporțiile directe</span><span class="badge accent">5 puncte</span></div>
+        <dl class="criteria"><div><dt>Set:</dt><dd>Proporții – mediu</dd></div><div><dt>Dificultate:</dt><dd>Mediu</dd></div><div><dt>Tip:</dt><dd>Completare</dd></div><div><dt>Temă:</dt><dd>Rapoarte și proporții</dd></div></dl>
+        <span class="matches ok"><i data-icon="check" class="sm"></i>3 întrebări finalizate se potrivesc, una cu valori diferite pentru fiecare candidat</span>
       </div>
-      <div class="item-actions">
-        <button class="btn btn-icon" aria-label="Mută itemul 4 mai sus"><i data-icon="arrow-up"></i></button>
-        <button class="btn btn-icon" aria-label="Opțiuni item 4"><i data-icon="ellipsis"></i></button>
-      </div>
+      <div class="item-actions"><button class="btn btn-icon" aria-label="Mută itemul 4 mai sus"><i data-icon="arrow-up"></i></button><button class="btn btn-icon" aria-label="Editează itemul 4"><i data-icon="ellipsis"></i></button></div>
     </div>
     <p class="t-caption secondary">Itemii 2, 3, 5 și 6 sunt restrânși. <a href="#" class="accent">Arată toți</a></p>
 
@@ -173,37 +170,61 @@
     <div class="item">
       <span class="item-num">7</span>
       <div class="stack-sm">
-        <div class="row"><span class="t-body-m">C3 · Unghiuri</span><span class="badge">Mediu</span><span class="badge accent">20 de puncte</span><span class="tag">cu barem</span></div>
-        <div class="variants"><span class="variant">M6-UG-021 · Finalizat</span><span class="variant">M6-UG-022 · Finalizat</span><span class="variant draft">M6-UG-025 · Ciornă — nu poate fi extrasă</span></div>
+        <div class="row"><span class="t-body-m">C3 · Recunoaște unghiuri opuse la vârf</span><span class="badge accent">20 de puncte</span></div>
+        <dl class="criteria"><div><dt>Set:</dt><dd>Unghiuri – probleme</dd></div><div><dt>Dificultate:</dt><dd>Mediu</dd></div><div><dt>Tip:</dt><dd>Problemă</dd></div><div><dt>Temă:</dt><dd class="any">orice temă</dd></div></dl>
+        <span class="matches ok"><i data-icon="check" class="sm"></i>2 întrebări finalizate se potrivesc · 1 ciornă exclusă</span>
       </div>
-      <div class="item-actions"><button class="btn btn-icon" aria-label="Opțiuni item 7"><i data-icon="ellipsis"></i></button></div>
+      <div class="item-actions"><button class="btn btn-icon" aria-label="Editează itemul 7"><i data-icon="ellipsis"></i></button></div>
     </div>
-    <div class="item" data-show="s-valid">
+    <div class="item" data-show="s-valid s-item">
       <span class="item-num">8</span>
       <div class="stack-sm">
-        <div class="row"><span class="t-body-m">C4 · Triunghiuri</span><span class="badge">Mediu</span><span class="badge accent">20 de puncte</span><span class="tag">cu barem</span></div>
-        <div class="variants"><span class="variant">M6-TR-004 · Finalizat</span><span class="variant">M6-TR-009 · Finalizat</span></div>
+        <div class="row"><span class="t-body-m">C4 · Folosește proprietățile triunghiului isoscel</span><span class="badge accent">20 de puncte</span></div>
+        <dl class="criteria"><div><dt>Set:</dt><dd>Triunghiuri – probleme</dd></div><div><dt>Dificultate:</dt><dd>Mediu</dd></div><div><dt>Tip:</dt><dd>Problemă</dd></div><div><dt>Temă:</dt><dd>Triunghiuri</dd></div></dl>
+        <span class="matches ok"><i data-icon="check" class="sm"></i>2 întrebări finalizate se potrivesc</span>
       </div>
-      <div class="item-actions"><button class="btn btn-icon" aria-label="Opțiuni item 8"><i data-icon="ellipsis"></i></button></div>
+      <div class="item-actions"><button class="btn btn-icon" aria-label="Editează itemul 8"><i data-icon="ellipsis"></i></button></div>
     </div>
-    <div class="item" data-show="s-valid">
+    <div class="item" data-show="s-valid s-item">
       <span class="item-num">9</span>
       <div class="stack-sm">
-        <div class="row"><span class="t-body-m">C2 · Rapoarte și proporții</span><span class="badge warning">Dificil · departajare</span><span class="badge accent">20 de puncte</span><span class="tag">fără barem</span></div>
-        <div class="variants"><span class="variant">M6-RP-030 · Finalizat</span><span class="variant">M6-RP-031 · Finalizat</span></div>
+        <div class="row"><span class="t-body-m">C2 · Folosește proporțiile directe</span><span class="badge warning">departajare</span><span class="badge accent">20 de puncte</span></div>
+        <dl class="criteria"><div><dt>Set:</dt><dd>Proporții – probleme</dd></div><div><dt>Dificultate:</dt><dd>Dificil</dd></div><div><dt>Tip:</dt><dd>Problemă</dd></div><div><dt>Temă:</dt><dd class="any">orice temă</dd></div></dl>
+        <span class="matches ok"><i data-icon="check" class="sm"></i>2 întrebări finalizate se potrivesc</span>
       </div>
-      <div class="item-actions"><button class="btn btn-icon" aria-label="Opțiuni item 9"><i data-icon="ellipsis"></i></button></div>
+      <div class="item-actions"><button class="btn btn-icon" aria-label="Editează itemul 9"><i data-icon="ellipsis"></i></button></div>
     </div>
     <div class="item error" data-show="s-errors">
       <span class="item-num">8</span>
       <div class="stack-sm">
-        <div class="row"><span class="t-body-m">C2 · Rapoarte și proporții</span><span class="badge warning">Dificil · departajare</span><span class="badge accent">25 de puncte</span></div>
-        <div class="variants"><span class="variant draft">M6-RP-030 · Ciornă — nu poate fi extrasă</span></div>
-        <span class="help error">Fără nicio variantă finalizată. Termină întrebarea în banca de întrebări sau adaugă alta.</span>
+        <div class="row"><span class="t-body-m">C2 · Folosește proporțiile directe</span><span class="badge accent">25 de puncte</span></div>
+        <dl class="criteria"><div><dt>Set:</dt><dd>Proporții – probleme</dd></div><div><dt>Dificultate:</dt><dd>Dificil</dd></div><div><dt>Tip:</dt><dd>Problemă</dd></div><div><dt>Temă:</dt><dd>Rapoarte și proporții</dd></div></dl>
+        <span class="matches bad"><i data-icon="x" class="sm"></i>Nicio întrebare finalizată nu se potrivește</span>
+        <span class="help error">În setul „Proporții – probleme” nu e nicio problemă finalizată, dificilă, cu tema „Rapoarte și proporții”. Alege „orice temă”, alt set, sau termină ciorna M6-RP-030.</span>
       </div>
-      <div class="item-actions"><button class="btn" aria-label="Adaugă variantă la itemul 8">+ Variantă</button></div>
+      <div class="item-actions"><button class="btn btn-icon" aria-label="Editează itemul 8"><i data-icon="ellipsis"></i></button></div>
     </div>
   </section>
+
+  <!-- Item editor (D-057) -->
+  <div class="backdrop" data-show="s-item">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="item-h" style="width: min(560px, 100%);">
+      <h2 id="item-h" class="t-h2">Itemul 4</h2>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option><option>Subiectul II</option></select></div>
+        <div class="field"><label>Puncte</label><input class="input t-math" value="5" inputmode="numeric"></div>
+      </div>
+      <div class="field"><label>Set de întrebări</label><select class="select"><option>Proporții – mediu</option><option>Numere întregi – ușor</option><option>Unghiuri – ușor</option></select></div>
+      <div class="field"><label>Competență</label><select class="select"><option>C2 · Folosește proporțiile directe</option></select></div>
+      <div class="grid-2">
+        <div class="field"><label>Dificultate</label><select class="select"><option>Mediu</option><option>Ușor</option><option>Dificil</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Completare</option><option>Orice tip</option><option>Adevărat / Fals</option><option>Alegere unică</option><option>Alegere multiplă</option></select></div>
+      </div>
+      <div class="field"><label>Temă</label><select class="select"><option>Rapoarte și proporții</option><option>Orice temă</option><option>Mulțimi de numere întregi</option></select></div>
+      <div class="alert success t-caption"><span><strong>3 întrebări finalizate se potrivesc</strong> în setul „Proporții – mediu” pentru clasa a VI-a. Fiecare candidat primește una la întâmplare.</span></div>
+      <div class="row" style="justify-content: flex-end;"><button class="btn">Anulează</button><button class="btn btn-primary">Salvează itemul</button></div>
+    </div>
+  </div>
 </main>
 
 <!-- ============ PREVIEW AS CANDIDATE (S-11) ============ -->
@@ -218,16 +239,16 @@
   <div class="card stack">
     <div class="row between"><h1 class="t-h1">A doua extragere</h1><span class="t-caption secondary">9 itemi · 90 + 10 puncte</span></div>
     <div class="stack-sm">
-      <div class="row"><span class="item-num">3</span><span class="tag">C2</span><span class="t-caption secondary">Varianta extrasă: M6-RP-011 (din 2)</span></div>
+      <div class="row"><span class="item-num">3</span><span class="tag">C2</span><span class="t-caption secondary">Întrebarea extrasă: M6-RP-011 (una din 4 potrivite)</span></div>
       <div class="preview-q">Trei sferturi din numărul <span class="val">48</span> reprezintă: a) 12 b) 36 c) 32 d) 64</div>
     </div>
     <div class="stack-sm">
-      <div class="row"><span class="item-num">4</span><span class="tag">C2</span><span class="t-caption secondary">Valori extrase: <span class="code">p = 3</span>, <span class="code">q = 5</span>, <span class="code">k = 8</span> · răspuns așteptat <span class="code">24</span></span></div>
-      <div class="preview-q">Numerele <span class="val">a</span> și <span class="val">b</span> sunt direct proporționale cu <span class="val">3</span> și <span class="val">5</span>, iar <span class="val">a + b = 64</span>. Numărul <span class="val">a</span> este egal cu …</div>
-      <div class="alert warning t-caption"><span>Verifică valorile: dacă un set extras nu are sens pentru clasă, ajustează intervalele întrebării înainte de publicare.</span></div>
+      <div class="row"><span class="item-num">4</span><span class="tag">C2</span><span class="t-caption secondary">Întrebarea extrasă: M6-RP-014 · valori <span class="code">p = 3</span>, <span class="code">q = 5</span>, <span class="code">k = 4</span>, <span class="code">s = 32</span> · răspuns așteptat <span class="code">12</span></span></div>
+      <div class="preview-q">Numerele <span class="val">a</span> și <span class="val">b</span> sunt direct proporționale cu <span class="val">3</span> și <span class="val">5</span>, iar <span class="val">a + b = 32</span>. Numărul <span class="val">a</span> este egal cu …</div>
+      <div class="alert warning t-caption"><span>Verifică valorile: dacă un set extras nu are sens pentru clasă, ajustează valorile întrebării în banca de întrebări înainte de publicare.</span></div>
     </div>
     <div class="stack-sm">
-      <div class="row"><span class="item-num">7</span><span class="tag">C3</span><span class="t-caption secondary">Varianta extrasă: M6-UG-022 (din 2 finalizate; ciorna M6-UG-025 este exclusă)</span></div>
+      <div class="row"><span class="item-num">7</span><span class="tag">C3</span><span class="t-caption secondary">Întrebarea extrasă: M6-UG-022 (una din 2 potrivite; ciorna M6-UG-025 este exclusă)</span></div>
       <div class="preview-q">Unghiurile <span class="val">AOB</span> și <span class="val">BOC</span> sunt adiacente suplementare, iar <span class="val">∢AOB = 3 · ∢BOC</span>. Calculează măsurile celor două unghiuri.</div>
     </div>
   </div>
@@ -242,7 +263,7 @@
   <div class="empty">
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
     <h2 class="t-h2">Încă nu ai niciun item</h2>
-    <p class="secondary" style="max-width: 520px;">Un examen are 6 itemi la Subiectul I (câte 5 puncte) și 3–4 probleme la Subiectul II (60 de puncte în total). Fiecare item testează o competență și primește una sau mai multe variante din banca ta.</p>
+    <p class="secondary" style="max-width: 520px;">Un examen are 6 itemi la Subiectul I (câte 5 puncte) și 3–4 probleme la Subiectul II (60 de puncte în total). Fiecare item extrage o întrebare dintr-un set al tău, după competență, dificultate, tip și temă.</p>
     <div class="row" style="justify-content: center;">
       <button type="button" class="btn btn-primary">+ Adaugă primul item</button>
     </div>

@@ -37,13 +37,13 @@ designs:
   - id: DS-007
     name: question-bank-manager
     kind: screen
-    status: approved
-    description: Question bank manager for creating, tagging, filtering, and previewing the 60 questions and parameter variations
+    status: draft
+    description: Examiner question bank: filters (competence, topic, pool, type, grade, difficulty, status), editor with every field an Item matches on, named values (fixed, random with exclusions, calculated), Draft/Ready checklist, shared library (D-057, D-058, D-059, D-040)
   - id: DS-008
     name: exam-builder
     kind: screen
-    status: approved
-    description: Exam template builder configuring pool rules, timer duration, Subject 1 & 2 point allocations, and availability windows
+    status: draft
+    description: Exam builder: settings with grade level, blueprint Items drawing from a pool by competence, difficulty, type and topic (each may be any) with live match counts, Item editor, publish checks, preview as a Candidate (D-057)
   - id: DS-009
     name: manual-grading-queue
     kind: screen

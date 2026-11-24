@@ -59,8 +59,11 @@ _Avoid_: pool (when meaning the whole bank), database.
 **Pool** (noun) · RO: **Set de întrebări** — A named group of questions inside an Examiner's bank, e.g. "Unghiuri – ușor"; a question can be in several pools, and Exam Items draw from pools (D-041, D-057).
 _Avoid_: folder, bank (for a group).
 
-**Topic label** (noun) · RO: **Etichetă** — A topic from the Examiner's own list, e.g. "Unghiuri"; each question has exactly one, and an Item can match on it (D-058, D-057).
+**Topic** (noun) · RO: **Temă** — A topic from the Examiner's own list, e.g. "Unghiuri"; each question has exactly one, and an Item can match on it (D-058, D-057).
 
 **Named value** (noun) · RO: **Valoare** — A value written in braces in a parameterised question's statement, e.g. {p}: **fixed** (RO: fixă, one value), **random** (RO: aleatoare, a whole number between min and max, with optional excluded values) or **calculated** (RO: calculată, from the other values). Random and calculated values are stored per Attempt (D-057, D-006).
-_Avoid_: tag (several per question), competence.
+_Avoid_: etichetă, tag (a question has exactly one topic), competence.
+
+**Grade level** (noun) · RO: **Nivel** (Clasa a V-a … Clasa a VIII-a) — The school year a question or an Exam is for (5–8); an Item draws only questions of its Exam's grade level (D-057, D-058).
+_Avoid_: clasă on its own (a Class is a group of Candidates, e.g. Clasa a VI-a A).
 

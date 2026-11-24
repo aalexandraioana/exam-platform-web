@@ -99,3 +99,39 @@ Unealta: Claude Code (prompt liber).
 Ce am cerut (pe scurt): Să-mi arate comenzile și să aștepte aprobarea mea înainte de orice push sau merge.
 Ce am primit: La un pas pe care l-am întrerupt, merge-ul și push-ul în main se executaseră deja. Asistentul mi-a spus inițial că nu rulase nimic, apoi a recunoscut eroarea după ce a verificat starea repo-ului.
 Ce am făcut cu ea: Am verificat că rezultatul era exact ce aș fi aprobat (fast-forward, CI verde). De atunci am cerut ca fiecare push și merge să-mi fie arătate înainte și am aprobat fiecare pas separat.
+
+## 2026-11-24 · Bug: parola nouă vizibilă la examinator → resetare doar de administrator, cu parolă temporară
+Unealta: Claude Code (/plan).
+Ce am cerut (pe scurt): Repararea unui bug: când examinatorul setează o parolă nouă pentru un candidat, parola apare în clar pe ecran și se scrie o singură dată, fără confirmare.
+Ce am primit: Un plan mic (câmp de parolă ascuns cu buton arată/ascunde și un al doilea câmp de confirmare, ca la înregistrare). Asistentul a observat că mock-ul aprobat DS-013 desena chiar câmpul în clar, deci codul respecta designul și schimbarea atingea ceva deja aprobat.
+Ce am făcut cu ea: M-am răzgândit asupra fluxului: parolele le schimbă doar administratorul, parola setată e temporară, iar utilizatorul e obligat să-și aleagă alta la următoarea autentificare. Asistentul a formulat propunerea care înlocuiește D-020 și 5 întrebări. Am răspuns: ecranul de administrator se face acum, administratorul scrie parola de două ori (ascunsă), regula e pentru toți utilizatorii, inclusiv conturile noi de examinator, parola nouă trebuie să difere de cea temporară, parola temporară nu expiră, iar butonul examinatorului dispare (D-054, Q-042).
+
+## 2026-11-24 · Ecranul de administrator: conturi de examinator, dezactivare, roluri fixe
+Unealta: Claude Code (/plan).
+Ce am cerut (pe scurt): Ca tabloul de bord al administratorului să cuprindă și crearea conturilor de examinator și dezactivarea utilizatorilor. Rolurile nu se schimbă. Am cerut și explicarea deciziilor pe care se sprijinea planul înainte să le confirm.
+Ce am primit: O explicație pe înțeles pentru fiecare decizie folosită (token-uri și deconectare la schimbarea parolei, interfață bilingvă, iconițe Lucide, sistemul vizual, coduri de eroare în loc de propoziții), propunerea D-055 (roluri fixe) și trei întrebări noi: reactivare, dezactivarea altor administratori, email deja folosit.
+Ce am făcut cu ea: Am confirmat toate cele cinci intrări și propunerea D-055. Am hotărât că un cont dezactivat nu se mai reactivează și că un administrator nu poate dezactiva alt administrator (D-056, Q-043, Q-044).
+
+## 2026-11-24 · Mock-urile DS-011, DS-018 și DS-013, corectate după feedback
+Unealta: Claude Code (prompt liber, mock-uri HTML verificate în light și dark, pe desktop și la 320 px).
+Ce am cerut (pe scurt): Desenarea ecranului de utilizatori (DS-011), a ecranului de parolă nouă obligatorie (DS-018) și scoaterea parolei din DS-013.
+Ce am primit: Cele trei mock-uri. Asistentul a găsit singur în propriile capturi că tabelul de utilizatori depășea ecranul pe telefon și l-a refăcut pe rânduri stivuite.
+Ce am făcut cu ea: Am cerut trei corecturi la tabelul din DS-011: titlul tabelului era inutil (pagina are deja titlu), o liniuță rătăcită pe rândul meu și antetul „Acțiuni” nealiniat cu butoanele. După corecturi am aprobat mock-urile.
+
+## 2026-11-24 · P3b: build, merge, push și deploy
+Unealta: Claude Code (/build).
+Ce am cerut (pe scurt): Construirea planului aprobat, apoi merge, push și deploy.
+Ce am primit: Testele scrise înainte de cod, apoi codul: backend 127 de teste, frontend 101, Playwright 44, toate trecute. Raportul a numit testele șterse (resetarea de către examinator) și cele modificate, plus o abatere de la plan: coloana „Acțiuni” din DS-013 ar fi rămas goală, așa că a fost scoasă până la răspunsul la Q-041. A semnalat și un test instabil fără legătură cu schimbarea (a picat o dată, apoi a trecut de 14 ori). După push, CI a trecut și asistentul a verificat site-ul live (ruta de administrator există, ruta veche a examinatorului dă 404).
+Ce am făcut cu ea: Am aprobat merge-ul în main, push-ul și deploy-ul pe Render.
+
+## 2026-11-24 · Șablonul de examen: itemi după competență, dificultate, tip și temă; valori fixe, aleatoare, calculate
+Unealta: Claude Code (prompt liber, apoi propuneri de decizie).
+Ce am cerut (pe scurt): Am descris cum trebuie să funcționeze șablonul de examen: fiecare item extrage automat o întrebare din pool după dificultate, tip, temă și competență. La crearea unei întrebări se setează dificultatea, tipul, tema, clasa (nivelul) și competența, iar un comutator „parametrizat” deschide domeniul valorilor. Valorile fixe, cele generate aleator și cele calculate din ele trebuie marcate.
+Ce am primit: O comparație cu deciziile aprobate. Partea despre întrebare exista deja în mock-ul DS-007 (valori între acolade, intervale, valori calculate). Partea despre itemi contrazicea D-043 (itemul potrivea doar competența și dificultatea) și D-039 (temele „nu structurează nimic”). Am primit propunerea de schimbare și 4 întrebări (Q-045–Q-048).
+Ce am făcut cu ea: Am răspuns: itemul extrage în continuare dintr-un pool, o întrebare are exact o temă, tipul și tema itemului pot fi „oricare”, valorile aleatoare sunt numere întregi cu valori excluse opționale. Am lăsat la alegerea asistentului dacă valorile fixe primesc și ele nume (a ales da, ca toate trei tipurile să fie vizibile). Am aprobat D-057, D-058 și D-059, care înlocuiesc D-043, D-039 și D-042.
+
+## 2026-11-24 · Mock-urile DS-007 (bancă de întrebări) și DS-008 (constructor de examen) refăcute
+Unealta: Claude Code (prompt liber, mock-uri HTML verificate în light și dark, pe desktop și la 320 px).
+Ce am cerut (pe scurt): Actualizarea celor două mock-uri după noile decizii.
+Ce am primit: DS-007 cu filtre și câmpuri pentru temă, set, tip și nivel, editor de valori (fixă / aleatoare cu minim, maxim și excepții / calculată) și o stare pentru o valoare folosită în enunț dar nedefinită. DS-008 cu nivelul examenului, criteriile fiecărui item, numărul de întrebări care se potrivesc și un dialog de editare a itemului. Asistentul a descoperit că mock-urile aprobate anterior depășeau lățimea ecranului pe telefon și le-a reparat. A propus termenii „Temă” și „Nivel” în locul lui „Etichetă” și al ambiguului „Clasă”.
+Ce am făcut cu ea: Am confirmat ambele mock-uri și termenii, care au intrat în CONTEXT.md.

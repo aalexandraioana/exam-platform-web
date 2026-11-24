@@ -86,7 +86,7 @@
 ## D-005 · Two-part assessment scoring architecture with zero negative marking
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
+- **Confirmed:** 2026-11-24
 - **Rule:** The scoring engine enforces a two-part assessment model: 10 baseline points (din oficiu) + Subject 1 (30 pts, auto-graded, binary 0 or full points, no partial credit) + Subject 2 (60 pts, manual grading queue for the examiner with partial credit support). Negative marking is strictly disallowed across all question types.
 - **Why:** Directly models the 6th-grade mathematics examination structure validated during the client interview.
 - **Rejected:** Negative marking for incorrect answers; automated grading for Subject 2 proofs/multi-step reasoning.
@@ -96,7 +96,7 @@
 ## D-006 · Exact-match numeric tolerance with concrete parameter persistence
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
+- **Confirmed:** 2026-11-24
 - **Rule:** Parameterized questions evaluate formulas with exact-match numeric tolerance (tolerance = 0), and each attempt permanently records its concrete generated parameter values.
 - **Why:** Matches the precision needed for 6th-grade mathematics problems and guarantees exact auditability and problem reconstruction during grade contests.
 - **Rejected:** Loose floating-point percentage tolerance; storing only random seeds without snapshotting evaluated parameters.
@@ -136,7 +136,7 @@
 ## D-013 · Sandboxed PHP mathematical expression library for formula evaluation
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-19
+- **Confirmed:** 2026-11-24
 - **Rule:** Parameterized question formulas are evaluated on the backend using a dedicated sandboxed PHP mathematical expression library with an operation whitelist, strictly avoiding native PHP eval().
 - **Why:** Meets the catalog security constraint requiring sandboxed formula parsing to prevent arbitrary code execution on dynamically evaluated expressions.
 - **Rejected:** Native PHP `eval()`; executing formulas in shell or unverified external processes.
@@ -166,7 +166,7 @@
 ## D-017 · Answer matching rules for numbers and text
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** Numeric answers accept both decimal separators ("2,5" and "2.5"); a fraction answer must be in the form the Examiner expects (an equal value in another form is wrong). Text answers are compared after ignoring case, extra whitespace and diacritics, against an Examiner-defined list of accepted answers. D-006 (tolerance 0) still holds.
 - **Why:** Romanian notation uses the decimal comma, and 6th-grade ratio work often expects a specific fraction form; short answers such as "se înjumătățesc" are often typed without diacritics.
 - **Rejected:** Accepting any equal-valued fraction; strict exact text matching; numeric-only short answers.
@@ -236,7 +236,7 @@
 ## D-029 · Database as question source, BANK.md as validation and pilot log
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** The database is the source of truth for questions. The initial pool is loaded by an insert-only seeder keyed on a stable, unique question code; it never updates or deletes, so questions added or edited in the UI are safe. BANK.md holds no question text: it is the validation and pilot log (per validated question: code, competence, the 2+ colleagues who validated it, when, what they corrected; plus the results of the pilot with 10+ Candidates).
 - **Why:** Avoids two sources of truth while meeting the catalog requirement to record peer validation and pilot results in BANK.md.
 - **Rejected:** BANK.md as the re-seeded question source; generating the question list into BANK.md.
@@ -336,7 +336,7 @@
 ## D-045 · Answer options shuffled per Attempt
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-24
 - **Rule:** The options of dual, single and multiple choice questions are shuffled per Attempt, and the order is stored with the Attempt so review and contests show exactly what the Candidate saw. Items keep the blueprint order (D-043).
 - **Why:** Delivers the catalog's random order without changing item numbers in grading or the shared difficulty curve.
 - **Rejected:** Also shuffling Items within each Subject; no shuffling.

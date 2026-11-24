@@ -57,6 +57,10 @@
 - Q-046 · How does an Item match a question's topics? · _answered_
 - Q-047 · Are fixed values in a parameterised question marked too? · _answered_
 - Q-048 · What can a value domain be? · _answered_
+- Q-049 · Must calculated values and the answer of a parameterised question be whole numbers? · _answered_
+- Q-050 · Which question types can use named values? · _answered_
+- Q-051 · Can the answer of a parameterised question be a fraction? · _answered_
+- Q-052 · Which operations can formulas use? · _answered_
 
 ---
 
@@ -336,3 +340,31 @@
 - **Blocks:** P4a (math engine), P4b (DS-007 editor)
 - **Context:** D-043 allows min/max bounds with simple conditions (e.g. `a > b`), and DS-007 draws whole numbers. Open: whole numbers only, or also decimals (how many places) or a step (e.g. multiples of 5); a list of allowed values; excluded values (e.g. not 0).
 - **Answer:** Whole numbers only, between min and max, with optional excluded values (e.g. not 0); simple conditions stay (D-043). (Answered 2026-11-24.)
+
+## Q-049 · Must calculated values and the answer of a parameterised question be whole numbers?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4a (draw), P4b (preview)
+- **Context:** Random values are whole numbers (Q-048), but a calculated value or the answer can come out non-whole through division (7 : 2 = 3,5; 1 : 3 = 0,333…). Options: reject such a draw and draw again (only whole results), or allow decimals up to a fixed number of places (shown with a comma) and reject only longer ones.
+- **Answer:** Only whole results: a draw whose calculated value or answer isn't a whole number is thrown away and drawn again. (Answered 2026-11-24.)
+
+## Q-050 · Which question types can use named values?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4a, P4b
+- **Context:** DS-007 shows values for a short-answer question with a numeric answer. Values could also appear in a Subject II problem statement (graded by hand, no computed answer), or in choice options (e.g. options {a}, {a + 1}, which then need distinct values).
+- **Answer:** All three: short answer with a numeric answer, Subject II problem statements (no computed answer), and the options of choice questions. (Answered 2026-11-24.)
+
+## Q-051 · Can the answer of a parameterised question be a fraction?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4a (answer matching)
+- **Context:** D-017 accepts a fraction only in the form the Examiner expects. With drawn values the form must be computed (e.g. p/q simplified), which means choosing a rule for "the expected form".
+- **Answer:** No. A parameterised question's answer is a number only. (Answered 2026-11-24.)
+
+## Q-052 · Which operations can formulas use?
+- **Status:** answered
+- **Date:** 2026-11-24
+- **Blocks:** P4a (whitelist, D-013)
+- **Context:** The seed template says + - * / and parentheses. 6th-grade problems may also want powers (2³), the remainder of a division, or the absolute value.
+- **Answer:** + − · : and parentheses only (`*`, `×` and `/` also accepted as the same operations). No powers, remainder or absolute value. (Answered 2026-11-24.)

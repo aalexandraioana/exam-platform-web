@@ -66,4 +66,4 @@ exam-platform-web is an online mathematics assessment platform administering exa
 
 ## Boundaries
 - **Client / Server Boundary:** The React SPA is untrusted; all total scores, timers, and formula validations are calculated strictly on the Laravel backend. Requests received after `duration + 30s grace` are rejected.
-- **Formula Evaluation Sandbox:** Parameterized question formulas are parsed exclusively via a sandboxed PHP mathematical expression library with an operation whitelist, strictly avoiding native `eval()`.
+- **Formula Evaluation Sandbox:** Formulas of named values (D-057) are checked against a whitelist (whole numbers, the question's names, + − · : and parentheses; Q-052) in `backend/app/Support/Math/Expression.php` before they reach `nxp/math-executor`, which parses them without `eval()` (D-013). `ValueDefinitions` checks a question's values (problem codes), `ValueDrawer` draws them from a seed with `Random\Randomizer` (Mt19937) so a draw is reproducible (D-006), and `AnswerMatcher` applies D-017.

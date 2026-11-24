@@ -23,19 +23,27 @@
 #   grade_level   5–8.
 #   difficulty    easy | medium | hard.
 #   points        Points this question is worth (Subject I items are usually 5).
-#   competence    Your own competence (D-039): a short `code` and a `description`
+#   competence    Your own competence (D-058): a short `code` and a `description`
 #                 of what is assessed. The seeder creates it in your list the first
 #                 time it sees the code; reuse the same code for other questions.
-#   topic_labels  Optional. Your descriptive labels, e.g. [Unghiuri, Triunghiuri].
+#   topic         Exactly one topic from your own list, e.g. Unghiuri (D-058). The
+#                 seeder creates it the first time it sees it. Exam Items can match
+#                 on it (D-057).
 #   pools         Optional. Named pools the question goes into (D-041), e.g.
-#                 [Unghiuri – ușor]. Exam Items draw from pools (D-043).
-#   statement     The question text, in Romanian. Use {name} for a value drawn per
-#                 Attempt (see `parameters`). Use `|` for text on several lines.
+#                 [Unghiuri – ușor]. Exam Items draw from pools (D-057).
+#   statement     The question text, in Romanian. Use {name} for a named value
+#                 (see `parameters`). Use `|` for text on several lines.
 #   answer        The answer key; its shape depends on `type` (see the examples).
-#   parameters    Optional. Values drawn per Attempt (D-043): integer bounds,
-#                 simple conditions, values computed from them, and the formula of
-#                 the correct answer. Formulas use + - * / and parentheses only;
-#                 they are evaluated on the server, never with eval (D-013).
+#   parameters    Optional. Named values that change for each Candidate (D-057):
+#                 `values` (each one fixed, random or calculated), optional
+#                 `conditions`, and the `answer` formula. Formulas use whole numbers,
+#                 the names, + − · : and parentheses (* × / also work); nothing else
+#                 (Q-052). They are evaluated on the server, never with eval (D-013).
+#                 Calculated values and the answer must come out whole; a draw that
+#                 doesn't is thrown away and drawn again (Q-049). Values can be used
+#                 in short answers (number answer, `answer` required), in Subject II
+#                 statements and in the options of choice questions, not in
+#                 true/false (Q-050). The answer is always a number (Q-051).
 #   explanation   Optional. Shown to the Candidate in the review after results are
 #                 published.
 #
@@ -49,9 +57,10 @@
 #   starts with { [ * & ! | > ' " % @ — e.g. explanation: "48 : 4 = 12".
 #   Inside double quotes, write \" for a quote character.
 #
-# A question is Ready only if it has a statement, points, competence, grade level
-# and difficulty, plus an answer key (Subject I) or a complete barem when one is
-# used (D-042). Barem steps must add up to `points`.
+# A question is Ready only if it has a statement, points, competence, topic, grade
+# level and difficulty, plus an answer key (Subject I) or a complete barem when one
+# is used, and every {name} defined with values that can be drawn (D-059). Barem
+# steps must add up to `points`.
 # ──────────────────────────────────────────────────────────────────────────────
 
 questions:
@@ -66,7 +75,7 @@ questions:
     competence:
       code: C4
       description: Știe că suma măsurilor unghiurilor unui triunghi este 180°.
-    topic_labels: [Triunghiuri]
+    topic: Triunghiuri
     pools: [Triunghiuri – ușor]
     statement: Suma măsurilor unghiurilor unui triunghi este 180°.
     answer:
@@ -82,7 +91,7 @@ questions:
     competence:
       code: C2
       description: Calculează o fracție dintr-un număr.
-    topic_labels: [Rapoarte și proporții]
+    topic: Rapoarte și proporții
     pools: [Rapoarte – ușor]
     statement: Trei sferturi din numărul 48 reprezintă …
     answer:
@@ -100,7 +109,7 @@ questions:
     competence:
       code: C1
       description: Recunoaște numerele divizibile cu 3.
-    topic_labels: [Mulțimi de numere]
+    topic: Mulțimi de numere întregi
     statement: Care dintre numerele următoare sunt divizibile cu 3?
     answer:
       options: ["12", "14", "21", "25"]
@@ -116,7 +125,7 @@ questions:
     competence:
       code: C3
       description: Recunoaște mărimile invers proporționale.
-    topic_labels: [Rapoarte și proporții]
+    topic: Rapoarte și proporții
     statement: Dacă viteza se dublează, timpul necesar pentru același drum …
     answer:
       kind: text
@@ -132,7 +141,7 @@ questions:
     competence:
       code: C2
       description: Scrie raportul a două numere ca fracție ireductibilă.
-    topic_labels: [Rapoarte și proporții]
+    topic: Rapoarte și proporții
     statement: Raportul numerelor 6 și 8, scris ca fracție ireductibilă, este …
     answer:
       kind: fraction                       # number | fraction
@@ -148,20 +157,43 @@ questions:
     competence:
       code: C2
       description: Rezolvă probleme cu mărimi direct proporționale.
-    topic_labels: [Rapoarte și proporții]
+    topic: Rapoarte și proporții
     pools: [Rapoarte – mediu]
     statement: Numerele a și b sunt direct proporționale cu {p} și {q}, iar a + b = {s}. Numărul a este egal cu …
     parameters:
-      variables:                           # whole numbers, drawn between min and max
-        p: { min: 2, max: 5 }
-        q: { min: 3, max: 9 }
-        k: { min: 2, max: 8 }
-      conditions: ["p < q"]                # simple comparisons only
-      computed:                            # values shown in the statement
-        s: "(p + q) * k"
-      answer: "p * k"                      # the correct answer, computed per Attempt
+      values:
+        p: { random: { min: 2, max: 5 } }               # a whole number from 2 to 5
+        q: { random: { min: 3, max: 9, except: [6] } }  # 3–9, never 6
+        k: { fixed: 4 }                                 # always 4
+        s: { calculated: "(p + q) · k" }                # from the others
+      conditions: ["p < q"]                # all must hold: < > <= >= = != (≤ ≥ ≠)
+      answer: "p · k"                      # the correct answer, a whole number
     answer:
       kind: number                         # the expected value comes from parameters.answer
+
+  # ── EXAMPLE · values in the options of a choice question ──────────────────
+  - code: EX-MN-009
+    section: subject_1
+    type: single_choice
+    grade_level: 6
+    difficulty: easy
+    points: 5
+    competence:
+      code: C1
+      description: Adună numere întregi.
+    topic: Mulțimi de numere întregi
+    statement: Cât face {a} + {b}?
+    parameters:
+      values:
+        a: { random: { min: -9, max: 9, except: [0] } }
+        b: { random: { min: 1, max: 9 } }
+        s: { calculated: "a + b" }
+        d: { calculated: "a - b" }
+        m: { calculated: "a · b" }
+    answer:
+      options: ["{s}", "{d}", "{m}"]       # filled per Candidate; a set where two options
+      correct: 1                           # read the same is drawn again
+                                           # options name values only: define a + 1 as a value
 
   # ── EXAMPLE · structured_problem with a barem (Subject II) ────────────────
   - code: EX-TR-007
@@ -173,7 +205,7 @@ questions:
     competence:
       code: C5
       description: Demonstrează proprietăți ale triunghiului isoscel.
-    topic_labels: [Triunghiuri]
+    topic: Triunghiuri
     pools: [Triunghiuri – probleme]
     statement: |
       În triunghiul ABC, AB = AC și ∢A = 40°.
@@ -197,6 +229,6 @@ questions:
     competence:
       code: C6
       description: Calculează măsuri de unghiuri folosind unghiuri adiacente suplementare.
-    topic_labels: [Unghiuri]
+    topic: Unghiuri
     statement: Unghiurile AOB și BOC sunt adiacente suplementare, iar ∢AOB = 3 · ∢BOC. Calculează măsurile celor două unghiuri.
     # no barem: you give one score between 0 and 20 when grading (D-031)

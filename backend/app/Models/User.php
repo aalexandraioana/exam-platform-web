@@ -74,7 +74,7 @@ class User extends Authenticatable
         return $this->hasMany(SchoolClass::class, 'examiner_id');
     }
 
-    /** This Examiner's own competences (D-039). @return HasMany<Competence, $this> */
+    /** This Examiner's own competences (D-058). @return HasMany<Competence, $this> */
     public function competences(): HasMany
     {
         return $this->hasMany(Competence::class, 'examiner_id');
@@ -92,10 +92,10 @@ class User extends Authenticatable
         return $this->hasMany(Pool::class, 'examiner_id');
     }
 
-    /** @return HasMany<TopicLabel, $this> */
-    public function topicLabels(): HasMany
+    /** This Examiner's own topics (D-058). @return HasMany<Topic, $this> */
+    public function topics(): HasMany
     {
-        return $this->hasMany(TopicLabel::class, 'examiner_id');
+        return $this->hasMany(Topic::class, 'examiner_id');
     }
 
     /** This Candidate's requests to join classes. @return HasMany<ClassMembership, $this> */

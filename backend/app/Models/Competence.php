@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/** What an Examiner wants to assess, e.g. "C1 · knows that the angles of a triangle add up to 180°" (D-039). */
+/** What an Examiner wants to assess, e.g. "C1 · knows that the angles of a triangle add up to 180°" (D-058). */
 #[Fillable(['code', 'description'])]
 class Competence extends Model
 {

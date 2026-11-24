@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * trusted code.
  */
 #[Fillable([
-    'section', 'type', 'grade_level', 'difficulty', 'competence_id', 'points',
+    'section', 'type', 'grade_level', 'difficulty', 'competence_id', 'topic_id', 'points',
     'statement', 'answer_key', 'parameters', 'uses_barem', 'explanation',
 ])]
 class Question extends Model
@@ -71,10 +71,10 @@ class Question extends Model
         return $this->belongsToMany(Pool::class, 'pool_question');
     }
 
-    /** @return BelongsToMany<TopicLabel, $this> */
-    public function topicLabels(): BelongsToMany
+    /** The question's one topic (D-058). @return BelongsTo<Topic, $this> */
+    public function topic(): BelongsTo
     {
-        return $this->belongsToMany(TopicLabel::class, 'question_topic_label');
+        return $this->belongsTo(Topic::class);
     }
 
     /** @return HasMany<BaremStep, $this> */
@@ -83,7 +83,7 @@ class Question extends Model
         return $this->hasMany(BaremStep::class)->orderBy('position');
     }
 
-    /** Every time this question was drawn (Item Analysis per question, D-043). @return HasMany<AttemptItem, $this> */
+    /** Every time this question was drawn (Item Analysis per question, D-057). @return HasMany<AttemptItem, $this> */
     public function attemptItems(): HasMany
     {
         return $this->hasMany(AttemptItem::class);

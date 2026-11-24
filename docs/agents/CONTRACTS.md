@@ -12,6 +12,7 @@
 - C-001 · Auth API: register, login, logout, current user · provided
 - C-002 · Classes API: classes and join requests · provided
 - C-003 · Administrator API: users, temporary passwords, Examiners, deactivation · provided
+- C-004 · Question bank API: questions, Ready check, preview, lists, library · provided
 
 ---
 
@@ -45,6 +46,16 @@
 - **Consumers:** `frontend/src/api/admin.ts`
 - **Interface:** [docs/API.md → Administrator](../API.md#administrator): `GET /api/admin/users`, `POST /api/admin/examiners`, `PUT /api/admin/users/{id}/password`, `PATCH /api/admin/users/{id}` (`is_active: false` only); 403 `forbidden_target` (own account; an Administrator), 409 `already_deactivated` (D-054, D-055, D-056).
 - **Evidence:** docs/plans/p3b-admin-password-reset.md; docs/API.md
+- **Source:** user (approved plan, 2026-11-24) · confidence high
+
+## C-004 · Question bank API: questions, Ready check, preview, lists, library
+- **Status:** approved
+- **Date:** 2026-11-24
+- **Confirmed:** 2026-11-24
+- **Provider:** `backend/` (routes/api.php, QuestionController, LibraryController, BankListController, Support/Questions/Readiness)
+- **Consumers:** `frontend/src/api/questions.ts` (P4b Part 3)
+- **Interface:** [docs/API.md → Question bank](../API.md#question-bank): the Examiner's own questions (list with filters, create with a typed code, show with `problems`, edit, Ready/Draft, delete), preview of named values and answer checking (P4a engine), competences/topics/pools (list, create), library (publish as `LIB-<code>`, browse, copy). 422 bodies carry codes; `status: not_ready` comes with `problems`; 409 codes `question_drawn`, `already_published`.
+- **Evidence:** docs/plans/p4b-question-bank.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-24) · confidence high
 
 ## Consumed

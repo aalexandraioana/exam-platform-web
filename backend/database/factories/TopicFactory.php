@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Models\TopicLabel;
+use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<TopicLabel>
+ * @extends Factory<Topic>
  */
-class TopicLabelFactory extends Factory
+class TopicFactory extends Factory
 {
     public function definition(): array
     {

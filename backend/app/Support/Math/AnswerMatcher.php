@@ -41,7 +41,7 @@ final class AnswerMatcher
     }
 
     /** A canonical decimal ("2,50" → "2.5", "-0" → "0"), or null if it isn't a plain number. */
-    private static function number(string $value): ?string
+    public static function number(string $value): ?string
     {
         $value = str_replace(['−', ','], ['-', '.'], trim($value));
         if (! preg_match('/^([+-]?)(\d+)(?:\.(\d+))?$/', $value, $m)) {
@@ -55,7 +55,7 @@ final class AnswerMatcher
     }
 
     /** [sign, numerator, denominator] exactly as written (spaces ignored), or null. */
-    private static function fraction(string $value): ?array
+    public static function fraction(string $value): ?array
     {
         $value = str_replace('−', '-', $value);
         if (! preg_match('/^\s*([+-]?)\s*(\d+)\s*\/\s*(\d+)\s*$/', $value, $m)) {

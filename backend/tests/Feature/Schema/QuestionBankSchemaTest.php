@@ -126,13 +126,14 @@ it('refuses to delete a competence a question uses', function () {
 it('navigates examiner, pools, questions, topic, barem, competence and library source', function () {
     $examiner = User::factory()->examiner()->create();
     $competence = Competence::factory()->for($examiner, 'examiner')->create();
+    $topic = Topic::factory()->for($examiner, 'examiner')->create();
     $question = Question::factory()->subjectTwo()->withBarem()->ready()
-        ->for($examiner, 'examiner')->create(['competence_id' => $competence->id]);
+        ->for($examiner, 'examiner')->create(['competence_id' => $competence->id, 'topic_id' => $topic->id]);
     $pool = Pool::factory()->for($examiner, 'examiner')->create();
     $pool->questions()->attach($question);
     $step = BaremStep::factory()->for($question)->create();
     $entry = Question::factory()->subjectTwo()->ready()->inLibrary()
-        ->for($examiner, 'examiner')->create(['competence_id' => $competence->id, 'copied_from_id' => $question->id]);
+        ->for($examiner, 'examiner')->create(['competence_id' => $competence->id, 'topic_id' => $topic->id, 'copied_from_id' => $question->id]);
 
     expect($examiner->pools->first()->questions->first()->is($question))->toBeTrue()
         ->and($examiner->questions()->count())->toBe(2)

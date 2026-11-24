@@ -180,6 +180,85 @@ accepted (nothing changes):
 `422`: `class_code` (`required`, `not_found`). `409 already_decided` when the Examiner declined an
 earlier request (until Q-041 is answered).
 
+## Question bank
+
+Bearer token of an **active Examiner** with a current password. Every route works on the Examiner's
+own data: another Examiner's question, competence, topic or pool, and a library entry where a bank
+question is expected, answer `404`. C-004, screen DS-007.
+
+A question (list rows carry the first block of fields only):
+```json
+{ "id": 12, "code": "M6-RP-014", "section": "subject_1", "type": "short_answer", "status": "ready",
+  "grade_level": 6, "difficulty": "medium", "statement": "Numerele a și b sunt direct proporționale cu {p} și {q} …",
+  "competence": { "id": 3, "code": "C2", "description": "Folosește proporțiile directe" },
+  "topic": { "id": 5, "name": "Rapoarte și proporții" }, "pools": [{ "id": 2, "name": "Proporții – mediu" }],
+  "points": 5, "explanation": null, "answer_key": { "kind": "number" },
+  "parameters": { "values": { "p": { "random": { "min": 2, "max": 5 } }, "k": { "fixed": 4 }, "s": { "calculated": "(p + q) · k" } },
+                  "conditions": ["p < q"], "answer": "p · k" },
+  "uses_barem": false, "barem": [], "copied_from": null, "published": false, "problems": [] }
+```
+`answer_key` per type (questions.template.yaml): `dual_choice` `{correct: bool}`; `single_choice`
+`{options: [..], correct: n}` (1-based); `multiple_choice` `{options, correct: [n, ..]}`;
+`short_answer` `{kind: text, accepted: [..]}` · `{kind: number, value: "2,5"}` (no `value` with
+named values) · `{kind: fraction, value: "3/4"}`. `parameters`: D-057 (P4a).
+
+`problems` lists what Ready still needs (D-059), each `{code, field?, name?}`: `required` (field
+`statement`, `points`, `grade_level`, `difficulty`, `competence`, `topic`, `answer_key`),
+`invalid_answer_key`, `too_few_options`, `empty_option`, `duplicate_options`, `fraction_with_values`,
+`barem_incomplete`, and the named-value codes with field `parameters` (`undefined_value`,
+`invalid_value`, `invalid_range`, `all_excluded`, `invalid_formula`, `unknown_name`, `cycle`,
+`invalid_condition`, `answer_required`, `values_not_allowed`, `no_valid_draw`).
+
+### GET /api/questions
+The bank, by code, without library entries. Filters: `search` (code or text, any case),
+`competence_id`, `topic_id`, `pool_id`, `type`, `section`, `grade_level`, `difficulty`, `status`.
+`200`: `{ "questions": [ … ] }`.
+
+### POST /api/questions
+`{ "code": "M6-UG-001", "section": "subject_1", "type": "single_choice" }` → `201 { "question" }`, a
+Draft. The code is typed once and never changes (Q-054): letters, digits, `-` `_` `.`, at most 28.
+`422`: `code` (`required`, `invalid`, `taken`), `section`, `type` (`required`, `invalid`; the type
+must fit the Subject: `structured_problem` is Subject II's only type).
+
+### GET /api/questions/{id} · PATCH /api/questions/{id}
+`PATCH` takes any of: `section`, `type`, `grade_level`, `difficulty`, `competence_id`, `topic_id`,
+`points`, `statement`, `explanation`, `answer_key`, `parameters`, `uses_barem`, `barem` (the full
+list of `{description, points}`, replacing the old one), `pool_ids` (the full list). `code` and
+`status` are ignored. `200 { "question" }`. `422`: a field `invalid` (another Examiner's
+competence, topic or pool; a barem on Subject I); `status: not_ready` with `problems` when a Ready
+question would become incomplete: nothing is saved; move it to Draft first (Q-057).
+
+### POST /api/questions/{id}/ready · POST /api/questions/{id}/draft
+Ready: `200 { "question" }`, or `422` `status: not_ready` with `problems`. Draft: always `200`.
+
+### DELETE /api/questions/{id}
+`204`. `409 question_drawn` once an Attempt has drawn it (Q-056).
+
+### POST /api/questions/preview
+The unsaved `type`, `statement`, `options` and `parameters` → `200 { "problems": [..], "samples": [..] }`,
+three samples `{values, statement, options, answer}` drawn with random seeds, or none when there are
+problems (`no_valid_draw` when no set of values can be drawn).
+
+### POST /api/questions/check-answer
+"Testează un răspuns": `{ "type", "answer_key", "given", "expected"? }` (`expected`: the answer of a
+sample draw) → `200 { "accepted": true }` (D-017).
+
+### GET, POST /api/competences · /api/topics · /api/pools
+Lists sorted by code or name. Create: `{ "code", "description" }` or `{ "name" }` → `201`
+`{ "competence" | "topic" | "pool" }`. `422`: `required`, `invalid`, `taken` (a competence code, or a
+topic or pool name ignoring case, already in the Examiner's list). No renaming or deleting (Q-053).
+
+### POST /api/questions/{id}/publish
+A Ready question → `201 { "entry" }`, a frozen copy coded `LIB-<code>` (D-040). `422 status:
+not_ready`; `409 already_published` (once per question, no withdrawing, Q-058).
+
+### GET /api/library · POST /api/library/{id}/copy
+Every entry, by code: `{ id, code, section, type, grade_level, difficulty, statement, competence:
+{code, description}, topic: {name}, author, copied_as }` (`copied_as`: the code of your copy, if
+any). Copy: `{ "code" }` → `201 { "question" }` in your bank, with the entry's status and barem,
+`copied_from` set; the entry's competence (by code) and topic (by name) are added to your lists if
+missing. `422`: `code` as for a new question. `404` for anything that isn't a library entry.
+
 ## Administrator
 
 Bearer token of an **active Administrator** with a current password; other roles get `403 forbidden_role`.

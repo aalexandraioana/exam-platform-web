@@ -8,6 +8,7 @@ use App\Enums\QuestionType;
 use App\Enums\Section;
 use App\Models\Competence;
 use App\Models\Question;
+use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,7 +30,7 @@ class QuestionFactory extends Factory
         ];
     }
 
-    /** Every field D-042 requires; the competence belongs to the same Examiner. */
+    /** Every field D-059 requires; the competence and topic belong to the same Examiner. */
     public function ready(): static
     {
         return $this->state(fn () => [
@@ -40,6 +41,8 @@ class QuestionFactory extends Factory
             'difficulty' => Difficulty::Medium,
             'answer_key' => ['accepted' => ['42']],
             'competence_id' => fn (array $attributes) => Competence::factory()
+                ->create(['examiner_id' => $attributes['examiner_id']])->id,
+            'topic_id' => fn (array $attributes) => Topic::factory()
                 ->create(['examiner_id' => $attributes['examiner_id']])->id,
         ]);
     }

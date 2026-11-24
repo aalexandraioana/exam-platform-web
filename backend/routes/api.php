@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BankListController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', function () {
@@ -34,6 +37,26 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->whereNumber('id');
                 Route::post('/memberships/{id}/accept', [MembershipController::class, 'accept'])->whereNumber('id');
                 Route::post('/memberships/{id}/decline', [MembershipController::class, 'decline'])->whereNumber('id');
+
+                // C-004 (docs/API.md → Question bank): the Examiner's own bank and the shared library.
+                Route::get('/questions', [QuestionController::class, 'index']);
+                Route::post('/questions', [QuestionController::class, 'store']);
+                Route::post('/questions/preview', [QuestionController::class, 'preview']);
+                Route::post('/questions/check-answer', [QuestionController::class, 'checkAnswer']);
+                Route::get('/questions/{id}', [QuestionController::class, 'show'])->whereNumber('id');
+                Route::patch('/questions/{id}', [QuestionController::class, 'update'])->whereNumber('id');
+                Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->whereNumber('id');
+                Route::post('/questions/{id}/ready', [QuestionController::class, 'ready'])->whereNumber('id');
+                Route::post('/questions/{id}/draft', [QuestionController::class, 'draft'])->whereNumber('id');
+                Route::post('/questions/{id}/publish', [LibraryController::class, 'publish'])->whereNumber('id');
+                Route::get('/library', [LibraryController::class, 'index']);
+                Route::post('/library/{id}/copy', [LibraryController::class, 'copy'])->whereNumber('id');
+                Route::get('/competences', [BankListController::class, 'competences']);
+                Route::post('/competences', [BankListController::class, 'storeCompetence']);
+                Route::get('/topics', [BankListController::class, 'topics']);
+                Route::post('/topics', [BankListController::class, 'storeTopic']);
+                Route::get('/pools', [BankListController::class, 'pools']);
+                Route::post('/pools', [BankListController::class, 'storePool']);
             });
 
             Route::post('/memberships', [MembershipController::class, 'join'])->middleware('role:candidate');

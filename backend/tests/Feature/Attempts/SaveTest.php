@@ -135,3 +135,21 @@ it('loses nothing on a refresh: the read returns every saved answer', function (
         ->assertJsonPath('attempt.items.2.answer.value', true)
         ->assertJsonPath('attempt.items.2.answer.version', 4);
 });
+
+it('refuses a version beyond what the database stores, with 422 not 500', function () {
+    $id = startAttempt(attemptSetup());
+
+    save($id, 2, ['answer' => '1', 'version' => 2147483647])->assertOk();
+    save($id, 3, ['answer' => true, 'version' => 2147483648])->assertUnprocessable()->assertJsonValidationErrors('version');
+});
+
+it('keeps the review mark when a save leaves it out', function () {
+    $id = startAttempt(attemptSetup());
+
+    save($id, 2, ['answer' => '1', 'version' => 1, 'marked_for_review' => true])->assertOk();
+    save($id, 2, ['answer' => '2', 'version' => 2])->assertOk()
+        ->assertJsonPath('answer.value', '2')
+        ->assertJsonPath('answer.marked_for_review', true);
+    save($id, 2, ['answer' => '2', 'version' => 3, 'marked_for_review' => false])->assertOk()
+        ->assertJsonPath('answer.marked_for_review', false);
+});

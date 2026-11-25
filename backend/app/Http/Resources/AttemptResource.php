@@ -38,6 +38,8 @@ class AttemptResource extends JsonResource
             'attempt_number' => $attempt->attempt_number,
             'started_at' => $attempt->started_at->toIso8601String(),
             'expires_at' => $attempt->expires_at->toIso8601String(),
+            // D-004: answers still arriving until then are accepted (P7d retries until this moment).
+            'accepts_answers_until' => $attempt->acceptsAnswersUntil()->toIso8601String(),
             'submitted_at' => $attempt->submitted_at?->toIso8601String(),
             'auto_submitted' => $attempt->auto_submitted,
             'server_time' => now()->toIso8601String(),

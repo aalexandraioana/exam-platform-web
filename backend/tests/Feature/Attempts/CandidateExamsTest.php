@@ -130,3 +130,20 @@ it('counts a sealed Attempt as submitted', function () {
 
     $this->getJson('/api/candidate/exams')->assertJsonPath('exams.0.submitted', true)->assertJsonPath('exams.0.can_start', false);
 });
+
+it('counts the Candidate\'s accepted and pending class requests, for the empty states', function () {
+    $s = attemptSetup();
+    $pending = SchoolClass::factory()->create(['join_code' => 'WAIT01']);
+    $request = new ClassMembership;
+    $request->class_id = $pending->id;
+    $request->candidate_id = $s['candidate']->id;
+    $request->status = MembershipStatus::Pending;
+    $request->save();
+    signInAs($s['candidate']);
+    $this->getJson('/api/candidate/exams')->assertOk()->assertJsonPath('classes', ['accepted' => 1, 'pending' => 1]);
+
+    signInAs(App\Models\User::factory()->candidate()->create());
+    $this->getJson('/api/candidate/exams')->assertOk()
+        ->assertJsonPath('classes', ['accepted' => 0, 'pending' => 0])
+        ->assertJsonPath('exams', []);
+});

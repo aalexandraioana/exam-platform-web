@@ -72,6 +72,7 @@
 - Q-061 · Can an Exam be unpublished or deleted? · _answered_
 - Q-062 · What is the "departajare" label on DS-008's Item 9? · _answered_
 - Q-063 · Which competences should an Exam cover (DS-008 coverage warning)? · _answered_
+- Q-064 · Where do Candidates see an Exam's description?
 
 ---
 
@@ -457,3 +458,10 @@
 - **Blocks:** P5
 - **Context:** DS-008 warns about a competence with no Item.
 - **Answer:** Every competence of the Examiner that has at least one Ready question for the Exam's grade level; a missing one is a warning, not a block. (Answered 2026-11-24.)
+
+## Q-064 · Where do Candidates see an Exam's description?
+- **Status:** open
+- **Date:** 2026-11-25
+- **Blocks:** P7 (Candidate dashboard DS-003, exam room DS-004)
+- **Context:** An Exam has an optional description, edited in the builder (DS-008 "Setări", added 2026-11-25). No Candidate screen shows it yet. Options: on the dashboard card, on the screen before the Attempt starts, or nowhere (a note for the Examiner only).
+

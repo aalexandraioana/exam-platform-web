@@ -45,3 +45,14 @@ it('gives the exam\'s attempt limit, for "Încercarea 1 din 1" (P7c)', function 
     $this->getJson("/api/attempts/{$id}")->assertOk()->assertJsonPath('attempt.exam.max_attempts', 3);
     $this->postJson("/api/attempts/{$id}/submit")->assertOk()->assertJsonPath('attempt.exam.max_attempts', 3);
 });
+
+it('says until when answers are accepted: the deadline plus the Grace Period (P7d, D-004)', function () {
+    $this->freezeSecond();
+    config(['attempts.grace_seconds' => 30]);
+    $s = attemptSetup();
+    signInAs($s['candidate']);
+    $id = $this->postJson("/api/candidate/exams/{$s['exam']->id}/attempts")->json('attempt.id');
+
+    $this->getJson("/api/attempts/{$id}")->assertOk()
+        ->assertJsonPath('attempt.accepts_answers_until', now()->addMinutes(50)->addSeconds(30)->toIso8601String());
+});

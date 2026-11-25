@@ -77,7 +77,7 @@
 ## D-004 · Authoritative server timer with 30-second expiration grace period
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-18
+- **Confirmed:** 2026-11-25
 - **Rule:** Exam duration is strictly enforced on the server, with a 30-second grace period buffer after timer expiration to accept in-flight submissions delayed by network latency before rejecting subsequent answers.
 - **Why:** Eliminates client-side timer tampering while maintaining fairness for candidates on school or mobile networks.
 - **Rejected:** Client-side only countdown timer; strict 0-second cutoff without latency tolerance.

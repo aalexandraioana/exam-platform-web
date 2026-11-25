@@ -1,6 +1,6 @@
 # Plan — P7d: offline and resume (twist part 1, client side)
 
-Status: proposed 2026-11-25 · Covers D-004, D-021, D-044 and the catalog's "refresh, closing the
+Status: approved 2026-11-25 (C-006 addition, D-004, the assumptions) · Covers D-004, D-021, D-044 and the catalog's "refresh, closing the
 tab and losing the connection lose nothing" · Builds on P6b (versioned autosave), P7b–P7c (same
 branch) · last part of P7 (Q-071)
 

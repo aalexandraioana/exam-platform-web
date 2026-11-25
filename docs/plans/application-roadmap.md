@@ -19,7 +19,7 @@
 | **P4b** | **Question bank**: pools, topic labels and competences managed in the app (D-039, D-041); a question's pools, labels and competence must belong to its Examiner (not enforced by the database); create/read/update/delete, Draft → Ready with required-field checks, barem definition, shared library (publish, copy), preview of drawn values | L | P1, P2, P4a | D-027, D-031, D-039, D-040, D-041, D-042, D-043 | DS-007 ✅ (needs a mock fix first: topics shown as competences; pools; grade and difficulty in "Ce lipsește pentru Finalizat") | Q-032 | [p4b-question-bank.md](p4b-question-bank.md) | built on branch feat/p4b-question-bank (2026-11-24), not merged | |
 | **P4c** | **Seed & BANK.md**: insert-only seeder keyed on question code, creating the seeding Examiner's own competences and topic labels with the questions (D-039), BANK.md log structure. The question text is written by the user, never invented | S | P4b | D-029, D-039 | — | — | to plan | |
 | **P5** | **Exam builder & publication**: blueprint Items drawing from pools, attempt limits and score policy, availability window, publish to classes; publishing only if every Item can get its own distinct eligible question (D-043); the Exam's classes and its Items' pools and competences must belong to its Examiner, and publishing requires title, duration, grade level, classes and complete Items summing to 30 + 60 points (not enforced by the database); once published, the Exam's Items and classes can't be edited, with guards and tests (from the P1c review); Candidate-facing lists filter on `published_at`, since `SchoolClass::exams()` includes drafts | M | P3, P4b | D-012, D-015, D-021, D-042, D-043 | DS-008 ✅ (needs a mock fix first: topics shown as competences; Items pick a pool instead of listing Variants) | — | [p5-exam-builder.md](p5-exam-builder.md) | built on branch feat/p5-exam-builder (2026-11-25), not merged | |
-| **P6** | **Attempt engine (the twist, backend)**: state machine with a test per invalid transition; one random eligible question per Item from its pool, never repeated within the Attempt (D-043), seed and snapshot at start; server timer with the 30 s Grace Period; idempotent versioned autosave; Subject 2 uploads (limits, HEIC→JPG: check Imagick + libheif in the image first) to S3-compatible object storage in production (D-048); Submission; expired Attempts sealed on read plus a scheduled job pinged by a free external cron (D-044); answer options shuffled and stored (D-045); Subject 1 auto-grading | L | P4a, P5 | D-004, D-005, D-006, D-012, D-021, D-026, D-043, D-044, D-045, D-048 | — | — | split (Q-065): P6a start and draw · P6b timer, autosave, submit · P6c Subject I grading · P6d Subject II photos; [p6a-start-and-draw.md](p6a-start-and-draw.md), [p6b-timer-autosave-submit.md](p6b-timer-autosave-submit.md) | P6a merged and live (2026-11-25, 1cb27a4); P6b built on branch feat/p6b-timer-autosave-submit (2026-11-25), not merged | |
+| **P6** | **Attempt engine (the twist, backend)**: state machine with a test per invalid transition; one random eligible question per Item from its pool, never repeated within the Attempt (D-043), seed and snapshot at start; server timer with the 30 s Grace Period; idempotent versioned autosave; Subject 2 uploads (limits, HEIC→JPG: check Imagick + libheif in the image first) to S3-compatible object storage in production (D-048); Submission; expired Attempts sealed on read plus a scheduled job pinged by a free external cron (D-044); answer options shuffled and stored (D-045); Subject 1 auto-grading | L | P4a, P5 | D-004, D-005, D-006, D-012, D-021, D-026, D-043, D-044, D-045, D-048 | — | — | split (Q-065): P6a start and draw · P6b timer, autosave, submit · P6c Subject I grading · P6d Subject II photos; [p6a-start-and-draw.md](p6a-start-and-draw.md), [p6b-timer-autosave-submit.md](p6b-timer-autosave-submit.md) | P6a merged and live (2026-11-25, 1cb27a4); P6b merged and live (2026-11-25, d20bcdc, PR #11) | |
 | **P7** | **Candidate exam experience**: dashboard, exam room (server-synced timer, local retry queue, resume after refresh or lost connection, uploads), "submitted, awaiting grading" status; Playwright test for refresh and lost connection | L | P6 | D-004, D-019, D-021, D-033 | DS-003 ✅, DS-004 ✅ | Q-032 | to plan | |
 | **P8** | **Grading & publication**: grading queue, barem ticking or one holistic score, recalculation on barem edit with flags, publish cohort note and private comments, barem and answer key locked after results are published with guards and tests (D-031, D-046), score aggregation; `cohort_note` is shown to Candidates only after `results_published_at` | L | P6 | D-005, D-012, D-019, D-031, D-046 | DS-009 ✅ (needs a mock fix first: topics shown as competences) | — | to plan | |
 | **P9** | **Results review**: the Candidate's read-only review after publication | M | P8 | D-019 | DS-005 *(draft)* | — | to plan | |
@@ -46,11 +46,11 @@ Agreed 2026-11-22. The pilot date drives everything after it.
 | 4 | Thu 26 Nov | P5 exam builder (DS-008 fix) | Finish the 60 |
 | 5 | Fri 27 Nov | P6 attempt engine: timer, grace, versioned autosave, auto-submit, draw (the twist) | Validations into BANK.md |
 | 6 | Sat 28 Nov | P7 exam room + Playwright refresh/disconnect test | — |
-| 7 | Sun 29 Nov | P4c seed the real questions, deploy, dry run with 1–2 people | Dry run |
+| 7 | Sun 29 Nov | P4c seed the real questions, deploy, dry run with 1–2 people | Dry run; **switch the cron-job.org job back on** (at the latest the morning of 30 Nov) |
 | 8 | Mon 30 Nov | **Pilot** with 10+ colleagues on the live site; fixes | Run the pilot |
 | 9 | Tue 1 Dec | P8 grading + publishing (DS-009 fix); P9 results as a simple page | Grade Subject II |
 | 10 | Wed 2 Dec | P10 Item Analysis on pilot data; BANK.md results; P12 README, API docs, SUBMISSION draft | Record the demo video |
-| 11 | Thu 3 Dec | Buffer, final checks, delivery | Deliver |
+| 11 | Thu 3 Dec | Buffer, final checks, delivery | Deliver; **the cron-job.org job stays on until the evaluation is done** |
 
 **Cut list (decided now):** P9 becomes a simple page inside P8; P11 dashboards and admin
 supervision are minimal or listed as not done in SUBMISSION; the shared-library screens (D-040)
@@ -67,6 +67,13 @@ existing tokens and mocks; the three-reviewer pass runs only on P6.
   free external Postgres, which would need a PROPOSAL against D-014). Back up the pilot
   results right after the pilot whatever is decided.
 - Free web services sleep after 15 minutes idle; the first request then takes up to a minute.
+- **Cron (D-044, Q-067):** a cron-job.org job POSTs `/api/cron/seal-expired` every 5 minutes with
+  `X-Cron-Secret` (`CRON_SECRET` in Render's settings only); set up and tested 2026-11-25. It also
+  keeps the API awake. Render gives 750 free instance hours per workspace per month; one
+  always-on API uses about 720–744. While only the user is testing, the job may be switched off
+  with its Enable toggle (sealing on read keeps results correct; only cold starts return). **On
+  from 29 Nov (at the latest the morning of the pilot), and from delivery (3 Dec) until the
+  evaluation is done.** A daytime-only schedule (e.g. 07:00–22:00) is the middle option.
 
 ## Risks
 - **Catalog items the client ruled out** (negative marking, partial credit on multiple choice,

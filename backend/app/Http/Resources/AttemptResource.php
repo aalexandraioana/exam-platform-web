@@ -33,7 +33,7 @@ class AttemptResource extends JsonResource
 
         return [
             'id' => $attempt->id,
-            'exam' => ['id' => $attempt->exam->id, 'title' => $attempt->exam->title],
+            'exam' => ['id' => $attempt->exam->id, 'title' => $attempt->exam->title, 'max_attempts' => $attempt->exam->max_attempts],
             'status' => $attempt->status->value,
             'attempt_number' => $attempt->attempt_number,
             'started_at' => $attempt->started_at->toIso8601String(),

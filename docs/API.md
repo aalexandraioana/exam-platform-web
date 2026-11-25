@@ -347,7 +347,7 @@ the Candidate's accepted classes.
 
 ### GET /api/attempts/{id}
 ```json
-{ "attempt": { "id": 12, "exam": { "id": 4, "title": "Evaluare Unitatea 3" }, "status": "started",
+{ "attempt": { "id": 12, "exam": { "id": 4, "title": "Evaluare Unitatea 3", "max_attempts": 1 }, "status": "started",
   "attempt_number": 1, "started_at": "…", "expires_at": "…", "server_time": "…",
   "items": [{ "position": 1, "section": "subject_1", "type": "single_choice", "points": 5,
               "statement": "Trei sferturi din 48 reprezintă …", "options": ["32", "12", "64", "36"] }] } }

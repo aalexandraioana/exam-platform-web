@@ -7,6 +7,11 @@ export default defineConfig({
   reporter: 'list',
   use: {
     baseURL: 'http://localhost:5173',
+    // As the teachers' browsers: Romanian formats (date fields) and Romania's time zone.
+    locale: 'ro-RO',
+    timezoneId: 'Europe/Bucharest',
+    // Native date fields follow Chromium's own interface language, not the page locale.
+    launchOptions: { args: ['--lang=ro-RO'] },
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],

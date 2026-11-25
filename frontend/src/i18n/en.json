@@ -20,7 +20,8 @@
     "offlineShort": "We couldn't reach the server. Try again."
   },
   "session": {
-    "loading": "Loading your account…"
+    "loading": "Loading your account…",
+    "page": "Loading the page…"
   },
   "login": {
     "title": "Log in",

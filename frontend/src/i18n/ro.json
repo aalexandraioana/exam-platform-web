@@ -20,7 +20,8 @@
     "offlineShort": "Nu ne-am putut conecta la server. Încearcă din nou."
   },
   "session": {
-    "loading": "Se încarcă contul tău…"
+    "loading": "Se încarcă contul tău…",
+    "page": "Se încarcă pagina…"
   },
   "login": {
     "title": "Intră în cont",

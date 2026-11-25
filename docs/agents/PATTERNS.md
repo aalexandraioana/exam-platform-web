@@ -12,6 +12,7 @@
 - PATTERN-004 · Fixed data rules as Postgres constraints, tested by refusal · candidate
 - PATTERN-005 · Validation errors as codes, not sentences · candidate
 - PATTERN-006 · An account state that blocks the app: one API refusal code, one SPA screen · candidate
+- PATTERN-007 · A write that depends on a row's state locks that row first · candidate
 
 ---
 
@@ -64,3 +65,11 @@
 - **Why:** The server enforces the state even for a client that ignores it, and the SPA needs one check, not one per page.
 - **Source:** agent · confidence medium
 
+
+## PATTERN-007 · A write that depends on a row's state locks that row first
+- **Status:** candidate
+- **Use when:** Concurrent requests may both pass a check on the same record (one open Attempt, its deadline, its status) before either writes.
+- **How:** In one `DB::transaction`, re-read the record with `lockForUpdate()`, check, write, return. A refusal that must persist (e.g. sealing on `time_up`) is returned from the transaction and thrown after it commits. Keep the database's own unique keys behind it and map their violation to the same `409` code. Verify with a parallel run (20 requests through `php artisan serve` with `PHP_CLI_SERVER_WORKERS`), once with the lock removed as a control.
+- **Example:** backend/app/Support/Attempts/Starter.php (start), Saver.php (autosave), Sealer.php (submit, seal)
+- **Why:** Pest runs requests one at a time, so only the lock and the unique key make the checks hold under load; checked 2026-11-25 (start: 1 × 201 and 19 × 409; saves: highest version kept, no 500s).
+- **Source:** agent · confidence medium

@@ -40,6 +40,7 @@ final class Sealer
             if ($attempt->isOpen() && ! self::sealIfExpired($attempt)) {
                 $attempt->moveTo(AttemptStatus::Submitted);
                 $attempt->submitted_at = now();
+                Grader::subjectOne($attempt); // P6c
                 $attempt->save();
             }
 
@@ -56,6 +57,7 @@ final class Sealer
         $attempt->moveTo(AttemptStatus::Submitted);
         $attempt->submitted_at = $attempt->expires_at;
         $attempt->auto_submitted = true;
+        Grader::subjectOne($attempt); // P6c
         $attempt->save();
 
         return true;

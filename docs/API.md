@@ -377,6 +377,12 @@ shape) or validation errors; `409 time_up` (past the deadline + grace: the Attem
 After the deadline + grace it seals instead (`auto_submitted: true`, `submitted_at` = `expires_at`);
 answers saved in time count.
 
+Whichever way an Attempt becomes submitted (submit, late submit or save, sealing on read or by the
+cron), Subject I is graded in the same transaction (P6c): full points or 0 per item from the
+Attempt's snapshot, shown positions mapped through the stored option order, short answers checked
+against the Attempt's drawn answer (D-005, D-006, D-017). No score or correctness appears in any
+response before publication (D-019).
+
 ## Cron
 
 ### POST /api/cron/seal-expired

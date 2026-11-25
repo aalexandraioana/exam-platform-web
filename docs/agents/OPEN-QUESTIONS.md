@@ -73,6 +73,10 @@
 - Q-062 · What is the "departajare" label on DS-008's Item 9? · _answered_
 - Q-063 · Which competences should an Exam cover (DS-008 coverage warning)? · _answered_
 - Q-064 · Where do Candidates see an Exam's description?
+- Q-065 · Is P6 built in one piece? · _answered_
+- Q-066 · Which object storage provider holds Subject II photos in production?
+- Q-067 · Who sets up the external cron that seals expired Attempts? · _investigating_
+- Q-068 · What separates the "started" and "in_progress" Attempt states? · _investigating_
 
 ---
 
@@ -464,4 +468,31 @@
 - **Date:** 2026-11-25
 - **Blocks:** P7 (Candidate dashboard DS-003, exam room DS-004)
 - **Context:** An Exam has an optional description, edited in the builder (DS-008 "Setări", added 2026-11-25). No Candidate screen shows it yet. Options: on the dashboard card, on the screen before the Attempt starts, or nowhere (a note for the Examiner only).
+
+## Q-065 · Is P6 built in one piece?
+- **Status:** answered
+- **Date:** 2026-11-25
+- **Blocks:** P6
+- **Context:** P6 covers the whole attempt engine plus Subject II photo uploads, which need ImageMagick in the Docker image, an S3 library and an object storage account (D-048).
+- **Answer:** Split in four: P6a start and draw (twist: reproducible parameters), P6b timer, autosave and submit (twist: server timer), P6c Subject I grading, P6d Subject II photos and storage. (Answered 2026-11-25; first in two, then split further.)
+
+## Q-066 · Which object storage provider holds Subject II photos in production?
+- **Status:** open
+- **Date:** 2026-11-25
+- **Blocks:** P6d
+- **Context:** D-048 left the provider to P6. Candidates: Supabase Storage (1 GB free, S3-compatible) or Cloudflare R2 (10 GB free, may need a payment card). The free tiers are to be verified before choosing. The user creates the account; its keys go in Render's settings, never in the repo. Needed by about 28 Nov for the 30 Nov pilot (Q-039).
+
+## Q-067 · Who sets up the external cron that seals expired Attempts?
+- **Status:** investigating
+- **Date:** 2026-11-25
+- **Blocks:** P6b (sealing endpoint), P12 (pilot)
+- **Context:** D-044 needs a free external service calling a secret-protected endpoint every few minutes; reads seal expired Attempts anyway, so correctness doesn't depend on it.
+- **Proposed answer:** P6b builds the endpoint (secret in Render's settings); after deploy the user creates a free cron-job.org job calling it every 5 minutes, with steps provided.
+
+## Q-068 · What separates the "started" and "in_progress" Attempt states?
+- **Status:** investigating
+- **Date:** 2026-11-25
+- **Blocks:** P6b (state machine)
+- **Context:** The schema has started, in_progress, submitted, graded.
+- **Proposed answer:** "started" when the Attempt is created, "in_progress" from the first saved answer, so the Examiner can tell who opened the exam but answered nothing.
 

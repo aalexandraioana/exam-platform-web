@@ -227,7 +227,7 @@
 ## D-028 · Examiner-created classes with join code and approval
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-25
 - **Rule:** Examiners create their classes; each class has a short join code. A Candidate enters the code at registration or later from the dashboard and stays pending until the Examiner accepts them. D-015 still holds.
 - **Why:** Self-registered Candidates need a way into a class, and approval blocks strangers who got the code.
 - **Rejected:** Join code without approval; Examiner adds Candidates by email; Administrator-managed classes.

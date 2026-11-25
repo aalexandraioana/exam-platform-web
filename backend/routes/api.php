@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AttemptController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BankListController;
+use App\Http\Controllers\CandidateExamController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamItemController;
@@ -75,7 +77,13 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::delete('/exams/{id}/items/{itemId}', [ExamItemController::class, 'destroy'])->whereNumber(['id', 'itemId']);
             });
 
-            Route::post('/memberships', [MembershipController::class, 'join'])->middleware('role:candidate');
+            // C-002 (docs/API.md → Joining a class) and C-006 (docs/API.md → Attempts): the Candidate.
+            Route::middleware('role:candidate')->group(function () {
+                Route::post('/memberships', [MembershipController::class, 'join']);
+                Route::get('/candidate/exams', [CandidateExamController::class, 'index']);
+                Route::post('/candidate/exams/{id}/attempts', [CandidateExamController::class, 'start'])->whereNumber('id');
+                Route::get('/attempts/{id}', [AttemptController::class, 'show'])->whereNumber('id');
+            });
 
             // C-003 (docs/API.md → Administrator): users, temporary passwords, Examiners, deactivation.
             Route::middleware('role:administrator')->prefix('admin')->group(function () {

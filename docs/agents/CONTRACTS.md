@@ -14,6 +14,7 @@
 - C-003 · Administrator API: users, temporary passwords, Examiners, deactivation · provided
 - C-004 · Question bank API: questions, Ready check, preview, lists, library · provided
 - C-005 · Exams API: exams, blueprint Items, publish checks, preview · provided
+- C-006 · Attempts API (Candidate): exams, start, read · provided
 
 ---
 
@@ -68,6 +69,16 @@
 - **Interface:** [docs/API.md → Exams](../API.md#exams): the Examiner's exams (list, create, show with `checks`, edit settings, delete a draft), Items (add, edit, delete, reorder; `type`/`topic` null = any; `eligible` count), match count for unsaved criteria, publish (422 `not_publishable` with `problems`), preview draw. After publishing only title, description and `available_until` change (409 `exam_published`).
 - **Evidence:** docs/plans/p5-exam-builder.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-24) · confidence high
+
+## C-006 · Attempts API (Candidate): exams, start, read
+- **Status:** approved
+- **Date:** 2026-11-25
+- **Confirmed:** 2026-11-25
+- **Provider:** `backend/` (routes/api.php, CandidateExamController, AttemptController, Support/Attempts/Starter)
+- **Consumers:** P7's exam room and dashboard (`frontend/src/api/attempts.ts`, to come)
+- **Interface:** [docs/API.md → Attempts (Candidate)](../API.md#attempts-candidate): `GET /api/candidate/exams` (state, attempts, `can_start`), `POST /api/candidate/exams/{id}/attempts` (409 `attempt_open` with `attempt_id`, `no_attempts_left`, `not_available`), `GET /api/attempts/{id}` (the snapshot as shown, `server_time`; never the key or a score). P6b–P6d extend it.
+- **Evidence:** docs/plans/p6a-start-and-draw.md; docs/API.md
+- **Source:** user (approved plan, 2026-11-25) · confidence high
 
 ## Consumed
 

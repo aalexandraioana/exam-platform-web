@@ -50,7 +50,7 @@ it('shuffles the options, stores their order and keeps the key in original posit
     $order = $item->expected_answer['option_order'];
     expect($order)->toEqualCanonicalizing([1, 2, 3, 4])
         ->and($item->question_snapshot['options'])->toBe(array_map(fn ($p) => ['12', '36', '32', '64'][$p - 1], $order))
-        ->and($item->expected_answer['answer_key'])->toBe(['options' => ['12', '36', '32', '64'], 'correct' => 2]);
+        ->and($item->expected_answer['answer_key'])->toEqual(['options' => ['12', '36', '32', '64'], 'correct' => 2]); // jsonb keeps its own key order
 
     $orders = collect(range(1, 40))->map(fn ($seed) => implode(',', collect(Starter::snapshot($s['exam']->fresh(), $seed))
         ->firstWhere('question_id', $s['questions']['single']->id)['expected_answer']['option_order']))->unique();

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * The question drawn for one Item of an Attempt and what the Candidate saw (D-006, D-043, D-045).
+ * The question drawn for one Item of an Attempt and what the Candidate saw (D-006, D-057, D-045).
  * Written once by the attempt engine; nothing is mass-assignable.
  */
 class AttemptItem extends Model

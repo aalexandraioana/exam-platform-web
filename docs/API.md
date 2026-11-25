@@ -313,6 +313,41 @@ question_id, code, competence, eligible, values, statement, options, answer }] }
 question, named values filled (`answer`: the drawn answer, for questions with values). `422 status:
 not_publishable` when no draw exists. Options are shuffled per Attempt in P6 (D-045), not here.
 
+## Attempts (Candidate)
+
+Bearer token of an **active Candidate** with a current password; own data only. C-006 (P6a: list,
+start, read; autosave, submit and sealing follow in P6b, grading in P6c, photos in P6d).
+
+### GET /api/candidate/exams
+Exams published to the classes where the Candidate's place is accepted (D-015, D-028):
+```json
+{ "exams": [{ "id": 4, "title": "Evaluare Unitatea 3", "description": null, "duration_minutes": 50,
+  "available_from": "2026-11-30T06:00:00+00:00", "available_until": "2026-11-30T12:00:00+00:00",
+  "max_attempts": 1, "attempts_used": 0, "state": "open", "open_attempt_id": null, "can_start": true,
+  "results_published": false }] }
+```
+`state`: `upcoming` before `available_from`, `closed` from `available_until`, else `open` (either
+end may be empty). `can_start`: open, an attempt left (D-012) and none still open.
+
+### POST /api/candidate/exams/{id}/attempts
+Starts an Attempt → `201 { "attempt" }` (below). The Attempt gets a seed; every Item its own Ready
+question (D-057); named values drawn (D-006); options shuffled (D-045); all stored, so the same seed
+rebuilds exactly what the Candidate saw. Its deadline is the start plus the Exam's full duration
+(D-021). `409`: `attempt_open` (with `attempt_id`, to resume it), `no_attempts_left`,
+`not_available` (upcoming, closed, or no longer drawable). `404` when the Exam isn't published to
+the Candidate's accepted classes.
+
+### GET /api/attempts/{id}
+```json
+{ "attempt": { "id": 12, "exam": { "id": 4, "title": "Evaluare Unitatea 3" }, "status": "started",
+  "attempt_number": 1, "started_at": "…", "expires_at": "…", "server_time": "…",
+  "items": [{ "position": 1, "section": "subject_1", "type": "single_choice", "points": 5,
+              "statement": "Trei sferturi din 48 reprezintă …", "options": ["32", "12", "64", "36"] }] } }
+```
+`options` in the shown order (empty for true/false and short answers). Never the answer key, the
+option order, the drawn values or answer, the seed or a score (D-019). Another Candidate's Attempt
+answers `404`.
+
 ## Administrator
 
 Bearer token of an **active Administrator** with a current password; other roles get `403 forbidden_role`.

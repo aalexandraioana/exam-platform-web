@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * One Candidate taking one Exam. Nothing is mass-assignable: the status, deadline, seed and
- * scores are set only by the attempt engine (P6) and grading (P8).
+ * scores are set only by the attempt engine (P6, `Support/Attempts`) and grading (P8).
  */
 class Attempt extends Model
 {

@@ -6,6 +6,7 @@ use App\Models\ClassMembership;
 use App\Models\Exam;
 use App\Models\SchoolClass;
 use App\Models\Topic;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -142,7 +143,7 @@ it('counts the Candidate\'s accepted and pending class requests, for the empty s
     signInAs($s['candidate']);
     $this->getJson('/api/candidate/exams')->assertOk()->assertJsonPath('classes', ['accepted' => 1, 'pending' => 1]);
 
-    signInAs(App\Models\User::factory()->candidate()->create());
+    signInAs(User::factory()->candidate()->create());
     $this->getJson('/api/candidate/exams')->assertOk()
         ->assertJsonPath('classes', ['accepted' => 0, 'pending' => 0])
         ->assertJsonPath('exams', []);

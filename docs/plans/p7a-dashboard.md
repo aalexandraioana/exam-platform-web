@@ -10,6 +10,9 @@ one dialog.
 ## Approach
 **Part 1 · API (C-006, additive).** `GET /candidate/exams` adds:
 - a top-level `server_time`
+- a top-level `classes`: `{accepted, pending}` counts of the Candidate's class requests, so the
+  empty state can say "no class", "request waiting" or "no exam yet" (added with your yes during the
+  build, 2026-11-25)
 - per exam:
   - `topics`: the distinct topic names of the exam's Items ("any" adds none) (Q-069)
   - `item_counts`: `{subject_1, subject_2}`

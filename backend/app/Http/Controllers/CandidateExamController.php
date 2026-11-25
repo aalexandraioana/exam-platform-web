@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\MembershipStatus;
 use App\Http\Resources\AttemptResource;
 use App\Support\Attempts\Sealer;
 use App\Support\Attempts\Starter;
@@ -20,39 +21,49 @@ class CandidateExamController extends Controller
             ->with(['attempts' => fn ($q) => $q->where('candidate_id', $candidate->id), 'items.topic'])
             ->orderByRaw('available_from IS NULL, available_from')->orderBy('id')->get();
 
-        return response()->json(['server_time' => now()->toIso8601String(), 'exams' => $exams->map(function ($exam) {
-            $state = Starter::state($exam);
-            $open = $exam->attempts->first(fn ($a) => in_array($a->status, Starter::OPEN, true));
-            $used = $exam->attempts->count();
+        // The dashboard's empty states: no class, a request waiting, or no exam yet (P7a).
+        $requests = $candidate->memberships()->selectRaw('status, count(*) as n')->groupBy('status')->pluck('n', 'status');
 
-            return [
-                'id' => $exam->id,
-                'title' => $exam->title,
-                'description' => $exam->description,
-                'duration_minutes' => $exam->duration_minutes,
-                'available_from' => $exam->available_from?->toIso8601String(),
-                'available_until' => $exam->available_until?->toIso8601String(),
-                'max_attempts' => $exam->max_attempts,
-                'attempts_used' => $used,
-                'state' => $state,
-                'open_attempt_id' => $open?->id,
-                'open_attempt' => $open ? [
-                    'id' => $open->id,
-                    'started_at' => $open->started_at->toIso8601String(),
-                    'expires_at' => $open->expires_at->toIso8601String(),
-                ] : null,
-                // D-019: "submitted, awaiting grading" until results are published.
-                'submitted' => $exam->attempts->contains(fn ($a) => ! in_array($a->status, Starter::OPEN, true)),
-                // Q-069: only the topics; Items with "any" topic add none.
-                'topics' => $exam->items->pluck('topic.name')->filter()->unique()->values()->all(),
-                'item_counts' => [
-                    'subject_1' => $exam->items->where('section.value', 'subject_1')->count(),
-                    'subject_2' => $exam->items->where('section.value', 'subject_2')->count(),
-                ],
-                'can_start' => $state === 'open' && ! $open && $used < $exam->max_attempts,
-                'results_published' => $exam->results_published_at !== null,
-            ];
-        })]);
+        return response()->json([
+            'server_time' => now()->toIso8601String(),
+            'classes' => [
+                'accepted' => (int) ($requests[MembershipStatus::Accepted->value] ?? 0),
+                'pending' => (int) ($requests[MembershipStatus::Pending->value] ?? 0),
+            ],
+            'exams' => $exams->map(function ($exam) {
+                $state = Starter::state($exam);
+                $open = $exam->attempts->first(fn ($a) => in_array($a->status, Starter::OPEN, true));
+                $used = $exam->attempts->count();
+
+                return [
+                    'id' => $exam->id,
+                    'title' => $exam->title,
+                    'description' => $exam->description,
+                    'duration_minutes' => $exam->duration_minutes,
+                    'available_from' => $exam->available_from?->toIso8601String(),
+                    'available_until' => $exam->available_until?->toIso8601String(),
+                    'max_attempts' => $exam->max_attempts,
+                    'attempts_used' => $used,
+                    'state' => $state,
+                    'open_attempt_id' => $open?->id,
+                    'open_attempt' => $open ? [
+                        'id' => $open->id,
+                        'started_at' => $open->started_at->toIso8601String(),
+                        'expires_at' => $open->expires_at->toIso8601String(),
+                    ] : null,
+                    // D-019: "submitted, awaiting grading" until results are published.
+                    'submitted' => $exam->attempts->contains(fn ($a) => ! in_array($a->status, Starter::OPEN, true)),
+                    // Q-069: only the topics; Items with "any" topic add none.
+                    'topics' => $exam->items->pluck('topic.name')->filter()->unique()->values()->all(),
+                    'item_counts' => [
+                        'subject_1' => $exam->items->where('section.value', 'subject_1')->count(),
+                        'subject_2' => $exam->items->where('section.value', 'subject_2')->count(),
+                    ],
+                    'can_start' => $state === 'open' && ! $open && $used < $exam->max_attempts,
+                    'results_published' => $exam->results_published_at !== null,
+                ];
+            }),
+        ]);
     }
 
     public function start(Request $request, int $id): JsonResponse

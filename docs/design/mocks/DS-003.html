@@ -39,6 +39,7 @@
       <button type="button" class="mock-btn active" data-state-btn="s-success">Cu examene</button>
       <button type="button" class="mock-btn" data-state-btn="s-empty">Fără examene</button>
       <button type="button" class="mock-btn" data-state-btn="s-noclass">Fără clasă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-waiting">Cerere în așteptare</button>
       <button type="button" class="mock-btn" data-state-btn="s-join">Cod de clasă</button>
       <button type="button" class="mock-btn" data-state-btn="s-join-err">Cod greșit</button>
       <button type="button" class="mock-btn" data-state-btn="s-join-declined">Cerere refuzată</button>
@@ -65,11 +66,11 @@
 </header>
 
 <main class="page">
-  <div class="page-head" data-show="s-success s-empty s-noclass s-error s-long s-join s-join-err s-join-declined s-join-sent">
+  <div class="page-head" data-show="s-success s-empty s-noclass s-waiting s-error s-long s-join s-join-err s-join-declined s-join-sent">
     <div class="stack-sm">
       <h1 class="t-display">Tablou de bord</h1>
       <p class="secondary" data-show="s-success s-error s-long s-join s-join-err s-join-declined s-join-sent">Examenele publicate pentru clasele tale.</p>
-      <p class="secondary" data-show="s-empty s-noclass">Nu ai niciun examen programat acum.</p>
+      <p class="secondary" data-show="s-empty s-noclass s-waiting">Nu ai niciun examen programat acum.</p>
     </div>
     <button type="button" class="btn btn-primary" data-show="s-success s-error s-long s-join s-join-err s-join-declined s-join-sent"><i data-icon="plus" class="sm"></i>Am un cod de clasă</button>
   </div>
@@ -168,6 +169,13 @@
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
     <h2 class="t-h2">Niciun examen disponibil</h2>
     <p class="secondary" style="max-width: 480px;">Examinatorul nu a publicat încă un examen pentru clasa ta. Examenele noi apar aici.</p>
+  </div>
+  <div class="empty" data-show="s-waiting">
+    <!-- A join request waits for the Examiner (classes.pending > 0, none accepted) -->
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <h2 class="t-h2">Cererea ta așteaptă examinatorul</h2>
+    <p class="secondary" style="max-width: 480px;">După ce examinatorul îți acceptă cererea de intrare în clasă, examenele publicate apar aici. Dacă durează, vorbește cu el.</p>
+    <button class="btn"><i data-icon="plus" class="sm"></i>Am alt cod de clasă</button>
   </div>
   <div class="empty" data-show="s-noclass">
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>

@@ -80,6 +80,7 @@
 - Q-069 · Which labels does an exam card on the Candidate dashboard show? · _answered_
 - Q-070 · Does P7 include Subject II photos and the submitted-exams table? · _answered_
 - Q-071 · Is P7 built in one piece? · _answered_
+- Q-072 · How many items does the exam room show at once? · _answered_
 
 ---
 
@@ -522,3 +523,10 @@
 - **Blocks:** P7
 - **Context:** P7 covers two screens, an offline-safe answer queue, a server-synced timer, API additions, mock additions and the catalog's refresh and lost-connection tests.
 - **Answer:** Split in four, built in order before the 30 Nov pilot: P7a dashboard (DS-003, join dialog, exam-list API additions), P7b exam room reading and answering (DS-004 additions, inputs, navigation, navigator, mark for review, direct saving), P7c timer and submit, P7d offline and resume (answer queue, resume, Playwright refresh and lost-connection tests). (Answered 2026-11-25; first in three, then P7b split further.)
+
+## Q-072 · How many items does the exam room show at once?
+- **Status:** answered
+- **Date:** 2026-11-25
+- **Blocks:** P7b (DS-004)
+- **Context:** The approved DS-004 mock shows items 3 and 4 together in Subject I but item 8 alone in Subject II.
+- **Answer:** One item per screen, in both Subjects; "← Itemul n" / "Itemul n →" move between items and the navigator jumps to any item. (Answered 2026-11-25.)

@@ -67,3 +67,65 @@ it('is for Candidates only', function () {
 
     $this->getJson('/api/candidate/exams')->assertForbidden()->assertJsonPath('code', 'forbidden_role');
 });
+
+// P7a · what the dashboard cards need (Q-069, D-019).
+
+it('lists the distinct topics of the exam\'s Items, none for "any"', function () {
+    $s = attemptSetup();
+    $angles = App\Models\Topic::factory()->for($s['examiner'], 'examiner')->create(['name' => 'Unghiuri']);
+    $ratios = App\Models\Topic::factory()->for($s['examiner'], 'examiner')->create(['name' => 'Rapoarte']);
+    $items = $s['exam']->items()->get();
+    $items[0]->forceFill(['topic_id' => $ratios->id])->save();
+    $items[1]->forceFill(['topic_id' => $angles->id])->save();
+    $items[2]->forceFill(['topic_id' => $ratios->id])->save();
+    signInAs($s['candidate']);
+
+    $topics = $this->getJson('/api/candidate/exams')->assertOk()->json('exams.0.topics');
+    expect($topics)->toEqualCanonicalizing(['Rapoarte', 'Unghiuri']);
+
+    $other = attemptSetup(); // all Items "any"
+    signInAs($other['candidate']);
+    $this->getJson('/api/candidate/exams')->assertJsonPath('exams.0.topics', []);
+});
+
+it('counts the Items per Subject and gives the server time', function () {
+    $this->freezeSecond();
+    $s = attemptSetup();
+    $s['exam']->items()->where('position', 3)->update(['section' => 'subject_2']);
+    signInAs($s['candidate']);
+
+    $this->getJson('/api/candidate/exams')->assertOk()
+        ->assertJsonPath('server_time', now()->toIso8601String())
+        ->assertJsonPath('exams.0.item_counts', ['subject_1' => 2, 'subject_2' => 1]);
+});
+
+it('gives the open Attempt\'s times and says when an Attempt was submitted', function () {
+    $this->freezeSecond();
+    $s = attemptSetup(['max_attempts' => 2]);
+    signInAs($s['candidate']);
+    $this->getJson('/api/candidate/exams')->assertJsonPath('exams.0.open_attempt', null)->assertJsonPath('exams.0.submitted', false);
+
+    $id = $this->postJson("/api/candidate/exams/{$s['exam']->id}/attempts")->json('attempt.id');
+    $this->getJson('/api/candidate/exams')
+        ->assertJsonPath('exams.0.open_attempt.id', $id)
+        ->assertJsonPath('exams.0.open_attempt.started_at', now()->toIso8601String())
+        ->assertJsonPath('exams.0.open_attempt.expires_at', now()->addMinutes(50)->toIso8601String())
+        ->assertJsonPath('exams.0.submitted', false);
+
+    $this->postJson("/api/attempts/{$id}/submit")->assertOk();
+    $this->getJson('/api/candidate/exams')
+        ->assertJsonPath('exams.0.open_attempt', null)
+        ->assertJsonPath('exams.0.submitted', true)
+        ->assertJsonPath('exams.0.can_start', true);
+});
+
+it('counts a sealed Attempt as submitted', function () {
+    $s = attemptSetup();
+    App\Models\Attempt::factory()->create([
+        'exam_id' => $s['exam']->id, 'candidate_id' => $s['candidate']->id,
+        'started_at' => now()->subHours(2), 'expires_at' => now()->subHour(),
+    ]);
+    signInAs($s['candidate']);
+
+    $this->getJson('/api/candidate/exams')->assertJsonPath('exams.0.submitted', true)->assertJsonPath('exams.0.can_start', false);
+});

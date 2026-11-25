@@ -101,3 +101,11 @@ function signInAs(User $user): void
     app('auth')->forgetGuards();
     test()->withToken($user->createToken('spa')->plainTextToken);
 }
+
+/** Starts an Attempt through the API as the setup's Candidate (P6b) and returns its id. */
+function startAttempt(array $s): int
+{
+    signInAs($s['candidate']);
+
+    return test()->postJson("/api/candidate/exams/{$s['exam']->id}/attempts")->assertCreated()->json('attempt.id');
+}

@@ -84,11 +84,23 @@ export default function ExamRoomPage() {
     endingStarted.current = true
     setEnding(true)
     void (async () => {
-      await saving.flushAll()
+      // Within the Grace Period (D-004) the waiting answers keep being sent (P7d).
+      const until = Date.parse(attempt.accepts_answers_until ?? attempt.expires_at)
+      let unsaved = await saving.flushAll()
+      while (unsaved.length > 0 && Date.now() + offset < until) {
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        unsaved = await saving.retryAll()
+      }
       const submitted = await submitAttempt(attemptId).catch(() => null)
       setEnd({ attempt: submitted ?? { ...attempt, submitted_at: attempt.expires_at }, sealed: true })
     })()
-  }, [attempt, end, left, attemptId, saving])
+  }, [attempt, end, left, attemptId, saving, offset])
+
+  // The Attempt has ended: the device copy of its answers is no longer needed (P7d).
+  const { clearDevice } = saving
+  useEffect(() => {
+    if (end) clearDevice()
+  }, [end, clearDevice])
 
   // A save refused as too late (or the Attempt submitted elsewhere): show how it ended.
   useEffect(() => {
@@ -168,7 +180,8 @@ export default function ExamRoomPage() {
   }
 
   let status = null
-  if (saving.state === 'saving') status = <span>{t('room.saving')}</span>
+  if (saving.offline) status = <span className="inline-flex items-center gap-2 text-warning"><WifiOff className="size-icon-sm" aria-hidden="true" />{t('room.offlineStatus', { count: saving.waitingCount })}</span>
+  else if (saving.state === 'saving') status = <span>{t('room.saving')}</span>
   else if (saving.state === 'failed') status = <span className="inline-flex items-center gap-2 text-warning"><CircleAlert className="size-icon-sm" aria-hidden="true" />{t('room.unsaved')}</span>
   else if (saving.state === 'saved' && saving.savedAt) {
     const seconds = Math.max(0, Math.round((now - saving.savedAt) / 1000))
@@ -226,7 +239,10 @@ export default function ExamRoomPage() {
         <div className="hidden desktop:grid">{navigator()}</div>
 
         <div className="grid gap-4 desktop:col-span-2">
-          {saving.failed.length > 0 && !locked && (
+          {saving.offline && !locked && (
+            <Alert variant="warning" icon={WifiOff} role="alert"><Trans i18nKey="room.offline" components={strong} /></Alert>
+          )}
+          {saving.failed.length > 0 && !saving.offline && !locked && (
             <Alert variant="error" icon={CircleAlert} role="alert" action={<Button onClick={saving.retry}>{t('errors.retry')}</Button>}>
               <Trans i18nKey="room.notSaved" values={{ number: saving.failed[0] }} components={strong} />
             </Alert>

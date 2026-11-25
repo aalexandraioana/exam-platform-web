@@ -686,6 +686,9 @@
       "doneTitle": "Exam submitted",
       "doneText": "You submitted the exam “{{title}}” at {{time}}. Your answers reached the server ({{answered}} of {{total}} items answered).",
       "resultsLater": "Results appear on the dashboard once the examiner publishes them."
-    }
+    },
+    "offlineStatus_one": "Offline · {{count}} answer waiting",
+    "offlineStatus_other": "Offline · {{count}} answers waiting",
+    "offline": "<strong>The connection dropped.</strong> You can carry on: your answers are kept on this device and sent by themselves when the connection is back. Don't close the page. The timer keeps running on the server."
   }
 }

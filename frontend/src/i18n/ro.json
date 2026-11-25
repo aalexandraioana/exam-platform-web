@@ -705,6 +705,10 @@
       "doneTitle": "Examen predat",
       "doneText": "Ai predat examenul „{{title}}” la {{time}}. Răspunsurile tale au ajuns pe server ({{answered}} din {{total}} itemi cu răspuns).",
       "resultsLater": "Rezultatele apar în tabloul de bord după ce examinatorul le publică."
-    }
+    },
+    "offlineStatus_one": "Fără conexiune · {{count}} răspuns în așteptare",
+    "offlineStatus_few": "Fără conexiune · {{count}} răspunsuri în așteptare",
+    "offlineStatus_other": "Fără conexiune · {{count}} de răspunsuri în așteptare",
+    "offline": "<strong>Conexiunea s-a întrerupt.</strong> Poți continua: răspunsurile sunt păstrate pe acest dispozitiv și se trimit singure când revine conexiunea. Nu închide pagina. Cronometrul continuă pe server."
   }
 }

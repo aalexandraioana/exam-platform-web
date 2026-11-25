@@ -68,6 +68,8 @@ export interface Attempt {
   attempt_number: number
   started_at: string
   expires_at: string
+  /** The deadline plus the Grace Period (D-004): late answers are accepted until then (P7d). */
+  accepts_answers_until?: string
   server_time: string
   submitted_at: string | null
   auto_submitted: boolean

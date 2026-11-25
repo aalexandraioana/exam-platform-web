@@ -107,3 +107,91 @@ it('starts a second Attempt after the first is submitted, when allowed (D-012)',
 
     $this->postJson("/api/candidate/exams/{$s['exam']->id}/attempts")->assertCreated()->assertJsonPath('attempt.attempt_number', 2);
 });
+
+// The mapping P6c grades with: shown position k is original position option_order[k-1]. Checked by
+// option text, over many seeds, for every way a key can depend on the order.
+
+/** The shown positions of the original positions in $original, through $order. */
+function shownPositionsOf(array $order, array $original): array
+{
+    $shown = array_map(fn (int $p) => array_search($p, $order, true) + 1, $original);
+    sort($shown);
+
+    return $shown;
+}
+
+it('maps the single choice key to the option the Candidate sees, for every seed', function () {
+    $s = attemptSetup();
+    $single = $s['questions']['single'];
+
+    foreach (range(1, 60) as $seed) {
+        $row = collect(Starter::snapshot($s['exam']->fresh(), $seed))->firstWhere('question_id', $single->id);
+        $order = $row['expected_answer']['option_order'];
+        $key = $row['expected_answer']['answer_key'];
+        [$shownCorrect] = shownPositionsOf($order, [$key['correct']]);
+
+        expect($row['question_snapshot']['options'][$shownCorrect - 1])->toBe('36'); // the correct text
+        foreach ($row['question_snapshot']['options'] as $k => $text) {
+            expect($text)->toBe($key['options'][$order[$k] - 1]);
+        }
+    }
+});
+
+it('maps every correct option of a multiple choice question, for every seed', function () {
+    $s = attemptSetup();
+    $multiple = poolQuestion($s['examiner'], $s['exam']->items()->first()->pool, [
+        'type' => 'multiple_choice', 'competence_id' => $s['exam']->items()->first()->competence_id,
+        'topic_id' => $s['questions']['single']->topic_id, 'statement' => 'Care numere sunt divizibile cu 3?',
+        'answer_key' => ['options' => ['12', '14', '21', '25', '30'], 'correct' => [1, 3, 5]],
+    ]);
+    $s['exam']->items()->where('position', 1)->update(['type' => 'multiple_choice']);
+
+    foreach (range(1, 60) as $seed) {
+        $row = collect(Starter::snapshot($s['exam']->fresh(), $seed))->firstWhere('question_id', $multiple->id);
+        $order = $row['expected_answer']['option_order'];
+        $shown = shownPositionsOf($order, $row['expected_answer']['answer_key']['correct']);
+        $texts = array_map(fn ($k) => $row['question_snapshot']['options'][$k - 1], $shown);
+        sort($texts);
+
+        expect($texts)->toBe(['12', '21', '30']);
+    }
+});
+
+it('fills options from values before shuffling, so the key still points at the right text', function () {
+    $s = attemptSetup();
+    $withValues = poolQuestion($s['examiner'], $s['exam']->items()->first()->pool, [
+        'type' => 'single_choice', 'competence_id' => $s['exam']->items()->first()->competence_id,
+        'topic_id' => $s['questions']['single']->topic_id, 'statement' => 'Cât face {a} + {b}?',
+        'answer_key' => ['options' => ['{s}', '{d}', '{m}'], 'correct' => 1],
+        'parameters' => ['values' => [
+            'a' => ['random' => ['min' => 2, 'max' => 9]], 'b' => ['random' => ['min' => 1, 'max' => 9]],
+            's' => ['calculated' => 'a + b'], 'd' => ['calculated' => 'a - b'], 'm' => ['calculated' => 'a · b'],
+        ]],
+    ]);
+    $s['questions']['single']->forceFill(['status' => 'draft'])->save(); // leaves only this one for Item 1 (status isn't fillable)
+
+    foreach (range(1, 60) as $seed) {
+        $row = collect(Starter::snapshot($s['exam']->fresh(), $seed))->firstWhere('question_id', $withValues->id);
+        $v = $row['drawn_values'];
+        [$shownCorrect] = shownPositionsOf($row['expected_answer']['option_order'], [1]);
+
+        expect($row['question_snapshot']['statement'])->toBe("Cât face {$v['a']} + {$v['b']}?")
+            ->and($row['question_snapshot']['options'][$shownCorrect - 1])->toBe((string) ($v['a'] + $v['b']))
+            ->and($row['question_snapshot']['options'])->toEqualCanonicalizing([(string) $v['s'], (string) $v['d'], (string) $v['m']]);
+    }
+});
+
+it('computes the drawn answer from the drawn values, independent of any order, and leaves true/false as is', function () {
+    $s = attemptSetup();
+
+    foreach (range(1, 30) as $seed) {
+        $rows = collect(Starter::snapshot($s['exam']->fresh(), $seed));
+        $values = $rows->firstWhere('question_id', $s['questions']['values']->id);
+        $dual = $rows->firstWhere('question_id', $s['questions']['dual']->id);
+
+        expect($values['expected_answer']['answer'])->toBe($values['drawn_values']['a'] + 10)
+            ->and($values['expected_answer']['option_order'])->toBeNull()
+            ->and($dual['expected_answer'])->toEqual(['answer_key' => ['correct' => true], 'option_order' => null, 'answer' => null])
+            ->and($dual['question_snapshot']['options'])->toBe([]);
+    }
+});

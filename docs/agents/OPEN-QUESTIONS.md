@@ -75,7 +75,7 @@
 - Q-064 · Where do Candidates see an Exam's description?
 - Q-065 · Is P6 built in one piece? · _answered_
 - Q-066 · Which object storage provider holds Subject II photos in production?
-- Q-067 · Who sets up the external cron that seals expired Attempts? · _investigating_
+- Q-067 · Who sets up the external cron that seals expired Attempts? · _answered_
 - Q-068 · What separates the "started" and "in_progress" Attempt states? · _investigating_
 
 ---
@@ -483,11 +483,12 @@
 - **Context:** D-048 left the provider to P6. Candidates: Supabase Storage (1 GB free, S3-compatible) or Cloudflare R2 (10 GB free, may need a payment card). The free tiers are to be verified before choosing. The user creates the account; its keys go in Render's settings, never in the repo. Needed by about 28 Nov for the 30 Nov pilot (Q-039).
 
 ## Q-067 · Who sets up the external cron that seals expired Attempts?
-- **Status:** investigating
+- **Status:** answered
 - **Date:** 2026-11-25
 - **Blocks:** P6b (sealing endpoint), P12 (pilot)
 - **Context:** D-044 needs a free external service calling a secret-protected endpoint every few minutes; reads seal expired Attempts anyway, so correctness doesn't depend on it.
 - **Proposed answer:** P6b builds the endpoint (secret in Render's settings); after deploy the user creates a free cron-job.org job calling it every 5 minutes, with steps provided.
+- **Answer:** Yes, cron-job.org; it can be removed later (sealing on read keeps results correct without it). Chosen also to keep the free API awake for the pilot, the demo and the evaluation. (Answered 2026-11-25.)
 
 ## Q-068 · What separates the "started" and "in_progress" Attempt states?
 - **Status:** investigating

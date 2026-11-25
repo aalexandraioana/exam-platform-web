@@ -364,8 +364,9 @@ Autosave. Request: `{ "answer": …, "marked_for_review": false, "version": 3 }`
   version is higher than the stored one; a repeated or late one changes nothing and still answers
   `200` with what is stored and `"applied": false`. That makes retries safe in any order.
 - `answer` by type: true/false a boolean; single choice the shown position (1-based); multiple
-  choice distinct shown positions; short answer a string (≤ 200); a Subject II problem its
-  step-by-step text (≤ 10 000); `null` clears it.
+  choice distinct shown positions, at least one (`[]` is refused); short answer a string (≤ 200);
+  a Subject II problem its step-by-step text (≤ 10 000); only `null` clears it.
+- `version`: 1 to 2147483647. `marked_for_review` is optional; left out, the stored mark stays.
 
 `200 { "answer": { … }, "applied": true, "status": "in_progress" }`. `422 invalid_answer` (wrong
 shape) or validation errors; `409 time_up` (past the deadline + grace: the Attempt is sealed);

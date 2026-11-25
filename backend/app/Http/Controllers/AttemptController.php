@@ -28,14 +28,14 @@ class AttemptController extends Controller
         $data = $request->validate([
             'answer' => ['present'],
             'marked_for_review' => ['sometimes', 'boolean'],
-            'version' => ['required', 'integer', 'min:1'],
+            'version' => ['required', 'integer', 'min:1', 'max:'.Saver::VERSION_MAX],
         ]);
         if (! Saver::fits($item, $data['answer'])) {
             return response()->json(['code' => 'invalid_answer', 'message' => 'The answer does not fit this question.'], 422);
         }
 
         try {
-            $saved = Saver::save($attempt, $item, $data['answer'], (bool) ($data['marked_for_review'] ?? false), (int) $data['version']);
+            $saved = Saver::save($attempt, $item, $data['answer'], isset($data['marked_for_review']) ? (bool) $data['marked_for_review'] : null, (int) $data['version']);
         } catch (AttemptClosed $closed) {
             return response()->json(['code' => $closed->reason, 'message' => 'The attempt takes no more answers.'], 409);
         }

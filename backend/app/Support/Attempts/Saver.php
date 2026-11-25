@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\DB;
  */
 final class Saver
 {
+    /** `answers.version` is a 4-byte integer. */
+    public const VERSION_MAX = 2_147_483_647;
+
     public const SHORT_ANSWER_MAX = 200;
 
     public const PROBLEM_TEXT_MAX = 10_000;
@@ -42,8 +45,12 @@ final class Saver
         };
     }
 
-    /** @return array{answer: Answer, applied: bool, status: AttemptStatus} */
-    public static function save(Attempt $attempt, AttemptItem $item, mixed $answer, bool $marked, int $version): array
+    /**
+     * `$marked` null keeps the stored review mark.
+     *
+     * @return array{answer: Answer, applied: bool, status: AttemptStatus}
+     */
+    public static function save(Attempt $attempt, AttemptItem $item, mixed $answer, ?bool $marked, int $version): array
     {
         $result = DB::transaction(function () use ($attempt, $item, $answer, $marked, $version) {
             $attempt = Attempt::lockForUpdate()->findOrFail($attempt->id);
@@ -62,7 +69,7 @@ final class Saver
             $applied = $version > $row->version;
             if ($applied) {
                 $row->answer = ['value' => $answer];
-                $row->marked_for_review = $marked;
+                $row->marked_for_review = $marked ?? $row->marked_for_review;
                 $row->version = $version;
                 $row->saved_at = now();
                 $row->save();

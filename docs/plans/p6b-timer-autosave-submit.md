@@ -19,7 +19,7 @@ service with a command, a schedule and a protected endpoint. Backend only.
 - **Autosave** (catalog: "idempotent, handles answers arriving out of order, a version per answer"):
   `PUT /attempts/{id}/items/{position}/answer` with `{answer, marked_for_review, version}`.
   - The client numbers its saves per answer (1, 2, 3…). The server stores a save only when its
-    `version` is higher than the stored one, in one conditional update, so a repeated or late
+    `version` is higher than the stored one (compared under the Attempt's row lock), so a repeated or late
     save changes nothing and still answers 200 with what is stored (`applied: false`).
   - The answer's shape is checked per type: true/false a boolean, single choice a shown position,
     multiple choice distinct shown positions, short answer a string (≤ 200 characters), a Subject II
@@ -68,7 +68,7 @@ Rejected:
 | add | `backend/config/attempts.php` | `grace_seconds` (env `ATTEMPT_GRACE_SECONDS`, 30) |
 | edit | `backend/app/Models/Attempt.php` | `moveTo()`, `acceptsAnswersUntil()` |
 | edit | `backend/app/Http/Controllers/AttemptController.php`, `CandidateExamController.php`, `Resources/AttemptResource.php` | save, submit, seal on read, answers in the read |
-| add | `backend/app/Http/Controllers/CronController.php`, `app/Console/Commands/SealExpiredAttempts.php` | endpoint and command |
+| add | `backend/app/Http/Controllers/CronController.php` | endpoint (the command is defined in `routes/console.php`, as built) |
 | edit | `backend/routes/api.php`, `routes/console.php` | routes; schedule every 5 minutes |
 | edit | `backend/.env.example` | `ATTEMPT_GRACE_SECONDS=30`, `CRON_SECRET=` (empty; the real one only in Render's settings) |
 | add | `backend/tests/Unit/Attempts/TransitionsTest.php`, `tests/Feature/Attempts/SaveTest.php`, `SubmitTest.php`, `SealTest.php` | below |

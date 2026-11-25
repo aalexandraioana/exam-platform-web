@@ -24,6 +24,9 @@ services:
         value: "false"
       - key: APP_KEY
         sync: false
+      # D-044, Q-067: the external cron's secret for POST /api/cron/seal-expired; set in the dashboard.
+      - key: CRON_SECRET
+        sync: false
       - key: LOG_CHANNEL
         value: stderr
       - key: SESSION_DRIVER

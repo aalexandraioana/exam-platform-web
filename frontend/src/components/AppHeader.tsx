@@ -20,8 +20,9 @@ const navigation: Partial<Record<Role, { label: string; links: { to: string; lab
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `flex min-h-hit items-center rounded-md px-3 font-medium no-underline ${isActive ? 'bg-primary-subtle text-accent' : 'text-secondary'} ${focusRing}`
 
-// mock.css `.app-header`. Signed out (auth screens) the toggles stay visible on mobile; with a
-// nav (DS-013) the nav, toggles and log-out move into the menu drawer below tablet width.
+// mock.css `.app-header`. Signed out (auth screens) the toggles stay visible on mobile; signed in,
+// the nav (if the role has one, DS-013), toggles and log-out move into the menu drawer below tablet
+// width (DS-003 for the Candidate, who has no nav).
 export default function AppHeader() {
   const { t, i18n } = useTranslation()
   const { user: signedIn, logout } = useAuth()
@@ -33,7 +34,7 @@ export default function AppHeader() {
   const nav = user ? navigation[user.role] : undefined
   const links = nav?.links ?? []
   const hasNav = links.length > 0
-  const desktopOnly = hasNav ? 'hidden tablet:inline-flex' : ''
+  const desktopOnly = user ? 'hidden tablet:inline-flex' : ''
 
   function toggleTheme() {
     const next = theme === 'dark' ? 'light' : 'dark'
@@ -84,10 +85,10 @@ export default function AppHeader() {
         {user && (
           <Button onClick={() => logout()} className={desktopOnly}>
             <LogOut className="size-icon-sm" aria-hidden="true" />
-            <span className={hasNav ? '' : 'sr-only tablet:not-sr-only'}>{t('header.logout')}</span>
+            {t('header.logout')}
           </Button>
         )}
-        {hasNav && (
+        {user && (
           <Button iconOnly aria-label={t('nav.open')} className="tablet:hidden" onClick={() => setMenuOpen(true)}>
             <Menu className="size-icon-md" aria-hidden="true" />
           </Button>
@@ -104,10 +105,14 @@ export default function AppHeader() {
             </Button>
           }
         >
-          <nav aria-label={t(nav!.label)} className="grid gap-1">
-            {navLinks}
-          </nav>
-          <hr className="border-subtle" />
+          {hasNav && (
+            <>
+              <nav aria-label={t(nav!.label)} className="grid gap-1">
+                {navLinks}
+              </nav>
+              <hr className="border-subtle" />
+            </>
+          )}
           <div className="grid gap-2">
             <span className="font-medium">{t('header.language')}</span>
             <div>{languageToggle}</div>

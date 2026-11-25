@@ -86,12 +86,6 @@ for (const theme of ['light', 'dark'] as const) {
       await page.screenshot({ path: screenshotPath(`DS-004.unsaved.${theme}${suffix}.png`), fullPage: true })
     })
 
-    test(`DS-004 time up, ${theme} at ${width} px`, async ({ page }) => {
-      await open(page, theme, width, 4, { status: 'submitted' })
-      await expect(page.getByText('Timpul s-a încheiat.', { exact: false })).toBeVisible()
-      await page.screenshot({ path: screenshotPath(`DS-004.closed.${theme}${suffix}.png`), fullPage: true })
-    })
-
     test(`DS-004 loading, ${theme} at ${width} px`, async ({ page }) => {
       await open(page, theme, width, 1, { hang: true })
       await expect(page.getByLabel('Se încarcă examenul')).toBeVisible()

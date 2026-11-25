@@ -216,24 +216,23 @@ describe('ExamRoomPage (DS-004, P7b)', () => {
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('locks the answers when the time is up', async () => {
+  it('ends on the time-up screen when a save is refused as too late (P7c replaces the P7b notice)', async () => {
     api(undefined, () => json(409, { code: 'time_up', message: 'x' }))
     renderRoom()
 
     fireEvent.click(await screen.findByRole('radio', { name: 'a) 32' }))
 
-    const notice = await screen.findByText('Timpul s-a încheiat.', { exact: false })
-    expect(notice.closest('[role="status"]')).toHaveTextContent('nu le mai poți modifica')
-    expect(screen.getByRole('radio', { name: 'a) 32' })).toBeDisabled()
+    expect(await screen.findByRole('heading', { name: 'Timpul s-a încheiat' })).toBeInTheDocument()
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Mergi la tabloul de bord' })).toHaveAttribute('href', '/candidate')
   })
 
-  it('opens a submitted Attempt locked', async () => {
+  it('opens a sealed Attempt on its end screen, without the inputs (P7c)', async () => {
     api(json(200, { attempt: attempt({ status: 'submitted', submitted_at: '2026-11-25T10:50:00Z', auto_submitted: true }) }))
     renderRoom()
 
-    expect(await screen.findByText('Timpul s-a încheiat.', { exact: false })).toBeInTheDocument()
-    expect(screen.getByRole('radio', { name: 'b) 12' })).toBeDisabled()
+    expect(await screen.findByRole('heading', { name: 'Timpul s-a încheiat' })).toBeInTheDocument()
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   })
 
   it('shows loading, and goes back to the dashboard for an unknown Attempt', async () => {

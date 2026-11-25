@@ -5,14 +5,17 @@ import { GRADES, type Ref } from '../../../api/questions'
 import SelectField from '../../../components/SelectField'
 import TextField from '../../../components/TextField'
 import { focusRing } from '../../../components/styles'
+import { TextAreaField } from '../questions/ui'
 import { fromLocalInput, toLocalInput } from './format'
 
 // DS-008 "Setări" (D-012, D-015, D-021): every change is queued for autosave. Once published,
-// only the end of the window changes (Q-060).
+// only the title, the description and the end of the window change (Q-060).
 export default function SettingsCard({ exam, classes, onChange }: { exam: Exam; classes: Ref[]; onChange: (patch: ExamPatch) => void }) {
   const { t } = useTranslation()
   const locked = exam.status === 'published'
   const [form, setForm] = useState({
+    title: exam.title,
+    description: exam.description ?? '',
     grade_level: exam.grade_level ? String(exam.grade_level) : '',
     duration_minutes: exam.duration_minutes ? String(exam.duration_minutes) : '',
     available_from: toLocalInput(exam.available_from),
@@ -34,6 +37,31 @@ export default function SettingsCard({ exam, classes, onChange }: { exam: Exam; 
     <section aria-labelledby="settings-heading" className="grid gap-4 rounded-lg border border-subtle bg-surface p-6 shadow-subtle">
       <h2 id="settings-heading" className="text-h2">{t('exams.settings')}</h2>
       <div className="grid items-start gap-4 tablet:grid-cols-2">
+        <div className="tablet:col-span-2">
+          <TextField
+            id="exam-title"
+            label={t('exams.titleField')}
+            maxLength={255}
+            value={form.title}
+            error={form.title.trim() ? undefined : t('exams.problem.required.title')}
+            onChange={(e) => {
+              const value = e.target.value
+              setForm((f) => ({ ...f, title: value }))
+              // An empty title is never sent: the API requires one (C-005).
+              if (value.trim()) onChange({ title: value.trim() })
+            }}
+          />
+        </div>
+        <div className="tablet:col-span-2">
+          <TextAreaField
+            id="exam-description"
+            label={<>{t('exams.descriptionField')} <span className="font-normal text-secondary">{t('exams.optional')}</span></>}
+            rows={3}
+            maxLength={5000}
+            value={form.description}
+            onChange={(e) => set('description', e.target.value, { description: e.target.value.trim() ? e.target.value : null })}
+          />
+        </div>
         <SelectField id="exam-grade" label={t('exams.level')} help={t('exams.levelHelp')} disabled={locked} value={form.grade_level} onChange={(e) => set('grade_level', e.target.value, { grade_level: e.target.value ? Number(e.target.value) : null })}>
           <option value="">{t('exams.choose')}</option>
           {GRADES.map((g) => <option key={g} value={g}>{t(`bank.grade.${g}`)}</option>)}

@@ -560,6 +560,9 @@
     "previewTitle": "O extragere",
     "previewDrawn": "Întrebarea extrasă: {{code}} (una din {{count}} potrivite)",
     "previewValues": "{{values}} · răspuns așteptat {{answer}}",
-    "previewFailed": "Nu se poate face o extragere încă: nu toți itemii pot primi o întrebare proprie."
+    "previewFailed": "Nu se poate face o extragere încă: nu toți itemii pot primi o întrebare proprie.",
+    "titleField": "Titlu",
+    "descriptionField": "Descriere",
+    "optional": "(opțional)"
   }
 }

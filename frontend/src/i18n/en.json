@@ -549,6 +549,9 @@
     "previewTitle": "One draw",
     "previewDrawn": "Drawn question: {{code}} (one of {{count}} matching)",
     "previewValues": "{{values}} · expected answer {{answer}}",
-    "previewFailed": "A draw isn't possible yet: not every item can get its own question."
+    "previewFailed": "A draw isn't possible yet: not every item can get its own question.",
+    "titleField": "Title",
+    "descriptionField": "Description",
+    "optional": "(optional)"
   }
 }

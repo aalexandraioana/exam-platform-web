@@ -76,7 +76,7 @@
 - Q-065 · Is P6 built in one piece? · _answered_
 - Q-066 · Which object storage provider holds Subject II photos in production?
 - Q-067 · Who sets up the external cron that seals expired Attempts? · _answered_
-- Q-068 · What separates the "started" and "in_progress" Attempt states? · _investigating_
+- Q-068 · What separates the "started" and "in_progress" Attempt states? · _answered_
 
 ---
 
@@ -491,9 +491,10 @@
 - **Answer:** Yes, cron-job.org; it can be removed later (sealing on read keeps results correct without it). Chosen also to keep the free API awake for the pilot, the demo and the evaluation. (Answered 2026-11-25.)
 
 ## Q-068 · What separates the "started" and "in_progress" Attempt states?
-- **Status:** investigating
+- **Status:** answered
 - **Date:** 2026-11-25
 - **Blocks:** P6b (state machine)
 - **Context:** The schema has started, in_progress, submitted, graded.
 - **Proposed answer:** "started" when the Attempt is created, "in_progress" from the first saved answer, so the Examiner can tell who opened the exam but answered nothing.
+- **Answer:** Yes, as proposed (confirmed in the P6b plan, 2026-11-25).
 

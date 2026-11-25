@@ -23,7 +23,8 @@ designs:
   - id: DS-004
     name: exam-room
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/pages/candidate/ExamRoomPage.tsx
     description: Active exam taking room with authoritative server countdown, autosave sync indicator, question drawer navigation, Subject 1 & 2 inputs, and submission modal; P7b additions drawn 2026-11-25: one item per screen (Q-072), multiple choice, true/false, short answer, Subject II text only (Q-070; photos in P6d), save failed, time up until P7c
   - id: DS-005
     name: exam-results-review
@@ -97,7 +98,7 @@ designs:
     kind: component
     status: implemented
     source: frontend/src/components/Modal.tsx
-    description: Dialog (or alertdialog for a confirmation that can't be undone) and right-side drawer (mock.css .modal, mock.js .drawer) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes, scrolls when taller than the screen; its buttons sit in `DialogActions` (mock.css .modal-actions): equal halves of the row, a third action (delete) on a row of its own (2026-11-25)
+    description: Dialog (or alertdialog for a confirmation that can't be undone), right-side drawer (mock.css .modal, mock.js .drawer) and bottom sheet (DS-004 navigator on phones) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes, scrolls when taller than the screen; its buttons sit in `DialogActions` (mock.css .modal-actions): equal halves of the row, a third action (delete) on a row of its own (2026-11-25)
   - id: DS-018
     name: auth-change-password
     kind: screen

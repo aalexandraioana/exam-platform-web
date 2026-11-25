@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
-import type { Attempt } from '../../api/attempts'
+import type { AnswerValue, Attempt } from '../../api/attempts'
 import { setToken } from '../../api/client'
 import { AuthProvider } from '../../auth/AuthProvider'
 import { candidate, json, mockApi } from '../../test/mockApi'
@@ -28,7 +28,7 @@ function renderRoom(item = 1) {
   )
 }
 
-const saved = (value: unknown, version: number, marked = false) => ({ value, version, marked_for_review: marked, saved_at: '2026-11-25T10:01:00Z' })
+const saved = (value: AnswerValue, version: number, marked = false) => ({ value, version, marked_for_review: marked, saved_at: '2026-11-25T10:01:00Z' })
 
 function attempt(overrides: Partial<Attempt> = {}): Attempt {
   return {
@@ -54,7 +54,7 @@ function api(read = json(200, { attempt: attempt() }), put?: (body: Put, positio
     routes[`PUT /attempts/12/items/${position}/answer`] = (init: RequestInit) => {
       const body = JSON.parse(String(init.body)) as Put
       puts.push({ ...body, position })
-      return put ? put(body, position) : json(200, { answer: saved(body.answer, body.version, body.marked_for_review), applied: true, status: 'in_progress' })
+      return put ? put(body, position) : json(200, { answer: saved(body.answer as AnswerValue, body.version, body.marked_for_review), applied: true, status: 'in_progress' })
     }
   }
   mockApi(routes)
@@ -94,7 +94,7 @@ describe('ExamRoomPage (DS-004, P7b)', () => {
   it('sends one save per item at a time, then only the latest', async () => {
     let release: (() => void) | null = null
     const puts = api(undefined, (body) => new Promise((resolve) => {
-      release = () => resolve(json(200, { answer: saved(body.answer, body.version), applied: true, status: 'in_progress' }))
+      release = () => resolve(json(200, { answer: saved(body.answer as AnswerValue, body.version), applied: true, status: 'in_progress' }))
     }))
     renderRoom(3)
 
@@ -201,7 +201,7 @@ describe('ExamRoomPage (DS-004, P7b)', () => {
 
   it('says when an answer was not saved and retries with the latest version', async () => {
     let fail = true
-    const puts = api(undefined, (body) => (fail ? json(500, {}) : json(200, { answer: saved(body.answer, body.version), applied: true, status: 'in_progress' })))
+    const puts = api(undefined, (body) => (fail ? json(500, {}) : json(200, { answer: saved(body.answer as AnswerValue, body.version), applied: true, status: 'in_progress' })))
     renderRoom()
 
     fireEvent.click(await screen.findByRole('radio', { name: 'a) 32' }))
@@ -241,7 +241,7 @@ describe('ExamRoomPage (DS-004, P7b)', () => {
     renderRoom()
 
     expect(screen.getByLabelText('Se încarcă examenul')).toBeInTheDocument()
-    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/candidate'))
-    expect(screen.getByText('dashboard')).toBeInTheDocument()
+    expect(await screen.findByText('dashboard')).toBeInTheDocument()
+    expect(screen.getByTestId('where')).toHaveTextContent(/^\/candidate$/)
   })
 })

@@ -1,0 +1,107 @@
+import { fileURLToPath } from 'node:url'
+import { expect, test, type Page } from '@playwright/test'
+
+// DS-004 screenshots (P7b) with the mock's sample data, compared by eye with
+// docs/design/mocks/DS-004.html.
+const me = { id: 7, first_name: 'Andrei', last_name: 'Ionescu', name: 'Andrei Ionescu', email: 'andrei@exemplu.ro', role: 'candidate', is_active: true, must_change_password: false }
+const saved = (value: unknown, marked = false) => ({ value, version: 1, marked_for_review: marked, saved_at: '2026-11-25T10:01:00Z' })
+const s1 = (position: number, type: string, statement: string, options: string[], answer: unknown = null) => ({ position, section: 'subject_1', type, points: 5, statement, options, answer })
+
+function attempt(status = 'in_progress') {
+  return {
+    id: 12, exam: { id: 4, title: 'Evaluare Unitatea 3: Rapoarte și proporții' }, status, attempt_number: 1,
+    started_at: new Date().toISOString(), expires_at: new Date(Date.now() + 50 * 60_000).toISOString(), server_time: new Date().toISOString(),
+    submitted_at: null, auto_submitted: false,
+    items: [
+      s1(1, 'single_choice', 'Care este cel mai mare număr întreg negativ?', ['−1', '0', '−10', '1'], saved(1)),
+      s1(2, 'short_answer', 'Calculează 25% din 80.', [], saved('20')),
+      s1(3, 'single_choice', 'Alege răspunsul corect. Trei sferturi din numărul 48 reprezintă:', ['12', '36', '32', '64'], saved(2)),
+      s1(4, 'short_answer', 'Completează spațiul punctat. Numerele a și b sunt direct proporționale cu 3 și 5, iar a + b = 64. Numărul a este egal cu …', [], saved('24', true)),
+      s1(5, 'multiple_choice', 'Care dintre numerele de mai jos sunt divizibile cu 3?', ['21', '14', '30', '25', '12'], null),
+      s1(6, 'dual_choice', 'Orice număr întreg negativ este mai mic decât 0.', [], saved(true)),
+      { position: 7, section: 'subject_2', type: 'structured_problem', points: 20, statement: 'Un pătrat are latura de 6 cm.\na) Află perimetrul. (10 puncte)\nb) Află aria. (10 puncte)', options: [], answer: saved('a) P = 4 · 6 = 24 cm') },
+      { position: 8, section: 'subject_2', type: 'structured_problem', points: 20, statement: 'În triunghiul ABC, AB = AC și ∢A = 40°.\na) Calculează măsura unghiului B. (8 puncte)\nb) Arată că bisectoarea unghiului A este și mediana laturii BC. (12 puncte)', options: [], answer: saved('a) ∢B = ∢C = 70°') },
+      { position: 9, section: 'subject_2', type: 'structured_problem', points: 20, statement: 'Un dreptunghi are lungimea de 3 ori mai mare decât lățimea, iar perimetrul de 64 cm.\na) Află dimensiunile dreptunghiului. (10 puncte)\nb) Calculează aria lui. (10 puncte)', options: [], answer: null },
+    ],
+  }
+}
+
+async function mockApi(page: Page, { status = 'in_progress', saveFails = false, hang = false } = {}) {
+  await page.route('http://localhost:8000/api/**', (route) => {
+    const request = route.request()
+    const path = new URL(request.url()).pathname
+    const reply = (code: number, body: unknown) => route.fulfill({ status: code, contentType: 'application/json', body: JSON.stringify(body) })
+    if (path.endsWith('/user')) return reply(200, { user: me })
+    if (request.method() === 'PUT') {
+      if (saveFails) return reply(500, { message: 'x' })
+      const body = request.postDataJSON()
+      return reply(200, { answer: { value: body.answer, version: body.version, marked_for_review: body.marked_for_review, saved_at: new Date().toISOString() }, applied: true, status: 'in_progress' })
+    }
+    if (hang) return new Promise(() => {})
+    return reply(200, { attempt: attempt(status) })
+  })
+}
+
+function screenshotPath(name: string) {
+  return fileURLToPath(new URL(`../../docs/design/screens/${name}`, import.meta.url))
+}
+
+async function open(page: Page, theme: string, width: number, item: number, options = {}) {
+  await mockApi(page, options)
+  await page.addInitScript((t) => {
+    localStorage.setItem('auth_token', '1|e2e')
+    localStorage.setItem('theme', t)
+  }, theme)
+  await page.setViewportSize({ width, height: 900 })
+  await page.goto(`/candidate/attempts/12?item=${item}`)
+}
+
+const states = [
+  { name: 'DS-004', item: 3, ready: 'Trei sferturi' },
+  { name: 'DS-004.short', item: 4, ready: 'Completează spațiul' },
+  { name: 'DS-004.multiple', item: 5, ready: 'Care dintre numerele' },
+  { name: 'DS-004.dual', item: 6, ready: 'Orice număr întreg' },
+  { name: 'DS-004.text', item: 9, ready: 'Un dreptunghi' },
+]
+
+for (const theme of ['light', 'dark'] as const) {
+  for (const width of [1440, 320]) {
+    const suffix = width === 320 ? '.320' : ''
+
+    for (const state of states) {
+      test(`${state.name} ${theme} at ${width} px`, async ({ page }) => {
+        await open(page, theme, width, state.item)
+        await expect(page.getByText(state.ready, { exact: false })).toBeVisible()
+        await page.screenshot({ path: screenshotPath(`${state.name}.${theme}${suffix}.png`), fullPage: true })
+      })
+    }
+
+    test(`DS-004 save failed, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 4, { saveFails: true })
+      await page.getByLabel('Răspunsul tău').fill('25')
+      await page.getByRole('button', { name: /Itemul 5/ }).click()
+      await page.getByRole('button', { name: /Itemul 4/ }).click()
+      await expect(page.getByRole('alert')).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.unsaved.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 time up, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 4, { status: 'submitted' })
+      await expect(page.getByText('Timpul s-a încheiat.', { exact: false })).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.closed.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 loading, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 1, { hang: true })
+      await expect(page.getByLabel('Se încarcă examenul')).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.loading.${theme}${suffix}.png`), fullPage: true })
+    })
+  }
+
+  test(`DS-004 navigator sheet, ${theme} on a phone`, async ({ page }) => {
+    await open(page, theme, 320, 3)
+    await page.getByRole('button', { name: /Itemi 7\/9/ }).click()
+    await expect(page.getByRole('dialog', { name: 'Itemi' })).toBeVisible()
+    await page.screenshot({ path: screenshotPath(`DS-004.navigator.${theme}.320.png`) })
+  })
+}

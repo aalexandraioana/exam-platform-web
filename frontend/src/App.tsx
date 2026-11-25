@@ -14,6 +14,7 @@ import SessionLoading from './components/SessionLoading'
 const ChangePasswordPage = lazy(() => import('./pages/ChangePasswordPage'))
 const UsersPage = lazy(() => import('./pages/admin/UsersPage'))
 const DashboardPage = lazy(() => import('./pages/candidate/DashboardPage'))
+const ExamRoomPage = lazy(() => import('./pages/candidate/ExamRoomPage'))
 const ClassesPage = lazy(() => import('./pages/examiner/ClassesPage'))
 const ExamBuilderPage = lazy(() => import('./pages/examiner/ExamBuilderPage'))
 const ExamsPage = lazy(() => import('./pages/examiner/ExamsPage'))
@@ -50,8 +51,7 @@ export default function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/change-password" element={<ChangePasswordPage />} />
               <Route path="/candidate" element={<ProtectedRoute role="candidate"><DashboardPage /></ProtectedRoute>} />
-              {/* The exam room comes in P7b; until then its address goes back to the dashboard. */}
-              <Route path="/candidate/attempts/:id" element={<Navigate to="/candidate" replace />} />
+              <Route path="/candidate/attempts/:id" element={<ProtectedRoute role="candidate"><ExamRoomPage /></ProtectedRoute>} />
               <Route path="/examiner" element={<ProtectedRoute role="examiner"><ClassesPage /></ProtectedRoute>} />
               <Route path="/examiner/questions" element={<ProtectedRoute role="examiner"><QuestionBankPage /></ProtectedRoute>} />
               <Route path="/examiner/exams" element={<ProtectedRoute role="examiner"><ExamsPage /></ProtectedRoute>} />

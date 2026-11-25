@@ -37,3 +37,47 @@ export function listCandidateExams(): Promise<CandidateExams> {
 export async function startAttempt(examId: number): Promise<{ id: number }> {
   return (await apiFetch<{ attempt: { id: number } }>(`/candidate/exams/${examId}/attempts`, { method: 'POST' })).attempt
 }
+
+export type ItemType = 'single_choice' | 'multiple_choice' | 'dual_choice' | 'short_answer' | 'structured_problem'
+/** Choices are the shown positions (1-based); true/false a boolean; text a string; null cleared. */
+export type AnswerValue = number | number[] | boolean | string | null
+
+export interface SavedAnswer {
+  value: AnswerValue
+  version: number
+  marked_for_review: boolean
+  saved_at: string | null
+}
+
+export interface AttemptItem {
+  position: number
+  section: 'subject_1' | 'subject_2'
+  type: ItemType
+  points: number
+  statement: string
+  /** In the order shown to this Candidate (D-045). */
+  options: string[]
+  answer: SavedAnswer | null
+}
+
+export interface Attempt {
+  id: number
+  exam: { id: number; title: string }
+  status: 'started' | 'in_progress' | 'submitted' | 'graded'
+  attempt_number: number
+  started_at: string
+  expires_at: string
+  server_time: string
+  submitted_at: string | null
+  auto_submitted: boolean
+  items: AttemptItem[]
+}
+
+export async function getAttempt(id: number): Promise<Attempt> {
+  return (await apiFetch<{ attempt: Attempt }>(`/attempts/${id}`)).attempt
+}
+
+/** Autosave (C-006): stored only when `version` is higher than the stored one. */
+export function saveAnswer(id: number, position: number, body: { answer: AnswerValue; marked_for_review: boolean; version: number }) {
+  return apiFetch<{ answer: SavedAnswer; applied: boolean; status: Attempt['status'] }>(`/attempts/${id}/items/${position}/answer`, { method: 'PUT', body })
+}

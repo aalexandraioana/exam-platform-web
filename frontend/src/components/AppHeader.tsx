@@ -1,7 +1,7 @@
 import { BookOpenText, LogOut, Menu, Moon, Sun, X } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, NavLink } from 'react-router'
+import { Link, NavLink, useLocation } from 'react-router'
 import type { Role } from '../api/auth'
 import { useAuth } from '../auth/context'
 import { currentTheme, setTheme, type Theme } from '../theme'
@@ -31,6 +31,7 @@ export default function AppHeader() {
   const user = signedIn?.must_change_password ? null : signedIn
   const [theme, setThemeState] = useState<Theme>(currentTheme)
   const [menuOpen, setMenuOpen] = useState(false)
+  const { pathname } = useLocation()
   const nav = user ? navigation[user.role] : undefined
   const links = nav?.links ?? []
   const hasNav = links.length > 0
@@ -63,6 +64,9 @@ export default function AppHeader() {
       {t(link.label)}
     </NavLink>
   ))
+
+  // DS-004: the exam room has its own header.
+  if (pathname.startsWith('/candidate/attempts/')) return null
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-4 border-b border-subtle bg-surface px-4 tablet:px-6">

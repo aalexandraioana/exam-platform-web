@@ -6,8 +6,9 @@ interface ModalProps {
   title: ReactNode
   onClose: () => void
   children: ReactNode
-  /** `drawer`: a panel on the right edge (the mobile menu, mock.js `.drawer`). */
-  variant?: 'dialog' | 'drawer'
+  /** `drawer`: a panel on the right edge (the mobile menu, mock.js `.drawer`); `sheet`: a panel
+   * at the bottom (DS-004's navigator on phones). */
+  variant?: 'dialog' | 'drawer' | 'sheet'
   /** Shown next to the title, e.g. the drawer's close button. */
   titleAction?: ReactNode
   /** `alertdialog` for a confirmation of something that can't be undone. */
@@ -47,15 +48,16 @@ export default function Modal({ title, onClose, children, variant = 'dialog', ti
   }
 
   const drawer = variant === 'drawer'
+  const sheet = variant === 'sheet'
   const heading = (
-    <h2 id={titleId} className={drawer ? 'text-h3' : 'text-h2'}>
+    <h2 id={titleId} className={drawer || sheet ? 'text-h3' : 'text-h2'}>
       {title}
     </h2>
   )
   return (
     <div
-      className={`fixed inset-0 z-50 bg-overlay ${drawer ? 'flex justify-end' : 'grid place-items-center p-4'}`}
-      onClick={(event) => event.target === event.currentTarget && drawer && onClose()}
+      className={`fixed inset-0 z-50 bg-overlay ${drawer ? 'flex justify-end' : sheet ? 'flex items-end' : 'grid place-items-center p-4'}`}
+      onClick={(event) => event.target === event.currentTarget && (drawer || sheet) && onClose()}
     >
       <div
         ref={dialogRef}
@@ -66,7 +68,9 @@ export default function Modal({ title, onClose, children, variant = 'dialog', ti
         className={
           drawer
             ? 'grid h-full w-full max-w-auth content-start gap-4 overflow-y-auto bg-surface p-4 shadow-modal'
-            : 'grid max-h-full w-full max-w-auth gap-4 overflow-y-auto rounded-lg bg-surface p-6 shadow-modal'
+            : sheet
+              ? 'grid max-h-full w-full content-start gap-4 overflow-y-auto rounded-t-lg bg-surface p-4 shadow-modal'
+              : 'grid max-h-full w-full max-w-auth gap-4 overflow-y-auto rounded-lg bg-surface p-6 shadow-modal'
         }
       >
         {titleAction ? (

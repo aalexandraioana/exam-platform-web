@@ -23,7 +23,7 @@ designs:
   - id: DS-004
     name: exam-room
     kind: screen
-    status: draft
+    status: approved
     description: Active exam taking room with authoritative server countdown, autosave sync indicator, question drawer navigation, Subject 1 & 2 inputs, and submission modal; P7b additions drawn 2026-11-25: one item per screen (Q-072), multiple choice, true/false, short answer, Subject II text only (Q-070; photos in P6d), save failed, time up until P7c
   - id: DS-005
     name: exam-results-review

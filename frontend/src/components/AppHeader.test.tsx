@@ -165,3 +165,20 @@ describe('AppHeader for a Candidate', () => {
     expect(within(drawer).getByRole('button', { name: 'Ieși din cont' })).toBeInTheDocument()
   })
 })
+
+describe('AppHeader in the exam room', () => {
+  it('is not shown: DS-004 has its own header', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: candidate }) })
+    const { container } = render(
+      <MemoryRouter initialEntries={['/candidate/attempts/12']}>
+        <AuthProvider>
+          <AppHeader />
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(container.querySelector('header')).toBeNull()
+  })
+})

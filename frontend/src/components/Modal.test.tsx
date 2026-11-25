@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { useState } from 'react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import Modal from './Modal'
 
 function Harness() {
@@ -45,5 +45,17 @@ describe('Modal', () => {
 
     fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Tab', shiftKey: true })
     expect(last).toHaveFocus()
+  })
+})
+
+describe('Modal as a bottom sheet (DS-004 navigator on phones)', () => {
+  it('sits at the bottom and closes from its backdrop', () => {
+    const onClose = vi.fn()
+    render(<Modal title="Itemi" variant="sheet" onClose={onClose}><button type="button">1</button></Modal>)
+
+    const sheet = screen.getByRole('dialog', { name: 'Itemi' })
+    expect(sheet.parentElement).toHaveClass('items-end')
+    fireEvent.click(sheet.parentElement!)
+    expect(onClose).toHaveBeenCalled()
   })
 })

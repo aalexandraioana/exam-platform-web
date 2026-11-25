@@ -1,6 +1,6 @@
 # Plan — P7c: timer and submit (DS-004)
 
-Status: proposed 2026-11-25 · Covers D-004, D-012, D-019, D-021, D-044 · Q-071 · Builds on P6b
+Status: approved 2026-11-25 (C-006 addition, D-044, the assumptions) · Covers D-004, D-012, D-019, D-021, D-044 · Q-071 · Builds on P6b
 (server timer, submit, sealing), P7b (the exam room, same branch) · next: P7d (offline, resume)
 
 ## Size

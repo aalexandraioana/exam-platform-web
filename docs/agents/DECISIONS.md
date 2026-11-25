@@ -327,7 +327,7 @@
 ## D-044 · Expired Attempts sealed on read and by a pinged scheduled job
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-25
 - **Rule:** Any request that touches an Attempt, or lists Attempts, first seals those past their duration plus the Grace Period (D-004, D-021). A Laravel scheduled job seals the rest; a free external cron service triggers it every few minutes through a secret-protected endpoint, which also keeps the free API awake. Correctness never depends on the job running on time.
 - **Why:** Render's cron jobs and workers are paid and the free API sleeps after 15 minutes idle, while the catalog requires a scheduled job that submits expired Attempts even when the browser is closed.
 - **Rejected:** A Render cron job or worker (paid); sealing only on read (no real scheduled job).

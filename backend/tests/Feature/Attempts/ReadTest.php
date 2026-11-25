@@ -36,3 +36,12 @@ it('keeps each Attempt private to its Candidate', function () {
     signInAs(User::factory()->candidate()->create());
     $this->getJson("/api/attempts/{$id}")->assertNotFound();
 });
+
+it('gives the exam\'s attempt limit, for "Încercarea 1 din 1" (P7c)', function () {
+    $s = attemptSetup(['max_attempts' => 3]);
+    signInAs($s['candidate']);
+    $id = $this->postJson("/api/candidate/exams/{$s['exam']->id}/attempts")->json('attempt.id');
+
+    $this->getJson("/api/attempts/{$id}")->assertOk()->assertJsonPath('attempt.exam.max_attempts', 3);
+    $this->postJson("/api/attempts/{$id}/submit")->assertOk()->assertJsonPath('attempt.exam.max_attempts', 3);
+});

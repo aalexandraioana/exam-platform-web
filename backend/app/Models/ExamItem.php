@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Difficulty;
+use App\Enums\QuestionType;
 use App\Enums\Section;
 use Database\Factories\ExamItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -11,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/** One blueprint Item: it fixes section, competence, difficulty and points, and draws from a pool (D-043). */
-#[Fillable(['position', 'section', 'competence_id', 'difficulty', 'points', 'pool_id'])]
+/** One blueprint Item: section, points, pool, competence and difficulty, plus a type and a topic (null = any) (D-057). */
+#[Fillable(['position', 'section', 'competence_id', 'difficulty', 'type', 'topic_id', 'points', 'pool_id'])]
 class ExamItem extends Model
 {
     /** @use HasFactory<ExamItemFactory> */
@@ -24,6 +25,7 @@ class ExamItem extends Model
             'position' => 'integer',
             'section' => Section::class,
             'difficulty' => Difficulty::class,
+            'type' => QuestionType::class,
             'points' => 'decimal:2',
         ];
     }
@@ -38,6 +40,12 @@ class ExamItem extends Model
     public function competence(): BelongsTo
     {
         return $this->belongsTo(Competence::class);
+    }
+
+    /** @return BelongsTo<Topic, $this> */
+    public function topic(): BelongsTo
+    {
+        return $this->belongsTo(Topic::class);
     }
 
     /** @return BelongsTo<Pool, $this> */

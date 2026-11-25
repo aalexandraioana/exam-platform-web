@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BankListController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\ExamController;
+use App\Http\Controllers\ExamItemController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\QuestionController;
@@ -57,6 +59,20 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/topics', [BankListController::class, 'storeTopic']);
                 Route::get('/pools', [BankListController::class, 'pools']);
                 Route::post('/pools', [BankListController::class, 'storePool']);
+
+                // C-005 (docs/API.md → Exams): the Examiner's exams and their blueprint.
+                Route::get('/exams', [ExamController::class, 'index']);
+                Route::post('/exams', [ExamController::class, 'store']);
+                Route::get('/exams/{id}', [ExamController::class, 'show'])->whereNumber('id');
+                Route::patch('/exams/{id}', [ExamController::class, 'update'])->whereNumber('id');
+                Route::delete('/exams/{id}', [ExamController::class, 'destroy'])->whereNumber('id');
+                Route::post('/exams/{id}/publish', [ExamController::class, 'publish'])->whereNumber('id');
+                Route::get('/exams/{id}/preview', [ExamController::class, 'preview'])->whereNumber('id');
+                Route::post('/exams/{id}/match', [ExamItemController::class, 'match'])->whereNumber('id');
+                Route::post('/exams/{id}/items', [ExamItemController::class, 'store'])->whereNumber('id');
+                Route::put('/exams/{id}/items/order', [ExamItemController::class, 'order'])->whereNumber('id');
+                Route::patch('/exams/{id}/items/{itemId}', [ExamItemController::class, 'update'])->whereNumber(['id', 'itemId']);
+                Route::delete('/exams/{id}/items/{itemId}', [ExamItemController::class, 'destroy'])->whereNumber(['id', 'itemId']);
             });
 
             Route::post('/memberships', [MembershipController::class, 'join'])->middleware('role:candidate');

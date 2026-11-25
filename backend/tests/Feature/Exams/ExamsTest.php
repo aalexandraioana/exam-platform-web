@@ -3,6 +3,7 @@
 use App\Models\Competence;
 use App\Models\Exam;
 use App\Models\Pool;
+use App\Models\Question;
 use App\Models\SchoolClass;
 use App\Models\Topic;
 use App\Models\User;
@@ -25,7 +26,7 @@ function examSetup(int $subjectOne = 6, int $subjectTwo = 2): array
         poolQuestion($examiner, $pool, ['competence_id' => $competence->id, 'topic_id' => $topic->id]);
     }
     foreach (range(1, $subjectTwo) as $i) {
-        $q = App\Models\Question::factory()->subjectTwo()->ready()->for($examiner, 'examiner')->create([
+        $q = Question::factory()->subjectTwo()->ready()->for($examiner, 'examiner')->create([
             'competence_id' => $competence->id, 'topic_id' => $topic->id, 'difficulty' => 'medium', 'grade_level' => 6, 'points' => 30,
         ]);
         $pool->questions()->attach($q);
@@ -193,7 +194,7 @@ it('deletes a draft and keeps a published exam (Q-061)', function () {
 
 it('previews a draw: every Item its own question, values filled, expected answer', function () {
     $s = examSetup();
-    $values = App\Models\Question::factory()->ready()->for($s['examiner'], 'examiner')->create([
+    $values = Question::factory()->ready()->for($s['examiner'], 'examiner')->create([
         'competence_id' => $s['competence']->id, 'topic_id' => $s['topic']->id, 'difficulty' => 'hard', 'grade_level' => 6,
         'statement' => 'Cât face {a} + {b}?', 'answer_key' => ['kind' => 'number'],
         'parameters' => ['values' => ['a' => ['random' => ['min' => 1, 'max' => 9]], 'b' => ['fixed' => 10]], 'answer' => 'a + b'],

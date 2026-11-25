@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * An Exam and its blueprint (D-043). Publishing and releasing results set their timestamps through
+ * An Exam and its blueprint (D-057). Publishing and releasing results set their timestamps through
  * trusted code only, after P5's and P8's checks.
  */
 #[Fillable([
@@ -57,6 +57,11 @@ class Exam extends Model
     public function classes(): BelongsToMany
     {
         return $this->belongsToMany(SchoolClass::class, 'class_exam', 'exam_id', 'class_id');
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published_at !== null;
     }
 
     /** @return HasMany<Attempt, $this> */

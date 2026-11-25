@@ -259,6 +259,60 @@ any). Copy: `{ "code" }` → `201 { "question" }` in your bank, with the entry's
 `copied_from` set; the entry's competence (by code) and topic (by name) are added to your lists if
 missing. `422`: `code` as for a new question. `404` for anything that isn't a library entry.
 
+## Exams
+
+Bearer token of an **active Examiner** with a current password; own exams only (another Examiner's
+exam answers `404`). C-005, screen DS-008.
+
+An exam:
+```json
+{ "id": 4, "title": "Evaluare Unitatea 3", "status": "draft", "grade_level": 6,
+  "available_from": "2026-11-30T08:00:00+00:00", "available_until": "2026-11-30T14:00:00+00:00", "published_at": null,
+  "classes": [{ "id": 3, "name": "Clasa a VI-a A" }], "item_count": 8,
+  "description": null, "duration_minutes": 50, "max_attempts": 1, "score_policy": "highest", "class_ids": [3],
+  "items": [{ "id": 11, "position": 1, "section": "subject_1", "points": 5, "pool": { "id": 2, "name": "Proporții – mediu" },
+              "competence": { "id": 3, "code": "C2", "description": "…" }, "difficulty": "medium",
+              "type": null, "topic": null, "eligible": 3 }],
+  "checks": { "totals": { "subject_1": 30, "subject_2": 60 }, "problems": [], "warnings": [] } }
+```
+The list (`GET /exams`) carries the first line of fields. An Item's `type` and `topic` null mean
+"any"; `eligible` counts the Ready questions it may draw (D-057).
+
+`checks.problems` block publishing: `required` (field `title`, `grade_level`, `duration_minutes`,
+`classes`), `subject_total` (`section`, `sum`, `expected`: 30 for Subject I, 60 for Subject II,
+D-005), `item_incomplete` (`item` position, field `points`, `pool`, `competence`, `difficulty`),
+`no_distinct_draw` (`items`: the positions that can't all get their own question). `checks.warnings`:
+`competence_missing` for a competence with a Ready question at this grade level but no Item (Q-063).
+
+### GET /api/exams · POST /api/exams
+List, newest first. Create: `{ "title" }` → `201 { "exam" }`, a draft. `422`: `title` (`required`).
+
+### GET /api/exams/{id} · PATCH /api/exams/{id} · DELETE /api/exams/{id}
+`PATCH` takes any of: `title`, `description`, `grade_level`, `duration_minutes`, `available_from`,
+`available_until`, `max_attempts`, `score_policy` (`highest`, `latest`), `class_ids` (the full list).
+`422`: a field `invalid` (another Examiner's class; `available_until` not after `available_from`).
+Once published, only `title`, `description` and `available_until` change; anything else is
+`409 exam_published` (Q-060). `DELETE`: a draft only, `204`; `409 exam_published` (Q-061).
+
+### POST /api/exams/{id}/items · PATCH, DELETE /api/exams/{id}/items/{itemId} · PUT /api/exams/{id}/items/order
+Item fields: `section` (required when adding), `points`, `pool_id`, `competence_id`, `difficulty`,
+`type`, `topic_id`. Order: `{ "item_ids": [...] }`, every Item once. Each answers with the whole
+exam (`201` when adding, else `200`). `422`: a field `invalid` (another Examiner's pool, competence or
+topic; a type that doesn't fit the Subject; an order that isn't every Item). `409 exam_published`.
+
+### POST /api/exams/{id}/match
+Unsaved Item criteria → `200 { "count": 3 }`, the live count of the Item dialog.
+
+### POST /api/exams/{id}/publish
+`200 { "exam" }` with `status: published`. `422`: `status: not_publishable` with `problems`;
+`409 exam_published`. Publishing can't be undone (Q-061).
+
+### GET /api/exams/{id}/preview
+One draw as a Candidate would get it, with a random seed: `200 { "items": [{ item_id, position,
+question_id, code, competence, eligible, values, statement, options, answer }] }`, every Item its own
+question, named values filled (`answer`: the drawn answer, for questions with values). `422 status:
+not_publishable` when no draw exists. Options are shuffled per Attempt in P6 (D-045), not here.
+
 ## Administrator
 
 Bearer token of an **active Administrator** with a current password; other roles get `403 forbidden_role`.

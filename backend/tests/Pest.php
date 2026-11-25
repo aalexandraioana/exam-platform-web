@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Pool;
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -30,9 +33,9 @@ function hasIndexOn(string $table, string $columns): bool
 }
 
 /** A Ready short answer in $pool, matching the defaults of blueprintItem(). */
-function poolQuestion(\App\Models\User $examiner, \App\Models\Pool $pool, array $attributes = []): \App\Models\Question
+function poolQuestion(User $examiner, Pool $pool, array $attributes = []): Question
 {
-    $question = \App\Models\Question::factory()->ready()->for($examiner, 'examiner')->create(array_merge([
+    $question = Question::factory()->ready()->for($examiner, 'examiner')->create(array_merge([
         'difficulty' => 'easy', 'grade_level' => 6, 'answer_key' => ['kind' => 'number', 'value' => '1'],
     ], $attributes));
     $pool->questions()->attach($question);

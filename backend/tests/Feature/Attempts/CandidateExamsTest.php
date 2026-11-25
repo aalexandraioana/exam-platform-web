@@ -5,6 +5,7 @@ use App\Models\Attempt;
 use App\Models\ClassMembership;
 use App\Models\Exam;
 use App\Models\SchoolClass;
+use App\Models\Topic;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -72,8 +73,8 @@ it('is for Candidates only', function () {
 
 it('lists the distinct topics of the exam\'s Items, none for "any"', function () {
     $s = attemptSetup();
-    $angles = App\Models\Topic::factory()->for($s['examiner'], 'examiner')->create(['name' => 'Unghiuri']);
-    $ratios = App\Models\Topic::factory()->for($s['examiner'], 'examiner')->create(['name' => 'Rapoarte']);
+    $angles = Topic::factory()->for($s['examiner'], 'examiner')->create(['name' => 'Unghiuri']);
+    $ratios = Topic::factory()->for($s['examiner'], 'examiner')->create(['name' => 'Rapoarte']);
     $items = $s['exam']->items()->get();
     $items[0]->forceFill(['topic_id' => $ratios->id])->save();
     $items[1]->forceFill(['topic_id' => $angles->id])->save();
@@ -121,7 +122,7 @@ it('gives the open Attempt\'s times and says when an Attempt was submitted', fun
 
 it('counts a sealed Attempt as submitted', function () {
     $s = attemptSetup();
-    App\Models\Attempt::factory()->create([
+    Attempt::factory()->create([
         'exam_id' => $s['exam']->id, 'candidate_id' => $s['candidate']->id,
         'started_at' => now()->subHours(2), 'expires_at' => now()->subHour(),
     ]);

@@ -1,6 +1,6 @@
 # Plan — P7b: exam room, reading and answering (DS-004)
 
-Status: proposed 2026-11-25 · Covers D-019, D-022, D-033, D-038, D-045, D-060 · Q-070, Q-071, Q-072
+Status: approved 2026-11-25 (C-006, D-045, D-060, the assumptions) · Covers D-019, D-022, D-033, D-038, D-045, D-060 · Q-070, Q-071, Q-072
 answered · Builds on C-006 (read, autosave) and P7a (same branch) · next: P7c (timer, submit),
 P7d (offline, resume)
 

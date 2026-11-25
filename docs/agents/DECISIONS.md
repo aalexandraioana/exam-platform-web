@@ -337,7 +337,7 @@
 ## D-045 · Answer options shuffled per Attempt
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-25
 - **Rule:** The options of dual, single and multiple choice questions are shuffled per Attempt, and the order is stored with the Attempt so review and contests show exactly what the Candidate saw. Items keep the blueprint order (D-043).
 - **Why:** Delivers the catalog's random order without changing item numbers in grading or the shared difficulty curve.
 - **Rejected:** Also shuffling Items within each Subject; no shuffling.
@@ -486,7 +486,7 @@
 ## D-060 · Maths as plain text in JetBrains Mono
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-25
 - **Rule:** Question statements, options, answers and barem steps are plain text with Unicode symbols (∢ ° ² ³ · : ≤ ≥ ≠ −), shown in JetBrains Mono (DESIGN.md `font-math`) wherever maths appears. No rendering library (KaTeX, MathJax) and no markup.
 - **Why:** The user's answer to Q-032; no new dependency before the 3 Dec deadline, and questions stay easy to type.
 - **Rejected:** KaTeX (a new dependency, and `\frac{3}{4}` to type in questions); MathJax.

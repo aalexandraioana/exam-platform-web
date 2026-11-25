@@ -1,6 +1,6 @@
 # Plan — P7a: Candidate dashboard (DS-003) and joining a class
 
-Status: proposed 2026-11-25 · Covers D-015, D-019, D-022, D-028, D-038 · Q-064, Q-069, Q-070,
+Status: approved 2026-11-25 (C-006 additions, D-028, C-002, the assumptions) · Covers D-015, D-019, D-022, D-028, D-038 · Q-064, Q-069, Q-070,
 Q-071 answered · Builds on C-006 (P6a–P6c), C-002 (joining) · next: P7b, P7c, P7d
 
 ## Size

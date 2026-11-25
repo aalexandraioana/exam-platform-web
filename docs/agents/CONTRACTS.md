@@ -33,7 +33,7 @@
 ## C-002 · Classes API: classes and join requests
 - **Status:** approved
 - **Date:** 2026-11-24 (set password removed per docs/plans/p3b-admin-password-reset.md)
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-25
 - **Provider:** `backend/` (routes/api.php, ClassController, MembershipController)
 - **Consumers:** `frontend/src/api/classes.ts`; P7's Candidate dashboard will consume `POST /api/memberships`
 - **Interface:** [docs/API.md → Classes](../API.md#classes) and [Joining a class](../API.md#joining-a-class-candidate): Examiner-only class routes (list, create, show, rename, new join code, delete, accept/decline; setting a password moved to C-003, D-054); Candidate objects carry `first_name`, `last_name` and `name`, rosters sorted by last name; Candidate `POST /api/memberships`; another Examiner's resources answer 404; 409 codes `already_decided`, `class_has_published_exam`.

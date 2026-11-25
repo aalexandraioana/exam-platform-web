@@ -31,6 +31,8 @@ export function useAnswers(attemptId: number, items: AttemptItem[] | null) {
   const waiting = useRef(new Set<number>())
   const timers = useRef<Record<number, ReturnType<typeof setTimeout>>>({})
   const locked = useRef(false)
+  const running = useRef(new Map<number, Promise<void>>())
+  const failedNow = useRef<number[]>([])
 
   // The saved answers are taken in the same render the Attempt arrives in (resume after a refresh).
   const [source, setSource] = useState<AttemptItem[] | null>(null)
@@ -46,35 +48,70 @@ export function useAnswers(attemptId: number, items: AttemptItem[] | null) {
 
   useEffect(() => () => Object.values(timers.current).forEach(clearTimeout), [])
 
-  const send = useCallback(async function send(position: number): Promise<void> {
-    if (locked.current) return
+  const markFailed = (position: number, failedNowToo: boolean) => {
+    failedNow.current = failedNowToo
+      ? (failedNow.current.includes(position) ? failedNow.current : [...failedNow.current, position])
+      : failedNow.current.filter((p) => p !== position)
+    setFailed(failedNow.current)
+  }
+
+  const send = useCallback(function send(position: number): Promise<void> {
+    if (locked.current) return Promise.resolve()
     if (inFlight.current.has(position)) {
       waiting.current.add(position)
-      return
+      return running.current.get(position) ?? Promise.resolve()
     }
     const local = latest.current[position]
     const version = (versions.current[position] ?? 0) + 1
     versions.current[position] = version
     inFlight.current.add(position)
     setBusy(inFlight.current.size)
-    try {
-      const result = await saveAnswer(attemptId, position, { answer: local.value, marked_for_review: local.marked, version })
-      versions.current[position] = Math.max(version, result.answer.version)
-      setFailed((list) => list.filter((p) => p !== position))
-      setSavedAt(Date.now())
-    } catch (error) {
-      if (error instanceof ApiError && (error.code === 'time_up' || error.code === 'attempt_submitted')) {
-        locked.current = true
-        setClosed(true)
-      } else {
-        setFailed((list) => (list.includes(position) ? list : [...list, position]))
+    const promise = (async () => {
+      try {
+        const result = await saveAnswer(attemptId, position, { answer: local.value, marked_for_review: local.marked, version })
+        versions.current[position] = Math.max(version, result.answer.version)
+        markFailed(position, false)
+        setSavedAt(Date.now())
+      } catch (error) {
+        if (error instanceof ApiError && (error.code === 'time_up' || error.code === 'attempt_submitted')) {
+          locked.current = true
+          setClosed(true)
+        } else {
+          markFailed(position, true)
+        }
+      } finally {
+        inFlight.current.delete(position)
+        running.current.delete(position)
+        setBusy(inFlight.current.size)
+        if (waiting.current.delete(position)) void send(position)
       }
-    } finally {
-      inFlight.current.delete(position)
-      setBusy(inFlight.current.size)
-      if (waiting.current.delete(position)) void send(position)
-    }
+    })()
+    running.current.set(position, promise)
+    return promise
   }, [attemptId])
+
+  /** Waits until nothing is on its way; returns the items whose answer is not saved. */
+  const settle = useCallback(async () => {
+    while (running.current.size > 0) await Promise.all([...running.current.values()])
+    return failedNow.current
+  }, [])
+
+  /** Before submitting or at 0: sends the typed answers still waiting, then settles. */
+  const flushAll = useCallback(async () => {
+    for (const key of Object.keys(timers.current)) {
+      const position = Number(key)
+      clearTimeout(timers.current[position])
+      delete timers.current[position]
+      void send(position)
+    }
+    return settle()
+  }, [send, settle])
+
+  /** Sends again every answer that failed, then settles. */
+  const retryAll = useCallback(async () => {
+    failedNow.current.forEach((position) => void send(position))
+    return settle()
+  }, [send, settle])
 
   const change = useCallback((position: number, next: Partial<LocalAnswer>, typed = false) => {
     if (locked.current) return
@@ -103,5 +140,5 @@ export function useAnswers(attemptId: number, items: AttemptItem[] | null) {
   const retry = useCallback(() => failed.forEach((position) => void send(position)), [failed, send])
 
   const state: SaveState = busy > 0 ? 'saving' : failed.length > 0 ? 'failed' : savedAt ? 'saved' : 'idle'
-  return { answers, change, flush, retry, state, savedAt, failed, closed }
+  return { answers, change, flush, flushAll, retry, retryAll, state, savedAt, failed, closed }
 }

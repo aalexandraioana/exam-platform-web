@@ -1,23 +1,38 @@
-import { ArrowLeft, ArrowRight, Check, CircleAlert, Info, List, WifiOff, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ArrowLeft, ArrowRight, Check, CircleAlert, Clock, EyeOff, Info, List, TriangleAlert, WifiOff, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
-import { getAttempt, type Attempt } from '../../api/attempts'
+import { useNavigate, useParams, useSearchParams } from 'react-router'
+import { getAttempt, submitAttempt, type Attempt } from '../../api/attempts'
 import { ApiError } from '../../api/client'
 import Alert from '../../components/Alert'
 import Button from '../../components/Button'
 import Modal from '../../components/Modal'
 import { focusRing } from '../../components/styles'
+import EndScreen from './exam/EndScreen'
 import ItemView from './exam/ItemView'
 import Navigator from './exam/Navigator'
+import SubmitDialog from './exam/SubmitDialog'
 import { isAnswered, useAnswers } from './exam/useAnswers'
+import { useCountdown } from './exam/useCountdown'
+import { clock } from './format'
 
 const strong = { strong: <strong /> }
-const secondaryLink = `inline-flex min-h-hit items-center justify-center gap-2 rounded-md border border-strong bg-surface px-4 py-2 font-medium text-primary no-underline hover:bg-surface-subtle ${focusRing}`
+const FIVE_MINUTES = 5 * 60_000
+const ONE_MINUTE = 60_000
+const hiddenKey = (id: number) => `exam-timer-hidden-${id}`
+
+function storedHidden(id: number): boolean {
+  try {
+    return localStorage.getItem(hiddenKey(id)) === '1'
+  } catch {
+    return false
+  }
+}
 
 // DS-004 · the exam room, reading and answering (P7b): one item per screen (Q-072), kept in the
-// address (?item=3) so a refresh stays on it. The timer and submitting come in P7c; keeping
-// unsent answers on the device in P7d.
+// address (?item=3) so a refresh stays on it. P7c: the countdown on the server's clock (D-004),
+// the notices, submitting, and at 0 the waiting answers are sent and the Attempt submitted; the
+// server seals it anyway (D-044). Keeping unsent answers on the device comes in P7d.
 export default function ExamRoomPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -28,12 +43,24 @@ export default function ExamRoomPage() {
   const [reload, setReload] = useState(0)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [now, setNow] = useState(() => Date.now())
+  const [offset, setOffset] = useState(0)
+  const [end, setEnd] = useState<{ attempt: Attempt; sealed: boolean } | null>(null)
+  const [ending, setEnding] = useState(false)
+  const [hidden, setHidden] = useState(() => storedHidden(attemptId))
+  const [dialog, setDialog] = useState<{ unsaved: number[]; busy: boolean; failed: boolean } | null>(null)
+  const endingStarted = useRef(false)
   const saving = useAnswers(attemptId, attempt?.items ?? null)
+  const left = useCountdown(attempt && !end ? attempt.expires_at : null, offset)
 
   useEffect(() => {
     let active = true
     getAttempt(attemptId).then(
-      (loaded) => active && setAttempt(loaded),
+      (loaded) => {
+        if (!active) return
+        setOffset(Date.parse(loaded.server_time) - Date.now())
+        setAttempt(loaded)
+        if (loaded.status === 'submitted' || loaded.status === 'graded') setEnd({ attempt: loaded, sealed: loaded.auto_submitted })
+      },
       (error) => {
         if (!active) return
         if (error instanceof ApiError && error.status === 404) navigate('/candidate', { replace: true })
@@ -49,6 +76,28 @@ export default function ExamRoomPage() {
     const timer = setInterval(() => setNow(Date.now()), 5000)
     return () => clearInterval(timer)
   }, [])
+
+  // At 0: the inputs lock, the waiting answers are sent, then the Attempt is submitted. Offline,
+  // the server seals it at its deadline with what it has (D-044).
+  useEffect(() => {
+    if (!attempt || end || left > 0 || endingStarted.current) return
+    endingStarted.current = true
+    setEnding(true)
+    void (async () => {
+      await saving.flushAll()
+      const submitted = await submitAttempt(attemptId).catch(() => null)
+      setEnd({ attempt: submitted ?? { ...attempt, submitted_at: attempt.expires_at }, sealed: true })
+    })()
+  }, [attempt, end, left, attemptId, saving])
+
+  // A save refused as too late (or the Attempt submitted elsewhere): show how it ended.
+  useEffect(() => {
+    if (!saving.closed || end || !attempt) return
+    getAttempt(attemptId).then(
+      (loaded) => setEnd({ attempt: loaded, sealed: loaded.auto_submitted || loaded.status !== 'submitted' }),
+      () => setEnd({ attempt: { ...attempt, submitted_at: attempt.expires_at }, sealed: true }),
+    )
+  }, [saving.closed, end, attempt, attemptId])
 
   if (!attempt) {
     return (
@@ -72,11 +121,13 @@ export default function ExamRoomPage() {
     )
   }
 
+  if (end) return <EndScreen attempt={end.attempt} sealed={end.sealed} />
+
   const items = attempt.items
   const requested = Number(params.get('item'))
   const index = Math.max(0, items.findIndex((item) => item.position === requested))
   const item = items[index]
-  const locked = saving.closed || attempt.status === 'submitted' || attempt.status === 'graded'
+  const locked = ending || saving.closed
   const answered = items.filter((i) => isAnswered(saving.answers[i.position])).length
   const points = items.reduce((sum, i) => sum + i.points, 0)
 
@@ -84,6 +135,36 @@ export default function ExamRoomPage() {
     saving.flush(item.position)
     setSheetOpen(false)
     setParams({ item: String(position) })
+  }
+
+  const low = left <= FIVE_MINUTES
+
+  function toggleHidden(next: boolean) {
+    setHidden(next)
+    try {
+      if (next) localStorage.setItem(hiddenKey(attemptId), '1')
+      else localStorage.removeItem(hiddenKey(attemptId))
+    } catch {
+      // remembered for this page only
+    }
+  }
+
+  async function submit() {
+    setDialog({ unsaved: [], busy: true, failed: false })
+    const unsaved = await saving.flushAll()
+    if (unsaved.length > 0) return setDialog({ unsaved, busy: false, failed: false })
+    try {
+      const submitted = await submitAttempt(attemptId)
+      setEnd({ attempt: submitted, sealed: submitted.auto_submitted })
+    } catch {
+      setDialog({ unsaved: [], busy: false, failed: true })
+    }
+  }
+
+  async function retryUnsaved() {
+    setDialog((d) => d && { ...d, busy: true })
+    const unsaved = await saving.retryAll()
+    setDialog({ unsaved, busy: false, failed: false })
   }
 
   let status = null
@@ -110,14 +191,34 @@ export default function ExamRoomPage() {
       <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-subtle bg-surface px-4 py-3 tablet:px-6">
         <div className="grid min-w-0">
           <span className="text-h3 [overflow-wrap:anywhere]">{attempt.exam.title}</span>
-          <span className="hidden text-caption text-secondary tablet:block">{t('room.summary', { count: items.length, points })}</span>
+          <span className="hidden text-caption text-secondary tablet:block">
+            {[attempt.exam.max_attempts && t('room.attemptOf', { number: attempt.attempt_number, max: attempt.exam.max_attempts }), t('room.summary', { count: items.length, points })].filter(Boolean).join(' · ')}
+          </span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <span role="status" className="text-caption text-secondary">{status}</span>
+          {!hidden && (
+            <span role="timer" aria-label={t('room.timeLeft', { time: clock(left) })} className={`inline-flex min-h-hit items-center gap-2 rounded-full border px-4 ${low ? 'border-warning bg-warning-bg text-warning' : 'border-strong text-primary'}`}>
+              {low ? <TriangleAlert className="size-icon-md" aria-hidden="true" /> : <Clock className="size-icon-md" aria-hidden="true" />}
+              <span className="font-mono text-timer tabular-nums">{clock(left)}</span>
+            </span>
+          )}
+          {hidden ? (
+            <Button onClick={() => toggleHidden(false)}>
+              <Clock className="size-icon-sm" aria-hidden="true" />
+              {t('room.show')}
+            </Button>
+          ) : (
+            <button type="button" aria-label={t('room.hideLabel')} onClick={() => toggleHidden(true)} className={`inline-flex min-h-hit items-center gap-2 rounded-md px-2 font-medium text-accent ${focusRing}`}>
+              <EyeOff className="size-icon-sm" aria-hidden="true" />
+              <span className="hidden tablet:inline">{t('room.hide')}</span>
+            </button>
+          )}
           <Button className="desktop:hidden" onClick={() => setSheetOpen(true)}>
             <List className="size-icon-sm" aria-hidden="true" />
             {t('room.itemsButton', { answered, total: items.length })}
           </Button>
+          <Button variant="primary" disabled={locked} onClick={() => setDialog({ unsaved: [], busy: false, failed: false })}>{t('room.submit')}</Button>
         </div>
       </header>
 
@@ -130,11 +231,12 @@ export default function ExamRoomPage() {
               <Trans i18nKey="room.notSaved" values={{ number: saving.failed[0] }} components={strong} />
             </Alert>
           )}
-          {locked && (
-            <Alert variant="info" icon={Info} role="status" action={<Link to="/candidate" className={secondaryLink}>{t('room.toDashboard')}</Link>}>
-              <Trans i18nKey="room.closed" components={strong} />
-            </Alert>
+          {left <= ONE_MINUTE ? (
+            <Alert variant="warning" icon={Clock} role="alert"><Trans i18nKey="room.lowOne" components={strong} /></Alert>
+          ) : low && (
+            <Alert variant="warning" icon={Clock} role="alert"><Trans i18nKey="room.lowFive" components={strong} /></Alert>
           )}
+          {hidden && <Alert variant="info" icon={Info} role="status">{t('room.hidden')}</Alert>}
 
           <div className="flex items-center gap-3 font-medium text-secondary">
             <span>{t(item.section === 'subject_1' ? 'room.subjectOne' : 'room.subjectTwo')}</span>
@@ -168,6 +270,21 @@ export default function ExamRoomPage() {
           </div>
         </div>
       </main>
+
+      {dialog && (
+        <SubmitDialog
+          answered={answered}
+          total={items.length}
+          unanswered={items.filter((i) => !isAnswered(saving.answers[i.position])).map((i) => i.position)}
+          marked={items.filter((i) => saving.answers[i.position]?.marked).map((i) => i.position)}
+          unsaved={dialog.unsaved}
+          busy={dialog.busy}
+          failed={dialog.failed}
+          onBack={() => setDialog(null)}
+          onSubmit={submit}
+          onRetry={retryUnsaved}
+        />
+      )}
 
       {sheetOpen && (
         <Modal

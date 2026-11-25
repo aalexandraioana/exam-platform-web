@@ -7,11 +7,11 @@ const me = { id: 7, first_name: 'Andrei', last_name: 'Ionescu', name: 'Andrei Io
 const saved = (value: unknown, marked = false) => ({ value, version: 1, marked_for_review: marked, saved_at: '2026-11-25T10:01:00Z' })
 const s1 = (position: number, type: string, statement: string, options: string[], answer: unknown = null) => ({ position, section: 'subject_1', type, points: 5, statement, options, answer })
 
-function attempt(status = 'in_progress') {
+function attempt(status = 'in_progress', minutesLeft = 28.75, auto = false) {
   return {
-    id: 12, exam: { id: 4, title: 'Evaluare Unitatea 3: Rapoarte și proporții' }, status, attempt_number: 1,
-    started_at: new Date().toISOString(), expires_at: new Date(Date.now() + 50 * 60_000).toISOString(), server_time: new Date().toISOString(),
-    submitted_at: null, auto_submitted: false,
+    id: 12, exam: { id: 4, title: 'Evaluare Unitatea 3: Rapoarte și proporții', max_attempts: 1 }, status, attempt_number: 1,
+    started_at: new Date().toISOString(), expires_at: new Date(Date.now() + minutesLeft * 60_000).toISOString(), server_time: new Date().toISOString(),
+    submitted_at: status === 'submitted' ? new Date().toISOString() : null, auto_submitted: auto,
     items: [
       s1(1, 'single_choice', 'Care este cel mai mare număr întreg negativ?', ['−1', '0', '−10', '1'], saved(1)),
       s1(2, 'short_answer', 'Calculează 25% din 80.', [], saved('20')),
@@ -26,7 +26,7 @@ function attempt(status = 'in_progress') {
   }
 }
 
-async function mockApi(page: Page, { status = 'in_progress', saveFails = false, hang = false } = {}) {
+async function mockApi(page: Page, { status = 'in_progress', saveFails = false, hang = false, minutesLeft = 28.75, auto = false } = {}) {
   await page.route('http://localhost:8000/api/**', (route) => {
     const request = route.request()
     const path = new URL(request.url()).pathname
@@ -38,7 +38,8 @@ async function mockApi(page: Page, { status = 'in_progress', saveFails = false, 
       return reply(200, { answer: { value: body.answer, version: body.version, marked_for_review: body.marked_for_review, saved_at: new Date().toISOString() }, applied: true, status: 'in_progress' })
     }
     if (hang) return new Promise(() => {})
-    return reply(200, { attempt: attempt(status) })
+    if (path.endsWith('/submit')) return reply(200, { attempt: attempt('submitted', minutesLeft, false) })
+    return reply(200, { attempt: attempt(status, minutesLeft, auto) })
   })
 }
 
@@ -95,6 +96,50 @@ for (const theme of ['light', 'dark'] as const) {
       await open(page, theme, width, 1, { hang: true })
       await expect(page.getByLabel('Se încarcă examenul')).toBeVisible()
       await page.screenshot({ path: screenshotPath(`DS-004.loading.${theme}${suffix}.png`), fullPage: true })
+    })
+  }
+
+  for (const width of [1440, 320]) {
+    const suffix = width === 320 ? '.320' : ''
+
+    test(`DS-004 under 5 minutes, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 3, { minutesLeft: 4.2 })
+      await expect(page.getByRole('alert')).toContainText('Mai sunt sub 5 minute.')
+      await page.screenshot({ path: screenshotPath(`DS-004.low.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 last minute, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 3, { minutesLeft: 0.8 })
+      await expect(page.getByRole('alert')).toContainText('Mai este 1 minut.')
+      await page.screenshot({ path: screenshotPath(`DS-004.oneminute.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 timer hidden, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 3)
+      await page.getByRole('button', { name: 'Ascunde cronometrul' }).click()
+      await expect(page.getByText('Cronometrul este ascuns.', { exact: false })).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.hidden.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 submit dialog, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 3)
+      await page.getByRole('button', { name: 'Predă examenul' }).click()
+      await expect(page.getByRole('dialog', { name: 'Predai examenul?' })).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.submit.${theme}${suffix}.png`) })
+    })
+
+    test(`DS-004 submitted, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 3)
+      await page.getByRole('button', { name: 'Predă examenul' }).click()
+      await page.getByRole('dialog').getByRole('button', { name: 'Predă examenul' }).click()
+      await expect(page.getByRole('heading', { name: 'Examen predat' })).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.done.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 sealed, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 3, { status: 'submitted', auto: true })
+      await expect(page.getByRole('heading', { name: 'Timpul s-a încheiat' })).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.sealed.${theme}${suffix}.png`), fullPage: true })
     })
   }
 

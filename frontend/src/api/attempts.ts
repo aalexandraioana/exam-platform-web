@@ -62,7 +62,8 @@ export interface AttemptItem {
 
 export interface Attempt {
   id: number
-  exam: { id: number; title: string }
+  /** `max_attempts` since P7c ("Încercarea 1 din 1"). */
+  exam: { id: number; title: string; max_attempts?: number }
   status: 'started' | 'in_progress' | 'submitted' | 'graded'
   attempt_number: number
   started_at: string
@@ -80,4 +81,9 @@ export async function getAttempt(id: number): Promise<Attempt> {
 /** Autosave (C-006): stored only when `version` is higher than the stored one. */
 export function saveAnswer(id: number, position: number, body: { answer: AnswerValue; marked_for_review: boolean; version: number }) {
   return apiFetch<{ answer: SavedAnswer; applied: boolean; status: Attempt['status'] }>(`/attempts/${id}/items/${position}/answer`, { method: 'PUT', body })
+}
+
+/** Submits (C-006): repeating it changes nothing; after the deadline + grace it seals instead. */
+export async function submitAttempt(id: number): Promise<Attempt> {
+  return (await apiFetch<{ attempt: Attempt }>(`/attempts/${id}/submit`, { method: 'POST' })).attempt
 }

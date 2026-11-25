@@ -653,7 +653,6 @@
     "stepsLabel": "Pașii rezolvării",
     "stepsHint": "Scrie toți pașii: datele, calculele și răspunsul.",
     "notSaved": "<strong>Răspunsul la itemul {{number}} nu s-a salvat.</strong> Verifică internetul; răspunsul rămâne pe ecran.",
-    "closed": "<strong>Timpul s-a încheiat.</strong> Examenul a fost predat cu răspunsurile salvate; nu le mai poți modifica.",
     "toDashboard": "Mergi la tabloul de bord",
     "navigator": {
       "label": "Navigator itemi",
@@ -675,6 +674,37 @@
       "unansweredFilter": "Fără răspuns ({{count}})",
       "markedFilter": "Marcați ({{count}})",
       "close": "Închide lista de itemi"
+    },
+    "attemptOf": "Încercarea {{number}} din {{max}}",
+    "timeLeft": "Timp rămas: {{time}}",
+    "hide": "Ascunde",
+    "hideLabel": "Ascunde cronometrul",
+    "show": "Arată cronometrul",
+    "lowFive": "<strong>Mai sunt sub 5 minute.</strong> Răspunsurile se salvează automat. La final, examenul se predă singur cu tot ce ai salvat.",
+    "lowOne": "<strong>Mai este 1 minut.</strong> La final, examenul se predă singur cu tot ce ai salvat.",
+    "hidden": "Cronometrul este ascuns. Te anunțăm când mai sunt 5 minute și când mai este 1 minut.",
+    "submit": "Predă examenul",
+    "submitDialog": {
+      "title": "Predai examenul?",
+      "answered": "Ai răspuns la <strong>{{answered}} din {{total}}</strong> itemi. După predare nu mai poți modifica răspunsurile.",
+      "unanswered_one": "<strong>{{count}} item fără răspuns:</strong> {{list}}",
+      "unanswered_few": "<strong>{{count}} itemi fără răspuns:</strong> {{list}}",
+      "unanswered_other": "<strong>{{count}} de itemi fără răspuns:</strong> {{list}}",
+      "marked_one": "<strong>{{count}} item marcat pentru revizuire:</strong> {{list}}",
+      "marked_few": "<strong>{{count}} itemi marcați pentru revizuire:</strong> {{list}}",
+      "marked_other": "<strong>{{count}} de itemi marcați pentru revizuire:</strong> {{list}}",
+      "unsaved_one": "<strong>Răspunsul la itemul {{list}} nu s-a salvat încă.</strong> Încearcă din nou înainte să predai, ca să nu se piardă.",
+      "unsaved_few": "<strong>Răspunsurile la itemii {{list}} nu s-au salvat încă.</strong> Încearcă din nou înainte să predai, ca să nu se piardă.",
+      "unsaved_other": "<strong>Răspunsurile la itemii {{list}} nu s-au salvat încă.</strong> Încearcă din nou înainte să predai, ca să nu se piardă.",
+      "note": "Rezultatele apar după ce examinatorul corectează și le publică.",
+      "back": "Înapoi la examen"
+    },
+    "end": {
+      "sealedTitle": "Timpul s-a încheiat",
+      "sealedText": "Examenul „{{title}}” a fost predat automat la {{time}}, cu toate răspunsurile salvate ({{answered}} din {{total}} itemi au ajuns pe server).",
+      "doneTitle": "Examen predat",
+      "doneText": "Ai predat examenul „{{title}}” la {{time}}. Răspunsurile tale au ajuns pe server ({{answered}} din {{total}} itemi cu răspuns).",
+      "resultsLater": "Rezultatele apar în tabloul de bord după ce examinatorul le publică."
     }
   }
 }

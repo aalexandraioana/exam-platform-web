@@ -5,6 +5,12 @@
 @tailwind utilities;
 
 @layer base {
+  /* mock.css `.option input`: radios and checkboxes in the primary colour (DS-004). */
+  input[type='radio'],
+  input[type='checkbox'] {
+    accent-color: var(--bg-primary);
+  }
+
   :root {
     --bg-canvas: #F5F1EA;
     --bg-surface: #FFFCF7;

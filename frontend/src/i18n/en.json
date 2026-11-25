@@ -637,7 +637,6 @@
     "stepsLabel": "Your solution steps",
     "stepsHint": "Write every step: the data, the calculations and the answer.",
     "notSaved": "<strong>Your answer to item {{number}} wasn't saved.</strong> Check your internet; the answer stays on screen.",
-    "closed": "<strong>Time is up.</strong> The exam was submitted with the saved answers; you can't change them any more.",
     "toDashboard": "Go to the dashboard",
     "navigator": {
       "label": "Item navigator",
@@ -659,6 +658,34 @@
       "unansweredFilter": "Not answered ({{count}})",
       "markedFilter": "Marked ({{count}})",
       "close": "Close the item list"
+    },
+    "attemptOf": "Attempt {{number}} of {{max}}",
+    "timeLeft": "Time left: {{time}}",
+    "hide": "Hide",
+    "hideLabel": "Hide the timer",
+    "show": "Show the timer",
+    "lowFive": "<strong>Less than 5 minutes left.</strong> Your answers save automatically. At the end, the exam is submitted with everything you saved.",
+    "lowOne": "<strong>1 minute left.</strong> At the end, the exam is submitted with everything you saved.",
+    "hidden": "The timer is hidden. We'll tell you when 5 minutes and when 1 minute are left.",
+    "submit": "Submit the exam",
+    "submitDialog": {
+      "title": "Submit the exam?",
+      "answered": "You answered <strong>{{answered}} of {{total}}</strong> items. After submitting you can't change your answers.",
+      "unanswered_one": "<strong>{{count}} item not answered:</strong> {{list}}",
+      "unanswered_other": "<strong>{{count}} items not answered:</strong> {{list}}",
+      "marked_one": "<strong>{{count}} item marked for review:</strong> {{list}}",
+      "marked_other": "<strong>{{count}} items marked for review:</strong> {{list}}",
+      "unsaved_one": "<strong>Your answer to item {{list}} isn't saved yet.</strong> Try again before submitting, so it isn't lost.",
+      "unsaved_other": "<strong>Your answers to items {{list}} aren't saved yet.</strong> Try again before submitting, so they aren't lost.",
+      "note": "Results appear after the examiner grades and publishes them.",
+      "back": "Back to the exam"
+    },
+    "end": {
+      "sealedTitle": "Time is up",
+      "sealedText": "The exam “{{title}}” was submitted automatically at {{time}}, with all your saved answers ({{answered}} of {{total}} items reached the server).",
+      "doneTitle": "Exam submitted",
+      "doneText": "You submitted the exam “{{title}}” at {{time}}. Your answers reached the server ({{answered}} of {{total}} items answered).",
+      "resultsLater": "Results appear on the dashboard once the examiner publishes them."
     }
   }
 }

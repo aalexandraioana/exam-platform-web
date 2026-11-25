@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react'
 import type { HTMLAttributes, ReactNode } from 'react'
 
 interface AlertProps extends HTMLAttributes<HTMLDivElement> {
-  variant: 'error' | 'info' | 'success'
+  variant: 'error' | 'info' | 'success' | 'warning'
   icon: LucideIcon
   /** A button shown at the end of the alert, e.g. "Try again". */
   action?: ReactNode
@@ -12,6 +12,7 @@ const tones = {
   error: { box: 'border-error bg-error-bg', icon: 'text-error' },
   info: { box: 'border-info bg-info-bg', icon: 'text-info' },
   success: { box: 'border-success bg-success-bg', icon: 'text-success' },
+  warning: { box: 'border-warning bg-warning-bg', icon: 'text-warning' },
 }
 
 // mock.css `.alert`: the icon sits on the first text line (a line-high box), or is

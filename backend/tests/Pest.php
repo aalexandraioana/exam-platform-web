@@ -42,3 +42,55 @@ function poolQuestion(User $examiner, Pool $pool, array $attributes = []): Quest
 
     return $question;
 }
+
+/**
+ * A published Exam with three Items (single choice, a short answer with named values, true/false),
+ * open now, and a Candidate accepted in its class (P6). `$exam` attributes override the defaults.
+ *
+ * @return array{examiner: \App\Models\User, candidate: \App\Models\User, class: \App\Models\SchoolClass, exam: \App\Models\Exam, questions: array<string, \App\Models\Question>}
+ */
+function attemptSetup(array $exam = []): array
+{
+    $examiner = \App\Models\User::factory()->examiner()->create();
+    $candidate = \App\Models\User::factory()->candidate()->create();
+    $class = \App\Models\SchoolClass::factory()->for($examiner, 'examiner')->create(['join_code' => strtoupper(fake()->unique()->bothify('??####'))]);
+    $membership = new \App\Models\ClassMembership;
+    $membership->class_id = $class->id;
+    $membership->candidate_id = $candidate->id;
+    $membership->status = \App\Enums\MembershipStatus::Accepted;
+    $membership->save();
+
+    $pool = \App\Models\Pool::factory()->for($examiner, 'examiner')->create();
+    $competence = \App\Models\Competence::factory()->for($examiner, 'examiner')->create();
+    $topic = \App\Models\Topic::factory()->for($examiner, 'examiner')->create();
+    $common = ['competence_id' => $competence->id, 'topic_id' => $topic->id];
+    $questions = [
+        'single' => poolQuestion($examiner, $pool, [...$common, 'type' => 'single_choice', 'statement' => 'Trei sferturi din 48 reprezintă …',
+            'answer_key' => ['options' => ['12', '36', '32', '64'], 'correct' => 2]]),
+        'values' => poolQuestion($examiner, $pool, [...$common, 'type' => 'short_answer', 'statement' => 'Cât face {a} + {b}?',
+            'answer_key' => ['kind' => 'number'],
+            'parameters' => ['values' => ['a' => ['random' => ['min' => 1, 'max' => 9]], 'b' => ['fixed' => 10]], 'answer' => 'a + b']]),
+        'dual' => poolQuestion($examiner, $pool, [...$common, 'type' => 'dual_choice', 'statement' => 'Orice număr întreg negativ este mai mic decât 0.',
+            'answer_key' => ['correct' => true]]),
+    ];
+
+    $exam = \App\Models\Exam::factory()->published()->for($examiner, 'examiner')->create(array_merge([
+        'grade_level' => 6, 'duration_minutes' => 50,
+        'available_from' => now()->subHour(), 'available_until' => now()->addHours(2),
+    ], $exam));
+    $exam->classes()->attach($class);
+    foreach (['single_choice', 'short_answer', 'dual_choice'] as $i => $type) {
+        \App\Models\ExamItem::factory()->create([
+            'exam_id' => $exam->id, 'position' => $i + 1, 'section' => 'subject_1', 'points' => 5,
+            'pool_id' => $pool->id, 'competence_id' => $competence->id, 'difficulty' => 'easy', 'type' => $type,
+        ]);
+    }
+
+    return compact('examiner', 'candidate', 'class', 'exam', 'questions');
+}
+
+function signInAs(\App\Models\User $user): void
+{
+    app('auth')->forgetGuards();
+    test()->withToken($user->createToken('spa')->plainTextToken);
+}

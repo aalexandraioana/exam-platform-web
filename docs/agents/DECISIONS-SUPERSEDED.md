@@ -24,6 +24,7 @@
 - D-039 · Examiner-defined competences and topic labels · _superseded-by D-058_
 - D-042 · Draft and Ready question status · _superseded-by D-059_
 - D-043 · Exam blueprint drawing from pools · _superseded-by D-057_
+- D-060 · Maths as plain text in JetBrains Mono · _superseded-by D-061_
 
 ---
 
@@ -169,4 +170,13 @@
 - **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), similar questions go to different Candidates (Q13), and it delivers the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
 - **Rejected:** Hand-listed Variants per Item (D-025); a blueprint row drawing N questions from a pool (weakens per-Item coverage); repeats within one Attempt.
 - **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/agents/OPEN-QUESTIONS.md:Q-036, Q-037; catalog-de-proiecte-web.md:893
+- **Source:** user · confidence high
+
+## D-060 · Maths as plain text in JetBrains Mono
+- **Status:** superseded-by D-061
+- **Date:** 2026-11-24
+- **Rule:** Question statements, options, answers and barem steps are plain text with Unicode symbols (∢ ° ² ³ · : ≤ ≥ ≠ −), shown in JetBrains Mono (DESIGN.md `font-math`) wherever maths appears. No rendering library (KaTeX, MathJax) and no markup.
+- **Why:** The user's answer to Q-032; no new dependency before the 3 Dec deadline, and questions stay easy to type.
+- **Rejected:** KaTeX (a new dependency, and `\frac{3}{4}` to type in questions); MathJax.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-032; docs/design/mocks/DS-007.html
 - **Source:** user · confidence high

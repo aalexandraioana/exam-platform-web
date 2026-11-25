@@ -1,6 +1,6 @@
 # Plan — P7b: exam room, reading and answering (DS-004)
 
-Status: approved 2026-11-25 (C-006, D-045, D-060, the assumptions) · Covers D-019, D-022, D-033, D-038, D-045, D-060 · Q-070, Q-071, Q-072
+Status: approved 2026-11-25 (C-006, D-045, D-060, the assumptions) · Covers D-019, D-022, D-033, D-038, D-045, D-061 (supersedes D-060) · Q-070, Q-071, Q-072
 answered · Builds on C-006 (read, autosave) and P7a (same branch) · next: P7c (timer, submit),
 P7d (offline, resume)
 
@@ -36,7 +36,7 @@ confirm first. No API change.
   - room is left for P7c's timer and "Predă examenul"
 - **The current item** is kept in the address (`?item=3`), so a refresh stays on it.
   - Number, points and the mark toggle at the top.
-  - The statement as plain text in JetBrains Mono, line breaks kept (D-060).
+  - The statement as plain text, line breaks kept; only numbers and formulas in JetBrains Mono (D-061).
   - The input for its type; options in the order the server sent them (D-045, already shuffled).
   - "← Itemul n" / "Itemul n →" below.
 - **Navigator:**

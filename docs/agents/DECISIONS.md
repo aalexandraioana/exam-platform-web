@@ -50,7 +50,7 @@
 - D-057 · Exam blueprint drawing from pools by competence, difficulty, type and topic
 - D-058 · Examiner-defined competences; one topic per question
 - D-059 · Draft and Ready question status
-- D-060 · Maths as plain text in JetBrains Mono
+- D-061 · Maths as plain text; in the exam room only numbers and formulas in JetBrains Mono
 
 ---
 
@@ -483,13 +483,12 @@
 - **Evidence:** supersedes D-042; D-057, D-058
 - **Source:** user (approved proposal, 2026-11-24) · confidence high
 
-## D-060 · Maths as plain text in JetBrains Mono
+## D-061 · Maths as plain text; in the exam room only numbers and formulas in JetBrains Mono
 - **Status:** approved
-- **Date:** 2026-11-24
+- **Date:** 2026-11-25
 - **Confirmed:** 2026-11-25
-- **Rule:** Question statements, options, answers and barem steps are plain text with Unicode symbols (∢ ° ² ³ · : ≤ ≥ ≠ −), shown in JetBrains Mono (DESIGN.md `font-math`) wherever maths appears. No rendering library (KaTeX, MathJax) and no markup.
-- **Why:** The user's answer to Q-032; no new dependency before the 3 Dec deadline, and questions stay easy to type.
-- **Rejected:** KaTeX (a new dependency, and `\frac{3}{4}` to type in questions); MathJax.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-032; docs/design/mocks/DS-007.html
+- **Rule:** Question statements, options, answers and barem steps stay plain text with Unicode symbols (∢ ° ² ³ · : ≤ ≥ ≠ −); no rendering library and no markup (as D-060). In the Candidate's exam room (DS-004) only numbers and formulas are shown in JetBrains Mono (DESIGN.md `font-math`), detected automatically: pieces containing a digit or a maths symbol, and single letters or short capital-letter names used as variables or points (not the words "o" and "e"); neighbouring pieces join into one span; words and trailing punctuation stay in the UI font. The Examiner's screens (preview, question editor) keep whole statements in JetBrains Mono for now.
+- **Why:** The user found whole statements in the mono font unpleasant to read in the exam room (P7b mock review); the Examiner's screens were left as they are for now.
+- **Rejected:** Whole statements in JetBrains Mono in the exam room (D-060 as built); markup for maths in questions; changing the Examiner's screens now.
+- **Evidence:** docs/plans/p7b-exam-room-answering.md; conversation 2026-11-25 (P7b mock review)
 - **Source:** user · confidence high
-

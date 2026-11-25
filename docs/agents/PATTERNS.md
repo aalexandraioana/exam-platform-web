@@ -13,6 +13,7 @@
 - PATTERN-005 · Validation errors as codes, not sentences · candidate
 - PATTERN-006 · An account state that blocks the app: one API refusal code, one SPA screen · candidate
 - PATTERN-007 · A write that depends on a row's state locks that row first · candidate
+- PATTERN-008 · Dialog buttons in equal halves through DialogActions · candidate
 
 ---
 
@@ -73,3 +74,11 @@
 - **Example:** backend/app/Support/Attempts/Starter.php (start), Saver.php (autosave), Sealer.php (submit, seal)
 - **Why:** Pest runs requests one at a time, so only the lock and the unique key make the checks hold under load; checked 2026-11-25 (start: 1 × 201 and 19 × 409; saves: highest version kept, no 500s).
 - **Source:** agent · confidence medium
+
+## PATTERN-008 · Dialog buttons in equal halves through DialogActions
+- **Status:** candidate
+- **Use when:** A dialog ends with its actions (cancel and confirm, or cancel and a destructive action).
+- **How:** Wrap the buttons in `components/DialogActions` (mock.css `.modal-actions`): a two-column grid, each button full width and centred. A third action, such as delete in an edit dialog, gets `className="col-span-2"` and sits on its own row above. Cancel comes first, the main action second. Never a bare `justify-end` row.
+- **Example:** frontend/src/components/DialogActions.tsx; frontend/src/pages/admin/UsersPage.tsx; frontend/src/pages/examiner/exams/ItemDialog.tsx
+- **Why:** Buttons as wide as their labels looked unbalanced next to each other (user, 2026-11-25); one component keeps all dialogs alike.
+- **Source:** user · confidence high

@@ -7,6 +7,7 @@ import { ApiError } from '../../api/client'
 import { useAuth } from '../../auth/context'
 import Alert from '../../components/Alert'
 import Button from '../../components/Button'
+import DialogActions from '../../components/DialogActions'
 import Modal from '../../components/Modal'
 import PasswordField from '../../components/PasswordField'
 import TextField from '../../components/TextField'
@@ -57,7 +58,7 @@ export default function UsersPage() {
   const shown = (users ?? []).filter((u) => !needle || u.name.toLowerCase().includes(needle) || u.email.toLowerCase().includes(needle))
 
   return (
-    <main className="mx-auto grid w-full max-w-screen-wide content-start gap-6 px-4 pb-12 pt-6 tablet:px-6 tablet:pb-16 tablet:pt-8">
+    <main className="mx-auto grid w-full max-w-screen-desktop content-start gap-6 px-4 pb-12 pt-6 tablet:px-6 tablet:pb-16 tablet:pt-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-display">{t('users.title')}</h1>
         {!loadFailed && (
@@ -272,12 +273,12 @@ function PasswordDialog({ user, onClose, onSubmit }: { user: User; onClose: () =
           onChange={(event) => setConfirmation(event.target.value)}
           error={errors.confirmation && t('register.mismatch')}
         />
-        <div className="flex flex-wrap justify-end gap-3">
+        <DialogActions>
           <Button onClick={onClose}>{t('users.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>
             {t('users.setPassword')}
           </Button>
-        </div>
+        </DialogActions>
       </form>
     </Modal>
   )
@@ -390,12 +391,12 @@ function ExaminerDialog({ onClose, onCreated }: { onClose: () => void; onCreated
           {...field('confirmation')}
           error={errors.confirmation && t('register.mismatch')}
         />
-        <div className="flex flex-wrap justify-end gap-3">
+        <DialogActions>
           <Button onClick={onClose}>{t('users.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>
             {t('users.create')}
           </Button>
-        </div>
+        </DialogActions>
       </form>
     </Modal>
   )
@@ -426,13 +427,13 @@ function DeactivateDialog({ user, onClose, onConfirm }: { user: User; onClose: (
           {failed}
         </Alert>
       )}
-      <div className="flex flex-wrap justify-end gap-3">
+      <DialogActions>
         <Button onClick={onClose}>{t('users.cancel')}</Button>
         <Button variant="danger" onClick={confirm} disabled={busy}>
           <UserX className="size-icon-sm" aria-hidden="true" />
           {t('users.deactivateConfirm')}
         </Button>
-      </div>
+      </DialogActions>
     </Modal>
   )
 }

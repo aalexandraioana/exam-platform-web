@@ -94,6 +94,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .card.tight { padding: var(--space-4); }
 .stack { display: grid; gap: var(--space-4); } .stack-sm { display: grid; gap: var(--space-2); }
 .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+/* Dialog footer: the buttons share the row in equal halves (2026-11-25); a third action (e.g. delete) takes a row of its own. */
+.modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.modal-actions > .btn { width: 100%; text-align: center; }
+.modal-actions > .btn.wide { grid-column: 1 / -1; }
+.page.narrow { max-width: 1024px; }
 .between { justify-content: space-between; }
 .divider { border: 0; border-top: 1px solid var(--border-subtle); margin: 0; }
 

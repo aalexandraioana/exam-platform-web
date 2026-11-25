@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ApiError } from '../../../api/client'
 import { SECTIONS, typesFor, type QuestionType, type Section } from '../../../api/questions'
 import Button from '../../../components/Button'
+import DialogActions from '../../../components/DialogActions'
 import Modal from '../../../components/Modal'
 import SelectField from '../../../components/SelectField'
 import TextField from '../../../components/TextField'
@@ -70,10 +71,10 @@ export function NewQuestionDialog({ onClose, onCreate }: { onClose: () => void; 
         </div>
         <p className="text-caption text-secondary">{t('bank.newHelp')}</p>
         {failed && <p className="text-caption text-error">{t('bank.failed')}</p>}
-        <div className="flex flex-wrap justify-end gap-3">
+        <DialogActions>
           <Button onClick={onClose}>{t('bank.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>{t('bank.createDraft')}</Button>
-        </div>
+        </DialogActions>
       </form>
     </Modal>
   )
@@ -126,10 +127,10 @@ export function NewItemDialog({ kind, onClose, onCreate }: { kind: ListKind; onC
           <TextField id="item-name" label={t('bank.name')} maxLength={100} value={name} onChange={(e) => setName(e.target.value)} error={message(errors.name)} />
         )}
         {failed && <p className="text-caption text-error">{t('bank.failed')}</p>}
-        <div className="flex flex-wrap justify-end gap-3">
+        <DialogActions>
           <Button onClick={onClose}>{t('bank.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>{t(competence ? 'bank.addCompetence' : 'bank.add')}</Button>
-        </div>
+        </DialogActions>
       </form>
     </Modal>
   )
@@ -157,13 +158,13 @@ export function DeleteDialog({ code, onClose, onConfirm }: { code: string; onClo
     <Modal role="alertdialog" title={t('bank.deleteTitle', { code })} onClose={onClose}>
       <p className="text-secondary">{t('bank.deleteText')}</p>
       {error && <p role="alert" className="text-caption text-error">{error}</p>}
-      <div className="flex flex-wrap justify-end gap-3">
+      <DialogActions>
         <Button onClick={onClose}>{t('bank.cancel')}</Button>
         <Button variant="danger" onClick={confirm} disabled={busy}>
           <Trash2 className="size-icon-sm" aria-hidden="true" />
           {t('bank.deleteConfirm')}
         </Button>
-      </div>
+      </DialogActions>
     </Modal>
   )
 }
@@ -199,10 +200,10 @@ export function CopyDialog({ entryCode, onClose, onCopy }: { entryCode: string; 
         <TextField id="copy-code" label={t('bank.copyCode')} className="font-mono" maxLength={28} value={code} onChange={(e) => setCode(e.target.value)} error={codeError(t, error)} />
         <p className="text-caption text-secondary">{t('bank.copyHelp')}</p>
         {failed && <p className="text-caption text-error">{t('bank.failed')}</p>}
-        <div className="flex flex-wrap justify-end gap-3">
+        <DialogActions>
           <Button onClick={onClose}>{t('bank.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>{t('bank.copyButton')}</Button>
-        </div>
+        </DialogActions>
       </form>
     </Modal>
   )

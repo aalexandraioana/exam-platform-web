@@ -16,6 +16,7 @@ import {
 } from '../../api/classes'
 import Alert from '../../components/Alert'
 import Button from '../../components/Button'
+import DialogActions from '../../components/DialogActions'
 import Modal from '../../components/Modal'
 import TextField from '../../components/TextField'
 import { focusRing } from '../../components/styles'
@@ -410,12 +411,12 @@ function NameDialog({ title, submitLabel, help, initial = '', onClose, onSubmit 
           error={error}
           help={help}
         />
-        <div className="flex flex-wrap justify-end gap-3">
+        <DialogActions>
           <Button onClick={onClose}>{t('classes.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>
             {submitLabel}
           </Button>
-        </div>
+        </DialogActions>
       </form>
     </Modal>
   )

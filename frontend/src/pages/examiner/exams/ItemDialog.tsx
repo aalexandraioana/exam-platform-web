@@ -5,6 +5,7 @@ import { matchCount, type ExamItem, type ItemInput } from '../../../api/exams'
 import { DIFFICULTIES, SECTIONS, typesFor, type Competence, type Difficulty, type QuestionType, type Ref, type Section } from '../../../api/questions'
 import Alert from '../../../components/Alert'
 import Button from '../../../components/Button'
+import DialogActions from '../../../components/DialogActions'
 import Modal from '../../../components/Modal'
 import SelectField from '../../../components/SelectField'
 import TextField from '../../../components/TextField'
@@ -132,15 +133,15 @@ export default function ItemDialog({ examId, grade, item, pools, competences, to
         </div>
         {failed && <p role="alert" className="text-caption text-error">{t('exams.failed')}</p>}
 
-        <div className="flex flex-wrap justify-end gap-3">
+        <DialogActions>
           {item && (
-            <Button variant="danger" className="mr-auto" disabled={busy} onClick={() => run(onDelete)}>
+            <Button variant="danger" className="col-span-2" disabled={busy} onClick={() => run(onDelete)}>
               {t('exams.deleteItem')}
             </Button>
           )}
           <Button onClick={onClose}>{t('exams.cancel')}</Button>
           <Button type="submit" variant="primary" disabled={busy}>{t('exams.saveItem')}</Button>
-        </div>
+        </DialogActions>
       </form>
     </Modal>
   )

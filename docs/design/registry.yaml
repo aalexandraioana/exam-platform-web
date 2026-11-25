@@ -61,7 +61,7 @@ designs:
     kind: screen
     status: implemented
     source: frontend/src/pages/admin/UsersPage.tsx
-    description: Administrator users list with search; sets a temporary password, creates Examiner accounts, deactivates users (D-054, D-055, D-056)
+    description: Administrator users list with search; sets a temporary password, creates Examiner accounts, deactivates users (D-054, D-055, D-056); the page is capped at the desktop width (1024 px, centred) so the table has no empty band
   - id: DS-012
     name: admin-exam-supervision
     kind: screen
@@ -96,7 +96,7 @@ designs:
     kind: component
     status: implemented
     source: frontend/src/components/Modal.tsx
-    description: Dialog (or alertdialog for a confirmation that can't be undone) and right-side drawer (mock.css .modal, mock.js .drawer) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes, scrolls when taller than the screen
+    description: Dialog (or alertdialog for a confirmation that can't be undone) and right-side drawer (mock.css .modal, mock.js .drawer) - labelled by its title, focus moves in and returns, Tab stays inside, Escape closes, scrolls when taller than the screen; its buttons sit in `DialogActions` (mock.css .modal-actions): equal halves of the row, a third action (delete) on a row of its own (2026-11-25)
   - id: DS-018
     name: auth-change-password
     kind: screen

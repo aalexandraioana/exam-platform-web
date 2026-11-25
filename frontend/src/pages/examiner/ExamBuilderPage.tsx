@@ -20,6 +20,7 @@ import {
 import { listCompetences, listPools, listTopics, type Competence, type Ref } from '../../api/questions'
 import Alert from '../../components/Alert'
 import Button from '../../components/Button'
+import DialogActions from '../../components/DialogActions'
 import Modal from '../../components/Modal'
 import TextField from '../../components/TextField'
 import { linkClass } from '../../components/styles'
@@ -271,13 +272,13 @@ function ConfirmDialog({ title, text, confirm, variant, onClose, onConfirm }: { 
     <Modal role="alertdialog" title={title} onClose={onClose}>
       <p className="text-secondary">{text}</p>
       {failed && <p role="alert" className="text-caption text-error">{t('exams.failed')}</p>}
-      <div className="flex flex-wrap justify-end gap-3">
+      <DialogActions>
         <Button onClick={onClose}>{t('exams.cancel')}</Button>
         <Button variant={variant} onClick={run} disabled={busy}>
           {variant === 'danger' && <Trash2 className="size-icon-sm" aria-hidden="true" />}
           {confirm}
         </Button>
-      </div>
+      </DialogActions>
     </Modal>
   )
 }

@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Support\Exams\Blueprint;
 use App\Support\Math\ValueDrawer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 use Random\Engine\Mt19937;
 use Random\Randomizer;
@@ -48,6 +49,19 @@ final class Starter
     }
 
     public static function start(User $candidate, Exam $exam): Attempt
+    {
+        try {
+            return self::startLocked($candidate, $exam);
+        } catch (UniqueConstraintViolationException) {
+            // Behind the lock, the unique (exam, Candidate, number) key refuses a second Attempt from
+            // starts that reach the database together; that is a concurrent start, not a server error.
+            $open = $exam->attempts()->where('candidate_id', $candidate->id)->whereIn('status', self::OPEN)->value('id');
+
+            throw new StartRefused('attempt_open', $open);
+        }
+    }
+
+    private static function startLocked(User $candidate, Exam $exam): Attempt
     {
         return DB::transaction(function () use ($candidate, $exam) {
             // One start at a time per Candidate and Exam.

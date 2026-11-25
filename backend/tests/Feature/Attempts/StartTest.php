@@ -195,3 +195,15 @@ it('computes the drawn answer from the drawn values, independent of any order, a
             ->and($dual['question_snapshot']['options'])->toBe([]);
     }
 });
+
+it('answers 409, not 500, if two starts ever reach the database together', function () {
+    // The lock serialises starts (checked with 20 parallel requests, 2026-11-25); behind it the
+    // unique (exam, Candidate, number) key refuses a second row. Forced here by a gap in the numbers:
+    // one Attempt numbered 2, so the next start also computes number 2 and hits the key.
+    $s = attemptSetup(['max_attempts' => 3]);
+    $only = Attempt::factory()->submitted()->create(['exam_id' => $s['exam']->id, 'candidate_id' => $s['candidate']->id, 'attempt_number' => 2]);
+    signInAs($s['candidate']);
+
+    $this->postJson("/api/candidate/exams/{$s['exam']->id}/attempts")->assertConflict()->assertJsonPath('code', 'attempt_open');
+    expect(Attempt::where('exam_id', $s['exam']->id)->pluck('id')->all())->toBe([$only->id]);
+});

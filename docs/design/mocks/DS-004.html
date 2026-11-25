@@ -87,24 +87,27 @@
       <button type="button" class="mock-btn" data-state-btn="s-closed">Timp expirat (până la P7c)</button>
       <button type="button" class="mock-btn" data-state-btn="s-navopen">Navigator deschis (mobil)</button>
       <button type="button" class="mock-btn" data-state-btn="s-low">Sub 5 minute</button>
+      <button type="button" class="mock-btn" data-state-btn="s-oneminute">Ultimul minut</button>
       <button type="button" class="mock-btn" data-state-btn="s-offline">Fără conexiune</button>
       <button type="button" class="mock-btn" data-state-btn="s-hidden">Cronometru ascuns</button>
       <button type="button" class="mock-btn" data-state-btn="s-submit">Confirmare predare</button>
+      <button type="button" class="mock-btn" data-state-btn="s-unsaved-submit">Predare cu răspuns nesalvat</button>
       <button type="button" class="mock-btn" data-state-btn="s-sealed">Timp expirat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-done">Examen predat</button>
       <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
     </div>
   </div>
 </aside>
 
 <!-- EXAM HEADER: title, server timer (S-1), save indicator (S-3) -->
-<header class="exam-header" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed">
+<header class="exam-header" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute">
   <div class="stack-sm" style="gap: 0;">
     <span class="t-h3 text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</span>
     <span class="t-caption secondary subtitle">Încercarea 1 din 1 · 9 itemi · 90 puncte + 10 puncte din oficiu</span>
   </div>
   <div class="row">
     <!-- Save indicator -->
-    <span class="save" role="status" data-show="s-subj1 s-subj2 s-low s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-closed">
+    <span class="save" role="status" data-show="s-subj1 s-subj2 s-low s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-closed s-unsaved-submit s-oneminute">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
       Salvat · acum 5 s
     </span>
@@ -117,26 +120,30 @@
       Fără conexiune · 2 răspunsuri în așteptare
     </span>
     <!-- Timer: neutral by default -->
-    <span class="timer" aria-label="Timp rămas: 28 minute și 45 de secunde" data-show="s-subj1 s-subj2 s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed">
+    <span class="timer" aria-label="Timp rămas: 28 minute și 45 de secunde" data-show="s-subj1 s-subj2 s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       <span class="t-timer">28:45</span>
     </span>
-    <span class="timer low" aria-label="Timp rămas: 4 minute și 12 secunde" data-show="s-low">
+    <span class="timer low" aria-label="Timp rămas: 4 minute și 12 secunde" data-show="s-low s-oneminute">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <span class="t-timer">04:12</span>
+      <span class="t-timer" data-show="s-low">04:12</span><span class="t-timer" data-show="s-oneminute">00:48</span>
     </span>
-    <button type="button" class="btn btn-ghost" data-show="s-subj1 s-subj2 s-low s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed" aria-label="Ascunde cronometrul"><i data-icon="eye-off" class="sm"></i><span class="btn-text">Ascunde</span></button>
-    <button type="button" class="btn items-btn" data-open-target="navigator" aria-controls="navigator" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed"><i data-icon="list" class="sm"></i>Itemi 7/9</button>
+    <button type="button" class="btn btn-ghost" data-show="s-subj1 s-subj2 s-low s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Ascunde cronometrul"><i data-icon="eye-off" class="sm"></i><span class="btn-text">Ascunde</span></button>
+    <button type="button" class="btn items-btn" data-open-target="navigator" aria-controls="navigator" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute"><i data-icon="list" class="sm"></i>Itemi 7/9</button>
     <button type="button" class="btn" data-show="s-hidden" aria-label="Arată cronometrul">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       Arată cronometrul
     </button>
-    <button type="button" class="btn btn-primary" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed">Predă examenul</button>
+    <button type="button" class="btn btn-primary" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute">Predă examenul</button>
   </div>
 </header>
 
 <!-- Banners -->
-<div style="max-width: 1200px; margin: 0 auto; padding: var(--space-4) var(--space-6) 0;" data-show="s-low s-offline s-hidden">
+<div style="max-width: 1200px; margin: 0 auto; padding: var(--space-4) var(--space-6) 0;" data-show="s-low s-offline s-hidden s-oneminute">
+  <div class="alert warning" role="alert" data-show="s-oneminute">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <div><strong>Mai este 1 minut.</strong> La final, examenul se predă singur cu tot ce ai salvat.</div>
+  </div>
   <div class="alert warning" role="alert" data-show="s-low">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <div><strong>Mai sunt sub 5 minute.</strong> Răspunsurile se salvează automat. La final, examenul se predă singur cu tot ce ai salvat.</div>
@@ -152,7 +159,7 @@
 </div>
 
 <!-- MAIN LAYOUT -->
-<div class="layout" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed">
+<div class="layout" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute">
   <!-- Navigator (S-2) -->
   <nav id="navigator" class="navigator card tight" aria-label="Navigator itemi" data-open-in="s-navopen">
     <div class="row between"><span class="t-h3">Itemi</span><span class="t-caption secondary">7 din 9 cu răspuns</span>
@@ -160,23 +167,23 @@
     <div class="stack-sm">
       <span class="t-caption secondary">Subiectul I</span>
       <div class="nav-grid">
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed" aria-label="Item 1, cu răspuns">1</button>
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed" aria-label="Item 2, cu răspuns">2</button>
-        <button class="nav-item answered current" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen" aria-current="true" aria-label="Item 3, cu răspuns, item curent">3</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 1, cu răspuns">1</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 2, cu răspuns">2</button>
+        <button class="nav-item answered current" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-unsaved-submit s-oneminute" aria-current="true" aria-label="Item 3, cu răspuns, item curent">3</button>
         <button class="nav-item answered" data-show="s-subj2 s-short s-multi s-dual s-text s-savefail s-closed" aria-label="Item 3, cu răspuns">3</button>
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-multi s-dual s-text" aria-label="Item 4, cu răspuns, marcat pentru revizuire">4<span class="flag" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg></span></button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-multi s-dual s-text s-unsaved-submit s-oneminute" aria-label="Item 4, cu răspuns, marcat pentru revizuire">4<span class="flag" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg></span></button>
         <button class="nav-item answered current" data-show="s-short s-savefail s-closed" aria-current="true" aria-label="Item 4, cu răspuns, marcat pentru revizuire, item curent">4<span class="flag" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg></span></button>
-        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-dual s-text s-savefail s-closed" aria-label="Item 5, fără răspuns">5</button>
+        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 5, fără răspuns">5</button>
         <button class="nav-item current" data-show="s-multi" aria-current="true" aria-label="Item 5, fără răspuns, item curent">5</button>
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-text s-savefail s-closed" aria-label="Item 6, cu răspuns">6</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 6, cu răspuns">6</button>
         <button class="nav-item answered current" data-show="s-dual" aria-current="true" aria-label="Item 6, cu răspuns, item curent">6</button>
       </div>
       <span class="t-caption secondary">Subiectul II</span>
       <div class="nav-grid">
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed" aria-label="Item 7, cu răspuns">7</button>
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed" aria-label="Item 8, cu răspuns">8</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 7, cu răspuns">7</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 8, cu răspuns">8</button>
         <button class="nav-item answered current" data-show="s-subj2" aria-current="true" aria-label="Item 8, cu răspuns, item curent">8</button>
-        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-savefail s-closed" aria-label="Item 9, fără răspuns">9</button>
+        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 9, fără răspuns">9</button>
         <button class="nav-item current" data-show="s-text" aria-current="true" aria-label="Item 9, fără răspuns, item curent">9</button>
       </div>
     </div>
@@ -196,7 +203,7 @@
   <div class="sheet-backdrop" data-open-in="s-navopen" aria-hidden="true"></div>
 
   <!-- SUBIECTUL I -->
-  <main class="stack" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen">
+  <main class="stack" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-unsaved-submit s-oneminute">
     <div class="section-label t-body-m">Subiectul I · 30 de puncte</div>
     <article class="card question" aria-labelledby="q3">
       <div class="q-head">
@@ -448,6 +455,36 @@ b) A = L · l = </textarea>
     </div>
   </div>
 </div>
+
+<!-- P7c: submitting while an answer isn't saved: nothing is submitted until it is -->
+<div class="backdrop" data-show="s-unsaved-submit">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sub2-title">
+    <h2 id="sub2-title" class="t-h2">Predai examenul?</h2>
+    <p class="secondary">Ai răspuns la <strong>7 din 9</strong> itemi. După predare nu mai poți modifica răspunsurile.</p>
+    <div class="alert error" role="alert">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span><strong>Răspunsul la itemul 4 nu s-a salvat încă.</strong> Încearcă din nou înainte să predai, ca să nu se piardă.</span>
+    </div>
+    <div class="stack-sm">
+      <div class="alert warning"><span><strong>2 itemi fără răspuns:</strong> 5, 9</span></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn">Înapoi la examen</button>
+      <button type="button" class="btn btn-primary">Încearcă din nou</button>
+    </div>
+  </div>
+</div>
+
+<!-- P7c: submitted by the Candidate -->
+<main class="page" data-show="s-done">
+  <div class="card stack" style="max-width: 640px; margin: var(--space-12) auto; text-align: center; justify-items: center;">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--status-success);" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <h1 class="t-h1">Examen predat</h1>
+    <p class="secondary">Ai predat examenul „Evaluare Unitatea 3: Rapoarte și proporții” la <span class="t-math">12:05</span>. Răspunsurile tale au ajuns pe server (7 din 9 itemi cu răspuns).</p>
+    <p class="t-caption secondary">Rezultatele apar în tabloul de bord după ce examinatorul le publică.</p>
+    <a href="#" class="btn btn-primary">Mergi la tabloul de bord</a>
+  </div>
+</main>
 
 <!-- Time expired, auto-sealed -->
 <main class="page" data-show="s-sealed">

@@ -9,17 +9,18 @@ use App\Support\Attempts\StartRefused;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-/** C-006: the Candidate's exams and starting an Attempt (D-012, D-015, D-021, P6a). */
+/** C-006: the Candidate's exams and starting an Attempt (D-012, D-015, D-021, P6a; dashboard fields P7a). */
 class CandidateExamController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
         $candidate = $request->user();
         Sealer::sealExpired($candidate); // D-044
-        $exams = Starter::examsFor($candidate)->with(['attempts' => fn ($q) => $q->where('candidate_id', $candidate->id)])
+        $exams = Starter::examsFor($candidate)
+            ->with(['attempts' => fn ($q) => $q->where('candidate_id', $candidate->id), 'items.topic'])
             ->orderByRaw('available_from IS NULL, available_from')->orderBy('id')->get();
 
-        return response()->json(['exams' => $exams->map(function ($exam) {
+        return response()->json(['server_time' => now()->toIso8601String(), 'exams' => $exams->map(function ($exam) {
             $state = Starter::state($exam);
             $open = $exam->attempts->first(fn ($a) => in_array($a->status, Starter::OPEN, true));
             $used = $exam->attempts->count();
@@ -35,6 +36,19 @@ class CandidateExamController extends Controller
                 'attempts_used' => $used,
                 'state' => $state,
                 'open_attempt_id' => $open?->id,
+                'open_attempt' => $open ? [
+                    'id' => $open->id,
+                    'started_at' => $open->started_at->toIso8601String(),
+                    'expires_at' => $open->expires_at->toIso8601String(),
+                ] : null,
+                // D-019: "submitted, awaiting grading" until results are published.
+                'submitted' => $exam->attempts->contains(fn ($a) => ! in_array($a->status, Starter::OPEN, true)),
+                // Q-069: only the topics; Items with "any" topic add none.
+                'topics' => $exam->items->pluck('topic.name')->filter()->unique()->values()->all(),
+                'item_counts' => [
+                    'subject_1' => $exam->items->where('section.value', 'subject_1')->count(),
+                    'subject_2' => $exam->items->where('section.value', 'subject_2')->count(),
+                ],
                 'can_start' => $state === 'open' && ! $open && $used < $exam->max_attempts,
                 'results_published' => $exam->results_published_at !== null,
             ];

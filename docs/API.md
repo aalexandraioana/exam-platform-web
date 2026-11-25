@@ -330,6 +330,12 @@ Exams published to the classes where the Candidate's place is accepted (D-015, D
 `state`: `upcoming` before `available_from`, `closed` from `available_until`, else `open` (either
 end may be empty). `can_start`: open, an attempt left (D-012) and none still open.
 
+Since P7a (the dashboard) the answer also has a top-level `server_time`, and each exam:
+`topics` (the distinct topic names of its Items; an Item with "any" topic adds none, Q-069),
+`item_counts` (`{ "subject_1": 6, "subject_2": 2 }`), `open_attempt`
+(`{ "id", "started_at", "expires_at" }` or `null`, beside `open_attempt_id`) and `submitted`
+(the Candidate has a submitted or sealed Attempt of it: "submitted, awaiting grading", D-019).
+
 ### POST /api/candidate/exams/{id}/attempts
 Starts an Attempt → `201 { "attempt" }` (below). The Attempt gets a seed; every Item its own Ready
 question (D-057); named values drawn (D-006); options shuffled (D-045); all stored, so the same seed

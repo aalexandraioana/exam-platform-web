@@ -82,6 +82,22 @@ describe('AppHeader for an Examiner', () => {
     expect(within(nav).getByRole('link', { name: 'Clase' })).toHaveAttribute('aria-current', 'page')
   })
 
+  it('lists the Examiner screens in the mocks\' order (DS-007, DS-008, DS-013)', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'examiner' } }) })
+    render(
+      <MemoryRouter initialEntries={['/examiner/exams/4']}>
+        <AuthProvider>
+          <AppHeader />
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+
+    const nav = await screen.findByRole('navigation', { name: 'Navigare examinator' })
+    expect(within(nav).getAllByRole('link').map((l) => l.textContent)).toEqual(['Bancă de întrebări', 'Examene', 'Clase'])
+    expect(within(nav).getByRole('link', { name: 'Examene' })).toHaveAttribute('href', '/examiner/exams')
+  })
+
   it('opens the menu drawer with the nav, language, theme and log-out', async () => {
     setToken('1|t')
     mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'examiner' } }) })

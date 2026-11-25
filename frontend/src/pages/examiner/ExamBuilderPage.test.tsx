@@ -87,6 +87,23 @@ describe('ExamBuilderPage (DS-008)', () => {
     expect(Object.assign({}, ...patches)).toMatchObject({ duration_minutes: 45, class_ids: [1, 2] })
   })
 
+  it('saves the title and the description automatically, never an empty title', async () => {
+    const fetchMock = mockApi({ ...base, 'PATCH /exams/4': (init) => json(200, { exam: { ...exam, ...JSON.parse(String(init.body)) } }) })
+    renderAt()
+
+    const title = await screen.findByLabelText('Titlu')
+    expect(title).toHaveValue('Evaluare Unitatea 3')
+    fireEvent.change(title, { target: { value: '' } })
+    expect(screen.getByText('Titlul lipsește.', { selector: '#exam-title-error' })).toBeInTheDocument()
+    fireEvent.change(title, { target: { value: 'Evaluare finală' } })
+    fireEvent.change(screen.getByLabelText('Descriere (opțional)'), { target: { value: 'Aveți nevoie de riglă.' } })
+
+    expect(await screen.findByRole('heading', { level: 1, name: 'Evaluare finală' }, { timeout: 3000 })).toBeInTheDocument()
+    const patches = fetchMock.mock.calls.filter(([url, init]) => String(url).endsWith('/exams/4') && init?.method === 'PATCH').map(([, init]) => JSON.parse(String(init?.body)))
+    expect(patches.some((p) => p.title === '')).toBe(false)
+    expect(Object.assign({}, ...patches)).toMatchObject({ title: 'Evaluare finală', description: 'Aveți nevoie de riglă.' })
+  })
+
   it('adds an Item with a live count of matching questions', async () => {
     const fetchMock = mockApi({ ...base, 'POST /exams/4/match': json(200, { count: 4 }), 'POST /exams/4/items': json(201, { exam }) })
     renderAt()
@@ -167,6 +184,8 @@ describe('ExamBuilderPage (DS-008)', () => {
     expect(await screen.findByText('Examenul este publicat pentru Clasa a VI-a A.', { exact: false })).toBeInTheDocument()
     expect(fetchMock.mock.calls.some(([url, init]) => String(url).endsWith('/exams/4/publish') && init?.method === 'POST')).toBe(true)
     expect(screen.getByLabelText('Durată (minute)')).toBeDisabled()
+    expect(screen.getByLabelText('Titlu')).toBeEnabled()
+    expect(screen.getByLabelText('Descriere (opțional)')).toBeEnabled()
     expect(screen.getByLabelText('Disponibil până la')).toBeEnabled()
     expect(screen.queryByRole('button', { name: '+ Adaugă item' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Mută itemul 1 mai jos' })).not.toBeInTheDocument()

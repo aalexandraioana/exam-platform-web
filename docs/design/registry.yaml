@@ -43,7 +43,7 @@ designs:
   - id: DS-008
     name: exam-builder
     kind: screen
-    status: draft
+    status: implemented
     source: frontend/src/pages/examiner/ExamsPage.tsx, ExamBuilderPage.tsx (+ exams/)
     description: Exam builder: settings with grade level, blueprint Items drawing from a pool by competence, difficulty, type and topic (each may be any) with live match counts, Item editor, publish checks, preview as a Candidate, Examene list, publish confirmation, locked published exam, deleting a draft (D-057, Q-059–Q-062)
   - id: DS-009

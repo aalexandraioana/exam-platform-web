@@ -59,3 +59,14 @@ export async function newJoinCode(id: number): Promise<SchoolClass> {
 export function decideRequest(id: number, decision: 'accept' | 'decline'): Promise<unknown> {
   return apiFetch(`/memberships/${id}/${decision}`, { method: 'POST' })
 }
+
+/** A Candidate's join request (D-028, POST /memberships): pending until the Examiner decides. */
+export interface Membership {
+  id: number
+  status: 'pending' | 'accepted' | 'declined'
+  class: { id: number; name: string }
+}
+
+export async function joinClass(classCode: string): Promise<Membership> {
+  return (await apiFetch<{ membership: Membership }>('/memberships', { method: 'POST', body: { class_code: classCode } })).membership
+}

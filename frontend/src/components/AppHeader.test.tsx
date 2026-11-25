@@ -141,3 +141,27 @@ describe('AppHeader for an Administrator', () => {
   })
 })
 
+
+describe('AppHeader for a Candidate', () => {
+  it('moves language, theme and log-out into the menu drawer on phones, as DS-003 shows', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: candidate }) })
+    render(
+      <MemoryRouter initialEntries={['/candidate']}>
+        <AuthProvider>
+          <AppHeader />
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+
+    const menu = await screen.findByRole('button', { name: 'Deschide meniul' })
+    expect(menu).toHaveClass('tablet:hidden')
+    expect(screen.getByRole('button', { name: 'Ieși din cont' })).toHaveClass('hidden', 'tablet:inline-flex')
+
+    fireEvent.click(menu)
+    const drawer = screen.getByRole('dialog', { name: 'Meniu' })
+    expect(within(drawer).queryByRole('navigation')).not.toBeInTheDocument()
+    expect(within(drawer).getByRole('group', { name: 'Limba' })).toBeInTheDocument()
+    expect(within(drawer).getByRole('button', { name: 'Ieși din cont' })).toBeInTheDocument()
+  })
+})

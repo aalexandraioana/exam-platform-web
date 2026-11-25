@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BankListController;
 use App\Http\Controllers\CandidateExamController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\CronController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamItemController;
 use App\Http\Controllers\LibraryController;
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', function () {
     return response()->json(['status' => 'healthy', 'service' => 'exam-platform-api']);
 });
+
+// D-044, Q-067: the external cron seals expired Attempts (secret header; no secret → 404).
+Route::post('/cron/seal-expired', [CronController::class, 'sealExpired'])->middleware('throttle:30,1');
 
 // C-001 (docs/API.md → Users). Login throttles failed attempts itself, per email and IP.
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1');
@@ -83,6 +87,8 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/candidate/exams', [CandidateExamController::class, 'index']);
                 Route::post('/candidate/exams/{id}/attempts', [CandidateExamController::class, 'start'])->whereNumber('id');
                 Route::get('/attempts/{id}', [AttemptController::class, 'show'])->whereNumber('id');
+                Route::put('/attempts/{id}/items/{position}/answer', [AttemptController::class, 'save'])->whereNumber(['id', 'position']);
+                Route::post('/attempts/{id}/submit', [AttemptController::class, 'submit'])->whereNumber('id');
             });
 
             // C-003 (docs/API.md → Administrator): users, temporary passwords, Examiners, deactivation.

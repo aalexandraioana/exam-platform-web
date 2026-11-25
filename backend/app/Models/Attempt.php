@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\AttemptStatus;
+use App\Support\Attempts\InvalidTransition;
+use Carbon\CarbonInterface;
 use Database\Factories\AttemptFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +37,37 @@ class Attempt extends Model
             'subject_2_score' => 'decimal:2',
             'total_score' => 'decimal:2',
         ];
+    }
+
+    /**
+     * The state machine (catalog P13, Q-068): started until the first saved answer, then
+     * in_progress; submitted by the Candidate or sealed at the deadline; graded after grading (P8).
+     */
+    public const TRANSITIONS = [
+        'started' => [AttemptStatus::InProgress, AttemptStatus::Submitted],
+        'in_progress' => [AttemptStatus::Submitted],
+        'submitted' => [AttemptStatus::Graded],
+        'graded' => [],
+    ];
+
+    /** The only way the status changes; the caller saves. */
+    public function moveTo(AttemptStatus $to): void
+    {
+        if (! in_array($to, self::TRANSITIONS[$this->status->value], true)) {
+            throw new InvalidTransition($this->status, $to);
+        }
+        $this->status = $to;
+    }
+
+    public function isOpen(): bool
+    {
+        return in_array($this->status, [AttemptStatus::Started, AttemptStatus::InProgress], true);
+    }
+
+    /** The deadline plus the Grace Period (D-004, D-021): the last moment an answer is accepted. */
+    public function acceptsAnswersUntil(): CarbonInterface
+    {
+        return $this->expires_at->copy()->addSeconds((int) config('attempts.grace_seconds'));
     }
 
     /** @return BelongsTo<Exam, $this> */

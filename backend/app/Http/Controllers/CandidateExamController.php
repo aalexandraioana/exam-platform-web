@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AttemptResource;
+use App\Support\Attempts\Sealer;
 use App\Support\Attempts\Starter;
 use App\Support\Attempts\StartRefused;
 use Illuminate\Http\JsonResponse;
@@ -14,6 +15,7 @@ class CandidateExamController extends Controller
     public function index(Request $request): JsonResponse
     {
         $candidate = $request->user();
+        Sealer::sealExpired($candidate); // D-044
         $exams = Starter::examsFor($candidate)->with(['attempts' => fn ($q) => $q->where('candidate_id', $candidate->id)])
             ->orderByRaw('available_from IS NULL, available_from')->orderBy('id')->get();
 
@@ -42,6 +44,7 @@ class CandidateExamController extends Controller
     public function start(Request $request, int $id): JsonResponse
     {
         $exam = Starter::examsFor($request->user())->findOrFail($id);
+        Sealer::sealExpired($request->user()); // an expired Attempt no longer blocks a new start
         try {
             $attempt = Starter::start($request->user(), $exam);
         } catch (StartRefused $refused) {

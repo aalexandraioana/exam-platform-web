@@ -3,8 +3,9 @@
 use App\Enums\AttemptStatus as S;
 use App\Models\Attempt;
 use App\Support\Attempts\InvalidTransition;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class);
+uses(TestCase::class);
 
 // The catalog's state machine: started → in_progress → submitted → graded, validated on the server,
 // with a test for every invalid transition (P6b, Q-068).

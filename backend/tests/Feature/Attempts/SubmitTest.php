@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Attempt;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -37,7 +38,7 @@ it('seals a late submit at the deadline, keeping the answers saved in time', fun
 
 it('keeps submitting private to the Candidate', function () {
     $id = startAttempt(attemptSetup());
-    signInAs(App\Models\User::factory()->candidate()->create());
+    signInAs(User::factory()->candidate()->create());
 
     $this->postJson("/api/attempts/{$id}/submit")->assertNotFound();
 });

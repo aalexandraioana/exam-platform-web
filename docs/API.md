@@ -316,7 +316,8 @@ not_publishable` when no draw exists. Options are shuffled per Attempt in P6 (D-
 ## Attempts (Candidate)
 
 Bearer token of an **active Candidate** with a current password; own data only. C-006 (P6a: list,
-start, read; autosave, submit and sealing follow in P6b, grading in P6c, photos in P6d).
+start, read; P6b: autosave, submit, sealing; grading follows in P6c, photos in P6d). Every request
+first seals the Candidate's Attempts past their deadline + the Grace Period (D-044).
 
 ### GET /api/candidate/exams
 Exams published to the classes where the Candidate's place is accepted (D-015, D-028):
@@ -347,6 +348,41 @@ the Candidate's accepted classes.
 `options` in the shown order (empty for true/false and short answers). Never the answer key, the
 option order, the drawn values or answer, the seed or a score (D-019). Another Candidate's Attempt
 answers `404`.
+Since P6b the Attempt also has `submitted_at`, `auto_submitted` (sealed at its deadline), and each
+item its saved `answer`: `{ "value": 2, "version": 3, "marked_for_review": false, "saved_at": "…" }`
+or `null`, so a refresh or another device resumes exactly where the Candidate stopped.
+
+**Status** (catalog P13, Q-068): `started` until the first saved answer, then `in_progress`;
+`submitted` by the Candidate or sealed; `graded` after grading (P8). No other change is possible.
+
+**Deadline** (D-004, D-021): answers are accepted until `expires_at` plus the Grace Period,
+`ATTEMPT_GRACE_SECONDS` (30 by default), on the server's clock only.
+
+### PUT /api/attempts/{id}/items/{position}/answer
+Autosave. Request: `{ "answer": …, "marked_for_review": false, "version": 3 }`.
+- `version`: the client numbers its saves of this answer 1, 2, 3…. A save is stored only when its
+  version is higher than the stored one; a repeated or late one changes nothing and still answers
+  `200` with what is stored and `"applied": false`. That makes retries safe in any order.
+- `answer` by type: true/false a boolean; single choice the shown position (1-based); multiple
+  choice distinct shown positions; short answer a string (≤ 200); a Subject II problem its
+  step-by-step text (≤ 10 000); `null` clears it.
+
+`200 { "answer": { … }, "applied": true, "status": "in_progress" }`. `422 invalid_answer` (wrong
+shape) or validation errors; `409 time_up` (past the deadline + grace: the Attempt is sealed);
+`409 attempt_submitted`; `404` unknown position or another Candidate's Attempt.
+
+### POST /api/attempts/{id}/submit
+`200 { "attempt" }` with `status: submitted` and `submitted_at`. Repeating it changes nothing.
+After the deadline + grace it seals instead (`auto_submitted: true`, `submitted_at` = `expires_at`);
+answers saved in time count.
+
+## Cron
+
+### POST /api/cron/seal-expired
+For the external cron (D-044, Q-067), every 5 minutes. Header `X-Cron-Secret: <CRON_SECRET>`.
+Seals every open Attempt past its deadline + grace → `200 { "sealed": 2 }`. Wrong or missing
+header `403`; no `CRON_SECRET` configured `404`. The same Sealer runs as the scheduled command
+`php artisan attempts:seal-expired`.
 
 ## Administrator
 

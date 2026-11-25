@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Attempt;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -48,6 +49,7 @@ it('seals within the Grace Period only once it is over', function () {
 });
 
 it('seals every expired open Attempt from the command, and nothing else', function () {
+    $this->freezeSecond(); // the database keeps whole seconds
     $s = attemptSetup();
     $other = attemptSetup();
     $expired = [expiredAttempt($s), expiredAttempt($other)];
@@ -66,7 +68,7 @@ it('seals every expired open Attempt from the command, and nothing else', functi
 });
 
 it('is scheduled every five minutes', function () {
-    $event = collect(app(Illuminate\Console\Scheduling\Schedule::class)->events())
+    $event = collect(app(Schedule::class)->events())
         ->first(fn ($e) => str_contains($e->command, 'attempts:seal-expired'));
 
     expect($event)->not->toBeNull()->and($event->expression)->toBe('*/5 * * * *');

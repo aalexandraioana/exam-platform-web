@@ -12,7 +12,7 @@
   .banner-side { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
   .timer { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-4);
     border: 1px solid var(--border-strong); border-radius: var(--radius-full); }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-4); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: var(--space-4); }
   .exam-card { display: grid; gap: var(--space-3); align-content: space-between; }
   .details { list-style: none; margin: 0; padding: var(--space-3) 0 0; border-top: 1px solid var(--border-subtle); display: grid; gap: var(--space-2); }
   .details li { display: flex; gap: var(--space-2); align-items: flex-start; }
@@ -37,7 +37,12 @@
     </div>
     <div class="mock-group">
       <button type="button" class="mock-btn active" data-state-btn="s-success">Cu examene</button>
-      <button type="button" class="mock-btn" data-state-btn="s-empty">Gol</button>
+      <button type="button" class="mock-btn" data-state-btn="s-empty">Fără examene</button>
+      <button type="button" class="mock-btn" data-state-btn="s-noclass">Fără clasă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-join">Cod de clasă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-join-err">Cod greșit</button>
+      <button type="button" class="mock-btn" data-state-btn="s-join-declined">Cerere refuzată</button>
+      <button type="button" class="mock-btn" data-state-btn="s-join-sent">Cerere trimisă</button>
       <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
       <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
       <button type="button" class="mock-btn" data-state-btn="s-long">Text lung</button>
@@ -60,13 +65,19 @@
 </header>
 
 <main class="page">
-  <div class="page-head" data-show="s-success s-empty s-error s-long">
+  <div class="page-head" data-show="s-success s-empty s-noclass s-error s-long s-join s-join-err s-join-declined s-join-sent">
     <div class="stack-sm">
       <h1 class="t-display">Tablou de bord</h1>
-      <p class="secondary" data-show="s-success s-error s-long">Examenele tale active și rezultatele publicate.</p>
-      <p class="secondary" data-show="s-empty">Nu ai niciun examen programat acum.</p>
+      <p class="secondary" data-show="s-success s-error s-long s-join s-join-err s-join-declined s-join-sent">Examenele publicate pentru clasele tale.</p>
+      <p class="secondary" data-show="s-empty s-noclass">Nu ai niciun examen programat acum.</p>
     </div>
-    <button type="button" class="btn btn-primary" data-show="s-success s-error s-long"><i data-icon="plus" class="sm"></i>Am un cod de clasă</button>
+    <button type="button" class="btn btn-primary" data-show="s-success s-error s-long s-join s-join-err s-join-declined s-join-sent"><i data-icon="plus" class="sm"></i>Am un cod de clasă</button>
+  </div>
+
+  <!-- Join request sent (D-028): the dialog closes and this notice stays -->
+  <div class="alert success" role="status" data-show="s-join-sent">
+    <i data-icon="circle-check"></i>
+    <span><strong>Cererea pentru Clasa a VI-a A a fost trimisă.</strong> Examinatorul trebuie să o accepte; examenele clasei apar aici după aceea.</span>
   </div>
 
   <!-- ERROR -->
@@ -76,13 +87,13 @@
   </div>
 
   <!-- Ongoing attempt -->
-  <section class="card banner" aria-labelledby="ongoing-h" data-show="s-success s-long">
+  <section class="card banner" aria-labelledby="ongoing-h" data-show="s-success s-long s-join s-join-err s-join-declined s-join-sent">
     <div class="banner-main">
       <span class="badge warning" style="justify-self: start;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         Încercare în desfășurare
       </span>
-      <h2 id="ongoing-h" class="t-h1 text-wrap" data-show="s-success">Evaluare Unitatea 3: Rapoarte și proporții</h2>
+      <h2 id="ongoing-h" class="t-h1 text-wrap" data-show="s-success s-join s-join-err s-join-declined s-join-sent">Evaluare Unitatea 3: Rapoarte și proporții</h2>
       <h2 class="t-h1 text-wrap" data-show="s-long">Evaluare națională pregătitoare interdisciplinară de matematică aplicată și raționament logic pentru clasa a VI-a, cu probleme de geometrie plană și calcul algebric</h2>
       <span class="secondary">Subiectul I (6 itemi) + Subiectul II (3 probleme) · început la <span class="t-math">11:25</span></span>
     </div>
@@ -92,14 +103,14 @@
     </div>
   </section>
 
-  <!-- Available exams -->
-  <section class="stack" aria-labelledby="avail-h" data-show="s-success s-long">
-    <h2 id="avail-h" class="t-h2">Examene disponibile (2)</h2>
+  <!-- The Candidate's exams, by state (P7a): open, upcoming, submitted. Topic chips only (Q-069). -->
+  <section class="stack" aria-labelledby="avail-h" data-show="s-success s-long s-join s-join-err s-join-declined s-join-sent">
+    <h2 id="avail-h" class="t-h2">Examenele tale (4)</h2>
     <div class="cards">
       <article class="card exam-card">
         <div class="stack-sm">
-          <span class="tag" style="justify-self: start;">C3 · C4 · Geometrie</span>
-          <h3 class="t-h2 text-wrap" data-show="s-success">Evaluare sumativă: Triunghiuri și unghiuri</h3>
+          <div class="row" style="gap: var(--space-2);"><span class="tag">Triunghiuri</span><span class="tag">Unghiuri</span></div>
+          <h3 class="t-h2 text-wrap" data-show="s-success s-join s-join-err s-join-declined s-join-sent">Evaluare sumativă: Triunghiuri și unghiuri</h3>
           <h3 class="t-h2 text-wrap" data-show="s-long">Concursul județean de matematică „Axioma” — etapa de calificare online pentru elevii ciclului gimnazial</h3>
           <p class="secondary">Clasificarea triunghiurilor, suma unghiurilor, unghiul exterior și cazurile de congruență.</p>
         </div>
@@ -112,71 +123,56 @@
       </article>
       <article class="card exam-card">
         <div class="stack-sm">
-          <span class="tag" style="justify-self: start;">C1 · Mulțimi de numere</span>
+          <div class="row" style="gap: var(--space-2);"><span class="tag">Mulțimi de numere</span></div>
           <h3 class="t-h2 text-wrap">Exercițiu recapitulativ: Mulțimi de numere întregi</h3>
           <p class="secondary">Operații cu numere întregi, modulul unui număr și relația de ordine.</p>
         </div>
         <ul class="details t-caption secondary">
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>40 de minute, din momentul în care începi</li>
           <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Subiectul I (30 p) + Subiectul II (60 p) + 10 p din oficiu</li>
-          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Poți începe până pe 26 nov 2026, ora 20:00 · 2 încercări</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2 încercări</li>
         </ul>
-        <a href="#" class="btn" style="width: 100%;">Începe examenul</a>
+        <span class="badge" style="justify-self: start;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Se deschide pe 2 dec, ora 08:00</span>
       </article>
-    </div>
-  </section>
-
-  <!-- Results -->
-  <section class="stack" aria-labelledby="res-h" data-show="s-success s-long">
-    <h2 id="res-h" class="t-h2">Examene predate</h2>
-    <div class="card" style="padding: 0;">
-      <div class="table-wrap">
-        <table class="results">
-          <thead><tr><th>Examen</th><th>Predat la</th><th>Punctaj</th><th>Nota</th><th>Stare</th><th>Acțiuni</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="title"><strong>Evaluare de verificare: Unghiuri și triunghiuri</strong><div class="t-caption secondary">50 de minute</div></td>
-              <td data-label="Predat la">19 nov 2026, 11:40</td>
-              <td data-label="Punctaj"><span aria-label="Nepublicat">—</span></td>
-              <td data-label="Nota"><span aria-label="Nepublicat">—</span></td>
-              <td data-label="Stare"><span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Predat · se corectează</span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="title"><strong>Evaluare inițială: Mulțimi și numere naturale</strong><div class="t-caption secondary">50 de minute</div></td>
-              <td data-label="Predat la">14 nov 2026, 10:45</td>
-              <td data-label="Punctaj"><span class="t-math">85 / 100</span></td>
-              <td data-label="Nota"><span class="grade">8,50</span></td>
-              <td data-label="Stare"><span class="badge success"><i data-icon="check" class="sm"></i>Publicat</span></td>
-              <td><a href="#" class="btn">Vezi rezultatul</a></td>
-            </tr>
-            <tr data-show="s-success">
-              <td class="title"><strong>Evaluare de verificare: Rapoarte și proporții (pilot)</strong><div class="t-caption secondary">45 de minute</div></td>
-              <td data-label="Predat la">10 nov 2026, 12:10</td>
-              <td data-label="Punctaj"><span class="t-math">95 / 100</span></td>
-              <td data-label="Nota"><span class="grade">9,50</span></td>
-              <td data-label="Stare"><span class="badge success"><i data-icon="check" class="sm"></i>Publicat</span></td>
-              <td><a href="#" class="btn">Vezi rezultatul</a></td>
-            </tr>
-            <tr data-show="s-long">
-              <td class="title text-wrap"><strong>Evaluare semestrială extinsă de geometrie: triunghiuri, mediatoare, bisectoare și alte linii importante în triunghi</strong><div class="t-caption secondary">50 de minute</div></td>
-              <td data-label="Predat la">10 nov 2026, 12:10</td>
-              <td data-label="Punctaj"><span class="t-math">92 / 100</span></td>
-              <td data-label="Nota"><span class="grade">9,20</span></td>
-              <td data-label="Stare"><span class="badge success"><i data-icon="check" class="sm"></i>Publicat</span></td>
-              <td><a href="#" class="btn">Vezi rezultatul</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <article class="card exam-card">
+        <div class="stack-sm">
+          <div class="row" style="gap: var(--space-2);"><span class="tag">Unghiuri</span></div>
+          <h3 class="t-h2 text-wrap">Evaluare de verificare: Unghiuri și triunghiuri</h3>
+        </div>
+        <ul class="details t-caption secondary">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>50 de minute, din momentul în care începi</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Subiectul I (30 p) + Subiectul II (60 p) + 10 p din oficiu</li>
+        </ul>
+        <span class="badge" style="justify-self: start;"><i data-icon="check" class="sm"></i>Predat · se corectează</span>
+        <p class="t-caption secondary">Rezultatul apare aici după ce examinatorul îl publică.</p>
+      </article>
+      <article class="card exam-card">
+        <div class="stack-sm">
+          <div class="row" style="gap: var(--space-2);"><span class="tag">Rapoarte</span><span class="tag">Proporții</span></div>
+          <h3 class="t-h2 text-wrap">Exersare: Rapoarte și proporții</h3>
+        </div>
+        <ul class="details t-caption secondary">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>30 de minute, din momentul în care începi</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Subiectul I (30 p) + Subiectul II (60 p) + 10 p din oficiu</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Poți începe până pe 28 nov 2026, ora 20:00 · încercarea 2 din 3</li>
+        </ul>
+        <span class="badge" style="justify-self: start;"><i data-icon="check" class="sm"></i>Predat · se corectează</span>
+        <a href="#" class="btn" style="width: 100%;">Începe din nou</a>
+      </article>
     </div>
   </section>
 
   <!-- EMPTY -->
   <div class="empty" data-show="s-empty">
+    <!-- In a class, nothing published yet -->
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
     <h2 class="t-h2">Niciun examen disponibil</h2>
-    <p class="secondary" style="max-width: 480px;">Examinatorul nu a publicat încă un examen pentru clasa ta. Examenele noi apar aici. Dacă nu ești încă într-o clasă, introdu codul primit de la examinator.</p>
+    <p class="secondary" style="max-width: 480px;">Examinatorul nu a publicat încă un examen pentru clasa ta. Examenele noi apar aici.</p>
+  </div>
+  <div class="empty" data-show="s-noclass">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+    <h2 class="t-h2">Nu ești încă într-o clasă</h2>
+    <p class="secondary" style="max-width: 480px;">Introdu codul primit de la examinator. După ce îți acceptă cererea, examenele clasei apar aici.</p>
     <button class="btn btn-primary"><i data-icon="plus" class="sm"></i>Am un cod de clasă</button>
   </div>
 
@@ -186,6 +182,25 @@
     <div class="card stack"><div class="skeleton" style="width: 25%;"></div><div class="skeleton" style="width: 60%; height: 24px;"></div></div>
     <div class="cards"><div class="card stack"><div class="skeleton" style="width: 30%;"></div><div class="skeleton"></div><div class="skeleton" style="width: 80%;"></div><div class="skeleton" style="height: 44px;"></div></div>
       <div class="card stack"><div class="skeleton" style="width: 30%;"></div><div class="skeleton"></div><div class="skeleton" style="width: 80%;"></div><div class="skeleton" style="height: 44px;"></div></div></div>
+  </div>
+  <!-- "Am un cod de clasă" dialog (D-028, C-002 POST /memberships). Already in the class or already
+       asked: the dialog closes with an info notice like "Ești deja în Clasa a VI-a A." -->
+  <div class="backdrop" data-show="s-join s-join-err s-join-declined">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="join-h">
+      <h2 id="join-h" class="t-h2">Intră într-o clasă</h2>
+      <p class="secondary">Scrie codul primit de la examinator. Examinatorul îți acceptă cererea, apoi vezi examenele clasei.</p>
+      <form novalidate class="stack">
+        <div class="field">
+          <label for="code">Codul clasei</label>
+          <input id="code" class="input t-math" autocomplete="off" placeholder="k7q-4mx" value="" data-show="s-join">
+          <input class="input t-math invalid" aria-label="Codul clasei" aria-invalid="true" aria-describedby="code-err" value="k7q-4mz" data-show="s-join-err">
+          <span id="code-err" class="help error" data-show="s-join-err">Nu există nicio clasă cu acest cod. Verifică-l și încearcă din nou.</span>
+          <input class="input t-math invalid" aria-label="Codul clasei" aria-invalid="true" aria-describedby="code-dec" value="k7q-4mx" data-show="s-join-declined">
+          <span id="code-dec" class="help error" data-show="s-join-declined">Examinatorul ți-a refuzat cererea pentru această clasă. Vorbește cu el dacă e o greșeală.</span>
+        </div>
+        <div class="modal-actions"><button type="button" class="btn">Anulează</button><button type="submit" class="btn btn-primary">Trimite cererea</button></div>
+      </form>
+    </div>
   </div>
 </main>
 

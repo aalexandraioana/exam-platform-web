@@ -17,8 +17,8 @@ designs:
   - id: DS-003
     name: candidate-dashboard
     kind: screen
-    status: approved
-    description: Candidate dashboard displaying available exams, ongoing attempts, and past published grades
+    status: draft
+    description: Candidate dashboard - the in-progress Attempt, exam cards by state (open, upcoming, submitted awaiting grading, submitted with attempts left) with topic chips only (Q-069) and the description (Q-064), empty states (no exams, no class) and the join-class dialog (D-028); no submitted-exams table until P9 (Q-070). P7a additions drawn 2026-11-25
   - id: DS-004
     name: exam-room
     kind: screen

@@ -7,13 +7,13 @@ import { LoaderCircle } from 'lucide-react'
 import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import LoginPage from './pages/LoginPage'
-import PlaceholderHome from './pages/PlaceholderHome'
 import RegisterPage from './pages/RegisterPage'
 import SessionLoading from './components/SessionLoading'
 
 // Signed-in screens load when first opened, so the login screen stays light (one chunk per page).
 const ChangePasswordPage = lazy(() => import('./pages/ChangePasswordPage'))
 const UsersPage = lazy(() => import('./pages/admin/UsersPage'))
+const DashboardPage = lazy(() => import('./pages/candidate/DashboardPage'))
 const ClassesPage = lazy(() => import('./pages/examiner/ClassesPage'))
 const ExamBuilderPage = lazy(() => import('./pages/examiner/ExamBuilderPage'))
 const ExamsPage = lazy(() => import('./pages/examiner/ExamsPage'))
@@ -49,7 +49,9 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/change-password" element={<ChangePasswordPage />} />
-              <Route path="/candidate" element={<ProtectedRoute role="candidate"><PlaceholderHome role="candidate" /></ProtectedRoute>} />
+              <Route path="/candidate" element={<ProtectedRoute role="candidate"><DashboardPage /></ProtectedRoute>} />
+              {/* The exam room comes in P7b; until then its address goes back to the dashboard. */}
+              <Route path="/candidate/attempts/:id" element={<Navigate to="/candidate" replace />} />
               <Route path="/examiner" element={<ProtectedRoute role="examiner"><ClassesPage /></ProtectedRoute>} />
               <Route path="/examiner/questions" element={<ProtectedRoute role="examiner"><QuestionBankPage /></ProtectedRoute>} />
               <Route path="/examiner/exams" element={<ProtectedRoute role="examiner"><ExamsPage /></ProtectedRoute>} />

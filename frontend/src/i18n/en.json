@@ -553,5 +553,62 @@
     "titleField": "Title",
     "descriptionField": "Description",
     "optional": "(optional)"
+  },
+  "candidate": {
+    "title": "Dashboard",
+    "subtitle": "The exams published for your classes.",
+    "subtitleEmpty": "You have no exam scheduled right now.",
+    "join": "I have a class code",
+    "joinOther": "I have another class code",
+    "loading": "Loading the dashboard",
+    "loadFailed": "<strong>We couldn't load your exams.</strong> Check your internet connection and try again. If it keeps happening, tell your examiner.",
+    "inProgress": "Attempt in progress",
+    "counts": "Subject I ({{subjectOne}}) + Subject II ({{subjectTwo}})",
+    "startedAt": "started at {{time}}",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items",
+    "problems_one": "{{count}} problem",
+    "problems_other": "{{count}} problems",
+    "timeLeft": "Time left: {{time}}",
+    "resume": "Resume the exam",
+    "yourExams": "Your exams ({{count}})",
+    "duration": "{{duration}}, from the moment you start",
+    "structure": "Subject I (30 p) + Subject II (60 p) + 10 p for free",
+    "until": "You can start until {{date}}, {{time}}",
+    "opensOn": "Opens on {{date}}, {{time}}",
+    "attempts_one": "{{count}} attempt",
+    "attempts_other": "{{count}} attempts",
+    "attemptOf": "attempt {{number}} of {{max}}",
+    "submitted": "Submitted · being graded",
+    "resultLater": "Your result appears here once the examiner publishes it.",
+    "start": "Start the exam",
+    "startAgain": "Start again",
+    "startRefused": {
+      "no_attempts_left": "You have no attempts left for this exam.",
+      "not_available": "This exam can't be started now.",
+      "other": "The exam didn't start. Try again."
+    },
+    "empty": {
+      "noClassTitle": "You're not in a class yet",
+      "noClassText": "Enter the code your examiner gave you. Once they accept your request, the class's exams appear here.",
+      "waitingTitle": "Your request is waiting for the examiner",
+      "waitingText": "Once the examiner accepts your request to join the class, its published exams appear here. If it takes a while, talk to them.",
+      "noExamsTitle": "No exams available",
+      "noExamsText": "Your examiner hasn't published an exam for your class yet. New exams appear here."
+    },
+    "joinDialog": {
+      "title": "Join a class",
+      "text": "Type the code your examiner gave you. The examiner accepts your request, then you see the class's exams.",
+      "code": "Class code",
+      "placeholder": "k7q-4mx",
+      "submit": "Send the request",
+      "cancel": "Cancel",
+      "required": "Type the class code.",
+      "notFound": "There's no class with this code. Check it and try again.",
+      "declined": "The examiner declined your request for this class. Talk to them if it's a mistake.",
+      "failed": "The request didn't reach the server. Try again.",
+      "sent": "<strong>Your request for {{name}} was sent.</strong> The examiner has to accept it; the class's exams appear here after that.",
+      "already": "<strong>You're already in {{name}}.</strong> The class's exams appear here."
+    }
   }
 }

@@ -72,11 +72,14 @@
 - Q-061 · Can an Exam be unpublished or deleted? · _answered_
 - Q-062 · What is the "departajare" label on DS-008's Item 9? · _answered_
 - Q-063 · Which competences should an Exam cover (DS-008 coverage warning)? · _answered_
-- Q-064 · Where do Candidates see an Exam's description?
+- Q-064 · Where do Candidates see an Exam's description? · _answered_
 - Q-065 · Is P6 built in one piece? · _answered_
 - Q-066 · Which object storage provider holds Subject II photos in production?
 - Q-067 · Who sets up the external cron that seals expired Attempts? · _answered_
 - Q-068 · What separates the "started" and "in_progress" Attempt states? · _answered_
+- Q-069 · Which labels does an exam card on the Candidate dashboard show? · _answered_
+- Q-070 · Does P7 include Subject II photos and the submitted-exams table? · _answered_
+- Q-071 · Is P7 built in one piece? · _answered_
 
 ---
 
@@ -464,11 +467,12 @@
 - **Answer:** Every competence of the Examiner that has at least one Ready question for the Exam's grade level; a missing one is a warning, not a block. (Answered 2026-11-24.)
 
 ## Q-064 · Where do Candidates see an Exam's description?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-25
 - **Blocks:** P7 (Candidate dashboard DS-003, exam room DS-004)
 - **Context:** An Exam has an optional description, edited in the builder (DS-008 "Setări", added 2026-11-25). No Candidate screen shows it yet. Options: on the dashboard card, on the screen before the Attempt starts, or nowhere (a note for the Examiner only).
 
+- **Answer:** On the exam card on the Candidate dashboard, under the title, as the DS-003 mock shows. (Answered 2026-11-25.)
 ## Q-065 · Is P6 built in one piece?
 - **Status:** answered
 - **Date:** 2026-11-25
@@ -498,3 +502,23 @@
 - **Proposed answer:** "started" when the Attempt is created, "in_progress" from the first saved answer, so the Examiner can tell who opened the exam but answered nothing.
 - **Answer:** Yes, as proposed (confirmed in the P6b plan, 2026-11-25).
 
+## Q-069 · Which labels does an exam card on the Candidate dashboard show?
+- **Status:** answered
+- **Date:** 2026-11-25
+- **Blocks:** P7 (DS-003)
+- **Context:** The approved DS-003 mock shows competence codes and topics ("C3 · C4 · Geometrie"); the API sends neither.
+- **Answer:** Only the topics of the exam's Items; no competence codes. (Answered 2026-11-25.)
+
+## Q-070 · Does P7 include Subject II photos and the submitted-exams table?
+- **Status:** answered
+- **Date:** 2026-11-25
+- **Blocks:** P7 (DS-003, DS-004)
+- **Context:** Photo uploads need P6d and a storage provider (Q-066); the DS-003 "Examene predate" table shows scores, which come with P9.
+- **Answer:** P7 is built without the photo block (P6d adds it as the approved DS-004 shows) and without the "Examene predate" table (it comes with P9). (Answered 2026-11-25.)
+
+## Q-071 · Is P7 built in one piece?
+- **Status:** answered
+- **Date:** 2026-11-25
+- **Blocks:** P7
+- **Context:** P7 covers two screens, an offline-safe answer queue, a server-synced timer, API additions, mock additions and the catalog's refresh and lost-connection tests.
+- **Answer:** Split in four, built in order before the 30 Nov pilot: P7a dashboard (DS-003, join dialog, exam-list API additions), P7b exam room reading and answering (DS-004 additions, inputs, navigation, navigator, mark for review, direct saving), P7c timer and submit, P7d offline and resume (answer queue, resume, Playwright refresh and lost-connection tests). (Answered 2026-11-25; first in three, then P7b split further.)

@@ -11,9 +11,9 @@ import { focusRing } from './styles'
 
 const languages = ['ro', 'en'] as const
 
-// The screens each role can open, in the mocks' order. Only built screens are listed (DS-007, DS-013, DS-011).
+// The screens each role can open, in the mocks' order. Only built screens are listed (DS-007, DS-008, DS-013, DS-011).
 const navigation: Partial<Record<Role, { label: string; links: { to: string; label: string }[] }>> = {
-  examiner: { label: 'nav.examiner', links: [{ to: '/examiner/questions', label: 'nav.questions' }, { to: '/examiner', label: 'nav.classes' }] },
+  examiner: { label: 'nav.examiner', links: [{ to: '/examiner/questions', label: 'nav.questions' }, { to: '/examiner/exams', label: 'nav.exams' }, { to: '/examiner', label: 'nav.classes' }] },
   administrator: { label: 'nav.administrator', links: [{ to: '/admin', label: 'nav.users' }] },
 }
 

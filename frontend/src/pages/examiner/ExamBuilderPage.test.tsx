@@ -65,8 +65,9 @@ describe('ExamBuilderPage (DS-008)', () => {
     expect(screen.getByText('Subiectul II: 60 / 60')).toBeInTheDocument()
     expect(screen.getByText('Total: 100')).toBeInTheDocument()
     expect(screen.getByText('Fiecare item are o întrebare proprie')).toBeInTheDocument()
-    expect(screen.getByText('C2 · Folosește proporțiile directe')).toBeInTheDocument()
-    expect(screen.getByText('C4 · Triunghiuri — niciun item (avertisment)')).toBeInTheDocument()
+    const coverage = screen.getByRole('list', { name: 'Competențe acoperite' })
+    expect(within(coverage).getByText('C2 · Folosește proporțiile directe')).toBeInTheDocument()
+    expect(within(coverage).getByText('C4 · Triunghiuri — niciun item (avertisment)')).toBeInTheDocument()
     const first = screen.getByRole('article', { name: 'Itemul 1' })
     expect(within(first).getByText('Proporții – mediu')).toBeInTheDocument()
     expect(within(first).getByText('orice tip')).toBeInTheDocument()
@@ -180,8 +181,7 @@ describe('ExamBuilderPage (DS-008)', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Șterge ciorna' }))
     fireEvent.click(within(screen.getByRole('alertdialog', { name: 'Ștergi ciorna „Evaluare Unitatea 3”?' })).getByRole('button', { name: 'Șterge ciorna' }))
 
-    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/examiner/exams'))
-    expect(screen.getByTestId('where')).not.toHaveTextContent('/examiner/exams/4')
+    await waitFor(() => expect(screen.getByTestId('where').textContent).toBe('/examiner/exams'))
   })
 
   it('previews a draw as a Candidate would see it', async () => {

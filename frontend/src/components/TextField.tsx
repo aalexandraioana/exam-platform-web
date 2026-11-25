@@ -36,7 +36,7 @@ export default function TextField({ id, label, error, help, labelAside, trailing
           id={id}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className={`min-h-hit w-full rounded-md border bg-surface px-3 py-2 text-primary placeholder:text-muted ${error ? 'border-error' : 'border-input'} ${trailing ? 'pr-12' : ''} ${focusRing} ${className}`}
+          className={`min-h-hit w-full rounded-md border bg-surface px-3 py-2 text-primary placeholder:text-muted disabled:cursor-not-allowed disabled:opacity-50 ${error ? 'border-error' : 'border-input'} ${trailing ? 'pr-12' : ''} ${focusRing} ${className}`}
           {...props}
         />
         {trailing}

@@ -7,6 +7,8 @@ import ChangePasswordPage from './pages/ChangePasswordPage'
 import LoginPage from './pages/LoginPage'
 import UsersPage from './pages/admin/UsersPage'
 import ClassesPage from './pages/examiner/ClassesPage'
+import ExamBuilderPage from './pages/examiner/ExamBuilderPage'
+import ExamsPage from './pages/examiner/ExamsPage'
 import QuestionBankPage from './pages/examiner/QuestionBankPage'
 import PlaceholderHome from './pages/PlaceholderHome'
 import RegisterPage from './pages/RegisterPage'
@@ -33,6 +35,8 @@ export default function App() {
             <Route path="/candidate" element={<ProtectedRoute role="candidate"><PlaceholderHome role="candidate" /></ProtectedRoute>} />
             <Route path="/examiner" element={<ProtectedRoute role="examiner"><ClassesPage /></ProtectedRoute>} />
             <Route path="/examiner/questions" element={<ProtectedRoute role="examiner"><QuestionBankPage /></ProtectedRoute>} />
+            <Route path="/examiner/exams" element={<ProtectedRoute role="examiner"><ExamsPage /></ProtectedRoute>} />
+            <Route path="/examiner/exams/:id" element={<ProtectedRoute role="examiner"><ExamBuilderPage /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute role="administrator"><UsersPage /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

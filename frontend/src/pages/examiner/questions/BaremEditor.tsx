@@ -4,7 +4,7 @@ import Alert from '../../../components/Alert'
 import Button from '../../../components/Button'
 import { ghostClass, inputClass } from './ui'
 
-type Step = { description: string; points: string }
+type Step = { id?: number; description: string; points: string }
 
 // DS-007: the optional barem of a Subject II problem (D-031); the steps must add up to the points.
 export default function BaremEditor({ steps, points, onChange }: { steps: Step[]; points: string; onChange: (steps: Step[]) => void }) {

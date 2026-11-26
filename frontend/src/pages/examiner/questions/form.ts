@@ -33,7 +33,7 @@ export interface QuestionForm {
   answer_key: AnswerKey
   values: ValuesForm | null
   uses_barem: boolean
-  barem: { description: string; points: string }[]
+  barem: { id?: number; description: string; points: string }[]
   pool_ids: number[]
 }
 
@@ -68,7 +68,7 @@ export function formFrom(q: Question): QuestionForm {
         }
       : null,
     uses_barem: q.uses_barem,
-    barem: q.barem.map((s) => ({ description: s.description, points: text(s.points) })),
+    barem: q.barem.map((s) => ({ id: s.id, description: s.description, points: text(s.points) })),
     pool_ids: q.pools.map((p) => p.id),
   }
 }
@@ -133,7 +133,7 @@ export function patchFrom(form: QuestionForm): QuestionPatch {
     parameters: form.values ? parametersFrom(form.values) : null,
     uses_barem: form.section === 'subject_2' && form.uses_barem,
     barem: form.section === 'subject_2' && form.uses_barem
-      ? form.barem.map((s) => ({ description: s.description, points: Number(s.points.replace(',', '.')) || 0 }))
+      ? form.barem.map((s) => ({ ...(s.id ? { id: s.id } : {}), description: s.description, points: Number(s.points.replace(',', '.')) || 0 }))
       : [],
     pool_ids: form.pool_ids,
   }

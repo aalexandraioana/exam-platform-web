@@ -51,7 +51,7 @@ class QuestionResource extends JsonResource
             'answer_key' => $q->answer_key,
             'parameters' => $q->parameters,
             'uses_barem' => $q->uses_barem,
-            'barem' => $q->baremSteps->map(fn ($s) => ['description' => $s->description, 'points' => self::number($s->points)])->all(),
+            'barem' => $q->baremSteps->map(fn ($s) => ['id' => $s->id, 'description' => $s->description, 'points' => self::number($s->points)])->all(),
             'copied_from' => $q->copiedFrom ? ['id' => $q->copiedFrom->id, 'code' => $q->copiedFrom->code] : null,
             'published' => Question::where('copied_from_id', $q->id)->whereNotNull('published_to_library_at')->exists(),
             'problems' => Readiness::problems($q),

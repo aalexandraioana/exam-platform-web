@@ -71,7 +71,8 @@ export interface Question extends QuestionSummary {
   answer_key: AnswerKey | null
   parameters: Parameters | null
   uses_barem: boolean
-  barem: { description: string; points: number }[]
+  // Step ids keep the grades given on a step when the barem is edited (C-004, P8a).
+  barem: { id: number; description: string; points: number }[]
   copied_from: { id: number; code: string } | null
   published: boolean
   problems: Problem[]
@@ -90,7 +91,7 @@ export interface QuestionPatch {
   answer_key?: AnswerKey | null
   parameters?: Parameters | null
   uses_barem?: boolean
-  barem?: { description: string; points: number }[]
+  barem?: { id?: number; description: string; points: number }[]
   pool_ids?: number[]
 }
 

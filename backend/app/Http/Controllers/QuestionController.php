@@ -13,6 +13,7 @@ use App\Http\Requests\Questions\UpdateQuestionRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\BaremStep;
 use App\Models\Question;
+use App\Support\Grading\Scorer;
 use App\Support\Math\AnswerMatcher;
 use App\Support\Math\NoValidDraw;
 use App\Support\Math\ValueDefinitions;
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -74,12 +76,21 @@ class QuestionController extends Controller
         $question = $this->find($request, $id);
         $data = $request->validated();
         $this->checkOwnership($request, $data, $question);
+        $this->checkLocks($question, $data);
+        $regraded = null;
 
         try {
-            $question = DB::transaction(function () use ($question, $data) {
+            $question = DB::transaction(function () use ($question, $data, &$regraded) {
                 $question->fill(collect($data)->except(['barem', 'pool_ids'])->all());
+                // C-004 (P8a): a step sent with its id keeps its row, so the scores given on it stay.
+                $current = $question->baremSteps->keyBy('id');
                 $steps = array_key_exists('barem', $data)
-                    ? collect(array_values($data['barem'] ?? []))->map(fn ($step, $i) => new BaremStep(['position' => $i + 1, ...$step]))
+                    ? collect(array_values($data['barem'] ?? []))->map(function ($step, $i) use ($current) {
+                        $model = isset($step['id']) ? $current[$step['id']] : new BaremStep;
+                        $model->fill(['position' => $i + 1, 'description' => $step['description'], 'points' => $step['points']]);
+
+                        return $model;
+                    })
                     : null;
                 if ($steps !== null) {
                     $question->setRelation('baremSteps', $steps);
@@ -92,8 +103,7 @@ class QuestionController extends Controller
 
                 $question->save();
                 if ($steps !== null) {
-                    $question->baremSteps()->delete();
-                    $question->baremSteps()->saveMany($steps);
+                    $regraded = $this->saveBarem($question, $steps);
                 }
                 if (array_key_exists('pool_ids', $data)) {
                     $question->pools()->sync($data['pool_ids']);
@@ -105,7 +115,7 @@ class QuestionController extends Controller
             return $this->notReady($e->problems);
         }
 
-        return $this->answer($question);
+        return $this->answer($question, 200, $regraded === null ? [] : ['regraded' => $regraded]);
     }
 
     public function ready(Request $request, int $id): JsonResponse
@@ -190,11 +200,78 @@ class QuestionController extends Controller
         return $this->bank($request)->findOrFail($id);
     }
 
-    private function answer(Question $question, int $status = 200): JsonResponse
+    private function answer(Question $question, int $status = 200, array $extra = []): JsonResponse
     {
         $question->load(['competence', 'topic', 'pools', 'baremSteps', 'copiedFrom']);
 
-        return response()->json(['question' => new QuestionResource($question)], $status);
+        return response()->json(['question' => new QuestionResource($question), ...$extra], $status);
+    }
+
+    /**
+     * Saves the barem steps in place: removed steps are deleted (with only their scores), kept ones
+     * updated, new ones added; then the graded answers are recalculated (D-031).
+     *
+     * @param  Collection<int, BaremStep>  $steps
+     * @return array{answers: int, flagged: int}
+     */
+    private function saveBarem(Question $question, Collection $steps): array
+    {
+        $before = Scorer::scoresBefore($question);
+        $kept = $steps->filter(fn (BaremStep $s) => $s->exists);
+        $added = $steps->count() !== $kept->count();
+
+        $question->baremSteps()->whereNotIn('id', $kept->pluck('id'))->delete();
+        // Positions are unique per question: move the kept steps out of the way first.
+        foreach ($kept as $step) {
+            BaremStep::whereKey($step->id)->update(['position' => $step->position + 1000]);
+        }
+        foreach ($steps as $step) {
+            $step->question_id = $question->id;
+            $step->save();
+            if ($kept->contains($step)) {
+                // Not dirty when it ends where it started, so written explicitly.
+                BaremStep::whereKey($step->id)->update(['position' => $step->position]);
+            }
+        }
+
+        return Scorer::regrade($question, $before, $kept->mapWithKeys(fn (BaremStep $s) => [$s->id => (float) $s->points])->all(), $added);
+    }
+
+    /** D-031, D-046: once an exam that drew this question has published results, its barem and answer key stay as they are. */
+    private function checkLocks(Question $question, array $data): void
+    {
+        $baremChanged = (array_key_exists('uses_barem', $data) && (bool) $data['uses_barem'] !== $question->uses_barem)
+            || (array_key_exists('barem', $data) && ! self::sameBarem($question, array_values($data['barem'] ?? [])));
+        $keyChanged = array_key_exists('answer_key', $data) && $data['answer_key'] != $question->answer_key;
+        if ((! $baremChanged && ! $keyChanged) || ! Scorer::locked($question)) {
+            return;
+        }
+        $errors = [];
+        if ($baremChanged) {
+            $errors['barem'] = ['barem_locked'];
+        }
+        if ($keyChanged) {
+            $errors['answer_key'] = ['answer_key_locked'];
+        }
+
+        throw ValidationException::withMessages($errors);
+    }
+
+    /** The editor sends the whole question on every save; an unchanged barem is not a change. */
+    private static function sameBarem(Question $question, array $incoming): bool
+    {
+        $current = $question->baremSteps->values();
+        if ($current->count() !== count($incoming)) {
+            return false;
+        }
+        foreach ($incoming as $i => $step) {
+            $was = $current[$i];
+            if (($step['id'] ?? null) !== $was->id || $step['description'] !== $was->description || (float) $step['points'] !== (float) $was->points) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /** @param  list<array>  $problems */
@@ -216,6 +293,10 @@ class QuestionController extends Controller
             if (isset($data[$field]) && ! DB::table($table)->where('id', $data[$field])->where('examiner_id', $examinerId)->exists()) {
                 $errors[$field] = 'invalid';
             }
+        }
+        $stepIds = array_values(array_filter(array_column($data['barem'] ?? [], 'id')));
+        if ($stepIds && (count(array_unique($stepIds)) !== count($stepIds) || array_diff($stepIds, $question->baremSteps->pluck('id')->all()))) {
+            $errors['barem'] = 'invalid';
         }
         $poolIds = array_unique($data['pool_ids'] ?? []);
         if ($poolIds && DB::table('pools')->whereIn('id', $poolIds)->where('examiner_id', $examinerId)->count() !== count($poolIds)) {

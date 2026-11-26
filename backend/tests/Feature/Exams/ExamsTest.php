@@ -14,7 +14,7 @@ uses(RefreshDatabase::class);
 // C-005 · the Examiner's exams: settings, Items, checks, publishing (D-005, D-012, D-015, D-057, Q-059–Q-063).
 
 /** An Examiner signed in, with a class, a pool, a competence and a topic, and `$n` Ready questions per Subject. */
-function examSetup(int $subjectOne = 6, int $subjectTwo = 2): array
+function examSetup(int $subjectOne = 6, int $subjectTwo = 3): array
 {
     $examiner = User::factory()->examiner()->create();
     test()->withToken($examiner->createToken('spa')->plainTextToken);
@@ -27,7 +27,7 @@ function examSetup(int $subjectOne = 6, int $subjectTwo = 2): array
     }
     foreach (range(1, $subjectTwo) as $i) {
         $q = Question::factory()->subjectTwo()->ready()->for($examiner, 'examiner')->create([
-            'competence_id' => $competence->id, 'topic_id' => $topic->id, 'difficulty' => 'medium', 'grade_level' => 6, 'points' => 30,
+            'competence_id' => $competence->id, 'topic_id' => $topic->id, 'difficulty' => 'medium', 'grade_level' => 6, 'points' => 20,
         ]);
         $pool->questions()->attach($q);
     }
@@ -35,14 +35,14 @@ function examSetup(int $subjectOne = 6, int $subjectTwo = 2): array
     return compact('examiner', 'class', 'pool', 'competence', 'topic');
 }
 
-/** Six 5-point Subject I Items and two 30-point Subject II Items on the setup's pool. */
-function fullBlueprint(array $s, Exam $exam): void
+/** Six 5-point Subject I Items and `$subjectTwo` 20-point Subject II Items on the setup's pool (D-062: 3 to publish). */
+function fullBlueprint(array $s, Exam $exam, int $subjectTwo = 3): void
 {
     foreach (range(1, 6) as $i) {
         test()->postJson("/api/exams/{$exam->id}/items", ['section' => 'subject_1', 'points' => 5, 'pool_id' => $s['pool']->id, 'competence_id' => $s['competence']->id, 'difficulty' => 'easy'])->assertCreated();
     }
-    foreach (range(1, 2) as $i) {
-        test()->postJson("/api/exams/{$exam->id}/items", ['section' => 'subject_2', 'points' => 30, 'pool_id' => $s['pool']->id, 'competence_id' => $s['competence']->id, 'difficulty' => 'medium', 'type' => 'structured_problem'])->assertCreated();
+    foreach (range(1, $subjectTwo) as $i) {
+        test()->postJson("/api/exams/{$exam->id}/items", ['section' => 'subject_2', 'points' => 20, 'pool_id' => $s['pool']->id, 'competence_id' => $s['competence']->id, 'difficulty' => 'medium', 'type' => 'structured_problem'])->assertCreated();
     }
 }
 
@@ -201,7 +201,7 @@ it('previews a draw: every Item its own question, values filled, expected answer
     ]);
     $s['pool']->questions()->attach($values);
     $exam = Exam::factory()->for($s['examiner'], 'examiner')->create();
-    fullBlueprint($s, $exam);
+    fullBlueprint($s, $exam, 2);
     $this->postJson("/api/exams/{$exam->id}/items", ['section' => 'subject_1', 'points' => 5, 'pool_id' => $s['pool']->id, 'competence_id' => $s['competence']->id, 'difficulty' => 'hard']);
 
     $items = $this->getJson("/api/exams/{$exam->id}/preview")->assertOk()->json('items');
@@ -226,4 +226,24 @@ it('refuses a preview that can\'t be drawn, and keeps exams private', function (
     foreach (['getJson' => '', 'patchJson' => '', 'deleteJson' => '', 'postJson' => '/publish'] as $method => $suffix) {
         $this->{$method}("/api/exams/{$theirs->id}{$suffix}")->assertNotFound();
     }
+});
+
+it('keeps a Subject II Item at 20 points and publishes only with exactly 3 of them (D-062)', function () {
+    $s = examSetup(6, 4);
+    $exam = Exam::factory()->for($s['examiner'], 'examiner')->create();
+    $exam->classes()->attach($s['class']);
+    $item = ['section' => 'subject_2', 'pool_id' => $s['pool']->id, 'competence_id' => $s['competence']->id, 'difficulty' => 'medium', 'type' => 'structured_problem'];
+
+    $this->postJson("/api/exams/{$exam->id}/items", [...$item, 'points' => 30])->assertUnprocessable()->assertJsonPath('errors.points.0', 'invalid');
+    $id = $this->postJson("/api/exams/{$exam->id}/items", [...$item, 'points' => 20])->assertCreated()->json('exam.items.0.id');
+    $this->patchJson("/api/exams/{$exam->id}/items/{$id}", ['points' => 10])->assertUnprocessable()->assertJsonPath('errors.points.0', 'invalid');
+
+    fullBlueprint($s, $exam, 1);
+    $this->getJson("/api/exams/{$exam->id}")->assertJsonFragment(['code' => 'subject_two_items', 'count' => 2, 'expected' => 3]);
+
+    $this->postJson("/api/exams/{$exam->id}/items", [...$item, 'points' => 20])->assertCreated();
+    $this->getJson("/api/exams/{$exam->id}")->assertJsonPath('exam.checks.problems', []);
+
+    $this->postJson("/api/exams/{$exam->id}/items", [...$item, 'points' => null])->assertCreated();
+    $this->getJson("/api/exams/{$exam->id}")->assertJsonFragment(['code' => 'subject_two_items', 'count' => 4, 'expected' => 3]);
 });

@@ -35,6 +35,8 @@ jobs:
           php-version: '8.4'
           extensions: pdo_pgsql
           coverage: none
+      # heif-convert and its HEVC decoder, as in the Docker image (D-026, P6d).
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libheif-examples libheif-plugin-libde265
       - run: composer install --no-interaction --no-progress
       - run: cp .env.example .env && php artisan key:generate --no-interaction
       - run: ./vendor/bin/pest

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { saveAnswer, type AnswerValue, type AttemptItem } from '../../../api/attempts'
 import { ApiError } from '../../../api/client'
 import { clearStored, readStored, writeStored, type StoredAnswer } from './answerStore'
@@ -143,7 +143,9 @@ export function useAnswers(attemptId: number, items: AttemptItem[] | null) {
   }, [attemptId, persist])
 
   // After a resume: refs from the merged answers, and the device's waiting answers sent at once.
-  useEffect(() => {
+  // A layout effect, so it is done before the page can handle a click: a late passive effect would
+  // overwrite a first answer's device copy (seen in CI, 2026-11-26).
+  useLayoutEffect(() => {
     if (!resumed) return
     latest.current = resumed.answers
     versions.current = { ...resumed.versions }

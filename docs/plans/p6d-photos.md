@@ -1,6 +1,6 @@
 # Plan — P6d: Subject II photos (D-026, D-048)
 
-Status: proposed 2026-11-26 · Covers D-004, D-019, D-026, D-044, D-048 · Q-066 answered (Cloudflare
+Status: approved 2026-11-26 (D-026, D-048, C-006 additions, the assumptions; deleting asks first) · Covers D-004, D-019, D-026, D-044, D-048 · Q-066 answered (Cloudflare
 R2), Q-070 · Builds on P6b (autosave, deadline, sealing), P7b–P7d (exam room) · next: P8 (the
 Examiner sees and grades the photos)
 
@@ -40,6 +40,7 @@ endpoints, the DS-004 photo block, and one new dependency plus one system packag
 ("Subiectul II + fotografii (P6d)") is approved. Added:
 - an upload refused: wrong type, too large, the network down ("Fotografia nu s-a încărcat …
   Încearcă din nou")
+- the confirmation before deleting a photo (the user's choice)
 - the Subject II hint back to the approved mock's wording: "Scrie pașii pe scurt. Desenul și
   calculele le poți fotografia mai jos."
 
@@ -53,7 +54,7 @@ endpoints, the DS-004 photo block, and one new dependency plus one system packag
 - **Photos are uploaded right away.** They aren't kept on the device like text answers (too large
   for browser storage). Offline, the upload is refused with the retry notice. The text steps stay
   protected by P7d.
-- **Deleting** asks nothing: the photo can be taken again.
+- **Deleting** asks first, in a small confirmation dialog ("Ștergi fotografia 2?", "Anulează" / "Șterge"), as the user asked.
 
 **Production check, after you set up R2:** I upload a test photo on the live site with a throwaway
 Candidate and check it in R2, then delete it.
@@ -143,5 +144,5 @@ evaluation; resizing.
 ### Assumptions (no entry behind them)
 - A problem with a photo but no text counts as answered.
 - Photos upload right away and aren't kept on the device offline.
-- Deleting a photo asks no confirmation.
+- Deleting a photo asks for confirmation (user, 2026-11-26).
 - In production without R2 configured, uploads are refused and the photo block is hidden.

@@ -207,7 +207,7 @@
 ## D-026 · Subject 2 photo upload limits
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-26
 - **Rule:** A Candidate can upload up to 3 images per Subject 2 problem, 10 MB each, in JPG, PNG or HEIC. HEIC is converted to JPG on the server so the Examiner's browser can display it. D-048 still holds (photos in object storage in production).
 - **Why:** Multi-page handwritten solutions from phones (often HEIC on iPhones) must reach the Examiner readable.
 - **Rejected:** 5 images per problem; 5 MB JPG/PNG only without HEIC conversion; 1 image per problem.
@@ -367,7 +367,7 @@
 ## D-048 · Subject II photos in object storage in production
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-26
 - **Rule:** Subject II solutions keep their step-by-step text and up to 3 handwritten photos per problem (D-011, D-026). In production the photos are stored in S3-compatible object storage with a free tier (provider chosen in P6); in development they stay on the local disk. The Examiner's grading queue shows them either way.
 - **Why:** Render's free web service loses its disk on every deploy, so photos uploaded in the pilot would be deleted before grading (Q-027).
 - **Rejected:** Local disk on Render with no deploys between pilot and grading; a paid Render persistent disk.

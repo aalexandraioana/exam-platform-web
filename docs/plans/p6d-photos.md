@@ -15,7 +15,8 @@ endpoints, the DS-004 photo block, and one new dependency plus one system packag
   setting: Laravel's own `FILESYSTEM_DISK` switches it.
 - **New dependency:** `league/flysystem-aws-s3-v3`, needed for Laravel's `s3` disk to talk to R2.
 - **Docker:**
-  - `libheif-examples` (the `heif-convert` tool) for the HEIC → JPG conversion (D-026)
+  - `libheif-examples` (the `heif-convert` tool) and `libheif-plugin-libde265` (its HEVC decoder,
+    needed for iPhone photos) for the HEIC → JPG conversion (D-026)
   - PHP's upload limits raised to 10 MB per file (the default is 2 MB)
 - **Endpoints** (Candidate, own Attempt, a Subject II problem only):
   - `POST /attempts/{id}/items/{position}/images` (one file, `image`) → `201 {image}`.
@@ -31,8 +32,8 @@ endpoints, the DS-004 photo block, and one new dependency plus one system packag
     - `409 time_up` / `attempt_submitted`: the same deadline and grace as saving answers (D-004),
       under the Attempt's row lock (PATTERN-007)
 - **The read:** `items[].images: [{id, position, name, size}]` for Subject II items.
-- `photos_enabled` in the read: false in production while R2 isn't configured, so the exam room hides
-  the photo block.
+- `photos_enabled` in the read: false in production until `FILESYSTEM_DISK=s3` **and** all R2 keys are
+  set (checked while building: the disk name alone wasn't enough), so the exam room hides the photo block.
 - **Answered:** a problem with a photo counts as answered for the navigator, the submit dialog and
   the end screen.
 
@@ -81,12 +82,12 @@ Consumers: `frontend/src/api/attempts.ts` (this plan); P8's grading queue later.
 | Action | Path | What |
 |---|---|---|
 | edit | `backend/composer.json`, `composer.lock` | `league/flysystem-aws-s3-v3` |
-| edit | `backend/Dockerfile` (+ `docker/php-uploads.ini`) | `libheif-examples`; 10 MB uploads |
-| add | `backend/app/Support/Attempts/Photos.php` | checks, HEIC conversion, storing, positions, under the row lock |
+| edit | `backend/Dockerfile` (+ `docker/php-uploads.ini`) | `libheif-examples`, `libheif-plugin-libde265`; 10 MB uploads |
+| add | `backend/app/Support/Attempts/Photos.php`, `PhotoRefused.php` | checks, HEIC conversion, storing, positions, under the row lock; the refusal codes |
 | add | `backend/app/Http/Controllers/AttemptImageController.php` | the three endpoints |
 | edit | `backend/routes/api.php`, `Resources/AttemptResource.php`, `Models/Answer.php` | routes, `images` in the read |
 | add | `backend/tests/Feature/Attempts/PhotosTest.php`, `tests/fixtures/` (tiny JPG, PNG, HEIC) | below |
-| edit | `render.yaml` | `FILESYSTEM_DISK=s3` and the `AWS_*` keys as `sync: false` (no values) |
+| edit | `render.yaml` | `FILESYSTEM_DISK` and the `AWS_*` keys listed as dashboard settings (`sync: false`, no values; region `auto`, bucket name and path style set) |
 | edit | `docs/design/mocks/DS-004.html`, `registry.yaml` | Part 2 |
 | edit | `frontend/src/api/attempts.ts` | upload (with progress), delete, fetch the image |
 | add | `frontend/src/pages/candidate/exam/PhotoTray.tsx` (+ test) | the photo block |

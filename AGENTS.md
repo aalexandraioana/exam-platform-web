@@ -95,6 +95,7 @@ docker compose up -d
 # Backend: commands run inside the api container (no PHP needed on the host)
 docker compose exec api ./vendor/bin/pest
 docker compose exec api php artisan migrate --seed
+docker compose exec api php artisan app:load-questions <examiner email>   # questions.yaml, insert-only (D-029)
 
 # Frontend (frontend/, Node from .nvmrc)
 npm install

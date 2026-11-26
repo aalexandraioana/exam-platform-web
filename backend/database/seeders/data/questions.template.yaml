@@ -3,8 +3,9 @@
 #
 # HOW TO USE
 #   1. Copy this file to `questions.yaml` in the same folder and write your real
-#      questions there. The seeder (P4c) reads ONLY `questions.yaml`; the examples
-#      below are illustrations and are never loaded.
+#      questions there. `php artisan app:load-questions <email>` reads
+#      `questions.yaml` (how to run it is at its top); the examples below are
+#      illustrations and are never loaded.
 #   2. One block per question, under `questions:`. Keep the indentation (2 spaces).
 #   3. Validation (the 2+ colleagues, when, what they corrected) and pilot results
 #      go in BANK.md, keyed by the question `code` — not here.
@@ -24,10 +25,10 @@
 #   difficulty    easy | medium | hard.
 #   points        Points this question is worth (Subject I items are usually 5).
 #   competence    Your own competence (D-058): a short `code` and a `description`
-#                 of what is assessed. The seeder creates it in your list the first
+#                 of what is assessed. The loader creates it in your list the first
 #                 time it sees the code; reuse the same code for other questions.
 #   topic         Exactly one topic from your own list, e.g. Unghiuri (D-058). The
-#                 seeder creates it the first time it sees it. Exam Items can match
+#                 loader creates it the first time it sees it. Exam Items can match
 #                 on it (D-057).
 #   pools         Optional. Named pools the question goes into (D-041), e.g.
 #                 [Unghiuri – ușor]. Exam Items draw from pools (D-057).

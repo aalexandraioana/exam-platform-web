@@ -10,6 +10,8 @@ export function examProblemText(t: TFunction, p: ExamProblem): string {
       return t('exams.problem.subject_total', { section: t(`bank.section.${p.section}`), sum: p.sum, expected: p.expected })
     case 'item_incomplete':
       return t('exams.problem.item_incomplete', { item: p.item, field: t(`exams.problem.field.${p.field}`) })
+    case 'subject_two_items':
+      return t('exams.problem.subject_two_items', { count: p.count, expected: p.expected })
     case 'no_distinct_draw':
       return t('exams.problem.no_distinct_draw', { items: (p.items ?? []).join(', ') })
     default:

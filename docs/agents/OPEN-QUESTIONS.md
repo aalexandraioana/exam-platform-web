@@ -82,6 +82,7 @@
 - Q-071 · Is P7 built in one piece? · _answered_
 - Q-072 · How many items does the exam room show at once? · _answered_
 - Q-073 · Does the delivered app move from Render to AWS?
+- Q-074 · How does questions.yaml get into the live bank? · _answered_
 
 ---
 
@@ -539,3 +540,9 @@
 - **Blocks:** P12 (delivery: the live URL on 3 Dec)
 - **Context:** The user's professor requires AWS for the delivered app (live on AWS for the 3 Dec delivery; the 30 Nov pilot may stay on Render). The user chose their own new AWS account and "an AWS server with Cloudflare R2". Drafted, not yet approved: a PROPOSAL superseding D-014 (a new decision, not numbered yet): one EC2 server (Frankfurt) with Docker Compose (the production API image, PostgreSQL 16 with a nightly backup to R2, Caddy serving the SPA and HTTPS), deploys from GitHub Actions, data moved from Render on 1 Dec. Two choices open: HTTPS through CloudFront, a bought domain or a free IP-name domain; the sealing cron on the server (updating D-044) or cron-job.org. Parked by the user on 2026-11-26 to finish the build first.
 
+## Q-074 · How does questions.yaml get into the live bank?
+- **Status:** answered
+- **Date:** 2026-11-26
+- **Blocks:** P4c
+- **Context:** The repo is public, so committed answer keys can be read by pilot Candidates; Render's free plan has no server shell; D-059 decides when a question can be Ready.
+- **Answer:** questions.yaml is committed (no .gitignore), knowing its answer keys are public. A question that is well-formed but incomplete loads as Draft, with what it still needs listed; complete ones load as Ready. The live load runs from the user's machine with `app:load-questions <email>` against the live database URL (read with `read -s`, `sslmode=require`). (Answered 2026-11-26.)

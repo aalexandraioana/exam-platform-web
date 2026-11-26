@@ -87,7 +87,7 @@
 ## D-005 · Two-part assessment scoring architecture with zero negative marking
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** The scoring engine enforces a two-part assessment model: 10 baseline points (din oficiu) + Subject 1 (30 pts, auto-graded, binary 0 or full points, no partial credit) + Subject 2 (60 pts, manual grading queue for the examiner with partial credit support). Negative marking is strictly disallowed across all question types.
 - **Why:** Directly models the 6th-grade mathematics examination structure validated during the client interview.
 - **Rejected:** Negative marking for incorrect answers; automated grading for Subject 2 proofs/multi-step reasoning.
@@ -97,7 +97,7 @@
 ## D-006 · Exact-match numeric tolerance with concrete parameter persistence
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Parameterized questions evaluate formulas with exact-match numeric tolerance (tolerance = 0), and each attempt permanently records its concrete generated parameter values.
 - **Why:** Matches the precision needed for 6th-grade mathematics problems and guarantees exact auditability and problem reconstruction during grade contests.
 - **Rejected:** Loose floating-point percentage tolerance; storing only random seeds without snapshotting evaluated parameters.
@@ -107,7 +107,7 @@
 ## D-008 · Pest PHP, Vitest, and Playwright as automated testing stack
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-26
 - **Rule:** Backend tests are written with Pest PHP (`./vendor/bin/pest`); frontend unit and integration tests use Vitest (`npm run test`); E2E user flows and automated visual regression screenshots are run with Playwright (`npx playwright test`), saving outputs to `docs/design/screens/<DS-id>.<light|dark>.png`.
 - **Why:** Pest PHP is the modern Laravel testing choice; Vitest integrates natively with Vite; Playwright covers E2E and screenshot verification, satisfying the catalog requirement of ≥10 tests and Definition of Done visual checks.
 - **Rejected:** PHPUnit standalone (Pest wraps it and is more expressive); Jest (Vitest is Vite-native); Cypress (Playwright is preferred for multi-browser and screenshot automation).
@@ -137,7 +137,7 @@
 ## D-013 · Sandboxed PHP mathematical expression library for formula evaluation
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Parameterized question formulas are evaluated on the backend using a dedicated sandboxed PHP mathematical expression library with an operation whitelist, strictly avoiding native PHP eval().
 - **Why:** Meets the catalog security constraint requiring sandboxed formula parsing to prevent arbitrary code execution on dynamically evaluated expressions.
 - **Rejected:** Native PHP `eval()`; executing formulas in shell or unverified external processes.
@@ -147,7 +147,7 @@
 ## D-014 · Production deployment on Render cloud platform
 - **Status:** approved
 - **Date:** 2026-11-19
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-26
 - **Rule:** The application is deployed to Render with a managed PostgreSQL 16 database, a containerized Laravel 13 REST API web service, and a static web service for the React 19 + Vite SPA.
 - **Why:** Delivers a reliable, production-ready HTTPS environment satisfying the course catalog requirement for public deployment and live pilot testing.
 - **Rejected:** Self-hosted unmanaged VPS; Fly.io (Render was chosen by the user for managed PostgreSQL and web services).
@@ -167,7 +167,7 @@
 ## D-017 · Answer matching rules for numbers and text
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Numeric answers accept both decimal separators ("2,5" and "2.5"); a fraction answer must be in the form the Examiner expects (an equal value in another form is wrong). Text answers are compared after ignoring case, extra whitespace and diacritics, against an Examiner-defined list of accepted answers. D-006 (tolerance 0) still holds.
 - **Why:** Romanian notation uses the decimal comma, and 6th-grade ratio work often expects a specific fraction form; short answers such as "se înjumătățesc" are often typed without diacritics.
 - **Rejected:** Accepting any equal-valued fraction; strict exact text matching; numeric-only short answers.
@@ -237,7 +237,7 @@
 ## D-029 · Database as question source, BANK.md as validation and pilot log
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** The database is the source of truth for questions. The initial pool is loaded by an insert-only seeder keyed on a stable, unique question code; it never updates or deletes, so questions added or edited in the UI are safe. BANK.md holds no question text: it is the validation and pilot log (per validated question: code, competence, the 2+ colleagues who validated it, when, what they corrected; plus the results of the pilot with 10+ Candidates).
 - **Why:** Avoids two sources of truth while meeting the catalog requirement to record peer validation and pilot results in BANK.md.
 - **Rejected:** BANK.md as the re-seeded question source; generating the question list into BANK.md.
@@ -247,7 +247,7 @@
 ## D-031 · Optional barem for Subject 2 questions
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** A Subject 2 question may have a barem; the Examiner chooses per question whether to use one. A barem is an ordered list of steps, each with a short description and points, summing to the question's points (each Variant has its own). With a barem, the Examiner ticks the steps a Candidate earned or gives part of a step's points (never more than the step is worth); the score is the sum plus an optional manual adjustment, kept between 0 and the question's points (D-005), with a private comment (D-019). The ticked steps and points are stored per answer. Without a barem, the Examiner enters one score between 0 and the question's points, plus the comment. A barem can be edited while grading: scores already given on that question are recalculated from their ticked steps (partial points capped at a step's new maximum, with the affected answers flagged for re-check). Once results are published, the barem is locked.
 - **Why:** Matches Romanian barem grading practice and makes grading consistent across Candidates, while leaving Examiners free to grade holistically when a barem does not fit.
 - **Rejected:** Mandatory barem for every Subject 2 question; locking the barem at the first graded answer; recalculating after publication.
@@ -307,7 +307,7 @@
 ## D-040 · Library entries are frozen copies
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Only Ready questions can be published to the shared library (D-027). Publishing makes a frozen copy with its own code, author and publish date; later edits to the author's question don't change it. Copying a library entry into another Examiner's bank creates an independent question that remembers which entry it came from, and also copies its competence and topic labels into the copier's own lists.
 - **Why:** Matches DS-007 (separate LIB- codes, "Copiată · M6-TR-011", "Doar întrebările finalizate pot fi publicate") and keeps every Examiner in control of their own questions.
 - **Rejected:** The library showing the author's live question; copies without the competence (the copier picks one).
@@ -317,7 +317,7 @@
 ## D-041 · One bank per Examiner, organised in pools
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Each Examiner has one bank: all their questions, private to them (D-027). Inside it they can create named pools; a question can be in several pools or in none, and deleting a pool keeps its questions. Exam Items draw from pools (D-043).
 - **Why:** The bank is the storage place; pools are the groups an Examiner builds for exams, as in the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
 - **Rejected:** Several separate banks per Examiner; a question belonging to exactly one pool; pools only for organising.
@@ -436,7 +436,7 @@
 ## D-055 · A user's role is fixed when the account is created
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** A user's role never changes after the account is created. Candidates register themselves; an Administrator creates Examiners (DS-011 or `app:create-user`); Administrators are created only with `app:create-user`. No screen or endpoint changes a role.
 - **Why:** The user fixed roles while scoping the Administrator screen (P3b).
 - **Rejected:** A role control on DS-011.
@@ -446,7 +446,7 @@
 ## D-056 · Deactivation is permanent and never applies to Administrators
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** An Administrator can deactivate Candidates and Examiners only. A deactivated account can't be reactivated: it is signed out everywhere and refused at login, and its data stays. The API refuses deactivating an Administrator (403) and reactivating anyone.
 - **Why:** The user's answers to Q-043 and Q-044.
 - **Rejected:** Reactivation; deactivating Administrators, including oneself.
@@ -456,7 +456,7 @@
 ## D-057 · Exam blueprint drawing from pools by competence, difficulty, type and topic
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** An Exam is a blueprint of ordered Items. Each Item fixes section, points, competence (the Examiner's own, D-058), difficulty and one of the Examiner's pools (D-041), plus a question type and a topic, each of which may be "any". When an Attempt starts, the server picks for each Item one random Ready question from that pool whose competence and difficulty match the Item's, whose type and topic match unless the Item says "any", and whose grade level matches the Exam's. No question appears twice in the same Attempt, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question. Questions are fixed by default. A parameterised question names its values in braces in the statement ({p}); each named value is fixed (one value), random (a whole number between min and max, with optional excluded values, under simple conditions such as `a > b`) or calculated from the others (D-013). The Examiner previews sample values before saving. The picked question, its values and the expected answer are stored per Attempt (D-006), so the Examiner sees which question each Candidate got. Item Analysis reports per question and per Item. "8 easy questions from pool A" = 8 Items on pool A.
 - **Why:** The user's description of the exam template (2026-11-24): Items draw by difficulty, type, topic and competence; values are marked as fixed, random or calculated. Keeps D-043's coverage: every Attempt has the same competences and difficulty curve, and similar questions go to different Candidates.
 - **Rejected:** Drawing from the whole bank without a pool (Q-045); decimal values, steps or value lists (Q-048); fixed numbers as unnamed text (Q-047); hand-listed Variants per Item (D-025); repeats within one Attempt.
@@ -466,7 +466,7 @@
 ## D-058 · Examiner-defined competences; one topic per question
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Each Examiner keeps their own list of competences: a short code (e.g. C1, unique for that Examiner) and a Romanian description of what is assessed. Questions and blueprint Items are tagged with one of the Examiner's competences, and Item Analysis groups by them. Each Examiner also keeps their own list of topics (chapters such as Mulțimi de numere întregi, Drepte, Unghiuri); a question has exactly one topic, and Items can match on it (D-057). Questions and exams carry a grade level (5–8).
 - **Why:** Competences are what the teacher decides to assess; the user wants Items to draw by topic, with one topic per question (Q-046).
 - **Rejected:** Several topics per question (D-039); a small fixed competence list (D-030); topics as a seeded curriculum structure; competences tied to a topic.
@@ -476,7 +476,7 @@
 ## D-059 · Draft and Ready question status
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Each question is Draft or Ready. A Draft needs only its Subject (I or II) and type. A question can be marked Ready only when its statement, points, competence, topic, grade level and difficulty are set, plus an answer key for Subject I and a complete barem for Subject II if the Examiner chose to use one (D-031). A parameterised question is Ready only when every {name} in its statement is defined and its preview produces valid values. Only Ready questions can be picked for an Attempt or published to the library (D-040); the Exam builder shows Draft questions as "not ready", and an Exam cannot be published unless D-057's publish check passes.
 - **Why:** Random picks (D-057) must never hand a Candidate a half-written question, and every field an Item can match on must be set.
 - **Rejected:** Ready without a topic (a question could then only match Items set to "any"); treating every saved question as usable.

@@ -19,7 +19,7 @@
 
 ## PATTERN-001 · Plan-then-build execution
 - **Status:** approved
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-26
 - **Use when:** Implementing features, refactorings, or modifications spanning multiple files or logic boundaries.
 - **How:** Run `/plan` to define size, approach, tests, and files; confirm knowledge; execute via `/build`.
 - **Example:** AGENTS.md:23
@@ -44,6 +44,7 @@
 
 ## PATTERN-004 · Fixed data rules as Postgres constraints, tested by refusal
 - **Status:** candidate
+- **Confirmed:** 2026-11-26
 - **Use when:** A data rule is simple and never depends on who is asking: allowed values, ranges, "if X then Y must be set", uniqueness, delete behaviour.
 - **How:** Enforce it in the migration: `enum` columns (CHECK constraints) with values from the PHP enum's `values()` (`App\Enums\Concerns\HasValues`), named `ALTER TABLE … ADD CONSTRAINT … CHECK (…)` for conditions, unique keys (an expression index for case-insensitive names), and explicit `restrictOnDelete` / `cascadeOnDelete` / `nullOnDelete`. Index every foreign key that no unique key leads with (Postgres doesn't index foreign keys). Test each rule with `expectRefused()` from `tests/Pest.php` (it wraps the statement in a savepoint, so the test continues), and send invalid values with `DB::table()` so the model's enum cast doesn't refuse them first. Rules that depend on the user or on several rows (ownership, sums) stay in application code.
 - **Example:** backend/database/migrations/2026_11_22_190002_create_questions_table.php; backend/tests/Feature/Schema/QuestionBankSchemaTest.php
@@ -52,6 +53,7 @@
 
 ## PATTERN-005 · Validation errors as codes, not sentences
 - **Status:** candidate
+- **Confirmed:** 2026-11-26
 - **Use when:** An API request is validated (FormRequest or a thrown `ValidationException`).
 - **How:** `messages()` maps each rule to a code from docs/API.md → Errors (`required`, `invalid`, `too_short`, `mismatch`, `taken`, `not_found`, `credentials`); `bootstrap/app.php` renders every API `ValidationException` as `{"message": "The given data was invalid.", "errors": {field: [code]}}`. The SPA turns codes into RO/EN text. A new code is added to docs/API.md in the same change. Tests assert the code (`assertJsonPath('errors.email.0', 'taken')`).
 - **Example:** backend/app/Http/Requests/Auth/RegisterRequest.php; backend/tests/Feature/Auth/RegisterTest.php

@@ -87,6 +87,8 @@
 - Q-076 · When may the Examiner publish an exam's results? · _answered_
 - Q-077 · Is P8 built in one piece? · _answered_
 - Q-078 · Which DS-009 parts may be cut to save time? · _answered_
+- Q-079 · Do answers marked for re-check block publishing results? · _investigating_
+- Q-080 · Can an exam without an end date publish its results? · _investigating_
 
 ---
 
@@ -578,3 +580,17 @@
 - **Blocks:** P8a
 - **Context:** The approved DS-009 mock has a "Pe item" and a "Pe candidat" view and an "Editează baremul" action.
 - **Answer:** None: both views are built, and the barem is edited inline on the grading screen, as in the mock. (Answered 2026-11-26.)
+
+## Q-079 · Do answers marked for re-check block publishing results?
+- **Status:** investigating
+- **Date:** 2026-11-26
+- **Blocks:** P8a
+- **Context:** Q-076 requires every submitted Attempt to be graded; a barem edit can flag graded answers for re-check (D-031).
+- **Proposed answer:** No; as built, flagged answers count as graded and the queue shows them as "de reverificat". To confirm with the user.
+
+## Q-080 · Can an exam without an end date publish its results?
+- **Status:** investigating
+- **Date:** 2026-11-26
+- **Blocks:** P8a
+- **Context:** Q-076 requires the availability window to have closed; `available_until` may be empty.
+- **Proposed answer:** No; as built, the Examiner sets "Disponibil până la" first (still editable after publishing, Q-060). To confirm with the user.

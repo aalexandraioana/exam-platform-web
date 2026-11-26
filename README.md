@@ -61,6 +61,8 @@ Needs Docker and Node (version in `frontend/.nvmrc`); no PHP on the host.
 ```bash
 docker compose up -d                        # PostgreSQL + API on http://localhost:8000
 docker compose exec api ./vendor/bin/pest   # backend tests
+docker compose exec api php artisan migrate --seed   # local demo accounts, one per role (DatabaseSeeder)
+docker compose exec api php artisan app:load-questions examiner@example.test   # the real question bank
 
 cd frontend
 cp .env.example .env                        # VITE_API_BASE_URL=http://localhost:8000/api
@@ -70,6 +72,8 @@ npm run test                                # frontend tests
 ```
 
 The first `docker compose up` installs the Composer packages, creates `backend/.env` with its own key and runs the migrations. Environment variables: `backend/.env.example`, `frontend/.env.example`.
+
+The question bank comes from `backend/database/seeders/data/questions.yaml` (format and examples in `questions.template.yaml` next to it). `app:load-questions` only inserts questions whose code is not in the database yet, so it can be run again safely; how to load the live database is at the top of `questions.yaml`.
 
 ---
 

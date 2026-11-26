@@ -14,6 +14,7 @@
 - PATTERN-006 · An account state that blocks the app: one API refusal code, one SPA screen · candidate
 - PATTERN-007 · A write that depends on a row's state locks that row first · candidate
 - PATTERN-008 · Dialog buttons in equal halves through DialogActions · candidate
+- PATTERN-009 · A file import checks the whole file, then inserts in one transaction · candidate
 
 ---
 
@@ -84,3 +85,11 @@
 - **Example:** frontend/src/components/DialogActions.tsx; frontend/src/pages/admin/UsersPage.tsx; frontend/src/pages/examiner/exams/ItemDialog.tsx
 - **Why:** Buttons as wide as their labels looked unbalanced next to each other (user, 2026-11-25); one component keeps all dialogs alike.
 - **Source:** user · confidence high
+
+## PATTERN-009 · A file import checks the whole file, then inserts in one transaction
+- **Status:** candidate
+- **Use when:** Data is loaded into the database from a file a person writes (an artisan command, not an API request).
+- **How:** First pass: parse the file and check every record's shape with `Validator::make`, reusing the request rules (`CodeRules`, `TypeFitsSection`); collect every error, labelled by the record's code, and stop with nothing written if there is one. Second pass, inside `DB::transaction`: insert-only, keyed on the stable code (an existing code is skipped and reported, never updated); find-or-create the owner's own lists; let the domain check (`Readiness`) decide the status rather than refusing. Print one line per fact, so tests can match each with `expectsOutputToContain` (it consumes a line per match). Tests write fixtures with `tempnam` and pass them through a `--file` option.
+- **Example:** backend/app/Console/Commands/LoadQuestions.php; backend/tests/Feature/Console/LoadQuestionsTest.php
+- **Why:** A half-loaded file is worse than none, and re-running must be safe (D-029).
+- **Source:** agent · confidence medium

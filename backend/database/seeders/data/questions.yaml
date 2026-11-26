@@ -1,6 +1,17 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# The initial question pool (D-029). The seeder (P4c) loads this file once:
-# a question whose `code` is already in the database is skipped, never updated.
+# The initial question pool (D-029). `php artisan app:load-questions <email>`
+# loads it into that Examiner's bank: a question whose `code` is already in the
+# database is skipped, never updated. The whole file is checked first; one broken
+# question stops the run and nothing is written. Complete questions become Ready,
+# incomplete ones Draft, with what each still needs (Q-074).
+#
+# LOCAL:  docker compose exec api php artisan app:load-questions examiner@example.test
+# LIVE (from your machine, Q-074; the URL holds the database password):
+#   read -s DB_URL     # paste Render's External Database URL, add ?sslmode=require
+#   export DB_URL
+#   docker compose exec -e DB_URL api php artisan app:load-questions <your email>
+#   unset DB_URL
+# Never put the URL in a file. Load locally first: there is no undo.
 # Every field, the answer format of each type and full examples are in
 # questions.template.yaml (same folder). Validation goes in BANK.md, by `code`.
 #

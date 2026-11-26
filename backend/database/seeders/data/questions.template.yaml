@@ -23,7 +23,8 @@
 #                 subject_2: structured_problem   (the only Subject II type)
 #   grade_level   5–8.
 #   difficulty    easy | medium | hard.
-#   points        Points this question is worth (Subject I items are usually 5).
+#   points        Points this question is worth (Subject I items are usually 5;
+#                 a Subject II problem is always 20, D-062).
 #   competence    Your own competence (D-058): a short `code` and a `description`
 #                 of what is assessed. The loader creates it in your list the first
 #                 time it sees the code; reuse the same code for other questions.
@@ -61,7 +62,7 @@
 # A question is Ready only if it has a statement, points, competence, topic, grade
 # level and difficulty, plus an answer key (Subject I) or a complete barem when one
 # is used, and every {name} defined with values that can be drawn (D-059). Barem
-# steps must add up to `points`.
+# steps must add up to `points` (20 for Subject II).
 # ──────────────────────────────────────────────────────────────────────────────
 
 questions:

@@ -41,6 +41,12 @@ final class PublishChecks
             }
         }
 
+        // D-062: exactly 3 Subject II problems.
+        $subjectTwo = $items->where('section', Section::SubjectTwo)->count();
+        if ($subjectTwo !== Section::SUBJECT_TWO_ITEMS) {
+            $problems[] = ['code' => 'subject_two_items', 'count' => $subjectTwo, 'expected' => Section::SUBJECT_TWO_ITEMS];
+        }
+
         foreach ($items as $item) {
             $missing = ['points' => ! ($item->points > 0), 'pool' => ! $item->pool_id, 'competence' => ! $item->competence_id, 'difficulty' => ! $item->difficulty];
             foreach (array_keys(array_filter($missing)) as $field) {

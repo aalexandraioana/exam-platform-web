@@ -93,7 +93,7 @@ it('lists the distinct topics of the exam\'s Items, none for "any"', function ()
 it('counts the Items per Subject and gives the server time', function () {
     $this->freezeSecond();
     $s = attemptSetup();
-    $s['exam']->items()->where('position', 3)->update(['section' => 'subject_2']);
+    $s['exam']->items()->where('position', 3)->update(['section' => 'subject_2', 'points' => 20]); // D-062
     signInAs($s['candidate']);
 
     $this->getJson('/api/candidate/exams')->assertOk()

@@ -35,6 +35,10 @@ final class Readiness
                 $problems[] = ['code' => 'required', 'field' => $field];
             }
         }
+        // D-062: a Subject II problem is worth 20 points, so its barem adds up to 20.
+        if ($question->section === Section::SubjectTwo && $question->points !== null && (float) $question->points !== (float) Section::SUBJECT_TWO_POINTS) {
+            $problems[] = ['code' => 'subject_two_points', 'field' => 'points'];
+        }
 
         $hasValues = ! empty($question->parameters);
         if ($question->section === Section::SubjectOne) {

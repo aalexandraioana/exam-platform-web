@@ -31,6 +31,7 @@ class UpdateQuestionRequest extends FormRequest
             'parameters' => ['sometimes', 'nullable', 'array'],
             'uses_barem' => ['sometimes', 'boolean'],
             'barem' => ['sometimes', 'nullable', 'array', 'max:30'],
+            'barem.*.id' => ['sometimes', 'integer'],
             'barem.*.description' => ['required', 'string', 'max:2000'],
             'barem.*.points' => ['required', 'numeric', 'between:0,999.99'],
             'pool_ids' => ['sometimes', 'array'],

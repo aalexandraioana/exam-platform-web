@@ -10,6 +10,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamItemController;
+use App\Http\Controllers\GradingController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\QuestionController;
@@ -80,6 +81,12 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::put('/exams/{id}/items/order', [ExamItemController::class, 'order'])->whereNumber('id');
                 Route::patch('/exams/{id}/items/{itemId}', [ExamItemController::class, 'update'])->whereNumber(['id', 'itemId']);
                 Route::delete('/exams/{id}/items/{itemId}', [ExamItemController::class, 'destroy'])->whereNumber(['id', 'itemId']);
+                // C-007 (P8a): Subject II grading and published results.
+                Route::get('/exams/{id}/grading', [GradingController::class, 'queue'])->whereNumber('id');
+                Route::post('/exams/{id}/results', [GradingController::class, 'publish'])->whereNumber('id');
+                Route::get('/grading/items/{id}', [GradingController::class, 'show'])->whereNumber('id');
+                Route::put('/grading/items/{id}', [GradingController::class, 'grade'])->whereNumber('id');
+                Route::get('/grading/images/{id}', [GradingController::class, 'image'])->whereNumber('id');
             });
 
             // C-002 (docs/API.md → Joining a class) and C-006 (docs/API.md → Attempts): the Candidate.

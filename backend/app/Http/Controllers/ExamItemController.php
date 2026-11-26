@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Section;
 use App\Http\Requests\Exams\ItemRequest;
 use App\Http\Requests\Questions\TypeFitsSection;
 use App\Http\Resources\ExamResource;
@@ -24,7 +25,7 @@ class ExamItemController extends Controller
         if ($exam->isPublished()) {
             return ExamController::published();
         }
-        $data = $this->checked($request, $request->validated(), null);
+        $data = $this->checked($request, $request->validated(), null, null);
         $exam->items()->create([...$data, 'position' => ($exam->items()->max('position') ?? 0) + 1]);
 
         return response()->json(['exam' => new ExamResource($exam->refresh())], 201);
@@ -37,7 +38,7 @@ class ExamItemController extends Controller
         if ($exam->isPublished()) {
             return ExamController::published();
         }
-        $item->update($this->checked($request, $request->validated(), $item->section->value));
+        $item->update($this->checked($request, $request->validated(), $item->section->value, $item->points));
 
         return response()->json(['exam' => new ExamResource($exam->refresh())]);
     }
@@ -91,7 +92,7 @@ class ExamItemController extends Controller
     }
 
     /** The pool, competence and topic must be the Examiner's; the type must fit the Subject. */
-    private function checked(Request $request, array $data, ?string $section): array
+    private function checked(Request $request, array $data, ?string $section, mixed $points): array
     {
         $examinerId = $request->user()->id;
         $errors = [];
@@ -103,6 +104,11 @@ class ExamItemController extends Controller
         $section = $data['section'] ?? $section;
         if (isset($data['type']) && ! TypeFitsSection::check($section, $data['type'])) {
             $errors['type'] = ['invalid'];
+        }
+        // D-062: a Subject II Item is worth 20 points (or none yet, while it is a draft).
+        $points = array_key_exists('points', $data) ? $data['points'] : $points;
+        if ($section === Section::SubjectTwo->value && $points !== null && (float) $points !== (float) Section::SUBJECT_TWO_POINTS) {
+            $errors['points'] = ['invalid'];
         }
         if ($errors) {
             throw ValidationException::withMessages($errors);

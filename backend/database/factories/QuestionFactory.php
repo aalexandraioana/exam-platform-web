@@ -36,7 +36,8 @@ class QuestionFactory extends Factory
         return $this->state(fn () => [
             'status' => QuestionStatus::Ready,
             'statement' => fake()->sentence().' …',
-            'points' => 5,
+            // D-062: a Ready Subject II problem is worth 20.
+            'points' => fn (array $attributes) => in_array($attributes['section'] ?? null, [Section::SubjectTwo, 'subject_2'], true) ? 20 : 5,
             'grade_level' => 6,
             'difficulty' => Difficulty::Medium,
             'answer_key' => ['accepted' => ['42']],
@@ -53,6 +54,7 @@ class QuestionFactory extends Factory
             'section' => Section::SubjectTwo,
             'type' => QuestionType::StructuredProblem,
             'answer_key' => null,
+            'points' => fn (array $attributes) => isset($attributes['points']) ? 20 : null,
         ]);
     }
 

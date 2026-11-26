@@ -11,4 +11,9 @@ enum Section: string
 
     case SubjectOne = 'subject_1';
     case SubjectTwo = 'subject_2';
+
+    /** D-062: Subject II is exactly 3 problems of 20 points. */
+    public const SUBJECT_TWO_ITEMS = 3;
+
+    public const SUBJECT_TWO_POINTS = 20;
 }

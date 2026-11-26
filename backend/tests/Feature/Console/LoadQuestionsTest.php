@@ -94,7 +94,7 @@ questions:
     type: structured_problem
     grade_level: 6
     difficulty: medium
-    points: 10
+    points: 20
     competence: { code: C5, description: Calculează unghiurile unui triunghi isoscel. }
     topic: Triunghiuri
     statement: |
@@ -102,7 +102,7 @@ questions:
       Calculează ∢B.
     barem:
       - { step: "Triunghi isoscel ⇒ ∢B = ∢C", points: 4 }
-      - { step: "∢B = 70°", points: 6 }
+      - { step: "∢B = 70°", points: 16 }
 YAML);
 
     load($examiner, $path)->assertSuccessful();
@@ -120,7 +120,7 @@ YAML);
         ->and($questions['M6-TR-004']->statement)->toBe("În triunghiul ABC, AB = AC și ∢A = 40°.\nCalculează ∢B.")
         ->and($questions['M6-TR-004']->baremSteps->map->only('position', 'description', 'points')->all())->toBe([
             ['position' => 1, 'description' => 'Triunghi isoscel ⇒ ∢B = ∢C', 'points' => '4.00'],
-            ['position' => 2, 'description' => '∢B = 70°', 'points' => '6.00'],
+            ['position' => 2, 'description' => '∢B = 70°', 'points' => '16.00'], // 20 points since D-062 (user's OK, 2026-11-26)
         ]);
 });
 

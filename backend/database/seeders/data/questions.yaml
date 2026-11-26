@@ -23,7 +23,7 @@
 #    type: single_choice           # dual_choice | single_choice | multiple_choice | short_answer | structured_problem
 #    grade_level: 6
 #    difficulty: easy              # easy | medium | hard
-#    points: 5
+#    points: 5                     # a Subject II problem: always 20 (D-062)
 #    competence:
 #      code: C1
 #      description: …

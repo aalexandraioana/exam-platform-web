@@ -27,6 +27,12 @@ it('finds nothing missing in a complete question', function () {
     expect(readinessOf([]))->toBe([]);
 });
 
+it('needs 20 points for a Subject II question (D-062)', function () {
+    expect(readinessOf(['points' => 10, 'status' => 'draft'], 'subjectTwo'))->toBe(['subject_two_points:points'])
+        ->and(readinessOf(['points' => 20], 'subjectTwo'))->toBe([])
+        ->and(readinessOf(['points' => null, 'status' => 'draft'], 'subjectTwo'))->toBe(['required:points']);
+});
+
 it('lists each missing field', function () {
     expect(readinessOf(['statement' => null, 'points' => null, 'competence_id' => null, 'topic_id' => null, 'grade_level' => null, 'difficulty' => null, 'status' => 'draft']))
         ->toBe(['required:statement', 'required:points', 'required:grade_level', 'required:difficulty', 'required:competence', 'required:topic']);

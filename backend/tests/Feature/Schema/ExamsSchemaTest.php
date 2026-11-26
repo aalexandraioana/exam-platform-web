@@ -109,3 +109,12 @@ it('indexes the foreign keys that no unique key covers', function () {
         ->and(hasIndexOn('exam_items', 'pool_id'))->toBeTrue()
         ->and(hasIndexOn('exam_items', 'competence_id'))->toBeTrue();
 });
+
+it('keeps a Subject II Item at 20 points, or none yet (D-062)', function () {
+    $exam = Exam::factory()->create();
+
+    expectRefused(fn () => ExamItem::factory()->for($exam)->create(['position' => 1, 'section' => 'subject_2', 'points' => 30]));
+
+    expect(ExamItem::factory()->for($exam)->create(['position' => 2, 'section' => 'subject_2', 'points' => 20])->points)->toBe('20.00')
+        ->and(ExamItem::factory()->for($exam)->create(['position' => 3, 'section' => 'subject_2', 'points' => null])->points)->toBeNull();
+});

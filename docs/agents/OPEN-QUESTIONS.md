@@ -74,7 +74,7 @@
 - Q-063 · Which competences should an Exam cover (DS-008 coverage warning)? · _answered_
 - Q-064 · Where do Candidates see an Exam's description? · _answered_
 - Q-065 · Is P6 built in one piece? · _answered_
-- Q-066 · Which object storage provider holds Subject II photos in production?
+- Q-066 · Which object storage provider holds Subject II photos in production? · _answered_
 - Q-067 · Who sets up the external cron that seals expired Attempts? · _answered_
 - Q-068 · What separates the "started" and "in_progress" Attempt states? · _answered_
 - Q-069 · Which labels does an exam card on the Candidate dashboard show? · _answered_
@@ -482,10 +482,11 @@
 - **Answer:** Split in four: P6a start and draw (twist: reproducible parameters), P6b timer, autosave and submit (twist: server timer), P6c Subject I grading, P6d Subject II photos and storage. (Answered 2026-11-25; first in two, then split further.)
 
 ## Q-066 · Which object storage provider holds Subject II photos in production?
-- **Status:** open
+- **Status:** answered
 - **Date:** 2026-11-25
 - **Blocks:** P6d
 - **Context:** D-048 left the provider to P6. Candidates: Supabase Storage (1 GB free, S3-compatible) or Cloudflare R2 (10 GB free, may need a payment card). The free tiers are to be verified before choosing. The user creates the account; its keys go in Render's settings, never in the repo. Needed by about 28 Nov for the 30 Nov pilot (Q-039).
+- **Answer:** Cloudflare R2, set up by the user on 2026-11-26: a private bucket and an API token limited to it; the keys only in Render's settings (`AWS_*`, Laravel's `s3` disk), never in the repo or the conversation. (Answered 2026-11-26.)
 
 ## Q-067 · Who sets up the external cron that seals expired Attempts?
 - **Status:** answered

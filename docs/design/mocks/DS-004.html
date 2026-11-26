@@ -46,9 +46,9 @@
   .photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
   .slot { aspect-ratio: 3 / 4; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--bg-surface-subtle);
     display: grid; place-items: center; text-align: center; padding: var(--space-3); position: relative; overflow: hidden; }
+  .photo-cell { display: grid; gap: var(--space-2); align-content: start; min-width: 0; }
   .slot.empty { border-style: dashed; background: var(--bg-surface); cursor: pointer; }
   .slot svg.paper { width: 100%; height: 100%; }
-  .slot .slot-actions { position: absolute; left: var(--space-2); right: var(--space-2); bottom: var(--space-2); display: flex; justify-content: space-between; }
   .progress { width: 100%; height: var(--space-2); border-radius: var(--radius-full); background: var(--border-subtle); overflow: hidden; }
   .progress > span { display: block; height: 100%; background: var(--bg-primary); }
   .footer-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3); }
@@ -258,33 +258,32 @@ b) Fie AD bisectoarea. Triunghiurile ABD și ACD au AB = AC, ∢BAD = ∢CAD și
           <span class="t-caption secondary">2 din 3</span>
         </div>
         <div class="photos">
-          <div class="slot" aria-label="Fotografia 1, încărcată">
-            <svg class="paper" viewBox="0 0 120 160" aria-hidden="true">
-              <rect width="120" height="160" fill="var(--bg-surface)"/>
-              <path d="M20 120 L60 30 L100 120 Z" fill="none" stroke="var(--text-secondary)" stroke-width="2"/>
-              <path d="M60 30 L60 120" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
-              <path d="M14 140 h60 M14 150 h80" stroke="var(--text-muted)" stroke-width="2"/>
-            </svg>
-            <div class="slot-actions">
-              <span class="badge success">Încărcată</span>
-              <button type="button" class="btn btn-icon" aria-label="Șterge fotografia 1">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
-              </button>
+          <!-- P6d (user, 2026-11-26): the photo stays clear; name, size and a labelled delete button below -->
+          <div class="photo-cell">
+            <div class="slot" aria-label="Fotografia 1">
+              <svg class="paper" viewBox="0 0 120 160" aria-hidden="true">
+                <rect width="120" height="160" fill="var(--bg-surface)"/>
+                <path d="M20 120 L60 30 L100 120 Z" fill="none" stroke="var(--text-secondary)" stroke-width="2"/>
+                <path d="M60 30 L60 120" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <path d="M14 140 h60 M14 150 h80" stroke="var(--text-muted)" stroke-width="2"/>
+              </svg>
             </div>
+            <span class="t-caption secondary text-wrap">IMG_2040.jpg · 2,4 MB</span>
+            <button type="button" class="btn" style="width: 100%;" aria-label="Șterge fotografia 1"><i data-icon="trash" class="sm"></i>Șterge</button>
           </div>
-          <div class="slot" aria-label="Fotografia 2, se procesează">
+          <div class="photo-cell"><div class="slot" aria-label="Fotografia 2, se procesează">
             <div class="stack-sm" style="justify-items: center; width: 100%;">
-              <span class="t-body-m">IMG_2041.HEIC</span>
+              <span class="t-body-m" style="overflow-wrap: anywhere;">IMG_2041.HEIC</span>
               <div class="progress" aria-hidden="true"><span style="width: 70%;"></span></div>
               <span class="t-caption secondary">Se pregătește imaginea…</span>
             </div>
-          </div>
-          <button type="button" class="slot empty" aria-label="Adaugă fotografia 3">
+          </div></div>
+          <div class="photo-cell"><button type="button" class="slot empty" aria-label="Adaugă fotografia 3">
             <div class="stack-sm" style="justify-items: center;">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
               <span class="t-body-m accent">Fotografiază sau alege</span>
             </div>
-          </button>
+          </button></div>
         </div>
         <span class="help">Cel mult 3 fotografii pentru această problemă: JPG, PNG sau HEIC, până la 10 MB fiecare.</span>
         <!-- P6d: an upload refused. Other texts: "Fotografia nu a fost încărcată: trimite o imagine JPG, PNG sau HEIC."

@@ -48,7 +48,8 @@ endpoints, the DS-004 photo block, and one new dependency plus one system packag
 **Part 3 · the exam room:**
 - **The photo block** under "Pașii rezolvării", as the mock:
   - three slots and "2 din 3"
-  - uploaded photos as thumbnails, each with "Șterge"
+  - uploaded photos as thumbnails; under each, its name and size and a full-width "Șterge" button
+    with the bin icon, nothing covering the photo (the user's choice after the mock review)
   - the upload in progress with its progress bar ("Se pregătește imaginea…" while a HEIC is converted)
   - "Fotografiază sau alege": the phone offers the camera or the gallery
   - the limits text

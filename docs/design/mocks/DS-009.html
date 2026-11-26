@@ -31,6 +31,13 @@
   .step.recheck { background: var(--status-warning-bg); padding-left: var(--space-2); padding-right: var(--space-2); border-radius: var(--radius-sm); }
   .total { display: flex; justify-content: space-between; align-items: baseline; padding-top: var(--space-3); }
   .val { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary-accent); }
+  .problem-tabs { display: flex; flex-wrap: wrap; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border-subtle); }
+  .problem-tab { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-3); border: 1px solid var(--border-input);
+    border-radius: var(--radius-md); background: var(--bg-surface); color: inherit; text-decoration: none; }
+  .problem-tab[aria-current="true"] { border-color: var(--border-focus); background: var(--bg-primary-subtle); }
+  .edit-step { display: grid; grid-template-columns: auto minmax(0, 1fr) 72px auto; gap: var(--space-2); align-items: start; padding: var(--space-2) 0; }
+  .edit-step .input { font-family: var(--font-mono); text-align: right; }
+  .edit-step .textarea { min-height: 0; }
   @media (max-width: 1023px) { .workspace { grid-template-columns: 1fr; } .grade-panel { position: static; } }
   @media (max-width: 639px) { .photos { grid-template-columns: 1fr; } }
 </style>
@@ -46,10 +53,14 @@
     <div class="mock-group">
       <button type="button" class="mock-btn active" data-state-btn="s-barem">Cu barem</button>
       <button type="button" class="mock-btn" data-state-btn="s-list">Listă deschisă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-candidate">Pe candidat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-edit">Editează baremul</button>
       <button type="button" class="mock-btn" data-state-btn="s-nobarem">Fără barem</button>
       <button type="button" class="mock-btn" data-state-btn="s-anon">Nume ascunse</button>
       <button type="button" class="mock-btn" data-state-btn="s-recheck">Barem modificat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-wait">Tot corectat · fereastra deschisă</button>
       <button type="button" class="mock-btn" data-state-btn="s-done">Tot corectat · publicare</button>
+      <button type="button" class="mock-btn" data-state-btn="s-published">Publicat (blocat)</button>
       <button type="button" class="mock-btn" data-state-btn="s-empty">Nicio predare</button>
     </div>
   </div>
@@ -79,32 +90,42 @@
       <h1 class="t-display text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</h1>
       <span class="t-caption secondary">Clasa a VI-a A și Clasa a VI-a B · 25 de predări · Subiectul I corectat automat</span>
     </div>
-    <div class="stack-sm" style="justify-items: end;" data-show="s-barem s-list s-nobarem s-anon s-recheck">
-      <div class="row"><span class="t-body-m">Subiectul II: 12 / 25 corectate</span><div class="progress" aria-hidden="true"><span style="width: 48%;"></span></div></div>
+    <div class="stack-sm" style="justify-items: end;" data-show="s-barem s-list s-candidate s-edit s-nobarem s-anon s-recheck">
+      <div class="row"><span class="t-body-m">Subiectul II: 37 / 75 de răspunsuri corectate</span><div class="progress" aria-hidden="true"><span style="width: 49%;"></span></div></div>
       <button type="button" class="btn btn-primary" aria-disabled="true" aria-describedby="pub-why">Publică rezultatele</button>
-      <span id="pub-why" class="help">Poți publica după ce corectezi toate cele 25 de predări.</span>
+      <span id="pub-why" class="help">Poți publica după ce corectezi toate răspunsurile (38 rămase) și se încheie examenul (30.11.2026, 14:00).</span>
     </div>
-    <div class="row" data-show="s-done"><span class="t-body-m">Subiectul II: 25 / 25 corectate</span><div class="progress" aria-hidden="true"><span style="width: 100%;"></span></div></div>
+    <div class="row" data-show="s-wait"><span class="t-body-m">Subiectul II: 75 / 75 de răspunsuri corectate</span><div class="progress" aria-hidden="true"><span style="width: 100%;"></span></div></div>
+    <div class="row" data-show="s-published"><span class="badge success"><i data-icon="check" class="sm"></i>Rezultate publicate</span></div>
+    <div class="row" data-show="s-done"><span class="t-body-m">Subiectul II: 75 / 75 de răspunsuri corectate</span><div class="progress" aria-hidden="true"><span style="width: 100%;"></span></div></div>
   </div>
 
   <!-- Toolbar: grade by item (S-6), hide names (S-7) -->
-  <div class="toolbar" data-show="s-barem s-list s-nobarem s-anon s-recheck">
+  <div class="toolbar" data-show="s-barem s-list s-candidate s-edit s-nobarem s-anon s-recheck">
     <div class="row">
       <div class="seg" role="group" aria-label="Mod de corectare">
-        <button type="button" aria-pressed="true">Pe item</button>
-        <button type="button" aria-pressed="false">Pe candidat</button>
+        <button type="button" aria-pressed="true" data-show="s-barem s-list s-edit s-nobarem s-anon s-recheck">Pe item</button><button type="button" aria-pressed="false" data-show="s-candidate">Pe item</button>
+        <button type="button" aria-pressed="false" data-show="s-barem s-list s-edit s-nobarem s-anon s-recheck">Pe candidat</button><button type="button" aria-pressed="true" data-show="s-candidate">Pe candidat</button>
       </div>
-      <label class="row" style="gap: var(--space-2);">
+      <label class="row" style="gap: var(--space-2);" data-show="s-barem s-list s-edit s-nobarem s-anon s-recheck">
         <span class="label-text">Item</span>
         <select class="select" style="width: auto;">
-          <option>7 · C3 Unghiuri (20 p)</option>
-          <option selected>8 · C4 Triunghiuri (20 p)</option>
-          <option>9 · C2 Rapoarte, departajare (20 p)</option>
+          <option>Itemul 7 · C3 · 20 p · 25 / 25</option>
+          <option selected>Itemul 8 · C4 · 20 p · 12 / 25</option>
+          <option>Itemul 9 · C2 · 20 p · 0 / 25</option>
+        </select>
+      </label>
+      <label class="row" style="gap: var(--space-2);" data-show="s-candidate">
+        <span class="label-text">Candidat</span>
+        <select class="select" style="width: auto;">
+          <option>Ana Dumitru · 3 / 3</option>
+          <option selected>Carla Moldovan · 1 / 3</option>
+          <option>Dan Stoica · 0 / 3</option>
         </select>
       </label>
     </div>
     <label class="switch">
-      <input type="checkbox" data-show="s-barem s-list s-nobarem s-recheck"><input type="checkbox" checked data-show="s-anon">
+      <input type="checkbox" data-show="s-barem s-list s-candidate s-edit s-nobarem s-recheck"><input type="checkbox" checked data-show="s-anon">
       <span>Ascunde numele candidaților</span>
     </label>
   </div>
@@ -115,17 +136,23 @@
   </div>
 
   <!-- Pager + collapsible answer list (replaces the fixed queue column) -->
-  <section class="card" style="padding: 0;" data-show="s-barem s-list s-nobarem s-anon s-recheck" aria-label="Răspunsuri la itemul 8">
+  <section class="card" style="padding: 0;" data-show="s-barem s-list s-candidate s-edit s-nobarem s-anon s-recheck" aria-label="Răspunsuri la itemul 8">
     <div class="pager">
       <button class="btn" aria-label="Răspunsul anterior"><i data-icon="arrow-left" class="sm"></i><span class="hide-mobile">Anterior</span></button>
       <div class="who">
-        <span class="t-body-m" data-show="s-barem s-list s-nobarem s-recheck">Carla Moldovan</span>
+        <span class="t-body-m" data-show="s-barem s-list s-candidate s-edit s-nobarem s-recheck">Carla Moldovan</span>
         <span class="t-body-m" data-show="s-anon">Candidat #11</span>
-        <span class="t-caption secondary">Răspunsul 3 din 25 · 13 de corectat<span data-show="s-recheck"> · 2 de reverificat</span></span>
+        <span class="t-caption secondary" data-show="s-barem s-list s-edit s-nobarem s-anon s-recheck">Răspunsul 3 din 25 · 13 de corectat<span data-show="s-recheck"> · 2 de reverificat</span></span>
+        <span class="t-caption secondary" data-show="s-candidate">Candidatul 3 din 25 · 1 din 3 probleme corectate</span>
       </div>
-      <button class="btn" data-open-target="answers" aria-controls="answers"><i data-icon="list" class="sm"></i>Toate răspunsurile</button>
+      <button class="btn" data-open-target="answers" aria-controls="answers" data-show="s-barem s-list s-edit s-nobarem s-anon s-recheck"><i data-icon="list" class="sm"></i>Toate răspunsurile</button>
       <button class="btn" aria-label="Răspunsul următor"><span class="hide-mobile">Următor</span><i data-icon="arrow-right" class="sm"></i></button>
     </div>
+    <nav class="problem-tabs" aria-label="Problemele candidatului" data-show="s-candidate">
+      <a href="#" class="problem-tab"><span class="t-body-m">Itemul 7</span><span class="badge success">16 / 20</span></a>
+      <a href="#" class="problem-tab" aria-current="true"><span class="t-body-m">Itemul 8</span><span class="badge">De corectat</span></a>
+      <a href="#" class="problem-tab"><span class="t-body-m">Itemul 9</span><span class="t-caption secondary">fără răspuns</span><span class="badge">De corectat</span></a>
+    </nav>
     <div id="answers" class="answers-list" data-open-in="s-list">
       <a href="#" class="queue-item"><span>Ana Dumitru <span class="t-caption secondary">· M6-TR-004</span></span><span class="badge success">16 / 20</span></a>
       <a href="#" class="queue-item"><span>Bogdan Ilie <span class="t-caption secondary">· M6-TR-009</span></span><span class="badge success">20 / 20</span></a>
@@ -136,10 +163,10 @@
   </section>
 
   <!-- WORKSPACE: answer (large photos) + grading panel -->
-  <div class="workspace" data-show="s-barem s-list s-nobarem s-anon s-recheck">
+  <div class="workspace" data-show="s-barem s-list s-candidate s-edit s-nobarem s-anon s-recheck">
     <section class="card stack" aria-labelledby="ans-h">
       <div class="row between">
-        <h2 id="ans-h" class="t-h2" data-show="s-barem s-list s-nobarem s-recheck">Carla Moldovan · itemul 8</h2>
+        <h2 id="ans-h" class="t-h2" data-show="s-barem s-list s-candidate s-edit s-nobarem s-recheck">Carla Moldovan · itemul 8</h2>
         <h2 class="t-h2" data-show="s-anon">Candidat #11 · itemul 8</h2>
         <span class="tag">Varianta M6-TR-004</span>
       </div>
@@ -177,7 +204,7 @@ b) AD bisectoare. ΔABD și ΔACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ cong
     </section>
 
     <!-- Grade panel: barem with 3-state steps (D-031) -->
-    <section class="card stack grade-panel" aria-labelledby="g-h" data-show="s-barem s-list s-anon s-recheck">
+    <section class="card stack grade-panel" aria-labelledby="g-h" data-show="s-barem s-list s-candidate s-anon s-recheck">
       <div class="row between"><h2 id="g-h" class="t-h2">Barem</h2><a href="#" class="t-caption accent">Editează baremul</a></div>
       <div>
         <div class="step"><div class="step-head"><span class="t-body">1 · Triunghi isoscel ⇒ ∢B = ∢C</span><span class="t-caption secondary">3 p</span></div>
@@ -188,10 +215,10 @@ b) AD bisectoare. ΔABD și ΔACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ cong
           <div class="step-ctrl"><div class="seg" role="group" aria-label="Pasul 3"><button aria-pressed="true"><i data-icon="x" class="sm"></i>Nu</button><button aria-pressed="false">Parțial</button><button aria-pressed="false">Da</button></div><span class="pts t-math">0 / 2</span></div></div>
         <div class="step"><div class="step-head"><span class="t-body">4 · Bisectoarea AD, triunghiurile ABD și ACD</span><span class="t-caption secondary">2 p</span></div>
           <div class="step-ctrl"><div class="seg" role="group" aria-label="Pasul 4"><button aria-pressed="false">Nu</button><button aria-pressed="false">Parțial</button><button aria-pressed="true"><i data-icon="check" class="sm"></i>Da</button></div><span class="pts t-math">2 / 2</span></div></div>
-        <div class="step" data-show="s-barem s-list s-anon"><div class="step-head"><span class="t-body">5 · ΔABD ≅ ΔACD (LUL), cu justificare</span><span class="t-caption secondary">6 p</span></div>
+        <div class="step" data-show="s-barem s-list s-candidate s-anon"><div class="step-head"><span class="t-body">5 · ΔABD ≅ ΔACD (LUL), cu justificare</span><span class="t-caption secondary">6 p</span></div>
           <div class="step-ctrl"><div class="seg" role="group" aria-label="Pasul 5"><button aria-pressed="false">Nu</button><button aria-pressed="true"><i data-icon="minus" class="sm"></i>Parțial</button><button aria-pressed="false">Da</button></div>
             <span class="pts"><input class="input" value="4" aria-label="Puncte acordate la pasul 5"> <span class="t-math">/ 6</span></span></div></div>
-        <div class="step" data-show="s-barem s-list s-anon"><div class="step-head"><span class="t-body">6 · BD = DC ⇒ AD mediană</span><span class="t-caption secondary">4 p</span></div>
+        <div class="step" data-show="s-barem s-list s-candidate s-anon"><div class="step-head"><span class="t-body">6 · BD = DC ⇒ AD mediană</span><span class="t-caption secondary">4 p</span></div>
           <div class="step-ctrl"><div class="seg" role="group" aria-label="Pasul 6"><button aria-pressed="true"><i data-icon="x" class="sm"></i>Nu</button><button aria-pressed="false">Parțial</button><button aria-pressed="false">Da</button></div><span class="pts t-math">0 / 4</span></div></div>
         <div class="step recheck" data-show="s-recheck"><div class="step-head"><span class="t-body">5 · ΔABD ≅ ΔACD (LUL), cu justificare <span class="badge accent">modificat</span></span><span class="t-caption secondary">5 p</span></div>
           <div class="step-ctrl"><div class="seg" role="group" aria-label="Pasul 5"><button aria-pressed="false">Nu</button><button aria-pressed="true"><i data-icon="minus" class="sm"></i>Parțial</button><button aria-pressed="false">Da</button></div>
@@ -204,6 +231,23 @@ b) AD bisectoare. ΔABD și ΔACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ cong
       <div class="field"><label for="cm">Comentariu pentru candidat</label><textarea id="cm" class="textarea">La a) ai greșit calculul: 140° : 2 = 70°. La b) lipsește concluzia BD = DC.</textarea>
         <span class="help">Candidatul îl vede doar după ce publici rezultatele.</span></div>
       <div class="row" style="justify-content: flex-end;"><button type="button" class="btn">Salvează</button><button type="button" class="btn btn-primary">Salvează și următorul</button></div>
+    </section>
+
+    <!-- Inline barem editor (Q-078): saves the question's barem in the bank; grades given are recalculated (D-031) -->
+    <section class="card stack grade-panel" aria-labelledby="eb-h" data-show="s-edit">
+      <div class="row between"><h2 id="eb-h" class="t-h2">Editează baremul</h2><span class="tag">M6-TR-004</span></div>
+      <p class="t-caption secondary">Baremul ține de întrebare: se schimbă și în banca de întrebări. Punctajele deja date la ea se recalculează, iar cele care depășesc un pas micșorat sunt marcate pentru reverificare.</p>
+      <div>
+        <div class="edit-step"><span class="t-caption secondary" style="padding-top: var(--space-3);">1</span><textarea class="textarea" rows="2" aria-label="Pasul 1">Triunghi isoscel ⇒ ∢B = ∢C</textarea><input class="input" value="3" aria-label="Puncte pasul 1" inputmode="decimal"><button class="btn btn-icon" aria-label="Șterge pasul 1"><i data-icon="x"></i></button></div>
+        <div class="edit-step"><span class="t-caption secondary" style="padding-top: var(--space-3);">2</span><textarea class="textarea" rows="2" aria-label="Pasul 2">∢B + ∢C = 140°</textarea><input class="input" value="3" aria-label="Puncte pasul 2" inputmode="decimal"><button class="btn btn-icon" aria-label="Șterge pasul 2"><i data-icon="x"></i></button></div>
+        <div class="edit-step"><span class="t-caption secondary" style="padding-top: var(--space-3);">3</span><textarea class="textarea" rows="2" aria-label="Pasul 3">∢B = 70°</textarea><input class="input" value="2" aria-label="Puncte pasul 3" inputmode="decimal"><button class="btn btn-icon" aria-label="Șterge pasul 3"><i data-icon="x"></i></button></div>
+        <div class="edit-step"><span class="t-caption secondary" style="padding-top: var(--space-3);">4</span><textarea class="textarea" rows="2" aria-label="Pasul 4">Bisectoarea AD, triunghiurile ABD și ACD</textarea><input class="input" value="2" aria-label="Puncte pasul 4" inputmode="decimal"><button class="btn btn-icon" aria-label="Șterge pasul 4"><i data-icon="x"></i></button></div>
+        <div class="edit-step"><span class="t-caption secondary" style="padding-top: var(--space-3);">5</span><textarea class="textarea" rows="2" aria-label="Pasul 5">ΔABD ≅ ΔACD (LUL), cu justificare</textarea><input class="input" value="5" aria-label="Puncte pasul 5" inputmode="decimal"><button class="btn btn-icon" aria-label="Șterge pasul 5"><i data-icon="x"></i></button></div>
+        <div class="edit-step"><span class="t-caption secondary" style="padding-top: var(--space-3);">6</span><textarea class="textarea" rows="2" aria-label="Pasul 6">BD = DC ⇒ AD mediană</textarea><input class="input" value="5" aria-label="Puncte pasul 6" inputmode="decimal"><button class="btn btn-icon" aria-label="Șterge pasul 6"><i data-icon="x"></i></button></div>
+      </div>
+      <button type="button" class="btn" style="justify-self: start;">+ Adaugă pas</button>
+      <div class="alert success t-caption" role="status"><i data-icon="check"></i><span>Pașii însumează <strong class="t-math">20</strong> din <strong class="t-math">20</strong> de puncte.</span></div>
+      <div class="row" style="justify-content: flex-end;"><button type="button" class="btn">Renunță</button><button type="button" class="btn btn-primary">Salvează baremul</button></div>
     </section>
 
     <!-- Grade panel: no barem -->
@@ -220,9 +264,9 @@ b) AD bisectoare. ΔABD și ΔACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ cong
   </div>
 
   <!-- ALL GRADED: cohort note + publish (D-019) -->
-  <section class="card stack" data-show="s-done" aria-labelledby="pub-h" style="max-width: 760px;">
+  <section class="card stack" data-show="s-done s-wait" aria-labelledby="pub-h" style="max-width: 760px;">
     <div class="alert success"><i data-icon="check"></i>
-      <span>Toate cele 25 de predări sunt corectate. Media: <strong class="t-math">7,64</strong> · mediana: <strong class="t-math">7,90</strong></span></div>
+      <span>Toate cele 75 de răspunsuri sunt corectate. Media: <strong class="t-math">7,64</strong> · mediana: <strong class="t-math">7,90</strong></span></div>
     <h2 id="pub-h" class="t-h2">Publică rezultatele</h2>
     <div class="field"><label for="note">Notă pentru toată clasa</label>
       <textarea id="note" class="textarea">Greșeala cea mai des întâlnită la Subiectul I: confuzia dintre mărimi direct și invers proporționale (itemul 4). La Subiectul II, nu uitați să scrieți concluzia fiecărei demonstrații.</textarea>
@@ -231,7 +275,19 @@ b) AD bisectoare. ΔABD și ΔACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ cong
       <li>Fiecare candidat își vede nota, punctajul pe itemi și comentariile tale.</li>
       <li>După publicare, baremele acestui examen nu mai pot fi modificate.</li>
     </ul>
-    <div class="row" style="justify-content: flex-end;"><button type="button" class="btn">Înapoi la corectare</button><button type="button" class="btn btn-primary">Publică rezultatele pentru 25 de candidați</button></div>
+    <div class="row" style="justify-content: flex-end;" data-show="s-done"><button type="button" class="btn">Înapoi la corectare</button><button type="button" class="btn btn-primary">Publică rezultatele pentru 25 de candidați</button></div>
+    <div class="alert warning t-caption" data-show="s-wait"><i data-icon="info"></i><span>Poți publica după ce se încheie examenul (30.11.2026, 14:00) și nu mai lucrează nimeni la el: 1 candidat lucrează acum. Nota pentru clasă rămâne aici până atunci.</span></div>
+    <div class="row" style="justify-content: flex-end;" data-show="s-wait"><button type="button" class="btn">Înapoi la corectare</button><button type="button" class="btn btn-primary" aria-disabled="true">Publică rezultatele pentru 25 de candidați</button></div>
+  </section>
+
+  <!-- PUBLISHED: read-only (D-019, D-031) -->
+  <section class="card stack" data-show="s-published" style="max-width: 760px;">
+    <div class="alert success"><i data-icon="check"></i>
+      <span><strong>Rezultatele au fost publicate pe 01.12.2026, ora 18:20.</strong> Candidații își văd nota, punctajul pe itemi și comentariile tale. Punctajele și baremele acestui examen nu se mai pot modifica.</span></div>
+    <div class="row"><span class="secondary">25 de candidați · media <strong class="t-math">7,64</strong> · mediana <strong class="t-math">7,90</strong></span></div>
+    <div class="field"><span class="label-text">Notă pentru toată clasa</span>
+      <p class="answer-text t-body" style="margin: 0;">Greșeala cea mai des întâlnită la Subiectul I: confuzia dintre mărimi direct și invers proporționale (itemul 4). La Subiectul II, nu uitați să scrieți concluzia fiecărei demonstrații.</p></div>
+    <div class="row" style="justify-content: flex-end;"><a href="#" class="btn">Vezi examenul</a></div>
   </section>
 
   <!-- EMPTY -->

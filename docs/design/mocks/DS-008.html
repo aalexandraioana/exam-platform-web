@@ -57,6 +57,7 @@
       <button type="button" class="mock-btn active" data-state-btn="s-valid">Se poate publica</button>
       <button type="button" class="mock-btn" data-state-btn="s-errors">Cu probleme</button>
       <button type="button" class="mock-btn" data-state-btn="s-item">Editează un item</button>
+      <button type="button" class="mock-btn" data-state-btn="s-item2">Item Subiectul II (20 p fix)</button>
       <button type="button" class="mock-btn" data-state-btn="s-publish">Confirmare publicare</button>
       <button type="button" class="mock-btn" data-state-btn="s-published">Publicat (blocat)</button>
       <button type="button" class="mock-btn" data-state-btn="s-delete">Ștergere ciornă</button>
@@ -85,19 +86,19 @@
 </header>
 
 <!-- ============ BUILDER (valid + errors) ============ -->
-<main class="page" data-show="s-valid s-errors s-item s-publish s-published s-delete">
+<main class="page" data-show="s-valid s-errors s-item s-item2 s-publish s-published s-delete">
   <span class="published-marker" data-show="s-published" hidden></span>
   <div class="page-head">
     <div class="stack-sm">
       <a href="#" class="t-caption accent row" style="gap: var(--space-1);"><i data-icon="arrow-left" class="sm"></i>Examene</a>
       <h1 class="t-display text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</h1>
-      <div class="row" data-show="s-valid s-errors s-item s-publish s-delete"><span class="badge">Ciornă</span><span class="t-caption secondary">Salvat automat · acum 10 s</span></div>
+      <div class="row" data-show="s-valid s-errors s-item s-item2 s-publish s-delete"><span class="badge">Ciornă</span><span class="t-caption secondary">Salvat automat · acum 10 s</span></div>
       <div class="row" data-show="s-published"><span class="badge success">Publicat</span><span class="t-caption secondary">pe 24.11.2026, 18:40</span></div>
     </div>
     <div class="row">
-      <button type="button" class="btn btn-ghost" style="color: var(--status-error);" data-show="s-valid s-errors s-item s-publish s-delete"><i data-icon="trash" class="sm"></i>Șterge ciorna</button>
+      <button type="button" class="btn btn-ghost" style="color: var(--status-error);" data-show="s-valid s-errors s-item s-item2 s-publish s-delete"><i data-icon="trash" class="sm"></i>Șterge ciorna</button>
       <button type="button" class="btn">Previzualizează ca un candidat</button>
-      <button type="button" class="btn btn-primary" data-show="s-valid s-item s-publish s-delete">Publică pentru clase</button>
+      <button type="button" class="btn btn-primary" data-show="s-valid s-item s-item2 s-publish s-delete">Publică pentru clase</button>
       <button type="button" class="btn btn-primary" data-show="s-errors" aria-disabled="true" aria-describedby="publish-why">Publică pentru clase</button>
     </div>
   </div>
@@ -108,9 +109,9 @@
   </div>
 
   <!-- Checks (S-10) -->
-  <section class="card stack" aria-labelledby="checks-h" data-show="s-valid s-errors s-item s-publish s-delete">
+  <section class="card stack" aria-labelledby="checks-h" data-show="s-valid s-errors s-item s-item2 s-publish s-delete">
     <h2 id="checks-h" class="t-h2">Verificări înainte de publicare</h2>
-    <div class="checks" data-show="s-valid s-item s-publish s-delete">
+    <div class="checks" data-show="s-valid s-item s-item2 s-publish s-delete">
       <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Subiectul I: 30 / 30</strong><div class="t-caption">6 itemi × 5 puncte</div></div></div>
       <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Subiectul II: 60 / 60</strong><div class="t-caption">3 probleme</div></div></div>
       <div class="check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><div><strong>Total: 100</strong><div class="t-caption">90 + 10 puncte din oficiu</div></div></div>
@@ -124,7 +125,7 @@
     </div>
     <div class="stack-sm">
       <span class="label-text">Competențe acoperite</span>
-      <div class="coverage" data-show="s-valid s-item s-publish s-delete">
+      <div class="coverage" data-show="s-valid s-item s-item2 s-publish s-delete">
         <span class="badge success"><i data-icon="check" class="sm"></i>C1 · Compară numere întregi</span><span class="badge success"><i data-icon="check" class="sm"></i>C2 · Folosește proporțiile directe</span>
         <span class="badge success"><i data-icon="check" class="sm"></i>C3 · Recunoaște unghiuri opuse la vârf</span><span class="badge success"><i data-icon="check" class="sm"></i>C4 · Folosește proprietățile triunghiului isoscel</span>
       </div>
@@ -199,7 +200,7 @@
       </div>
       <div class="item-actions"><button class="btn btn-icon" aria-label="Editează itemul 7"><i data-icon="ellipsis"></i></button></div>
     </div>
-    <div class="item" data-show="s-valid s-item s-publish s-delete">
+    <div class="item" data-show="s-valid s-item s-item2 s-publish s-delete">
       <span class="item-num">8</span>
       <div class="stack-sm">
         <div class="row"><span class="t-body-m">C4 · Folosește proprietățile triunghiului isoscel</span><span class="badge accent">20 de puncte</span></div>
@@ -208,7 +209,7 @@
       </div>
       <div class="item-actions"><button class="btn btn-icon" aria-label="Editează itemul 8"><i data-icon="ellipsis"></i></button></div>
     </div>
-    <div class="item" data-show="s-valid s-item s-publish s-delete">
+    <div class="item" data-show="s-valid s-item s-item2 s-publish s-delete">
       <span class="item-num">9</span>
       <div class="stack-sm">
         <div class="row"><span class="t-body-m">C2 · Folosește proporțiile directe</span><span class="badge accent">20 de puncte</span></div>
@@ -228,6 +229,26 @@
       <div class="item-actions"><button class="btn btn-icon" aria-label="Editează itemul 8"><i data-icon="ellipsis"></i></button></div>
     </div>
   </section>
+
+  <!-- Item editor, Subject II (D-062): 3 problems of 20 points, so the points are fixed -->
+  <div class="backdrop" data-show="s-item2">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="item2-h" style="width: min(560px, 100%);">
+      <h2 id="item2-h" class="t-h2">Itemul 8</h2>
+      <div class="grid-2">
+        <div class="field"><label>Subiect</label><select class="select"><option>Subiectul II</option><option>Subiectul I</option></select></div>
+        <div class="field"><label for="p2">Puncte</label><input id="p2" class="input t-math" value="20" readonly aria-describedby="p2-help"><span id="p2-help" class="help">La Subiectul II, fiecare problemă are 20 de puncte.</span></div>
+      </div>
+      <div class="field"><label>Set de întrebări</label><select class="select"><option>Triunghiuri – probleme</option></select></div>
+      <div class="field"><label>Competență</label><select class="select"><option>C4 · Demonstrează proprietăți ale triunghiului isoscel</option></select></div>
+      <div class="grid-2">
+        <div class="field"><label>Dificultate</label><select class="select"><option>Mediu</option></select></div>
+        <div class="field"><label>Tip</label><select class="select"><option>Problemă structurată</option></select></div>
+      </div>
+      <div class="field"><label>Temă</label><select class="select"><option>Triunghiuri</option><option>Orice temă</option></select></div>
+      <div class="alert success t-caption"><span><strong>4 probleme finalizate de 20 de puncte se potrivesc</strong> în setul „Triunghiuri – probleme” pentru clasa a VI-a.</span></div>
+      <div class="modal-actions"><button class="btn">Anulează</button><button class="btn btn-primary">Salvează itemul</button></div>
+    </div>
+  </div>
 
   <!-- Item editor (D-057) -->
   <div class="backdrop" data-show="s-item">

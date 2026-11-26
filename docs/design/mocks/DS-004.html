@@ -83,6 +83,7 @@
       <button type="button" class="mock-btn" data-state-btn="s-dual">Adevărat / Fals</button>
       <button type="button" class="mock-btn" data-state-btn="s-text">Subiectul II (text)</button>
       <button type="button" class="mock-btn" data-state-btn="s-subj2">Subiectul II + fotografii (P6d)</button>
+      <button type="button" class="mock-btn" data-state-btn="s-photos3">Două încărcate, una se încarcă</button>
       <button type="button" class="mock-btn" data-state-btn="s-photo-error">Fotografie refuzată</button>
       <button type="button" class="mock-btn" data-state-btn="s-photo-delete">Ștergere fotografie</button>
       <button type="button" class="mock-btn" data-state-btn="s-savefail">Nesalvat</button>
@@ -102,14 +103,14 @@
 </aside>
 
 <!-- EXAM HEADER: title, server timer (S-1), save indicator (S-3) -->
-<header class="exam-header" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete">
+<header class="exam-header" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3">
   <div class="stack-sm" style="gap: 0;">
     <span class="t-h3 text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</span>
     <span class="t-caption secondary subtitle">Încercarea 1 din 1 · 9 itemi · 90 puncte + 10 puncte din oficiu</span>
   </div>
   <div class="row">
     <!-- Save indicator -->
-    <span class="save" role="status" data-show="s-subj1 s-subj2 s-low s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete">
+    <span class="save" role="status" data-show="s-subj1 s-subj2 s-low s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
       Salvat · acum 5 s
     </span>
@@ -122,7 +123,7 @@
       Fără conexiune · 2 răspunsuri în așteptare
     </span>
     <!-- Timer: neutral by default -->
-    <span class="timer" aria-label="Timp rămas: 28 minute și 45 de secunde" data-show="s-subj1 s-subj2 s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-photo-error s-photo-delete">
+    <span class="timer" aria-label="Timp rămas: 28 minute și 45 de secunde" data-show="s-subj1 s-subj2 s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-photo-error s-photo-delete s-photos3">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       <span class="t-timer">28:45</span>
     </span>
@@ -130,13 +131,13 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       <span class="t-timer" data-show="s-low">04:12</span><span class="t-timer" data-show="s-oneminute">00:48</span>
     </span>
-    <button type="button" class="btn btn-ghost" data-show="s-subj1 s-subj2 s-low s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Ascunde cronometrul"><i data-icon="eye-off" class="sm"></i><span class="btn-text">Ascunde</span></button>
-    <button type="button" class="btn items-btn" data-open-target="navigator" aria-controls="navigator" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete"><i data-icon="list" class="sm"></i>Itemi 7/9</button>
+    <button type="button" class="btn btn-ghost" data-show="s-subj1 s-subj2 s-low s-offline s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Ascunde cronometrul"><i data-icon="eye-off" class="sm"></i><span class="btn-text">Ascunde</span></button>
+    <button type="button" class="btn items-btn" data-open-target="navigator" aria-controls="navigator" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3"><i data-icon="list" class="sm"></i>Itemi 7/9</button>
     <button type="button" class="btn" data-show="s-hidden" aria-label="Arată cronometrul">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       Arată cronometrul
     </button>
-    <button type="button" class="btn btn-primary" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete">Predă examenul</button>
+    <button type="button" class="btn btn-primary" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3">Predă examenul</button>
   </div>
 </header>
 
@@ -161,7 +162,7 @@
 </div>
 
 <!-- MAIN LAYOUT -->
-<div class="layout" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete">
+<div class="layout" data-show="s-subj1 s-subj2 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3">
   <!-- Navigator (S-2) -->
   <nav id="navigator" class="navigator card tight" aria-label="Navigator itemi" data-open-in="s-navopen">
     <div class="row between"><span class="t-h3">Itemi</span><span class="t-caption secondary">7 din 9 cu răspuns</span>
@@ -169,23 +170,23 @@
     <div class="stack-sm">
       <span class="t-caption secondary">Subiectul I</span>
       <div class="nav-grid">
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Item 1, cu răspuns">1</button>
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Item 2, cu răspuns">2</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Item 1, cu răspuns">1</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Item 2, cu răspuns">2</button>
         <button class="nav-item answered current" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-unsaved-submit s-oneminute" aria-current="true" aria-label="Item 3, cu răspuns, item curent">3</button>
-        <button class="nav-item answered" data-show="s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-photo-error s-photo-delete" aria-label="Item 3, cu răspuns">3</button>
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-multi s-dual s-text s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Item 4, cu răspuns, marcat pentru revizuire">4<span class="flag" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg></span></button>
+        <button class="nav-item answered" data-show="s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-photo-error s-photo-delete s-photos3" aria-label="Item 3, cu răspuns">3</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-multi s-dual s-text s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Item 4, cu răspuns, marcat pentru revizuire">4<span class="flag" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg></span></button>
         <button class="nav-item answered current" data-show="s-short s-savefail s-closed" aria-current="true" aria-label="Item 4, cu răspuns, marcat pentru revizuire, item curent">4<span class="flag" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M4 22V4h12l-2 4 2 4H6v10z"/></svg></span></button>
-        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Item 5, fără răspuns">5</button>
+        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Item 5, fără răspuns">5</button>
         <button class="nav-item current" data-show="s-multi" aria-current="true" aria-label="Item 5, fără răspuns, item curent">5</button>
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Item 6, cu răspuns">6</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Item 6, cu răspuns">6</button>
         <button class="nav-item answered current" data-show="s-dual" aria-current="true" aria-label="Item 6, cu răspuns, item curent">6</button>
       </div>
       <span class="t-caption secondary">Subiectul II</span>
       <div class="nav-grid">
-        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Item 7, cu răspuns">7</button>
+        <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Item 7, cu răspuns">7</button>
         <button class="nav-item answered" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-short s-multi s-dual s-text s-savefail s-closed s-unsaved-submit s-oneminute" aria-label="Item 8, cu răspuns">8</button>
-        <button class="nav-item answered current" data-show="s-subj2 s-photo-error s-photo-delete" aria-current="true" aria-label="Item 8, cu răspuns, item curent">8</button>
-        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete" aria-label="Item 9, fără răspuns">9</button>
+        <button class="nav-item answered current" data-show="s-subj2 s-photo-error s-photo-delete s-photos3" aria-current="true" aria-label="Item 8, cu răspuns, item curent">8</button>
+        <button class="nav-item" data-show="s-subj1 s-low s-offline s-hidden s-submit s-navopen s-subj2 s-short s-multi s-dual s-savefail s-closed s-unsaved-submit s-oneminute s-photo-error s-photo-delete s-photos3" aria-label="Item 9, fără răspuns">9</button>
         <button class="nav-item current" data-show="s-text" aria-current="true" aria-label="Item 9, fără răspuns, item curent">9</button>
       </div>
     </div>
@@ -231,7 +232,7 @@
   </main>
 
   <!-- SUBIECTUL II with photo tray (D-026), P6d. Without object storage (photos_enabled false) the tray is hidden and the P7b hint is used. -->
-  <main class="stack" data-show="s-subj2 s-photo-error s-photo-delete">
+  <main class="stack" data-show="s-subj2 s-photo-error s-photo-delete s-photos3">
     <div class="section-label t-body-m">Subiectul II · 60 de puncte · scrie rezolvările complete</div>
     <article class="card question" aria-labelledby="q8">
       <div class="q-head">
@@ -257,7 +258,37 @@ b) Fie AD bisectoarea. Triunghiurile ABD și ACD au AB = AC, ∢BAD = ∢CAD și
           <span class="label-text">Fotografii cu rezolvarea scrisă de mână</span>
           <span class="t-caption secondary">2 din 3</span>
         </div>
-        <div class="photos">
+        <!-- P6d: two photos uploaded, the third still on its way (no empty slot left) -->
+        <div class="photos" data-show="s-photos3">
+          <div class="photo-cell">
+            <div class="slot" aria-label="Fotografia 1">
+              <svg class="paper" viewBox="0 0 120 160" aria-hidden="true">
+                <rect width="120" height="160" fill="var(--bg-surface)"/>
+                <path d="M20 120 L60 30 L100 120 Z" fill="none" stroke="var(--text-secondary)" stroke-width="2"/><path d="M60 30 L60 120" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M14 140 h60 M14 150 h80" stroke="var(--text-muted)" stroke-width="2"/>
+              </svg>
+            </div>
+            <span class="t-caption secondary text-wrap">IMG_2040.jpg · 2,4 MB</span>
+            <button type="button" class="btn" style="width: 100%;" aria-label="Șterge fotografia 1"><i data-icon="trash" class="sm"></i>Șterge</button>
+          </div>
+          <div class="photo-cell">
+            <div class="slot" aria-label="Fotografia 2">
+              <svg class="paper" viewBox="0 0 120 160" aria-hidden="true">
+                <rect width="120" height="160" fill="var(--bg-surface)"/>
+                <path d="M14 24 h70 M14 40 h86 M14 56 h60 M14 72 h92 M14 88 h50 M14 104 h80 M14 120 h66" stroke="var(--text-secondary)" stroke-width="2"/><path d="M14 140 h40" stroke="var(--status-success)" stroke-width="3"/>
+              </svg>
+            </div>
+            <span class="t-caption secondary text-wrap">IMG_2042.jpg · 1,9 MB</span>
+            <button type="button" class="btn" style="width: 100%;" aria-label="Șterge fotografia 2"><i data-icon="trash" class="sm"></i>Șterge</button>
+          </div>
+          <div class="photo-cell"><div class="slot" aria-label="Fotografia 3, se încarcă">
+            <div class="stack-sm" style="justify-items: center; width: 100%;">
+              <span class="t-body-m" style="overflow-wrap: anywhere;">IMG_2043.HEIC</span>
+              <div class="progress" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Se încarcă: 45%"><span style="width: 45%;"></span></div>
+              <span class="t-caption secondary">Se încarcă… 45%</span>
+            </div>
+          </div></div>
+        </div>
+        <div class="photos" data-show="s-subj2 s-photo-error s-photo-delete">
           <!-- P6d (user, 2026-11-26): the photo stays clear; name, size and a labelled delete button below -->
           <div class="photo-cell">
             <div class="slot" aria-label="Fotografia 1">

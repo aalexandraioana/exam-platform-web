@@ -15,6 +15,7 @@
 - C-004 · Question bank API: questions, Ready check, preview, lists, library · provided
 - C-005 · Exams API: exams, blueprint Items, publish checks, preview · provided
 - C-006 · Attempts API (Candidate): exams, start, read, autosave, submit; sealing cron · provided
+- C-007 · Grading API (Examiner): queue, grades, published results, photos · provided
 
 ---
 
@@ -79,6 +80,16 @@
 - **Interface:** [docs/API.md → Attempts (Candidate)](../API.md#attempts-candidate) and [→ Cron](../API.md#cron): `GET /api/candidate/exams` (with `server_time`, `classes`, `topics`, `item_counts`, `open_attempt`, `submitted` since P7a), `POST /api/candidate/exams/{id}/attempts` (409 `attempt_open` with `attempt_id`, `no_attempts_left`, `not_available`), `GET /api/attempts/{id}` (the snapshot as shown, saved answers, `server_time`, `exam.max_attempts` since P7c, `accepts_answers_until` since P7d; never the key or a score), `PUT /api/attempts/{id}/items/{position}/answer` (versioned, idempotent; 409 `time_up`, `attempt_submitted`; 422 `invalid_answer`), `POST /api/attempts/{id}/submit` (idempotent), Subject II photos since P6d (`POST`/`DELETE …/items/{position}/images`, `GET …/images/{imageId}`; `items[].images`, `photos_enabled`), `POST /api/cron/seal-expired` (`X-Cron-Secret`). P6c–P6d extend it.
 - **Evidence:** docs/plans/p6a-start-and-draw.md, docs/plans/p6b-timer-autosave-submit.md, docs/plans/p7a-dashboard.md; docs/API.md
 - **Source:** user (approved plans, 2026-11-25) · confidence high
+
+## C-007 · Grading API (Examiner): queue, grades, published results, photos
+- **Status:** approved
+- **Date:** 2026-11-26
+- **Confirmed:** 2026-11-26
+- **Provider:** `backend/` (routes/api.php, GradingController, Requests/Grading, Support/Grading/Scorer)
+- **Consumers:** `frontend/src/api/grading.ts` (P8a, DS-009)
+- **Interface:** [docs/API.md → Grading (Examiner)](../API.md#grading-examiner): `GET /api/exams/{id}/grading` (queue, counts, publish readiness, mean and median), `GET`/`PUT /api/grading/items/{attemptItemId}` (one answer; barem steps or one score, adjustment, comment; 422 `steps`, `points`, `adjustment: out_of_range`; 409 `results_published`, `attempt_open`), `POST /api/exams/{id}/results` (cohort note; 422 `results_not_ready` with `missing`; 409 `results_published`), `GET /api/grading/images/{imageId}`.
+- **Evidence:** docs/plans/p8a-grading-and-publishing.md; docs/API.md
+- **Source:** user (approved plan, 2026-11-26) · confidence high
 
 ## Consumed
 

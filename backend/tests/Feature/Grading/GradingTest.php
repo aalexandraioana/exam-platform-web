@@ -34,7 +34,7 @@ function gradingSetup(int $candidates = 2, array $exam = []): array
     foreach ([7 => ['M6-TR-004', [6, 6, 8]], 8 => ['M6-UG-005', null], 9 => ['M6-RP-006', [10, 10]]] as $position => [$code, $barem]) {
         $question = Question::factory()->subjectTwo()->ready()->for($examiner, 'examiner')->create(['code' => $code, 'points' => 20, 'uses_barem' => $barem !== null]);
         foreach ($barem ?? [] as $i => $points) {
-            $question->baremSteps()->create(['position' => $i + 1, 'description' => "Pasul ".($i + 1), 'points' => $points]);
+            $question->baremSteps()->create(['position' => $i + 1, 'description' => 'Pasul '.($i + 1), 'points' => $points]);
         }
         $item = ExamItem::factory()->create(['exam_id' => $exam->id, 'position' => $position, 'section' => 'subject_2', 'points' => 20, 'competence_id' => $competence->id]);
         $questions[$position] = compact('question', 'item');
@@ -60,7 +60,7 @@ function gradingSetup(int $candidates = 2, array $exam = []): array
     return compact('examiner', 'exam', 'questions', 'attempts');
 }
 
-function itemOf(Attempt $attempt, int $position): AttemptItem
+function gradingItem(Attempt $attempt, int $position): AttemptItem
 {
     return $attempt->items()->where('position', $position)->firstOrFail();
 }
@@ -70,9 +70,9 @@ function gradeAll(array $s, Attempt $attempt, array $seven, float $eight, array 
 {
     $steps = fn (int $position, array $points) => $s['questions'][$position]['question']->baremSteps()->get()
         ->map(fn ($step, $i) => ['id' => $step->id, 'points' => $points[$i]])->all();
-    test()->putJson('/api/grading/items/'.itemOf($attempt, 7)->id, ['steps' => $steps(7, $seven)])->assertOk();
-    test()->putJson('/api/grading/items/'.itemOf($attempt, 8)->id, ['points' => $eight])->assertOk();
-    test()->putJson('/api/grading/items/'.itemOf($attempt, 9)->id, ['steps' => $steps(9, $nine)])->assertOk();
+    test()->putJson('/api/grading/items/'.gradingItem($attempt, 7)->id, ['steps' => $steps(7, $seven)])->assertOk();
+    test()->putJson('/api/grading/items/'.gradingItem($attempt, 8)->id, ['points' => $eight])->assertOk();
+    test()->putJson('/api/grading/items/'.gradingItem($attempt, 9)->id, ['steps' => $steps(9, $nine)])->assertOk();
 }
 
 it('shows the queue only to the exam\'s Examiner', function () {
@@ -82,7 +82,7 @@ it('shows the queue only to the exam\'s Examiner', function () {
 
     signInAs(User::factory()->examiner()->create());
     $this->getJson("/api/exams/{$s['exam']->id}/grading")->assertNotFound();
-    $this->putJson('/api/grading/items/'.itemOf($s['attempts'][0], 8)->id, ['points' => 10])->assertNotFound();
+    $this->putJson('/api/grading/items/'.gradingItem($s['attempts'][0], 8)->id, ['points' => 10])->assertNotFound();
 
     signInAs(User::factory()->candidate()->create());
     $this->getJson("/api/exams/{$s['exam']->id}/grading")->assertForbidden();
@@ -102,10 +102,10 @@ it('lists the Subject II answers per problem and per Candidate, unanswered ones 
         ->and($queue['counts'])->toBe(['total' => 6, 'graded' => 0, 'to_grade' => 6, 'recheck' => 0])
         ->and($queue['answers'])->toHaveCount(6)
         ->and($queue['answers'][0])->toMatchArray([
-            'attempt_item_id' => itemOf($s['attempts'][0], 7)->id, 'candidate' => 'Candidat1 Pop', 'number' => 1,
+            'attempt_item_id' => gradingItem($s['attempts'][0], 7)->id, 'candidate' => 'Candidat1 Pop', 'number' => 1,
             'position' => 7, 'question_code' => 'M6-TR-004', 'photos' => 0, 'answered' => true, 'status' => 'to_grade', 'awarded_points' => null,
         ])
-        ->and(collect($queue['answers'])->firstWhere('attempt_item_id', itemOf($s['attempts'][1], 9)->id))
+        ->and(collect($queue['answers'])->firstWhere('attempt_item_id', gradingItem($s['attempts'][1], 9)->id))
         ->toMatchArray(['candidate' => 'Candidat2 Pop', 'number' => 2, 'answered' => false, 'status' => 'to_grade'])
         ->and($queue['publish'])->toMatchArray(['ready' => false, 'missing' => ['ungraded']]);
 });
@@ -113,7 +113,7 @@ it('lists the Subject II answers per problem and per Candidate, unanswered ones 
 it('shows one answer with its statement, written steps, photos and the live barem', function () {
     Storage::fake();
     $s = gradingSetup(1);
-    $item = itemOf($s['attempts'][0], 7);
+    $item = gradingItem($s['attempts'][0], 7);
     AnswerImage::factory()->create(['answer_id' => $item->answer->id, 'position' => 1, 'original_name' => 'IMG_1.jpg']);
 
     $shown = $this->getJson("/api/grading/items/{$item->id}")->assertOk()->json('item');
@@ -124,7 +124,7 @@ it('shows one answer with its statement, written steps, photos and the live bare
         'scores' => [], 'adjustment' => null, 'comment' => null, 'awarded_points' => null, 'needs_recheck' => false,
     ])
         ->and(collect($shown['photos'])->pluck('name')->all())->toBe(['IMG_1.jpg'])
-        ->and(collect($shown['barem'])->map->only('description', 'points', 'modified')->all())->toBe([
+        ->and(collect($shown['barem'])->map(fn ($b) => ['description' => $b['description'], 'points' => $b['points'], 'modified' => $b['modified']])->all())->toBe([
             ['description' => 'Pasul 1', 'points' => 6, 'modified' => false],
             ['description' => 'Pasul 2', 'points' => 6, 'modified' => false],
             ['description' => 'Pasul 3', 'points' => 8, 'modified' => false],
@@ -133,7 +133,7 @@ it('shows one answer with its statement, written steps, photos and the live bare
 
 it('grades with the barem: no, part or all of each step, plus an adjustment and a comment', function () {
     $s = gradingSetup(1);
-    $item = itemOf($s['attempts'][0], 7);
+    $item = gradingItem($s['attempts'][0], 7);
     $steps = $s['questions'][7]['question']->baremSteps()->get();
 
     $this->putJson("/api/grading/items/{$item->id}", [
@@ -152,7 +152,7 @@ it('grades with the barem: no, part or all of each step, plus an adjustment and 
 
 it('refuses barem grades above a step, with a step missing, or a total outside 0..20', function () {
     $s = gradingSetup(1);
-    $item = itemOf($s['attempts'][0], 7);
+    $item = gradingItem($s['attempts'][0], 7);
     $steps = $s['questions'][7]['question']->baremSteps()->get();
     $all = fn (array $points) => collect($steps)->map(fn ($step, $i) => ['id' => $step->id, 'points' => $points[$i]])->all();
 
@@ -167,13 +167,13 @@ it('refuses barem grades above a step, with a step missing, or a total outside 0
 
 it('grades without a barem with one score between 0 and 20, also an unanswered problem', function () {
     $s = gradingSetup(1);
-    $eight = itemOf($s['attempts'][0], 8);
+    $eight = gradingItem($s['attempts'][0], 8);
 
     $this->putJson("/api/grading/items/{$eight->id}", ['points' => 21])->assertUnprocessable()->assertJsonPath('errors.points.0', 'invalid');
     $this->putJson("/api/grading/items/{$eight->id}", ['steps' => []])->assertUnprocessable()->assertJsonPath('errors.points.0', 'required');
     $this->putJson("/api/grading/items/{$eight->id}", ['points' => 14, 'comment' => 'Raționament bun.'])->assertOk()->assertJsonPath('item.awarded_points', 14);
 
-    $nine = itemOf($s['attempts'][0], 9);
+    $nine = gradingItem($s['attempts'][0], 9);
     $steps = $s['questions'][9]['question']->baremSteps()->pluck('id');
     $this->putJson("/api/grading/items/{$nine->id}", ['steps' => [['id' => $steps[0], 'points' => 0], ['id' => $steps[1], 'points' => 0]]])->assertOk();
     expect($nine->fresh()->answer->awarded_points)->toBe('0.00')->and($nine->fresh()->answer->answer)->toBeNull();
@@ -184,7 +184,7 @@ it('marks the Attempt graded with its Subject II score and total once every prob
     $attempt = $s['attempts'][0];
     $steps = $s['questions'][7]['question']->baremSteps()->pluck('id');
 
-    $this->putJson('/api/grading/items/'.itemOf($attempt, 7)->id, ['steps' => [['id' => $steps[0], 'points' => 6], ['id' => $steps[1], 'points' => 6], ['id' => $steps[2], 'points' => 4]]])->assertOk();
+    $this->putJson('/api/grading/items/'.gradingItem($attempt, 7)->id, ['steps' => [['id' => $steps[0], 'points' => 6], ['id' => $steps[1], 'points' => 6], ['id' => $steps[2], 'points' => 4]]])->assertOk();
     expect($attempt->fresh()->status)->toBe(AttemptStatus::Submitted);
 
     gradeAll($s, $attempt, [6, 6, 4], 14, [10, 5]);
@@ -194,13 +194,13 @@ it('marks the Attempt graded with its Subject II score and total once every prob
         ->and($attempt->subject_2_score)->toBe('45.00')
         ->and($attempt->total_score)->toBe('80.00'); // 10 + 25 + 45
 
-    $this->putJson('/api/grading/items/'.itemOf($attempt, 8)->id, ['points' => 20])->assertOk();
+    $this->putJson('/api/grading/items/'.gradingItem($attempt, 8)->id, ['points' => 20])->assertOk();
     expect($attempt->fresh()->total_score)->toBe('86.00');
 });
 
 it('clears the re-check mark when an answer is graded again', function () {
     $s = gradingSetup(1);
-    $item = itemOf($s['attempts'][0], 8);
+    $item = gradingItem($s['attempts'][0], 8);
     $this->putJson("/api/grading/items/{$item->id}", ['points' => 10])->assertOk();
     $item->answer->forceFill(['needs_recheck' => true])->save();
 
@@ -210,7 +210,7 @@ it('clears the re-check mark when an answer is graded again', function () {
 
 it('marks barem steps changed since the answer was graded', function () {
     $s = gradingSetup(1);
-    $item = itemOf($s['attempts'][0], 7);
+    $item = gradingItem($s['attempts'][0], 7);
     $steps = $s['questions'][7]['question']->baremSteps()->get();
     $this->putJson("/api/grading/items/{$item->id}", ['steps' => $steps->map(fn ($step) => ['id' => $step->id, 'points' => 0])->all()])->assertOk();
     $this->travel(1)->minutes();
@@ -231,7 +231,7 @@ it('publishes only when every Attempt is graded, none is running and the window 
     $results()->assertUnprocessable()->assertJsonPath('missing', ['open_attempts', 'window_open']);
 
     $s['exam']->update(['available_until' => now()->subMinute()]);
-    $open->forceFill(['expires_at' => now()->subMinutes(5)])->save(); // past the grace: sealed first, then it needs grading
+    $open->forceFill(['started_at' => now()->subHour(), 'expires_at' => now()->subMinutes(5)])->save(); // past the grace: sealed first, then it needs grading
     $results()->assertUnprocessable()->assertJsonPath('missing', ['ungraded']);
     expect($open->fresh()->status)->toBe(AttemptStatus::Submitted);
 });
@@ -245,10 +245,10 @@ it('publishes the results with the cohort note, once', function () {
 
     expect($s['exam']->fresh()->results_published_at)->not->toBeNull();
     $this->postJson("/api/exams/{$s['exam']->id}/results")->assertConflict()->assertJsonPath('code', 'results_published');
-    $this->putJson('/api/grading/items/'.itemOf($s['attempts'][0], 8)->id, ['points' => 10])->assertConflict()->assertJsonPath('code', 'results_published');
+    $this->putJson('/api/grading/items/'.gradingItem($s['attempts'][0], 8)->id, ['points' => 10])->assertConflict()->assertJsonPath('code', 'results_published');
 });
 
-it('gives the mean and median of the grades, counting each Candidate\'s Attempt by the score policy (D-012)', function (string $policy, float $mean) {
+it('gives the mean and median of the grades, counting each Candidate\'s Attempt by the score policy (D-012)', function (string $policy, int|float $mean) {
     $s = gradingSetup(2, ['score_policy' => $policy, 'max_attempts' => 2]);
     gradeAll($s, $s['attempts'][0], [6, 6, 8], 20, [10, 10]); // 10 + 25 + 60 = 95
     gradeAll($s, $s['attempts'][1], [0, 0, 0], 5, [0, 0]);    // 10 + 25 + 5 = 40
@@ -262,13 +262,13 @@ it('gives the mean and median of the grades, counting each Candidate\'s Attempt 
         ->assertJsonPath('publish.median', $mean);
 })->with([
     'highest' => ['highest', 6.75], // (9.5 + 4) / 2
-    'latest' => ['latest', 5.0],    // (6 + 4) / 2
+    'latest' => ['latest', 5],      // (6 + 4) / 2; JSON has no 5.0
 ]);
 
 it('streams a photo of an answer only to the exam\'s Examiner', function () {
     Storage::fake();
     $s = gradingSetup(1);
-    $image = AnswerImage::factory()->create(['answer_id' => itemOf($s['attempts'][0], 7)->answer->id, 'path' => 'answers/a.jpg']);
+    $image = AnswerImage::factory()->create(['answer_id' => gradingItem($s['attempts'][0], 7)->answer->id, 'path' => 'answers/a.jpg']);
     Storage::put('answers/a.jpg', 'jpeg-bytes');
 
     expect($this->get("/api/grading/images/{$image->id}")->assertOk()->streamedContent())->toBe('jpeg-bytes');

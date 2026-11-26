@@ -53,6 +53,9 @@ class ExamResource extends JsonResource
                 'eligible' => count(Blueprint::eligible($item->setRelation('exam', $exam))),
             ])->all(),
             'checks' => PublishChecks::for($exam),
+            // D-019 (P8a): the cohort note is the Examiner's here; Candidates see it only after publication.
+            'results_published_at' => $exam->results_published_at?->toIso8601String(),
+            'cohort_note' => $exam->cohort_note,
         ];
     }
 }

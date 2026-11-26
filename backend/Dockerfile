@@ -1,10 +1,14 @@
 # One image for local development (target `dev`) and Render (target `prod`), D-014 / D-036.
 FROM php:8.4-apache AS base
 
+# heif-convert and its HEVC decoder turn iPhone HEIC photos into JPG (D-026, P6d).
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libpq-dev unzip git \
+    && apt-get install -y --no-install-recommends libpq-dev unzip git libheif-examples libheif-plugin-libde265 \
     && docker-php-ext-install pdo_pgsql \
     && rm -rf /var/lib/apt/lists/*
+
+# Photos up to 10 MB each (D-026); PHP's default is 2 MB.
+COPY docker/php-uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 

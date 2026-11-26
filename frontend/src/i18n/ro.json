@@ -343,6 +343,7 @@
     "delete": "Șterge",
     "refused": "<strong>Nu am salvat modificările.</strong> O întrebare finalizată trebuie să rămână completă. Completează ce lipsește sau mută întrebarea în ciorne și salvează din nou.",
     "notReady": "<strong>Nu poate fi marcată „Finalizat” încă.</strong> Vezi ce lipsește mai jos.",
+    "locked": "<strong>Nu am salvat modificările.</strong> Rezultatele unui examen care a folosit această întrebare sunt publicate, așa că baremul și răspunsul corect nu se mai pot schimba. Restul îl poți modifica.",
     "saveFailed": "<strong>Nu am salvat modificările.</strong> Nu ne-am putut conecta la server; modificările rămân aici. Încearcă din nou.",
     "publishedDone": "<strong>Publicată ca {{code}}.</strong> Ceilalți examinatori o pot copia în banca lor.",
     "alreadyPublished": "Întrebarea este deja în biblioteca comună.",

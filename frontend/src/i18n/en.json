@@ -336,6 +336,7 @@
     "delete": "Delete",
     "refused": "<strong>Your changes weren't saved.</strong> A ready question must stay complete. Fill in what's missing, or move the question to drafts and save again.",
     "notReady": "<strong>It can't be marked \"Ready\" yet.</strong> See what's missing below.",
+    "locked": "<strong>Your changes weren't saved.</strong> An exam that used this question has published results, so its marking scheme and correct answer can't change any more. You can still change the rest.",
     "saveFailed": "<strong>Your changes weren't saved.</strong> We couldn't reach the server; your changes stay here. Try again.",
     "publishedDone": "<strong>Published as {{code}}.</strong> Other examiners can copy it into their bank.",
     "alreadyPublished": "The question is already in the shared library.",

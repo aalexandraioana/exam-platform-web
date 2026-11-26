@@ -35,7 +35,7 @@ export type ListKind = 'competence' | 'topic' | 'pool'
 const NEW = '__new'
 const strong = { strong: <strong /> }
 
-type Notice = 'saved' | 'refused' | 'notReady' | 'saveFailed' | 'published' | 'alreadyPublished' | 'failed'
+type Notice = 'saved' | 'refused' | 'notReady' | 'locked' | 'saveFailed' | 'published' | 'alreadyPublished' | 'failed'
 
 interface Props {
   question: Question
@@ -89,6 +89,8 @@ export default function QuestionEditor({ question, competences, topics, pools, o
       if (error instanceof ApiError && error.status === 422 && error.fields.status?.[0] === 'not_ready') {
         setProblems((error.body.problems as Problem[] | undefined) ?? problems)
         setNotice({ kind: ready ? 'refused' : 'notReady' })
+      } else if (error instanceof ApiError && error.status === 422 && (error.fields.barem?.[0] === 'barem_locked' || error.fields.answer_key?.[0] === 'answer_key_locked')) {
+        setNotice({ kind: 'locked' })
       } else {
         setNotice({ kind: 'saveFailed' })
       }
@@ -132,7 +134,7 @@ export default function QuestionEditor({ question, competences, topics, pools, o
           {t('bank.saved')}
         </Alert>
       )}
-      {(notice?.kind === 'refused' || notice?.kind === 'notReady') && (
+      {(notice?.kind === 'refused' || notice?.kind === 'notReady' || notice?.kind === 'locked') && (
         <Alert variant="error" icon={CircleAlert} role="alert">
           <Trans i18nKey={`bank.${notice.kind}`} components={strong} />
         </Alert>

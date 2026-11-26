@@ -223,9 +223,17 @@ must fit the Subject: `structured_problem` is Subject II's only type).
 ### GET /api/questions/{id} · PATCH /api/questions/{id}
 `PATCH` takes any of: `section`, `type`, `grade_level`, `difficulty`, `competence_id`, `topic_id`,
 `points`, `statement`, `explanation`, `answer_key`, `parameters`, `uses_barem`, `barem` (the full
-list of `{description, points}`, replacing the old one), `pool_ids` (the full list). `code` and
-`status` are ignored. `200 { "question" }`. `422`: a field `invalid` (another Examiner's
-competence, topic or pool; a barem on Subject I); `status: not_ready` with `problems` when a Ready
+list of `{id?, description, points}`), `pool_ids` (the full list). `code` and `status` are ignored.
+Barem steps are kept by `id` (P8a, D-031): a step sent with its id keeps its row and the grades
+given on it; one without an id is new; a step left out is deleted with only its grades. When
+`barem` is sent, graded answers to the question in exams whose results aren't published are
+recalculated (points above a step's new maximum are capped; a removed step that had points, a new
+step or a clamped total marks the answer `needs_recheck`), and the response adds
+`"regraded": {"answers", "flagged"}`. `200 { "question" }`. `422`: a field `invalid` (another
+Examiner's competence, topic or pool; a barem on Subject I; a barem step id that isn't this
+question's); `barem: barem_locked` / `answer_key: answer_key_locked` when an exam that drew the
+question has published results and the barem, `uses_barem` or the answer key would change (an
+unchanged value is not a change; D-031, D-046); `status: not_ready` with `problems` when a Ready
 question would become incomplete: nothing is saved; move it to Draft first (Q-057).
 
 ### POST /api/questions/{id}/ready · POST /api/questions/{id}/draft

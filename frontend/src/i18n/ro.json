@@ -709,6 +709,27 @@
     "offlineStatus_one": "Fără conexiune · {{count}} răspuns în așteptare",
     "offlineStatus_few": "Fără conexiune · {{count}} răspunsuri în așteptare",
     "offlineStatus_other": "Fără conexiune · {{count}} de răspunsuri în așteptare",
-    "offline": "<strong>Conexiunea s-a întrerupt.</strong> Poți continua: răspunsurile sunt păstrate pe acest dispozitiv și se trimit singure când revine conexiunea. Nu închide pagina. Cronometrul continuă pe server."
+    "offline": "<strong>Conexiunea s-a întrerupt.</strong> Poți continua: răspunsurile sunt păstrate pe acest dispozitiv și se trimit singure când revine conexiunea. Nu închide pagina. Cronometrul continuă pe server.",
+    "stepsHintPhotos": "Scrie pașii pe scurt. Desenul și calculele le poți fotografia mai jos.",
+    "photos": {
+      "title": "Fotografii cu rezolvarea scrisă de mână",
+      "count": "{{count}} din {{max}}",
+      "photo": "Fotografia {{number}}",
+      "delete": "Șterge",
+      "deleteLabel": "Șterge fotografia {{number}}",
+      "add": "Fotografiază sau alege",
+      "inputLabel": "Adaugă o fotografie",
+      "limits": "Cel mult 3 fotografii pentru această problemă: JPG, PNG sau HEIC, până la 10 MB fiecare.",
+      "uploading": "Se încarcă… {{percent}}%",
+      "preparing": "Se pregătește imaginea…",
+      "tooLarge": "<strong>{{name}} are peste 10 MB.</strong> Fă o poză nouă sau alege una mai mică.",
+      "wrongType": "Fotografia nu a fost încărcată: trimite o imagine JPG, PNG sau HEIC.",
+      "offline": "Fotografia nu s-a încărcat. Verifică internetul și încearcă din nou.",
+      "chooseOther": "Alege altă fotografie",
+      "confirmTitle": "Ștergi fotografia {{number}}?",
+      "confirmText": "Fotografia se șterge din rezolvarea problemei {{item}}. O poți face din nou oricând înainte de predare.",
+      "cancel": "Anulează",
+      "confirmDelete": "Șterge fotografia"
+    }
   }
 }

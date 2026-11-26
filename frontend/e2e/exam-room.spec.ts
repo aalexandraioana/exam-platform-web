@@ -7,11 +7,16 @@ const me = { id: 7, first_name: 'Andrei', last_name: 'Ionescu', name: 'Andrei Io
 const saved = (value: unknown, marked = false) => ({ value, version: 1, marked_for_review: marked, saved_at: '2026-11-25T10:01:00Z' })
 const s1 = (position: number, type: string, statement: string, options: string[], answer: unknown = null) => ({ position, section: 'subject_1', type, points: 5, statement, options, answer })
 
+// A photographed page of handwritten work, for the thumbnails.
+const handwritten = (triangle: boolean) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160"><rect width="120" height="160" fill="#fffcf7"/>${
+  triangle ? '<path d="M20 120 L60 30 L100 120 Z" fill="none" stroke="#5a5248" stroke-width="2"/><path d="M14 140 h60 M14 150 h80" stroke="#8a8073" stroke-width="2"/>'
+    : '<path d="M14 24 h70 M14 40 h86 M14 56 h60 M14 72 h92 M14 88 h50 M14 104 h80" stroke="#5a5248" stroke-width="2"/>'}</svg>`
+
 function attempt(status = 'in_progress', minutesLeft = 28.75, auto = false) {
   return {
     id: 12, exam: { id: 4, title: 'Evaluare Unitatea 3: Rapoarte și proporții', max_attempts: 1 }, status, attempt_number: 1,
     started_at: new Date().toISOString(), expires_at: new Date(Date.now() + minutesLeft * 60_000).toISOString(), server_time: new Date().toISOString(),
-    submitted_at: status === 'submitted' ? new Date().toISOString() : null, auto_submitted: auto,
+    submitted_at: status === 'submitted' ? new Date().toISOString() : null, auto_submitted: auto, photos_enabled: true,
     items: [
       s1(1, 'single_choice', 'Care este cel mai mare număr întreg negativ?', ['−1', '0', '−10', '1'], saved(1)),
       s1(2, 'short_answer', 'Calculează 25% din 80.', [], saved('20')),
@@ -20,7 +25,8 @@ function attempt(status = 'in_progress', minutesLeft = 28.75, auto = false) {
       s1(5, 'multiple_choice', 'Care dintre numerele de mai jos sunt divizibile cu 3?', ['21', '14', '30', '25', '12'], null),
       s1(6, 'dual_choice', 'Orice număr întreg negativ este mai mic decât 0.', [], saved(true)),
       { position: 7, section: 'subject_2', type: 'structured_problem', points: 20, statement: 'Un pătrat are latura de 6 cm.\na) Află perimetrul. (10 puncte)\nb) Află aria. (10 puncte)', options: [], answer: saved('a) P = 4 · 6 = 24 cm') },
-      { position: 8, section: 'subject_2', type: 'structured_problem', points: 20, statement: 'În triunghiul ABC, AB = AC și ∢A = 40°.\na) Calculează măsura unghiului B. (8 puncte)\nb) Arată că bisectoarea unghiului A este și mediana laturii BC. (12 puncte)', options: [], answer: saved('a) ∢B = ∢C = 70°') },
+      { position: 8, section: 'subject_2', type: 'structured_problem', points: 20, statement: 'În triunghiul ABC, AB = AC și ∢A = 40°.\na) Calculează măsura unghiului B. (8 puncte)\nb) Arată că bisectoarea unghiului A este și mediana laturii BC. (12 puncte)', options: [], answer: saved('a) ∢B = ∢C = 70°'),
+        images: [{ id: 31, position: 1, name: 'IMG_2040.jpg', size: 2_516_582 }, { id: 32, position: 2, name: 'IMG_2042.jpg', size: 1_992_294 }] },
       { position: 9, section: 'subject_2', type: 'structured_problem', points: 20, statement: 'Un dreptunghi are lungimea de 3 ori mai mare decât lățimea, iar perimetrul de 64 cm.\na) Află dimensiunile dreptunghiului. (10 puncte)\nb) Calculează aria lui. (10 puncte)', options: [], answer: null },
     ],
   }
@@ -32,6 +38,8 @@ async function mockApi(page: Page, { status = 'in_progress', saveFails = false, 
     const path = new URL(request.url()).pathname
     const reply = (code: number, body: unknown) => route.fulfill({ status: code, contentType: 'application/json', body: JSON.stringify(body) })
     if (path.endsWith('/user')) return reply(200, { user: me })
+    if (/\/images\/\d+$/.test(path) && request.method() === 'GET') return route.fulfill({ status: 200, contentType: 'image/svg+xml', body: handwritten(path.endsWith('31')) })
+    if (path.endsWith('/images') && request.method() === 'POST') return new Promise(() => {}) // stays uploading
     if (request.method() === 'PUT') {
       if (saveFails) return reply(500, { message: 'x' })
       const body = request.postDataJSON()
@@ -134,6 +142,37 @@ for (const theme of ['light', 'dark'] as const) {
       await open(page, theme, width, 3, { status: 'submitted', auto: true })
       await expect(page.getByRole('heading', { name: 'Timpul s-a încheiat' })).toBeVisible()
       await page.screenshot({ path: screenshotPath(`DS-004.sealed.${theme}${suffix}.png`), fullPage: true })
+    })
+  }
+
+  for (const width of [1440, 320]) {
+    const suffix = width === 320 ? '.320' : ''
+
+    test(`DS-004 photos, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 8)
+      await expect(page.getByRole('img', { name: 'Fotografia 2' })).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.photos.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 photo uploading, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 8)
+      await page.getByLabel('Adaugă o fotografie').setInputFiles({ name: 'IMG_2043.HEIC', mimeType: 'image/heic', buffer: Buffer.alloc(200_000) })
+      await expect(page.getByRole('progressbar')).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.photo-uploading.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 photo refused, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 8)
+      await page.getByLabel('Adaugă o fotografie').setInputFiles({ name: 'IMG_2077.JPG', mimeType: 'image/jpeg', buffer: Buffer.alloc(10 * 1024 * 1024 + 1) })
+      await expect(page.getByRole('alert')).toContainText('are peste 10 MB')
+      await page.screenshot({ path: screenshotPath(`DS-004.photo-refused.${theme}${suffix}.png`), fullPage: true })
+    })
+
+    test(`DS-004 photo delete, ${theme} at ${width} px`, async ({ page }) => {
+      await open(page, theme, width, 8)
+      await page.getByRole('button', { name: 'Șterge fotografia 1' }).click()
+      await expect(page.getByRole('alertdialog', { name: 'Ștergi fotografia 1?' })).toBeVisible()
+      await page.screenshot({ path: screenshotPath(`DS-004.photo-delete.${theme}${suffix}.png`) })
     })
   }
 

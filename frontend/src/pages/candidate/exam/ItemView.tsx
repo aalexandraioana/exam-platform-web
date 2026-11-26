@@ -5,6 +5,7 @@ import type { AnswerValue, AttemptItem } from '../../../api/attempts'
 import TextField from '../../../components/TextField'
 import { focusRing } from '../../../components/styles'
 import MathText from './MathText'
+import PhotoTray from './PhotoTray'
 import type { LocalAnswer } from './useAnswers'
 
 const LETTERS = 'abcdefghij'
@@ -13,12 +14,14 @@ const option = (selected: boolean, disabled: boolean) =>
 
 // DS-004 · one item (Q-072): number, points, the review mark, the statement (D-061) and the
 // input for its type. Choices are the shown positions (D-045). `typed` answers wait for a pause.
-export default function ItemView({ item, answer, disabled, onChange, onLeave }: {
+export default function ItemView({ item, answer, disabled, onChange, onLeave, photos }: {
   item: AttemptItem
   answer: LocalAnswer
   disabled: boolean
   onChange: (next: Partial<LocalAnswer>, typed?: boolean) => void
   onLeave: () => void
+  /** Subject II photos (P6d), when the storage is set up. */
+  photos?: { attemptId: number; onCount: (position: number, count: number) => void; onClosed: () => void }
 }) {
   const { t } = useTranslation()
   const id = useId()
@@ -94,7 +97,12 @@ export default function ItemView({ item, answer, disabled, onChange, onLeave }: 
           onBlur={onLeave}
           className={`w-full rounded-md border border-input bg-surface px-3 py-2 text-primary disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
         />
-        <span id={`${id}-steps-help`} className="text-caption text-secondary">{t('room.stepsHint')}</span>
+        <span id={`${id}-steps-help`} className="text-caption text-secondary">{t(photos ? 'room.stepsHintPhotos' : 'room.stepsHint')}</span>
+        {photos && (
+          <div className="mt-3">
+            <PhotoTray attemptId={photos.attemptId} item={item} disabled={disabled} onCount={(count) => photos.onCount(item.position, count)} onClosed={photos.onClosed} />
+          </div>
+        )}
       </div>
     )
   }

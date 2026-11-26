@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AttemptItem } from '../../../api/attempts'
 import { focusRing } from '../../../components/styles'
-import { isAnswered, type LocalAnswer } from './useAnswers'
+import type { LocalAnswer } from './useAnswers'
 
 type Filter = 'all' | 'unanswered' | 'marked'
 
@@ -12,19 +12,21 @@ const cell = `relative grid min-h-hit place-items-center rounded-md border font-
 // DS-004 navigator: items by Subject, answered (ticked) / unanswered / current (underlined) /
 // marked (flag), the count, and the filters. In the phones' bottom sheet (`inSheet`) the sheet
 // gives the title and the close button.
-export default function Navigator({ items, answers, current, onJump, inSheet = false }: {
+export default function Navigator({ items, answers, current, onJump, inSheet = false, isDone }: {
   items: AttemptItem[]
   answers: Record<number, LocalAnswer>
   current: number
   onJump: (position: number) => void
   inSheet?: boolean
+  /** Answered: a value, or Subject II photos (P6d). */
+  isDone: (position: number) => boolean
 }) {
   const { t } = useTranslation()
   const [filter, setFilter] = useState<Filter>('all')
-  const answered = items.filter((item) => isAnswered(answers[item.position])).length
+  const answered = items.filter((item) => isDone(item.position)).length
   const marked = items.filter((item) => answers[item.position]?.marked).length
   const shown = (item: AttemptItem) =>
-    filter === 'all' || (filter === 'unanswered' ? !isAnswered(answers[item.position]) : answers[item.position]?.marked)
+    filter === 'all' || (filter === 'unanswered' ? !isDone(item.position) : answers[item.position]?.marked)
 
   const grid = (section: AttemptItem['section'], label: string) => {
     const list = items.filter((item) => item.section === section)
@@ -35,7 +37,7 @@ export default function Navigator({ items, answers, current, onJump, inSheet = f
         <div className="grid grid-cols-6 gap-1">
           {list.filter(shown).map((item) => {
             const answer = answers[item.position]
-            const done = isAnswered(answer)
+            const done = isDone(item.position)
             const isCurrent = item.position === current
             const name = [
               t('room.navigator.item', { number: item.position }),

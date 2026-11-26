@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight, Check, CircleAlert, Clock, EyeOff, Info, List, TriangleAlert, WifiOff, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { getAttempt, submitAttempt, type Attempt } from '../../api/attempts'
@@ -49,6 +49,8 @@ export default function ExamRoomPage() {
   const [hidden, setHidden] = useState(() => storedHidden(attemptId))
   const [dialog, setDialog] = useState<{ unsaved: number[]; busy: boolean; failed: boolean } | null>(null)
   const endingStarted = useRef(false)
+  const [photoCounts, setPhotoCounts] = useState<Record<number, number>>({})
+  const [photoClosed, setPhotoClosed] = useState(false)
   const saving = useAnswers(attemptId, attempt?.items ?? null)
   const left = useCountdown(attempt && !end ? attempt.expires_at : null, offset)
 
@@ -58,6 +60,7 @@ export default function ExamRoomPage() {
       (loaded) => {
         if (!active) return
         setOffset(Date.parse(loaded.server_time) - Date.now())
+        setPhotoCounts(Object.fromEntries(loaded.items.map((i) => [i.position, i.images?.length ?? 0])))
         setAttempt(loaded)
         if (loaded.status === 'submitted' || loaded.status === 'graded') setEnd({ attempt: loaded, sealed: loaded.auto_submitted })
       },
@@ -98,18 +101,20 @@ export default function ExamRoomPage() {
 
   // The Attempt has ended: the device copy of its answers is no longer needed (P7d).
   const { clearDevice } = saving
+  const countPhotos = useCallback((position: number, count: number) => setPhotoCounts((all) => (all[position] === count ? all : { ...all, [position]: count })), [])
+  const closePhotos = useCallback(() => setPhotoClosed(true), [])
   useEffect(() => {
     if (end) clearDevice()
   }, [end, clearDevice])
 
   // A save refused as too late (or the Attempt submitted elsewhere): show how it ended.
   useEffect(() => {
-    if (!saving.closed || end || !attempt) return
+    if (!(saving.closed || photoClosed) || end || !attempt) return
     getAttempt(attemptId).then(
       (loaded) => setEnd({ attempt: loaded, sealed: loaded.auto_submitted || loaded.status !== 'submitted' }),
       () => setEnd({ attempt: { ...attempt, submitted_at: attempt.expires_at }, sealed: true }),
     )
-  }, [saving.closed, end, attempt, attemptId])
+  }, [saving.closed, photoClosed, end, attempt, attemptId])
 
   if (!attempt) {
     return (
@@ -140,7 +145,9 @@ export default function ExamRoomPage() {
   const index = Math.max(0, items.findIndex((item) => item.position === requested))
   const item = items[index]
   const locked = ending || saving.closed
-  const answered = items.filter((i) => isAnswered(saving.answers[i.position])).length
+  // P6d: a problem with photos but no text counts as answered.
+  const done = (position: number) => isAnswered(saving.answers[position]) || (photoCounts[position] ?? 0) > 0
+  const answered = items.filter((i) => done(i.position)).length
   const points = items.reduce((sum, i) => sum + i.points, 0)
 
   function go(position: number) {
@@ -194,7 +201,7 @@ export default function ExamRoomPage() {
   }
 
   const navigator = (inSheet = false) => (
-    <Navigator items={items} answers={saving.answers} current={item.position} onJump={go} inSheet={inSheet} />
+    <Navigator items={items} answers={saving.answers} current={item.position} onJump={go} inSheet={inSheet} isDone={done} />
   )
   const previous = items[index - 1]
   const next = items[index + 1]
@@ -267,6 +274,7 @@ export default function ExamRoomPage() {
               disabled={locked}
               onChange={(change, typed) => saving.change(item.position, change, typed)}
               onLeave={() => saving.flush(item.position)}
+              photos={attempt.photos_enabled ? { attemptId, onCount: countPhotos, onClosed: closePhotos } : undefined}
             />
           )}
 
@@ -291,7 +299,7 @@ export default function ExamRoomPage() {
         <SubmitDialog
           answered={answered}
           total={items.length}
-          unanswered={items.filter((i) => !isAnswered(saving.answers[i.position])).map((i) => i.position)}
+          unanswered={items.filter((i) => !done(i.position)).map((i) => i.position)}
           marked={items.filter((i) => saving.answers[i.position]?.marked).map((i) => i.position)}
           unsaved={dialog.unsaved}
           busy={dialog.busy}

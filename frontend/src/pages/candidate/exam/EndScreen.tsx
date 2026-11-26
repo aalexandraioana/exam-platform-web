@@ -14,7 +14,7 @@ export default function EndScreen({ attempt, sealed }: { attempt: Attempt; seale
   const values = {
     title: attempt.exam.title,
     time: dayAndTime(when, i18n.resolvedLanguage).time,
-    answered: attempt.items.filter((item) => item.answer && item.answer.value !== null).length,
+    answered: attempt.items.filter((item) => (item.answer && item.answer.value !== null) || (item.images?.length ?? 0) > 0).length,
     total: attempt.items.length,
   }
   return (

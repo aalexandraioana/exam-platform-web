@@ -135,3 +135,57 @@ Unealta: Claude Code (prompt liber, mock-uri HTML verificate în light și dark,
 Ce am cerut (pe scurt): Actualizarea celor două mock-uri după noile decizii.
 Ce am primit: DS-007 cu filtre și câmpuri pentru temă, set, tip și nivel, editor de valori (fixă / aleatoare cu minim, maxim și excepții / calculată) și o stare pentru o valoare folosită în enunț dar nedefinită. DS-008 cu nivelul examenului, criteriile fiecărui item, numărul de întrebări care se potrivesc și un dialog de editare a itemului. Asistentul a descoperit că mock-urile aprobate anterior depășeau lățimea ecranului pe telefon și le-a reparat. A propus termenii „Temă” și „Nivel” în locul lui „Etichetă” și al ambiguului „Clasă”.
 Ce am făcut cu ea: Am confirmat ambele mock-uri și termenii, care au intrat în CONTEXT.md.
+
+## 2026-11-24 · P4a și P4b: motorul de calcul și banca de întrebări
+Unealta: Claude Code (/plan, /build).
+Ce am cerut (pe scurt): Planul și construirea motorului matematic (valori fixe, aleatoare și calculate, formule evaluate fără `eval`, potrivirea răspunsurilor) și apoi a băncii de întrebări (DS-007). Pe parcurs am întrebat unde scriu întrebările mele.
+Ce am primit: Motorul (P4a) cu teste scrise înainte de cod: valori reproductibile dintr-un seed, condiții, virgulă sau punct zecimal, forma de fracție cerută, text fără diacritice. Pentru formule a propus text simplu cu simboluri Unicode, fără bibliotecă nouă (D-060). Apoi banca (P4b, contractul C-004) și un fișier gol `questions.yaml` pentru întrebările mele, care urmează să fie încărcate în P4c.
+Ce am făcut cu ea: Am aprobat ambele planuri și D-060, am confirmat mock-ul și am cerut merge și push după fiecare parte. Am spus că am doar 12 întrebări deocamdată și am cerut să trecem la alți pași până le completez.
+
+## 2026-11-25 · P5: constructorul de examen și publicarea
+Unealta: Claude Code (/plan, /build).
+Ce am cerut (pe scurt): Planul pentru constructorul de examen (DS-008): setări, itemi, verificările de publicare, previzualizare.
+Ce am primit: O potrivire „fiecare item cu întrebarea lui” care nu eșuează când există o soluție (potrivire bipartită, reproductibilă din seed), verificări de publicare ca coduri (30 + 60 de puncte, o întrebare distinctă pe item, clase), listă de examene și constructorul cu salvare automată.
+Ce am făcut cu ea: Am răspuns la cele cinci întrebări (Q-059–Q-063), am cerut să fie implementate și observațiile găsite la review, am confirmat ecranele și am cerut merge și push.
+
+## 2026-11-25 · P6: motorul încercărilor (twist-ul), împărțit în patru
+Unealta: Claude Code (/plan, /build).
+Ce am cerut (pe scurt): Planul pentru P6. L-am găsit prea mare și am cerut să fie împărțit, și am întrebat explicit dacă include twist-ul.
+Ce am primit: P6 împărțit în P6a (pornire și extragere: valori diferite pentru fiecare candidat, seed reproductibil pentru contestații), P6b (cronometru pe server, grație, autosave cu versiuni, predare, sigilare), P6c (corectarea Subiectului I) și P6d (fotografii). Am primit și harta: care parte acoperă care bucată din twist.
+Ce am făcut cu ea: Am aprobat împărțirea (Q-065) și fiecare plan. Înainte de merge la P6a am cerut două verificări: că cheia de răspuns și răspunsul calculat se potrivesc cu ordinea amestecată a variantelor, și refuzurile la pornire în condiții de concurență. Prima a trecut fără modificări. A doua a găsit un defect: două porniri simultane ajungeau la cheia unică din baza de date și primeau 500 în loc de 409. Asistentul l-a dovedit cu 20 de cereri paralele, inclusiv cu lacătul scos ca probă, și l-a reparat.
+
+## 2026-11-25 · Cron extern și review cu trei sub-agenți pe P6b
+Unealta: Claude Code (prompt liber, sub-agenți).
+Ce am cerut (pe scurt): Am întrebat de ce e nevoie de cron-job.org, ce se întâmplă fără el și ce e în linie cu twist-ul. Apoi am cerut review pe PR #11 cu trei sub-agenți: performanță, securitate, SEO și GEO.
+Ce am primit: Explicația: rezultatele rămân corecte și fără cron (sigilare la citire), cronul ține API-ul gratuit treaz pentru pilot și evaluare, iar twist-ul e acoperit în ambele variante. La review: nicio problemă gravă, patru mărunte confirmate în cod (o versiune prea mare dădea 500, marcajul de revizuire se pierdea dacă lipsea din cerere, secretul cronului lipsea din render.yaml, o precizare în documentație).
+Ce am făcut cu ea: Am păstrat cron-job.org, am generat singură secretul și l-am pus în Render, am creat jobul și am verificat răspunsul 200. Am cerut cele patru reparații și push. Am întrebat dacă pot opri jobul cât lucrez singură. Răspunsul a fost da, iar datele de repornire (29 noiembrie și de la predare până la evaluare) au intrat în roadmap.
+
+## 2026-11-25 · P6c: corectarea automată a Subiectului I
+Unealta: Claude Code (/plan, /build).
+Ce am cerut (pe scurt): Planul și construirea corectării Subiectului I.
+Ce am primit: Corectare la predare și la sigilare, din instantaneul încercării: pozițiile afișate traduse prin ordinea stocată, răspunsul scurt verificat față de răspunsul calculat din valorile acelei încercări, punctaj întreg sau 0. Nimic nu se arată candidatului înainte de publicare.
+Ce am făcut cu ea: Am aprobat amânarea recalculării la corectarea cheii (D-046) pentru P8 și am cerut merge și push.
+
+## 2026-11-25 · Butoanele din dialoguri și tabelul de utilizatori
+Unealta: Claude Code (prompt liber, cu captură de ecran).
+Ce am cerut (pe scurt): Am raportat două probleme la ecranul de administrator: butoanele din formularul „Examinator nou” erau disproporționate, iar tabelul era prea lat, cu mult spațiu gol în dreapta.
+Ce am primit: Trei variante desenate pentru butoane și două pentru tabel. După alegerea mea: butoane în jumătăți egale în toate cele 10 dialoguri (o componentă comună, PATTERN-008) și pagina de utilizatori limitată la 1024 px.
+Ce am făcut cu ea: Am ales variantele, am verificat capturile și am cerut merge și push.
+
+## 2026-11-25 · P7: experiența candidatului, împărțită în patru
+Unealta: Claude Code (/plan, /build).
+Ce am cerut (pe scurt): Planul pentru P7. L-am cerut împărțit în planuri mai mici și apoi încă o dată pentru partea camerei de examen.
+Ce am primit: P7a (tabloul de bord și intrarea într-o clasă), P7b (camera de examen: citire și răspuns), P7c (cronometru și predare), P7d (offline și reluare). Pentru fiecare: completări desenate în mock-uri, confirmate înainte de cod.
+Ce am făcut cu ea: Am decis descrierea examenului pe card, doar etichetele de temă, fără fotografii și fără tabelul de examene predate până la P9 (Q-064, Q-069, Q-070). Am ales un item pe ecran (Q-072). Am acceptat un câmp nou în API ca pagina să poată spune „nu ești într-o clasă” sau „cererea ta așteaptă”. Am cerut să păstrez P7a nemerged până la P7b, ca nimeni să nu pornească un examen fără cameră de examen. Am aprobat și repararea antetului candidatului pe telefon.
+
+## 2026-11-25 · Fontul formulelor în camera de examen
+Unealta: Claude Code (prompt liber, apoi propunere de decizie).
+Ce am cerut (pe scurt): Mi-a displăcut că tot enunțul era scris cu JetBrains Mono. Am cerut ca doar numerele și formulele să folosească acest font.
+Ce am primit: Explicația (textul e simplu, deci matematica trebuie recunoscută automat), regula de recunoaștere cu exemple și limita ei (cuvinte de o literă), plus propunerea de schimbare a D-060.
+Ce am făcut cu ea: Am decis ca doar camera de examen să se schimbe deocamdată, iar ecranele examinatorului să rămână cum sunt. A rezultat D-061, care înlocuiește D-060. Am confirmat mock-ul redesenat.
+
+## 2026-11-25 · P7c și P7d: cronometru, predare, offline și reluare; P7 live
+Unealta: Claude Code (/plan, /build, Playwright).
+Ce am cerut (pe scurt): Construirea cronometrului și a predării, apoi a părții offline, și verificarea twist-ului: refresh-ul, închiderea tab-ului și pierderea conexiunii nu pierd nimic.
+Ce am primit: Cronometru după ceasul serverului (corect și cu ceasul telefonului greșit), avertismente la 5 și la 1 minut, dialog de predare, ecranele „Examen predat” și „Timp expirat”. Răspunsurile se păstrează pe dispozitiv până le confirmă serverul, se retrimit singure și se trimit în perioada de grație la expirare. Cele trei teste Playwright cerute de catalog trec, iar rulate pe codul dinainte de P7d au picat toate trei, deci testele chiar verifică ceva. Asistentul mi-a cerut acordul înainte să modifice trei teste vechi care verificau un mesaj temporar înlocuit prin plan, și a spus deschis că a făcut retrimiterea automată doar la pierderea conexiunii, nu și la erorile de server.
+Ce am făcut cu ea: Am aprobat planurile și mock-urile, am dat acordul pentru testele vechi și am cerut merge și push pentru tot P7. E live din 25 noiembrie, ora 21:07.

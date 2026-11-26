@@ -81,6 +81,7 @@
 - Q-070 · Does P7 include Subject II photos and the submitted-exams table? · _answered_
 - Q-071 · Is P7 built in one piece? · _answered_
 - Q-072 · How many items does the exam room show at once? · _answered_
+- Q-073 · Does the delivered app move from Render to AWS?
 
 ---
 
@@ -531,3 +532,10 @@
 - **Blocks:** P7b (DS-004)
 - **Context:** The approved DS-004 mock shows items 3 and 4 together in Subject I but item 8 alone in Subject II.
 - **Answer:** One item per screen, in both Subjects; "← Itemul n" / "Itemul n →" move between items and the navigator jumps to any item. (Answered 2026-11-25.)
+
+## Q-073 · Does the delivered app move from Render to AWS?
+- **Status:** open
+- **Date:** 2026-11-26
+- **Blocks:** P12 (delivery: the live URL on 3 Dec)
+- **Context:** The user's professor requires AWS for the delivered app (live on AWS for the 3 Dec delivery; the 30 Nov pilot may stay on Render). The user chose their own new AWS account and "an AWS server with Cloudflare R2". Drafted, not yet approved: a PROPOSAL superseding D-014 (a new decision, not numbered yet): one EC2 server (Frankfurt) with Docker Compose (the production API image, PostgreSQL 16 with a nightly backup to R2, Caddy serving the SPA and HTTPS), deploys from GitHub Actions, data moved from Render on 1 Dec. Two choices open: HTTPS through CloudFront, a bought domain or a free IP-name domain; the sealing cron on the server (updating D-044) or cron-job.org. Parked by the user on 2026-11-26 to finish the build first.
+

@@ -38,6 +38,7 @@ export interface ExamProblem {
   section?: Section
   sum?: number
   expected?: number
+  count?: number
   item?: number
   items?: number[]
 }

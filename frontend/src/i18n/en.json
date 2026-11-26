@@ -391,6 +391,7 @@
       "duplicate_options": "Two options are the same.",
       "fraction_with_values": "With values that change, the answer must be a number, not a fraction.",
       "barem_incomplete": "The marking scheme doesn't add up to the question's points.",
+      "subject_two_points": "A Subject II problem is worth 20 points.",
       "undefined_value": "{{name}} is in the statement but has no value.",
       "invalid_value": "The value {{name}} isn't complete.",
       "invalid_range": "The range of {{name}} isn't valid: min and max are whole numbers, min ≤ max.",
@@ -478,6 +479,7 @@
         "competence": "the competence",
         "difficulty": "the difficulty"
       },
+      "subject_two_items": "Subject II has {{count}} problems; it needs exactly {{expected}}.",
       "no_distinct_draw": "Items {{items}} can't each get their own question. Add matching questions or widen the criteria (e.g. \"any topic\").",
       "unknown": "Something to fill in ({{code}})."
     },

@@ -25,7 +25,7 @@ designs:
     kind: screen
     status: implemented
     source: frontend/src/pages/candidate/ExamRoomPage.tsx
-    description: Active exam taking room with authoritative server countdown, autosave sync indicator, question drawer navigation, Subject 1 & 2 inputs, and submission modal; P7b additions drawn 2026-11-25: one item per screen (Q-072), multiple choice, true/false, short answer, Subject II text only (Q-070; photos in P6d), save failed, time up until P7c; P7c additions drawn, confirmed and built 2026-11-25; "Fără conexiune" built in P7d; P6d additions drawn 2026-11-26 (to confirm): a refused photo upload, the confirmation before deleting a photo; each photo with its name, size and a labelled "Șterge" button below it, no badge on the photo (user, 2026-11-26): the 1-minute notice, "Examen predat" after submitting, submitting blocked by an unsaved answer
+    description: Active exam taking room with authoritative server countdown, autosave sync indicator, question drawer navigation, Subject 1 & 2 inputs, and submission modal; P7b additions drawn 2026-11-25: one item per screen (Q-072), multiple choice, true/false, short answer, Subject II text only (Q-070; photos in P6d), save failed, time up until P7c; P7c additions drawn, confirmed and built 2026-11-25; "Fără conexiune" built in P7d; P6d additions drawn and confirmed 2026-11-26: a refused photo upload, the confirmation before deleting a photo; each photo with its name, size and a labelled "Șterge" button below it, no badge on the photo (user, 2026-11-26): the 1-minute notice, "Examen predat" after submitting, submitting blocked by an unsaved answer
   - id: DS-005
     name: exam-results-review
     kind: screen

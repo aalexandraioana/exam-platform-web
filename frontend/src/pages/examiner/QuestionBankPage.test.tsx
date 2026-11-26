@@ -131,6 +131,40 @@ describe('QuestionBankPage (DS-007)', () => {
     expect(bodyOf(fetchMock, 'PATCH /questions/13')).toMatchObject({ topic_id: 5 })
   })
 
+  it('sends barem steps back with their ids, so grades given on them stay (C-004, P8a)', async () => {
+    const problem = {
+      ...question, id: 14, code: 'M6-TR-004', section: 'subject_2', type: 'structured_problem', points: 20, answer_key: null, uses_barem: true,
+      barem: [{ id: 41, description: 'Triunghi isoscel', points: 8 }, { id: 42, description: '∢B = 70°', points: 12 }],
+    }
+    const fetchMock = mockApi({ ...base, 'GET /questions/14': json(200, { question: problem }), 'PATCH /questions/14': json(200, { question: problem }) })
+    renderAt('?q=14')
+
+    fireEvent.change(await screen.findByRole('textbox', { name: 'Pasul 2' }), { target: { value: '∢B = 70°, cu justificare' } })
+    fireEvent.change(screen.getByRole('textbox', { name: 'Puncte pasul 2' }), { target: { value: '8' } })
+    fireEvent.click(screen.getByRole('button', { name: '+ Adaugă pas' }))
+    fireEvent.change(screen.getByRole('textbox', { name: 'Pasul 3' }), { target: { value: 'Concluzia' } })
+    fireEvent.change(screen.getByRole('textbox', { name: 'Puncte pasul 3' }), { target: { value: '4' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Salvează' }))
+
+    expect(await screen.findByText('Salvat.')).toBeInTheDocument()
+    expect(bodyOf(fetchMock, 'PATCH /questions/14').barem).toEqual([
+      { id: 41, description: 'Triunghi isoscel', points: 8 },
+      { id: 42, description: '∢B = 70°, cu justificare', points: 8 },
+      { description: 'Concluzia', points: 4 },
+    ])
+  })
+
+  it('explains that published results lock the barem and the answer key (D-031, D-046)', async () => {
+    mockApi({ ...base, 'PATCH /questions/12': json(422, { message: 'x', errors: { barem: ['barem_locked'], answer_key: ['answer_key_locked'] } }) })
+    renderAt('?q=12')
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Salvează' }))
+
+    const alert = await screen.findByRole('alert')
+    expect(alert).toHaveTextContent('Nu am salvat modificările.')
+    expect(alert).toHaveTextContent('Rezultatele unui examen care a folosit această întrebare sunt publicate, așa că baremul și răspunsul corect nu se mai pot schimba.')
+  })
+
   it('edits single choice options and the correct one', async () => {
     const fetchMock = mockApi({ ...base, 'PATCH /questions/13': json(200, { question: draft }) })
     renderAt('?q=13')

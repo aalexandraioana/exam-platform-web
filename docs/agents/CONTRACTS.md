@@ -53,17 +53,17 @@
 ## C-004 · Question bank API: questions, Ready check, preview, lists, library
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Provider:** `backend/` (routes/api.php, QuestionController, LibraryController, BankListController, Support/Questions/Readiness)
 - **Consumers:** `frontend/src/api/questions.ts` (P4b Part 3)
-- **Interface:** [docs/API.md → Question bank](../API.md#question-bank): the Examiner's own questions (list with filters, create with a typed code, show with `problems`, edit, Ready/Draft, delete), preview of named values and answer checking (P4a engine), competences/topics/pools (list, create), library (publish as `LIB-<code>`, browse, copy). 422 bodies carry codes; `status: not_ready` comes with `problems`; 409 codes `question_drawn`, `already_published`.
+- **Interface:** [docs/API.md → Question bank](../API.md#question-bank): the Examiner's own questions (list with filters, create with a typed code, show with `problems`, edit, Ready/Draft, delete), preview of named values and answer checking (P4a engine), competences/topics/pools (list, create), library (publish as `LIB-<code>`, browse, copy). 422 bodies carry codes; `status: not_ready` comes with `problems`; 409 codes `question_drawn`, `already_published`. Barem steps carry ids and are kept by id; a barem edit recalculates graded answers of exams whose results aren't published and flags them for re-check (D-031), reported as `regraded`; a question drawn in an exam with published results refuses barem and answer-key changes (`barem_locked`, `answer_key_locked`) (P8a).
 - **Evidence:** docs/plans/p4b-question-bank.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-24) · confidence high
 
 ## C-005 · Exams API: exams, blueprint Items, publish checks, preview
 - **Status:** approved
 - **Date:** 2026-11-25
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Provider:** `backend/` (routes/api.php, ExamController, ExamItemController, Support/Exams/Blueprint, Support/Exams/PublishChecks)
 - **Consumers:** `frontend/src/api/exams.ts` (P5 Part 3); P6 reuses `Blueprint::assign` server-side
 - **Interface:** [docs/API.md → Exams](../API.md#exams): the Examiner's exams (list, create, show with `checks`, edit settings, delete a draft), Items (add, edit, delete, reorder; `type`/`topic` null = any; `eligible` count), match count for unsaved criteria, publish (422 `not_publishable` with `problems`), preview draw. After publishing only title, description and `available_until` change (409 `exam_published`).

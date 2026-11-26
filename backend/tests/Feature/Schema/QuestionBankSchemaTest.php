@@ -151,3 +151,10 @@ it('indexes the foreign keys that no unique key covers', function () {
         ->and(hasIndexOn('pool_question', 'question_id'))->toBeTrue()
         ->and(hasIndexOn('questions', 'topic_id'))->toBeTrue();
 });
+
+it('keeps a Ready Subject II question at 20 points (D-062)', function () {
+    expectRefused(fn () => Question::factory()->subjectTwo()->ready()->create(['points' => 10]));
+
+    expect(Question::factory()->subjectTwo()->create(['points' => 10])->points)->toBe('10.00') // a Draft may be anything
+        ->and(Question::factory()->subjectTwo()->ready()->create(['points' => 20])->points)->toBe('20.00');
+});

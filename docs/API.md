@@ -283,7 +283,7 @@ An exam:
               "type": null, "topic": null, "eligible": 3 }],
   "checks": { "totals": { "subject_1": 30, "subject_2": 60 }, "problems": [], "warnings": [] } }
 ```
-The list (`GET /exams`) carries the first line of fields. An Item's `type` and `topic` null mean
+The list (`GET /exams`) carries the first line of fields. An exam also carries `results_published_at` and `cohort_note` (P8a, C-007). An Item's `type` and `topic` null mean
 "any"; `eligible` counts the Ready questions it may draw (D-057).
 
 `checks.problems` block publishing: `required` (field `title`, `grade_level`, `duration_minutes`,
@@ -320,6 +320,48 @@ One draw as a Candidate would get it, with a random seed: `200 { "items": [{ ite
 question_id, code, competence, eligible, values, statement, options, answer }] }`, every Item its own
 question, named values filled (`answer`: the drawn answer, for questions with values). `422 status:
 not_publishable` when no draw exists. Options are shuffled per Attempt in P6 (D-045), not here.
+
+## Grading (Examiner)
+
+C-007 (P8a). Subject II grading (D-005, D-031) and publishing the results (D-019). Only the exam's
+Examiner: another Examiner's exam, answer or photo is `404`. Points are numbers; a Subject II
+problem is worth 20 (D-062).
+
+### GET /api/exams/{id}/grading
+The queue. `exam` (`id`, `title`, `classes` names, `available_until`, `submissions` = submitted or
+graded Attempts, `results_published_at`, `cohort_note`); `items` per Subject II problem
+(`position`, `competence` code, `points`, `graded`, `total`); `answers`, one per Subject II problem
+of each handed-in Attempt, unanswered ones included (`attempt_item_id`, `attempt_id`, `candidate`
+name, `number` = the Attempt's place in the list, for hidden names, `position`, `question_code`,
+`photos` count, `answered`, `status` `to_grade` | `graded` | `recheck`, `awarded_points`);
+`counts` (`total`, `graded`, `to_grade`, `recheck`); `publish` (`ready`, `missing` as below,
+`mean` and `median` grade 1–10 over each Candidate's counted Attempt by the score policy, D-012;
+null before any Attempt is graded).
+
+### GET /api/grading/items/{attemptItemId} · PUT /api/grading/items/{attemptItemId}
+`GET` → `{ "item" }`: `attempt_item_id`, `attempt_id`, `position`, `question_id`, `question_code`,
+`candidate`, `statement` (the Attempt's snapshot), `points`, `text` (the written steps), `photos`
+(`{id, position, name, size}`), `uses_barem`, `barem` (the question's live steps, `{id, description,
+points, modified}`; `modified` = changed after this answer was graded), `scores` (step id → points),
+`adjustment`, `comment`, `awarded_points`, `needs_recheck`, `graded_at`.
+`PUT` with a barem: `{ "steps": [{id, points}], "adjustment"?, "comment"? }`, every step once, each
+between 0 and its points; without a barem: `{ "points", "adjustment"?, "comment"? }`, at most the
+problem's points. The total (steps or points, plus the adjustment) must stay between 0 and the
+problem's points. Saving clears `needs_recheck`; when every Subject II problem of the Attempt is
+graded, the Attempt becomes `graded` with `subject_2_score` and `total_score` = 10 + Subject I +
+Subject II. `200 { "item" }`. `422`: `steps` `required` / `invalid`, `points` `required` /
+`invalid`, `adjustment` `out_of_range`, `comment` `invalid`. `409`: `results_published`,
+`attempt_open`.
+
+### POST /api/exams/{id}/results
+`{ "cohort_note"? }` → `200 { "exam" }` with `results_published_at` and `cohort_note`. Expired
+Attempts are sealed first. `422` `status: results_not_ready` with `missing`: `ungraded` (a submitted
+Attempt isn't graded yet), `open_attempts` (an Attempt is still running), `window_open`
+(`available_until` hasn't passed or isn't set) (Q-076). `409 results_published`. Publishing can't be
+undone; afterwards the barem and answer key of the exam's questions are locked (C-004).
+
+### GET /api/grading/images/{imageId}
+A Subject II photo of an answer in one of the Examiner's exams, streamed with its type.
 
 ## Attempts (Candidate)
 

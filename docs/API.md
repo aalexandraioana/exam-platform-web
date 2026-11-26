@@ -205,7 +205,7 @@ named values) · `{kind: fraction, value: "3/4"}`. `parameters`: D-057 (P4a).
 `problems` lists what Ready still needs (D-059), each `{code, field?, name?}`: `required` (field
 `statement`, `points`, `grade_level`, `difficulty`, `competence`, `topic`, `answer_key`),
 `invalid_answer_key`, `too_few_options`, `empty_option`, `duplicate_options`, `fraction_with_values`,
-`barem_incomplete`, and the named-value codes with field `parameters` (`undefined_value`,
+`barem_incomplete`, `subject_two_points` (field `points`: a Subject II problem is worth 20, D-062), and the named-value codes with field `parameters` (`undefined_value`,
 `invalid_value`, `invalid_range`, `all_excluded`, `invalid_formula`, `unknown_name`, `cycle`,
 `invalid_condition`, `answer_required`, `values_not_allowed`, `no_valid_draw`).
 
@@ -281,7 +281,7 @@ The list (`GET /exams`) carries the first line of fields. An Item's `type` and `
 `checks.problems` block publishing: `required` (field `title`, `grade_level`, `duration_minutes`,
 `classes`), `subject_total` (`section`, `sum`, `expected`: 30 for Subject I, 60 for Subject II,
 D-005), `item_incomplete` (`item` position, field `points`, `pool`, `competence`, `difficulty`),
-`no_distinct_draw` (`items`: the positions that can't all get their own question). `checks.warnings`:
+`subject_two_items` (`count`, `expected`: exactly 3 Subject II problems, D-062), `no_distinct_draw` (`items`: the positions that can't all get their own question). `checks.warnings`:
 `competence_missing` for a competence with a Ready question at this grade level but no Item (Q-063).
 
 ### GET /api/exams · POST /api/exams
@@ -298,7 +298,7 @@ Once published, only `title`, `description` and `available_until` change; anythi
 Item fields: `section` (required when adding), `points`, `pool_id`, `competence_id`, `difficulty`,
 `type`, `topic_id`. Order: `{ "item_ids": [...] }`, every Item once. Each answers with the whole
 exam (`201` when adding, else `200`). `422`: a field `invalid` (another Examiner's pool, competence or
-topic; a type that doesn't fit the Subject; an order that isn't every Item). `409 exam_published`.
+topic; a type that doesn't fit the Subject; Subject II `points` other than 20 (empty is allowed while drafting, D-062); an order that isn't every Item). `409 exam_published`.
 
 ### POST /api/exams/{id}/match
 Unsaved Item criteria → `200 { "count": 3 }`, the live count of the Item dialog.

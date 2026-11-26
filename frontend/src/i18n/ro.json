@@ -398,6 +398,7 @@
       "duplicate_options": "Două variante sunt la fel.",
       "fraction_with_values": "Cu valori care se schimbă, răspunsul trebuie să fie un număr, nu o fracție.",
       "barem_incomplete": "Baremul nu însumează punctajul întrebării.",
+      "subject_two_points": "O problemă de la Subiectul II valorează 20 de puncte.",
       "undefined_value": "{{name}} apare în enunț, dar nu are o valoare.",
       "invalid_value": "Valoarea {{name}} nu e completă.",
       "invalid_range": "Intervalul lui {{name}} nu e valid: minimul și maximul sunt numere întregi, minim ≤ maxim.",
@@ -486,6 +487,7 @@
         "competence": "competența",
         "difficulty": "dificultatea"
       },
+      "subject_two_items": "Subiectul II are {{count}} probleme; trebuie să aibă exact {{expected}}.",
       "no_distinct_draw": "Itemii {{items}} nu pot primi fiecare o întrebare proprie. Adaugă întrebări potrivite sau lărgește criteriile (de exemplu „orice temă”).",
       "unknown": "Ceva de completat ({{code}})."
     },

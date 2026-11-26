@@ -390,6 +390,20 @@ Attempt's snapshot, shown positions mapped through the stored option order, shor
 against the Attempt's drawn answer (D-005, D-006, D-017). No score or correctness appears in any
 response before publication (D-019).
 
+### Subject II photos (P6d, D-026, D-048)
+Up to 3 per Subject II problem, 10 MB each, JPG, PNG or HEIC (converted to JPG on the server). The
+read gives each Subject II item's `images: [{ "id", "position", "name", "size" }]` (null for other
+items) and a top-level `photos_enabled`: false in production until the object storage (Cloudflare
+R2) and its keys are configured. Same deadline + grace as answers (409 `time_up`,
+`attempt_submitted`).
+
+- `POST /api/attempts/{id}/items/{position}/images` (multipart, field `image`) → `201 { "image": { "id": 31, "position": 2, "name": "IMG_2041.HEIC", "size": 2483312 } }`.
+  The lowest free position (1–3). `422 image_type` (not a JPG/PNG/HEIC image), `image_too_large`,
+  `not_a_problem` (not a Subject II problem); `409 images_full`; `503 storage_unavailable`.
+- `DELETE /api/attempts/{id}/items/{position}/images/{imageId}` → `204`; frees the position.
+- `GET /api/attempts/{id}/images/{imageId}` → the file, for the Attempt's own Candidate (an `<img>`
+  can't send the token, so the SPA fetches it and shows it). Another Candidate: `404`.
+
 ## Cron
 
 ### POST /api/cron/seal-expired

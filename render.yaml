@@ -24,6 +24,21 @@ services:
         value: "false"
       - key: APP_KEY
         sync: false
+      # D-048, Q-066: Subject II photos in Cloudflare R2; the AWS_* values are set in the dashboard.
+      - key: FILESYSTEM_DISK
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        value: auto
+      - key: AWS_BUCKET
+        value: exam-platform-photos
+      - key: AWS_ENDPOINT
+        sync: false
+      - key: AWS_USE_PATH_STYLE_ENDPOINT
+        value: "true"
       # D-044, Q-067: the external cron's secret for POST /api/cron/seal-expired; set in the dashboard.
       - key: CRON_SECRET
         sync: false

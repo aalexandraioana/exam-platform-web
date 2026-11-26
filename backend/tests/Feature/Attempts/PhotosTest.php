@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AnswerImage;
 use App\Models\Attempt;
 use App\Models\AttemptItem;
 use App\Models\User;
@@ -61,7 +62,7 @@ it('converts a HEIC photo to JPG on the server (D-026)', function () {
 
     $stored = Storage::get(Storage::allFiles()[0]);
     expect(substr($stored, 0, 3))->toBe("\xFF\xD8\xFF")
-        ->and(App\Models\AnswerImage::sole()->mime_type)->toBe('image/jpeg');
+        ->and(AnswerImage::sole()->mime_type)->toBe('image/jpeg');
 });
 
 it('refuses other files, large files, a fourth photo and Subject I items', function () {
@@ -126,6 +127,10 @@ it('refuses uploads in production until the object storage is set up (D-048)', f
     upload($id, photo('page.jpg'))->assertStatus(503)->assertJsonPath('code', 'storage_unavailable');
     $this->getJson("/api/attempts/{$id}")->assertJsonPath('attempt.photos_enabled', false);
 
-    config(['filesystems.default' => 's3']);
+    config(['filesystems.default' => 's3']); // the disk set, but no keys yet
+    $this->getJson("/api/attempts/{$id}")->assertJsonPath('attempt.photos_enabled', false);
+    upload($id, photo('page.jpg'))->assertStatus(503);
+
+    config(['filesystems.disks.s3' => [...config('filesystems.disks.s3'), 'key' => 'k', 'secret' => 's', 'bucket' => 'b', 'endpoint' => 'https://example.r2.cloudflarestorage.com']]);
     $this->getJson("/api/attempts/{$id}")->assertJsonPath('attempt.photos_enabled', true);
 });

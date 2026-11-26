@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AttemptController;
+use App\Http\Controllers\AttemptImageController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BankListController;
 use App\Http\Controllers\CandidateExamController;
@@ -89,6 +90,10 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/attempts/{id}', [AttemptController::class, 'show'])->whereNumber('id');
                 Route::put('/attempts/{id}/items/{position}/answer', [AttemptController::class, 'save'])->whereNumber(['id', 'position']);
                 Route::post('/attempts/{id}/submit', [AttemptController::class, 'submit'])->whereNumber('id');
+                // P6d: Subject II photos (D-026, D-048).
+                Route::post('/attempts/{id}/items/{position}/images', [AttemptImageController::class, 'store'])->whereNumber(['id', 'position']);
+                Route::delete('/attempts/{id}/items/{position}/images/{imageId}', [AttemptImageController::class, 'destroy'])->whereNumber(['id', 'position', 'imageId']);
+                Route::get('/attempts/{id}/images/{imageId}', [AttemptImageController::class, 'show'])->whereNumber(['id', 'imageId']);
             });
 
             // C-003 (docs/API.md → Administrator): users, temporary passwords, Examiners, deactivation.

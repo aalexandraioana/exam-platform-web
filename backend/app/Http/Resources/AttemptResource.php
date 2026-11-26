@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Controllers\AttemptImageController;
 use App\Models\Answer;
 use App\Models\Attempt;
+use App\Support\Attempts\Photos;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -29,7 +31,7 @@ class AttemptResource extends JsonResource
     {
         /** @var Attempt $attempt */
         $attempt = $this->resource;
-        $attempt->loadMissing(['exam', 'items.answer']);
+        $attempt->loadMissing(['exam', 'items.answer.images']);
 
         return [
             'id' => $attempt->id,
@@ -43,6 +45,8 @@ class AttemptResource extends JsonResource
             'submitted_at' => $attempt->submitted_at?->toIso8601String(),
             'auto_submitted' => $attempt->auto_submitted,
             'server_time' => now()->toIso8601String(),
+            // P6d: false in production until the object storage is set up (D-048).
+            'photos_enabled' => Photos::enabled(),
             'items' => $attempt->items->map(fn ($item) => [
                 'position' => $item->position,
                 'section' => $item->question_snapshot['section'],
@@ -51,6 +55,9 @@ class AttemptResource extends JsonResource
                 'statement' => $item->question_snapshot['statement'],
                 'options' => $item->question_snapshot['options'],
                 'answer' => $item->answer ? self::answer($item->answer) : null,
+                'images' => $item->question_snapshot['type'] === 'structured_problem'
+                    ? ($item->answer?->images ?? collect())->map(fn ($image) => AttemptImageController::image($image))->values()->all()
+                    : null,
             ])->all(),
         ];
     }

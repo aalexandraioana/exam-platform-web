@@ -37,6 +37,7 @@
 
 ## PATTERN-003 · Tokens-only Tailwind theme
 - **Status:** candidate
+- **Confirmed:** 2026-11-26
 - **Use when:** Styling any frontend component.
 - **How:** Design tokens live once, as CSS variables in `frontend/src/index.css` (`:root` for light, `[data-theme='dark']` for dark). `frontend/tailwind.config.js` *replaces* (does not extend) the theme keys for colors, spacing, radii, shadows, font sizes and screens with `var(--token)` references, so the default palette and scale are unavailable and a raw value cannot slip in as a utility class. Class names drop the token's group prefix: `bg-surface`, `text-secondary`, `border-input`, `text-h1`, `rounded-lg`, `shadow-subtle`.
 - **Example:** frontend/tailwind.config.js; frontend/src/App.tsx
@@ -72,6 +73,7 @@
 
 ## PATTERN-007 · A write that depends on a row's state locks that row first
 - **Status:** candidate
+- **Confirmed:** 2026-11-26
 - **Use when:** Concurrent requests may both pass a check on the same record (one open Attempt, its deadline, its status) before either writes.
 - **How:** In one `DB::transaction`, re-read the record with `lockForUpdate()`, check, write, return. A refusal that must persist (e.g. sealing on `time_up`) is returned from the transaction and thrown after it commits. Keep the database's own unique keys behind it and map their violation to the same `409` code. Verify with a parallel run (20 requests through `php artisan serve` with `PHP_CLI_SERVER_WORKERS`), once with the lock removed as a control.
 - **Example:** backend/app/Support/Attempts/Starter.php (start), Saver.php (autosave), Sealer.php (submit, seal)
@@ -80,6 +82,7 @@
 
 ## PATTERN-008 · Dialog buttons in equal halves through DialogActions
 - **Status:** candidate
+- **Confirmed:** 2026-11-26
 - **Use when:** A dialog ends with its actions (cancel and confirm, or cancel and a destructive action).
 - **How:** Wrap the buttons in `components/DialogActions` (mock.css `.modal-actions`): a two-column grid, each button full width and centred. A third action, such as delete in an edit dialog, gets `className="col-span-2"` and sits on its own row above. Cancel comes first, the main action second. Never a bare `justify-end` row.
 - **Example:** frontend/src/components/DialogActions.tsx; frontend/src/pages/admin/UsersPage.tsx; frontend/src/pages/examiner/exams/ItemDialog.tsx

@@ -51,6 +51,7 @@
 - D-058 · Examiner-defined competences; one topic per question
 - D-059 · Draft and Ready question status
 - D-061 · Maths as plain text; in the exam room only numbers and formulas in JetBrains Mono
+- D-062 · Fixed Subject II structure: 3 problems of 20 points
 - D-063 · Develop locally in Docker; Render only for grouped releases and the pilot, deployed after CI passes
 
 ---
@@ -128,7 +129,7 @@
 ## D-012 · Configurable attempt limits and score aggregation policy
 - **Status:** approved
 - **Date:** 2026-11-18
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** The platform supports configurable attempt limits per Exam (single or multiple attempts) defined by the Examiner, with score aggregation policy (e.g., highest score or latest score).
 - **Why:** Satisfies the catalog requirement for configurable attempts, providing flexibility for both summative graded exams (1 attempt) and formative practice modules.
 - **Rejected:** Hardcoded single-attempt restriction across all exams.
@@ -158,7 +159,7 @@
 ## D-015 · Classes and Exam publication to classes
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Candidates belong to classes. An Exam is published to one or more classes, and only Candidates of those classes see it. The cohort for feedback (D-019) is the Candidates of the classes the Exam was published to.
 - **Why:** Matches the classroom reality from the interview and the approved DS-003 mock ("Clasa a VI-a B", "pentru clasa ta").
 - **Rejected:** Published Exams visible to every Candidate; grade level as the only filter.
@@ -178,7 +179,7 @@
 ## D-019 · Results and feedback released only on publication
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** After full grading the Examiner publishes, in two channels: (1) one cohort note, visible to the whole cohort (D-015); (2) private per-problem partial points and comments on each Subject 2 answer. No score, Subject 1 included, is visible to a Candidate before publication; until then the Candidate sees "submitted, awaiting grading".
 - **Why:** Keeps D-010's classroom practice and closes the gap about the instantly auto-graded Subject 1 score.
 - **Rejected:** Showing the Subject 1 score at Submission; publishing grades piece by piece.
@@ -198,7 +199,7 @@
 ## D-022 · Bilingual Romanian and English UI
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** The UI is available in Romanian and English with a language toggle. CONTEXT.md holds the Romanian and English word for each term (words: Q-017).
 - **Why:** Romanian classroom users plus English project documentation and review.
 - **Rejected:** Romanian-only or English-only UI.
@@ -258,7 +259,7 @@
 ## D-033 · Lucide as the only icon set
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** All UI icons come from Lucide (`lucide-react` in the frontend, imported per icon), 2px stroke, at 16, 20 or 24 px. No Unicode symbols or emoji are used as icons. Icon-only controls keep an accessible name (DESIGN.md).
 - **Why:** Mixed hand-copied SVGs and Unicode glyphs render differently per device; Lucide matches the existing outline style (Feather), is free (ISC) and tree-shaken.
 - **Rejected:** Heroicons (smaller set), Phosphor (multiple weights invite drift), Tabler Icons (more technical look).
@@ -268,7 +269,7 @@
 ## D-035 · Warm, calm visual system with a fresh mint accent
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** The user interface adheres strictly to the tokens in docs/design/DESIGN.md: a fresh mint primary accent (`#1F7A4F` light / `#7EE2A8` dark, hover `#17603D` / `#AFF0C9`, tint `#E3F2E8` / `#1C3A28`); warm neutrals in both themes, a cream light theme (canvas `#F5F1EA`, surface `#FFFCF7`) and an espresso dark theme (canvas `#1A1612`, surface `#241F1A`); Plus Jakarta Sans for UI copy and headings; JetBrains Mono for formulas, equations and timers; a 4px grid spacing scale; soft rounded shapes (radius 10/16 px) and subtle, warm-tinted elevation.
 - **Why:** The user preferred mint green to teal. In light mode the mint is deep enough to carry white text (5.31:1) and links on cream (4.72:1); the bright mint shows in dark mode. Status colors keep their meaning through icons and text, since the accent is close to the success green.
 - **Rejected:** Teal accent (D-034); classic and soft sage-mint options; light mint in light mode (fails contrast).
@@ -348,7 +349,7 @@
 ## D-046 · Subject I answer-key corrections recalculate until publication
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-22
+- **Confirmed:** 2026-11-26
 - **Rule:** Correcting a Subject I answer key after Attempts were submitted recalculates that question's scores in every Attempt and logs the change. Once results are published, the answer key is locked. Same rule as barem edits (D-031).
 - **Why:** The catalog requires recalculation when the teacher corrects a question after the exam; locking at publication keeps published grades stable.
 - **Rejected:** Recalculating after publication; no recalculation.
@@ -388,7 +389,7 @@
 ## D-050 · The SPA authenticates with a Sanctum bearer token
 - **Status:** approved
 - **Date:** 2026-11-23
-- **Confirmed:** 2026-11-24
+- **Confirmed:** 2026-11-26
 - **Rule:** Login and registration return a Sanctum personal access token. The SPA stores it in localStorage and sends it as `Authorization: Bearer <token>` on every API request; protected routes use `auth:sanctum`. Logout revokes the current token. The API does not use `statefulApi()` or session cookies.
 - **Why:** The site and the API run on different onrender.com domains (D-014). onrender.com is a public suffix, so a session cookie would be cross-site (`SameSite=None`), which Safari blocks.
 - **Rejected:** Sanctum SPA cookie session (needs one custom domain for the site and the API).
@@ -398,7 +399,7 @@
 ## D-051 · The API is documented in a hand-written docs/API.md
 - **Status:** approved
 - **Date:** 2026-11-23
-- **Confirmed:** 2026-11-23
+- **Confirmed:** 2026-11-26
 - **Rule:** Every API endpoint has a section in `docs/API.md` with its method, path, auth and role, a request example, and response examples for success and for each error status. Each backend part updates it in the same change; C- entries link to the section.
 - **Why:** The catalog accepts an API.md with examples; it needs no new dependency.
 - **Rejected:** An OpenAPI spec with a generator such as Scribe (a new dependency).
@@ -487,11 +488,21 @@
 ## D-061 · Maths as plain text; in the exam room only numbers and formulas in JetBrains Mono
 - **Status:** approved
 - **Date:** 2026-11-25
-- **Confirmed:** 2026-11-25
+- **Confirmed:** 2026-11-26
 - **Rule:** Question statements, options, answers and barem steps stay plain text with Unicode symbols (∢ ° ² ³ · : ≤ ≥ ≠ −); no rendering library and no markup (as D-060). In the Candidate's exam room (DS-004) only numbers and formulas are shown in JetBrains Mono (DESIGN.md `font-math`), detected automatically: pieces containing a digit or a maths symbol, and single letters or short capital-letter names used as variables or points (not the words "o" and "e"); neighbouring pieces join into one span; words and trailing punctuation stay in the UI font. The Examiner's screens (preview, question editor) keep whole statements in JetBrains Mono for now.
 - **Why:** The user found whole statements in the mono font unpleasant to read in the exam room (P7b mock review); the Examiner's screens were left as they are for now.
 - **Rejected:** Whole statements in JetBrains Mono in the exam room (D-060 as built); markup for maths in questions; changing the Examiner's screens now.
 - **Evidence:** docs/plans/p7b-exam-room-answering.md; conversation 2026-11-25 (P7b mock review)
+- **Source:** user · confidence high
+
+## D-062 · Fixed Subject II structure: 3 problems of 20 points
+- **Status:** approved
+- **Date:** 2026-11-26
+- **Confirmed:** 2026-11-26
+- **Rule:** An Exam's Subject II has exactly 3 Items (problems) of 20 points each. A Subject II question can be Ready only when it is worth 20 points, so its barem adds up to 20 (D-031). Subject I is unchanged (D-057: any Item points, Subject total 30). D-057 and D-059 stay approved; this adds to them.
+- **Why:** Grading needs the barem and the Item on the same scale (Q-075); the user chose a fixed structure, matching the 6th-grade exam model (D-005) and the DS-009 mock (items 7–9 at 20 points).
+- **Rejected:** Matching a Subject II Item only to questions of equal points with any Item value (agent proposal); scaling a question's score to the Item's points; grading on the Item's points with the barem scaled.
+- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-075; docs/plans/p8a-grading-and-publishing.md
 - **Source:** user · confidence high
 
 ## D-063 · Develop locally in Docker; Render only for grouped releases and the pilot, deployed after CI passes

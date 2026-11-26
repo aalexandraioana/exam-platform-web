@@ -83,6 +83,10 @@
 - Q-072 · How many items does the exam room show at once? · _answered_
 - Q-073 · Does the delivered app move from Render to AWS?
 - Q-074 · How does questions.yaml get into the live bank? · _answered_
+- Q-075 · How is a Subject II Item graded when its question's points differ from the Item's? · _answered_
+- Q-076 · When may the Examiner publish an exam's results? · _answered_
+- Q-077 · Is P8 built in one piece? · _answered_
+- Q-078 · Which DS-009 parts may be cut to save time? · _answered_
 
 ---
 
@@ -299,7 +303,7 @@
 - **Date:** 2026-11-23
 - **Blocks:** P4c (seeded questions), P8 (grading on 1 Dec), P12 (pilot)
 - **Context:** Subject 1 alone, auto-graded, already gives the pilot the weak-item data Item Analysis needs. Subject 2 adds photo uploads and Examiner grading with a barem to the pilot.
-- **Answer:** Yes. The pilot Exam has 6 Subject 1 Items and 2 Subject 2 problems, each with a barem: about 20–30 photographed answers, graded by the Examiner on 1 Dec (30–60 minutes). (Answered 2026-11-23.)
+- **Answer:** Yes. The pilot Exam has 6 Subject 1 Items and 3 Subject 2 problems of 20 points (D-062), each with a barem, graded by the Examiner on 1 Dec. (Answered 2026-11-23; 3 problems instead of 2 since 2026-11-26.)
 
 ## Q-040 · What happens when the class code entered at registration matches no class?
 - **Status:** answered
@@ -546,3 +550,31 @@
 - **Blocks:** P4c
 - **Context:** The repo is public, so committed answer keys can be read by pilot Candidates; Render's free plan has no server shell; D-059 decides when a question can be Ready.
 - **Answer:** questions.yaml is committed (no .gitignore), knowing its answer keys are public. A question that is well-formed but incomplete loads as Draft, with what it still needs listed; complete ones load as Ready. The live load runs from the user's machine with `app:load-questions <email>` against the live database URL (read with `read -s`, `sslmode=require`). (Answered 2026-11-26.)
+
+## Q-075 · How is a Subject II Item graded when its question's points differ from the Item's?
+- **Status:** answered
+- **Date:** 2026-11-26
+- **Blocks:** P8a
+- **Context:** P5 lets an Item's points be any positive value (only the Subject totals are checked), but a barem adds up to the question's own points (D-031).
+- **Answer:** A fixed Subject II structure: 3 problems of 20 points, and Subject II questions are Ready only at 20 points, so the barem and the Item always match (D-062). (Answered 2026-11-26.)
+
+## Q-076 · When may the Examiner publish an exam's results?
+- **Status:** answered
+- **Date:** 2026-11-26
+- **Blocks:** P8a
+- **Context:** Publishing can't be undone (D-019); the DS-009 mock says publishing waits until all submissions are graded.
+- **Answer:** When every submitted Attempt is graded, no Attempt is still running, and the exam's availability window has closed. (Answered 2026-11-26.)
+
+## Q-077 · Is P8 built in one piece?
+- **Status:** answered
+- **Date:** 2026-11-26
+- **Blocks:** P8
+- **Context:** P8 is large and Subject II grading happens on 1 Dec (Q-039).
+- **Answer:** No. P8a: grading and publishing results (now). P8b: the Candidate's results page (DS-005 mock confirmed first), right after. P8c: answer-key correction recalculation (D-046), after the pilot. (Answered 2026-11-26.)
+
+## Q-078 · Which DS-009 parts may be cut to save time?
+- **Status:** answered
+- **Date:** 2026-11-26
+- **Blocks:** P8a
+- **Context:** The approved DS-009 mock has a "Pe item" and a "Pe candidat" view and an "Editează baremul" action.
+- **Answer:** None: both views are built, and the barem is edited inline on the grading screen, as in the mock. (Answered 2026-11-26.)

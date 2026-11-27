@@ -51,6 +51,7 @@
 - D-058 · Examiner-defined competences; one topic per question
 - D-059 · Draft and Ready question status
 - D-061 · Maths as plain text; in the exam room only numbers and formulas in JetBrains Mono
+- D-063 · Develop locally in Docker; Render only for grouped releases and the pilot, deployed after CI passes
 
 ---
 
@@ -491,4 +492,14 @@
 - **Why:** The user found whole statements in the mono font unpleasant to read in the exam room (P7b mock review); the Examiner's screens were left as they are for now.
 - **Rejected:** Whole statements in JetBrains Mono in the exam room (D-060 as built); markup for maths in questions; changing the Examiner's screens now.
 - **Evidence:** docs/plans/p7b-exam-room-answering.md; conversation 2026-11-25 (P7b mock review)
+- **Source:** user · confidence high
+
+## D-063 · Develop locally in Docker; Render only for grouped releases and the pilot, deployed after CI passes
+- **Status:** approved
+- **Date:** 2026-11-27
+- **Confirmed:** 2026-11-27
+- **Rule:** Parts are built and tried locally (`docker compose up -d` for PostgreSQL and the API, `npm run dev` for the SPA) on their branches, each with its PR and CI. Finished parts wait on their branches and reach main together in one grouped merge (a release); nothing is merged to main during the pilot or a live exam window. Both Render services set `autoDeployTrigger: checksPass`: a push to main deploys only when every CI check on that commit passes (backend, frontend, ledger). Each service's `rootDir` already limits auto-deploys to its own folder, so changes only to docs/ deploy nothing.
+- **Why:** 31 deploys in 5 days (one per merge per touched service); a push with red CI still deployed (8be5d21, 3 deploys); an API deploy restarts the server, which would hit Candidates mid-exam in the pilot (user, 2026-11-27).
+- **Rejected:** One merge per part (too many deploys); auto-deploy on every commit (deploys red builds); explicit `buildFilter` paths (rootDir already filters; Render docs).
+- **Evidence:** render.yaml; https://render.com/docs/blueprint-spec (`autoDeployTrigger`, `rootDir`); https://render.com/docs/deploys (checks); conversation 2026-11-27
 - **Source:** user · confidence high

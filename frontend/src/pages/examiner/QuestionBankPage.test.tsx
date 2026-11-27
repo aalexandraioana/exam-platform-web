@@ -183,7 +183,7 @@ describe('QuestionBankPage (DS-007)', () => {
     ])
   })
 
-  it('explains why options and named values can no longer change once drawn (Q-088, Q-089)', async () => {
+  it('explains why options, named values, the type and the Subject can no longer change once drawn (Q-088, Q-089, Q-092)', async () => {
     mockApi({ ...base, 'PATCH /questions/12': json(422, { message: 'x', errors: { answer_key: ['options_locked'] } }) })
     renderAt('?q=12')
     fireEvent.click(await screen.findByRole('button', { name: 'Salvează' }))
@@ -192,6 +192,13 @@ describe('QuestionBankPage (DS-007)', () => {
     mockApi({ ...base, 'PATCH /questions/12': json(422, { message: 'x', errors: { parameters: ['parameters_locked'] } }) })
     fireEvent.click(screen.getByRole('button', { name: 'Salvează' }))
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Întrebarea a fost deja extrasă pentru candidați, așa că valorile și formula răspunsului nu se mai pot schimba.'))
+
+    // Q-092: the type and the Subject, under either field.
+    for (const field of ['type', 'section']) {
+      mockApi({ ...base, 'PATCH /questions/12': json(422, { message: 'x', errors: { [field]: ['type_locked'] } }) })
+      fireEvent.click(screen.getByRole('button', { name: 'Salvează' }))
+      await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Întrebarea a fost deja extrasă pentru candidați, așa că tipul și subiectul nu se mai pot schimba. Pentru alt tip, creează o întrebare nouă.'))
+    }
   })
 
   it('edits single choice options and the correct one', async () => {

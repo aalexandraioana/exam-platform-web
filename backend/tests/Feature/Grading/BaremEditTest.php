@@ -292,3 +292,17 @@ it('publishes once those answers are graded on the barem steps (Q-086, Q-079)', 
 
     $this->postJson("/api/exams/{$s['exam']->id}/results")->assertOk();
 });
+
+it('leaves graded answers alone when a save sends the same barem, as the editor does on every save', function () {
+    $s = baremSetup();
+    $answer = gradedAnswer($s, [6, 3, 0]);
+    $before = $answer->fresh()->updated_at;
+    $this->travel(1)->minutes();
+
+    $response = $this->patchJson("/api/questions/{$s['question']->id}", ['explanation' => 'Folosește suma unghiurilor.', 'barem' => baremOf($s['question'])])->assertOk();
+
+    expect($response->json())->not->toHaveKey('regraded')
+        ->and($answer->fresh()->updated_at->equalTo($before))->toBeTrue()
+        ->and($answer->baremScores()->count())->toBe(3);
+});
+

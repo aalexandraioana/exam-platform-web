@@ -272,6 +272,9 @@ class GradingController extends Controller
         if ($exam->attempts()->where('status', AttemptStatus::Submitted)->exists()) {
             $missing[] = 'ungraded';
         }
+        if ($this->submitted($exam)->whereHas('items.answer', fn (Builder $a) => $a->where('needs_recheck', true))->exists()) {
+            $missing[] = 'recheck';
+        }
         if ($exam->attempts()->whereIn('status', Starter::OPEN)->exists()) {
             $missing[] = 'open_attempts';
         }

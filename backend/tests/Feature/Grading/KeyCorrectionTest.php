@@ -1,9 +1,13 @@
 <?php
 
 use App\Enums\AttemptStatus;
+use App\Enums\MembershipStatus;
+use App\Models\AnswerKeyCorrection;
 use App\Models\Attempt;
 use App\Models\AttemptItem;
+use App\Models\ClassMembership;
 use App\Models\ExamItem;
+use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -31,7 +35,7 @@ function keySetup(): array
         ]);
     }
     // Item 2 (values) and item 5 (text) are both short answers: keep each on its own question.
-    ExamItem::where('exam_id', $s['exam']->id)->where('position', 5)->update(['topic_id' => $topic = \App\Models\Topic::factory()->for($s['examiner'], 'examiner')->create()->id]);
+    ExamItem::where('exam_id', $s['exam']->id)->where('position', 5)->update(['topic_id' => $topic = Topic::factory()->for($s['examiner'], 'examiner')->create()->id]);
     $s['questions']['text']->forceFill(['topic_id' => $topic])->save();
 
     return $s;
@@ -138,7 +142,7 @@ it('keeps what the Candidate saw when an option text is fixed, without re-gradin
         ->and($s['questions']['single']->fresh()->answer_key['options'])->toBe(['12', '36', '32', '46'])
         ->and(keyItem($id, 1)->question_snapshot['options'])->toBe($shown)
         ->and(keyItem($id, 1)->expected_answer['answer_key']['options'])->toBe(['12', '36', '32', '64'])
-        ->and(\App\Models\AnswerKeyCorrection::count())->toBe(0);
+        ->and(AnswerKeyCorrection::count())->toBe(0);
 });
 
 it('refuses adding, removing or reordering options, and changing a formula, once drawn (Q-088, Q-089)', function (string $question, array $patch, string $field, string $code) {
@@ -158,17 +162,17 @@ it('refuses adding, removing or reordering options, and changing a formula, once
 it('logs each correction with who, when, the key before and after, and the count, shown on the question (Q-087)', function () {
     $s = keySetup();
     $classmate = User::factory()->candidate()->create();
-    $membership = new \App\Models\ClassMembership;
+    $membership = new ClassMembership;
     $membership->class_id = $s['class']->id;
     $membership->candidate_id = $classmate->id;
-    $membership->status = \App\Enums\MembershipStatus::Accepted;
+    $membership->status = MembershipStatus::Accepted;
     $membership->save();
     keyAttempt($s);
     keyAttempt($s, $classmate);
 
     keyPatch($s, 'single', ['options' => ['12', '36', '32', '64'], 'correct' => 1])->assertOk()->assertJsonPath('regraded.answers', 2);
 
-    $log = \App\Models\AnswerKeyCorrection::sole();
+    $log = AnswerKeyCorrection::sole();
     expect($log->question_id)->toBe($s['questions']['single']->id)
         ->and($log->examiner_id)->toBe($s['examiner']->id)
         ->and($log->before['correct'])->toBe(2)
@@ -189,5 +193,5 @@ it('does not re-grade or log when the question was never drawn, or the same key 
     keyAttempt($s);
     keyPatch($s, 'single', ['options' => ['12', '36', '32', '64'], 'correct' => 1])->assertOk()->assertJsonMissingPath('regraded');
 
-    expect(\App\Models\AnswerKeyCorrection::count())->toBe(0);
+    expect(AnswerKeyCorrection::count())->toBe(0);
 });

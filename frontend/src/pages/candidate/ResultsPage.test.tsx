@@ -43,6 +43,9 @@ const results = (attempts = [attempt(51, 1, 7.9, true)]) => ({
   exam: { id: 4, title: 'Evaluare Unitatea 3', score_policy: 'highest', results_published_at: '2026-12-01T16:20:00Z', cohort_note: 'Scrieți concluzia fiecărei demonstrații.' },
   attempts,
 })
+/** The value next to a label in a label/value list (dt → dd). */
+const valueOf = (label: string, scope: HTMLElement = document.body) => within(scope).getByText(label, { selector: 'dt' }).nextElementSibling as HTMLElement
+
 const base = { 'GET /user': json(200, { user: candidate }), 'GET /attempts/51/images/9': () => new Response(new Blob(['x'], { type: 'image/jpeg' })) }
 
 beforeEach(() => {
@@ -59,10 +62,9 @@ describe('ResultsPage (DS-005, P8b)', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Evaluare Unitatea 3' })).toBeInTheDocument()
     expect(screen.getByText('Rezultate publicate pe 01.12.2026, ora 18:20')).toBeInTheDocument()
     expect(screen.getByTestId('grade')).toHaveTextContent('7,90')
-    const scores = screen.getByRole('definition', { name: 'Total' })
-    expect(scores).toHaveTextContent('79 / 100')
-    expect(screen.getByRole('definition', { name: 'Subiectul I' })).toHaveTextContent('25 / 30')
-    expect(screen.getByRole('definition', { name: 'Subiectul II' })).toHaveTextContent('44 / 60')
+    expect(valueOf('Total')).toHaveTextContent('79 / 100')
+    expect(valueOf('Subiectul I')).toHaveTextContent('25 / 30')
+    expect(valueOf('Subiectul II')).toHaveTextContent('44 / 60')
     expect(screen.getByText('Scrieți concluzia fiecărei demonstrații.')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Tablou de bord' })).toHaveAttribute('href', '/candidate')
     // Q-085: no class statistics (the Examiner's "Media: … · mediana: …"); "mediană" in a barem step is not one.
@@ -75,17 +77,18 @@ describe('ResultsPage (DS-005, P8b)', () => {
 
     const one = await screen.findByRole('article', { name: 'Itemul 1' })
     expect(within(one).getByText('5 / 5')).toBeInTheDocument()
-    expect(within(one).getByRole('listitem', { name: /36/ })).toHaveTextContent('Răspunsul tău · corect')
+    expect(within(one).getByText('36', { selector: 'li span' }).closest('li')).toHaveTextContent('Răspunsul tău · corect')
+    expect(within(one).getByText('36', { selector: 'li span' }).closest('li')).not.toHaveAttribute('aria-label')
     expect(within(one).getByText(/Un sfert din/)).toBeInTheDocument()
 
     const four = screen.getByRole('article', { name: 'Itemul 4' })
     expect(within(four).getByText('0 / 5')).toBeInTheDocument()
-    expect(within(four).getByRole('definition', { name: 'Răspunsul tău' })).toHaveTextContent('20')
-    expect(within(four).getByRole('definition', { name: 'Răspuns corect' })).toHaveTextContent('12')
+    expect(valueOf('Răspunsul tău', four)).toHaveTextContent('20')
+    expect(valueOf('Răspuns corect', four)).toHaveTextContent('12')
 
     const five = screen.getByRole('article', { name: 'Itemul 5' })
-    expect(within(five).getByRole('definition', { name: 'Răspunsul tău' })).toHaveTextContent('Fără răspuns')
-    expect(within(five).getByRole('definition', { name: 'Răspuns corect' })).toHaveTextContent('Adevărat')
+    expect(valueOf('Răspunsul tău', five)).toHaveTextContent('Fără răspuns')
+    expect(valueOf('Răspuns corect', five)).toHaveTextContent('Adevărat')
   })
 
   it('shows each Subject II problem with the steps, photos, barem points, adjustment and comment (Q-083)', async () => {
@@ -96,8 +99,8 @@ describe('ResultsPage (DS-005, P8b)', () => {
     expect(within(seven).getByText('14 / 20')).toBeInTheDocument()
     expect(within(seven).getByText('a) ∢B = 70°')).toBeInTheDocument()
     expect(await within(seven).findByRole('img', { name: 'Fotografia 1 din 1' })).toHaveAttribute('src', 'blob:photo')
-    expect(within(seven).getByRole('listitem', { name: /BD = DC/ })).toHaveTextContent('0 / 5')
-    expect(within(seven).getByRole('listitem', { name: 'Ajustare' })).toHaveTextContent('+1')
+    expect(within(seven).getByText('2 · BD = DC ⇒ AD mediană').closest('li')).toHaveTextContent('0 / 5')
+    expect(within(seven).getByText('Ajustare').closest('li')).toHaveTextContent('+1')
     expect(within(seven).getByText(/La b\) lipsește concluzia/)).toBeInTheDocument()
 
     const eight = screen.getByRole('article', { name: 'Problema 8' })
@@ -111,14 +114,16 @@ describe('ResultsPage (DS-005, P8b)', () => {
     ])) })
     renderAt()
 
-    const nav = await screen.findByRole('navigation', { name: 'Încercările tale' })
+    // A group of toggle buttons that switch the page in place, not a navigation landmark.
+    const nav = await screen.findByRole('group', { name: 'Încercările tale' })
+    expect(screen.queryByRole('navigation', { name: 'Încercările tale' })).not.toBeInTheDocument()
     expect(within(nav).getByRole('button', { name: /Încercarea 2.*7,90.*contează/ })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByTestId('grade')).toHaveTextContent('7,90')
     expect(screen.getByText('Contează nota cea mai mare dintre încercări.')).toBeInTheDocument()
 
     fireEvent.click(within(nav).getByRole('button', { name: /Încercarea 1/ }))
     expect(screen.getByTestId('grade')).toHaveTextContent('6,40')
-    expect(screen.getByRole('definition', { name: 'Subiectul I' })).toHaveTextContent('20 / 30')
+    expect(valueOf('Subiectul I')).toHaveTextContent('20 / 30')
   })
 
   it('says when the results are not published yet', async () => {

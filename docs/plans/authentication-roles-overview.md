@@ -8,7 +8,7 @@ Implement full-stack authentication and role-based access control (RBAC) across 
 
 ## User Review Required
 > [!IMPORTANT]
-> - **Scaffolding prerequisite:** As `backend/` and `frontend/` directories do not yet exist, initial building will initialize the Laravel 13 project and React + Vite SPA skeletons strictly adhering to [D-036](../agents/DECISIONS.md#D-036) and [D-009](../agents/DECISIONS.md#D-009).
+> - **Scaffolding prerequisite:** As `backend/` and `frontend/` directories do not yet exist, initial building will initialize the Laravel 13 project and React + Vite SPA skeletons strictly adhering to [D-036](../agents/decisions/platform-and-delivery.md) and [D-009](../agents/decisions/platform-and-delivery.md).
 > - **Examiner accounts:** Candidate accounts are active immediately upon registration; Examiner accounts are created by an Administrator (no self-registration, no approval step), and `is_active = false` means a deactivated account ([D-020](../agents/DECISIONS.md)).
 
 ## Open Questions
@@ -20,7 +20,7 @@ Implement full-stack authentication and role-based access control (RBAC) across 
 
 ### Backend REST API (`backend/`)
 #### [NEW] `docker-compose.yml` (Root)
-PostgreSQL 16 container definition with persistent volume and port mapping `5432:5432` per [D-003](../agents/DECISIONS.md#D-003).
+PostgreSQL 16 container definition with persistent volume and port mapping `5432:5432` per [D-003](../agents/decisions/platform-and-delivery.md).
 
 #### [NEW] `backend/database/migrations/xxxx_create_users_table.php`
 Schema migration defining:

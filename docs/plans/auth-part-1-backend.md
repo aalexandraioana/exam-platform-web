@@ -4,7 +4,7 @@
 **M** — Scaffolds local PostgreSQL 16 (`docker-compose.yml`), backend Laravel 13 application (`backend/`), User model with roles, Sanctum API authentication, and Pest test suite.
 
 ## Approach
-Implement the headless REST API authentication layer in `backend/` following [D-036](../agents/DECISIONS.md#D-036) and [D-009](../agents/DECISIONS.md#D-009). The User schema defines three roles (`candidate`, `examiner`, `administrator`) and an `is_active` flag. Candidate self-registers directly via `POST /api/register`; Examiner and Administrator accounts are seeded or provisioned with admin approval. Sanctum issues plain text bearer tokens on login and verifies authenticated requests with `auth:sanctum` and a dedicated `role:` middleware. All endpoints are verified with automated Pest tests before any frontend work begins.
+Implement the headless REST API authentication layer in `backend/` following [D-036](../agents/decisions/platform-and-delivery.md) and [D-009](../agents/decisions/platform-and-delivery.md). The User schema defines three roles (`candidate`, `examiner`, `administrator`) and an `is_active` flag. Candidate self-registers directly via `POST /api/register`; Examiner and Administrator accounts are seeded or provisioned with admin approval. Sanctum issues plain text bearer tokens on login and verifies authenticated requests with `auth:sanctum` and a dedicated `role:` middleware. All endpoints are verified with automated Pest tests before any frontend work begins.
 
 ## Files
 | Action | Path | What |

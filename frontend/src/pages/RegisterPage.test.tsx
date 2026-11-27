@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { getToken } from '../api/client'
@@ -210,7 +210,8 @@ describe('RegisterPage focus after a failed submit', () => {
     submit()
 
     await screen.findByText(/Există deja un cont cu acest email\./)
-    expect(screen.getByLabelText('Email')).toHaveFocus()
+    // Focus moves in an effect after the errors render, so it can follow the text by a tick.
+    await waitFor(() => expect(screen.getByLabelText('Email')).toHaveFocus())
   })
 })
 

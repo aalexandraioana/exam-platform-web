@@ -14,9 +14,9 @@ services:
     runtime: docker
     plan: free
     rootDir: backend
-    # Deploy only once every CI check on main passes (D-063). rootDir already limits
-    # auto-deploys to changes under backend/.
-    autoDeployTrigger: checksPass
+    # D-063: deployed by hand from the dashboard after a grouped merge with CI green on main,
+    # the API first (it runs the migrations), then the site.
+    autoDeployTrigger: "off"
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /up
@@ -62,8 +62,8 @@ services:
     name: exam-platform-web
     runtime: static
     rootDir: frontend
-    # Deploy only once every CI check on main passes (D-063); auto-deploys only for frontend/.
-    autoDeployTrigger: checksPass
+    # D-063: deployed by hand after the API, from the dashboard.
+    autoDeployTrigger: "off"
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
     routes:

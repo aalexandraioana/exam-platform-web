@@ -152,7 +152,7 @@ export default function AnswerGrader({ item, name, readOnly, onSaved, onBaremSav
                         value={s.partial}
                         disabled={readOnly}
                         onChange={(e) => setSteps((all) => ({ ...all, [step.id]: { ...s, partial: e.target.value } }))}
-                        className={`min-h-hit w-16 rounded-md border border-input bg-surface px-2 text-right font-mono ${focusRing}`}
+                        className={`min-h-hit w-[4rem] rounded-md border border-input bg-surface px-2 text-right font-mono ${focusRing}`}
                       />
                     ) : (
                       <span className="font-mono">{s.choice ? formatPoints(stepPoints(step.id, step.points) ?? 0) : '–'}</span>
@@ -166,7 +166,7 @@ export default function AnswerGrader({ item, name, readOnly, onSaved, onBaremSav
         ) : (
           <>
             <p className="text-secondary">{t('grading.noBarem', { points: item.points })}</p>
-            <TextField id="grade-points" label={t('grading.points')} inputMode="decimal" value={points} disabled={readOnly} onChange={(e) => setPoints(e.target.value)} className="w-24 font-mono" />
+            <TextField id="grade-points" label={t('grading.points')} inputMode="decimal" value={points} disabled={readOnly} onChange={(e) => setPoints(e.target.value)} className="w-[6rem] font-mono" />
           </>
         )}
 
@@ -180,7 +180,7 @@ export default function AnswerGrader({ item, name, readOnly, onSaved, onBaremSav
               value={adjustment}
               disabled={readOnly}
               onChange={(e) => setAdjustment(e.target.value)}
-              className="w-24 font-mono"
+              className="w-[6rem] font-mono"
             />
             <div className="flex items-baseline justify-between gap-3">
               <span className="font-medium">{t('grading.total')}</span>
@@ -189,7 +189,7 @@ export default function AnswerGrader({ item, name, readOnly, onSaved, onBaremSav
             {outOfRange && <p className="text-caption text-error">{t('grading.outOfRange', { points: item.points })}</p>}
             <div className="grid gap-1">
               <label htmlFor="grade-comment" className="font-medium">{t('grading.comment')}</label>
-              <textarea id="grade-comment" aria-describedby="grade-comment-help" value={comment} disabled={readOnly} onChange={(e) => setComment(e.target.value)} className={`min-h-24 rounded-md border border-input bg-surface px-3 py-2 ${focusRing}`} />
+              <textarea id="grade-comment" aria-describedby="grade-comment-help" value={comment} disabled={readOnly} onChange={(e) => setComment(e.target.value)} className={`min-h-[6rem] rounded-md border border-input bg-surface px-3 py-2 ${focusRing}`} />
               <span id="grade-comment-help" className="text-caption text-secondary">{t('grading.commentHelp')}</span>
             </div>
             {state === 'failed' && <p role="alert" className="text-caption text-error">{t('grading.saveFailed')}</p>}
@@ -237,10 +237,10 @@ function Photos({ photos }: { photos: GradingItem['photos'] }) {
           <figure key={photo.id} className="overflow-hidden rounded-md border border-subtle bg-surface-subtle">
             {urls[photo.id] ? (
               <a href={urls[photo.id]} target="_blank" rel="noreferrer" className={focusRing}>
-                <img src={urls[photo.id]} alt={t('grading.photo', { index: index + 1, total: photos.length })} className="aspect-[3/4] w-full object-contain" />
+                <img src={urls[photo.id]} alt={t('grading.photo', { index: index + 1, total: photos.length })} className="h-[20rem] w-full object-contain" />
               </a>
             ) : (
-              <div className="aspect-[3/4] w-full animate-pulse motion-reduce:animate-none" aria-hidden="true" />
+              <div className="h-[20rem] w-full animate-pulse motion-reduce:animate-none" aria-hidden="true" />
             )}
             <figcaption className="px-2 py-1 text-caption text-secondary">{index + 1} / {photos.length}</figcaption>
           </figure>

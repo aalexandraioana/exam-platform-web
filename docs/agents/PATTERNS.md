@@ -74,10 +74,9 @@
 
 ## PATTERN-007 · A write that depends on a row's state locks that row first
 - **Status:** candidate
-- **Confirmed:** 2026-11-26
 - **Use when:** Concurrent requests may both pass a check on the same record (one open Attempt, its deadline, its status) before either writes.
-- **How:** In one `DB::transaction`, re-read the record with `lockForUpdate()`, check, write, return. A refusal that must persist (e.g. sealing on `time_up`) is returned from the transaction and thrown after it commits. Keep the database's own unique keys behind it and map their violation to the same `409` code. Verify with a parallel run (20 requests through `php artisan serve` with `PHP_CLI_SERVER_WORKERS`), once with the lock removed as a control.
-- **Example:** backend/app/Support/Attempts/Starter.php (start), Saver.php (autosave), Sealer.php (submit, seal)
+- **How:** In one `DB::transaction`, re-read the record with `lockForUpdate()`, check, write, return. A refusal that must persist (e.g. sealing on `time_up`) is returned from the transaction and thrown after it commits. Keep the database's own unique keys behind it and map their violation to the same `409` code. Verify with a parallel run (20 requests through `php artisan serve` with `PHP_CLI_SERVER_WORKERS`), once with the lock removed as a control. When several rows are locked, always in this order, so two requests wait for each other but never deadlock: the exam, then its Attempts, then the question (grading, publishing, barem edits, key corrections); a start that only reads takes the exam, then its drawn questions, with `sharedLock()`. A single-request test checks the order from the query log; a race is reproduced with a `DB::beforeExecuting` hook that writes as the transaction starts.
+- **Example:** backend/app/Support/Attempts/Starter.php (start), Saver.php (autosave), Sealer.php (submit, seal), backend/app/Http/Controllers/GradingController.php (grade, publish), QuestionController.php (update), backend/app/Support/Grading/KeyCorrection.php; tests: Grading/BaremEditTest.php, Grading/KeyCorrectionTest.php, Grading/GradingTest.php
 - **Why:** Pest runs requests one at a time, so only the lock and the unique key make the checks hold under load; checked 2026-11-25 (start: 1 × 201 and 19 × 409; saves: highest version kept, no 500s).
 - **Source:** agent · confidence medium
 

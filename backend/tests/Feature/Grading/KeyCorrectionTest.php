@@ -236,4 +236,3 @@ it('starts an Attempt only after a key correction running now, by locking the ex
     }
     expect(array_values(array_unique($order)))->toBe(['exams', 'questions', 'snapshot']);
 });
-

@@ -80,6 +80,10 @@ final class Starter
                 throw new StartRefused('no_attempts_left');
             }
 
+            // PATTERN-007, P8c: the exam first (shared), so a key correction, a grade or a publication
+            // writing now is waited for; then the drawn questions (shared, in snapshot()), so even a
+            // first draw gets a corrected key. Two starts share these locks and don't wait for each other.
+            Exam::whereKey($exam->id)->sharedLock()->first();
             $seed = random_int(1, PHP_INT_MAX >> 16);
             $items = self::snapshot($exam, $seed);
             if ($items === null) {
@@ -118,7 +122,7 @@ final class Starter
         if ($assignment === null) {
             return null;
         }
-        $questions = Question::findMany(array_values($assignment))->keyBy('id');
+        $questions = Question::whereIn('id', array_values($assignment))->orderBy('id')->sharedLock()->get()->keyBy('id');
 
         return $exam->items()->get()->map(function ($item) use ($assignment, $questions, $seed) {
             $question = $questions[$assignment[$item->id]];

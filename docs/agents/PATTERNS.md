@@ -16,6 +16,8 @@
 - PATTERN-008 · Dialog buttons in equal halves through DialogActions · candidate
 - PATTERN-009 · A file import checks the whole file, then inserts in one transaction · candidate
 - PATTERN-010 · Frontend tests run in the users' time zone · candidate
+- PATTERN-011 · Statistics as a pure class, checked against an independent computation · candidate
+- PATTERN-012 · Full-page screenshots after clicks scroll back to the top · candidate
 
 ---
 
@@ -105,3 +107,19 @@
 - **Example:** frontend/vitest.config.ts; frontend/src/pages/examiner/GradingPage.test.tsx
 - **Why:** The DS-009 tests passed on a laptop in Romania and failed on CI in UTC (PR #14, 2026-11-27).
 - **Source:** agent · confidence medium
+
+## PATTERN-011 · Statistics as a pure class, checked against an independent computation
+- **Status:** candidate
+- **Use when:** The backend computes a statistic someone must be able to trust (Item Analysis, grades over a cohort).
+- **How:** Put the arithmetic in a final class of static functions on plain arrays (`Support/Analysis/ItemAnalysis`), with thresholds as named constants and flags computed from unrounded values; the controller only reads the rows and assembles the arrays. Unit-test the degenerate cases by hand (one Attempt, no variation, exactly at each threshold) and add a JSON fixture whose expected values come from an independent tool (Python's `statistics`, `python3 -I`), with the method written in the fixture's `source` field. When a choice among rows decides the result (the counted Attempt), give it a total order and prove it with a control run without the tie-break.
+- **Example:** backend/app/Support/Analysis/ItemAnalysis.php; backend/tests/Unit/Analysis/ItemAnalysisTest.php; backend/tests/fixtures/item-analysis-reference.json; backend/app/Support/Grading/CountedAttempts.php
+- **Why:** P10: the catalog requires Item Analysis to be statistically correct on the pilot data; a value checked only against the same code's own output proves nothing.
+- **Source:** agent (P10 build, 2026-11-27) · confidence medium
+
+## PATTERN-012 · Full-page screenshots after clicks scroll back to the top
+- **Status:** candidate
+- **Use when:** A Playwright screenshot test clicks or opens something before `page.screenshot({ fullPage: true })`.
+- **How:** Before the screenshot, `await page.mouse.move(0, 0)` and `await page.evaluate('window.scrollTo(0, 0)')` (a string: the e2e files are typechecked without DOM types), so the fixed app header sits at the top and no hover state is left on the last button. Also assert `page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')` to catch horizontal scroll at 320 px.
+- **Example:** frontend/e2e/analysis.spec.ts
+- **Why:** P10: after opening Variants, the fixed header was drawn halfway down the full-page screenshot.
+- **Source:** agent (P10 build, 2026-11-27) · confidence medium

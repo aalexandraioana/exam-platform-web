@@ -14,9 +14,11 @@ export interface CandidateExam {
   open_attempt_id: number | null
   open_attempt: { id: number; started_at: string; expires_at: string } | null
   can_start: boolean
-  /** Submitted or sealed at least once: "submitted, awaiting grading" until P9 (D-019). */
+  /** Submitted or sealed at least once: "submitted, awaiting grading" until results are published (D-019). */
   submitted: boolean
   results_published: boolean
+  /** The counted grade (1–10) once the results are published, else null (P8b, D-012). */
+  grade: number | null
   /** The Items' topics; competence codes are not shown (Q-069). */
   topics: string[]
   item_counts: { subject_1: number; subject_2: number }

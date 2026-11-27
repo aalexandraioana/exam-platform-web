@@ -1,18 +1,23 @@
-import { CalendarDays, Check, Clock, FileText } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { ArrowRight, CalendarDays, Check, CircleCheck, Clock, FileText } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import type { CandidateExam } from '../../api/attempts'
 import Button from '../../components/Button'
+import { focusRing } from '../../components/styles'
+import { formatGrade } from '../examiner/grading/format'
 import { dayAndTime } from './format'
 
 const badge = 'inline-flex items-center gap-1 justify-self-start rounded-full bg-surface-subtle px-2 text-caption font-semibold text-secondary'
 const icon = 'size-icon-sm shrink-0'
 
 // DS-003 exam card, by state (P7a): open, upcoming, submitted awaiting grading (D-019), submitted
-// with attempts left. Topic chips only (Q-069), the description under the title (Q-064).
+// with attempts left, results published with the counted grade (P8b). Topic chips only (Q-069),
+// the description under the title (Q-064).
 export default function ExamCard({ exam, busy, onStart }: { exam: CandidateExam; busy: boolean; onStart: (exam: CandidateExam) => void }) {
   const { t, i18n } = useTranslation()
   const language = i18n.resolvedLanguage
   const upcoming = exam.state === 'upcoming'
+  const published = exam.submitted && exam.results_published
 
   let when: string | null = null
   if (exam.state === 'open' && (!exam.submitted || exam.can_start)) {
@@ -46,8 +51,24 @@ export default function ExamCard({ exam, busy, onStart }: { exam: CandidateExam;
       {upcoming && exam.available_from && (
         <span className={badge}><Clock className={icon} aria-hidden="true" />{t('candidate.opensOn', dayAndTime(exam.available_from, language, false))}</span>
       )}
-      {exam.submitted && <span className={badge}><Check className={icon} aria-hidden="true" />{t('candidate.submitted')}</span>}
-      {exam.can_start ? (
+      {published && (
+        <>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="inline-flex items-center gap-1 rounded-full bg-success-bg px-2 text-caption font-semibold text-success">
+              <CircleCheck className={icon} aria-hidden="true" />{t('candidate.resultsPublished')}
+            </span>
+            {exam.grade !== null && (
+              <span className="text-body-medium"><Trans i18nKey="candidate.grade" values={{ grade: formatGrade(exam.grade) }} components={{ strong: <strong className="font-mono text-h2" /> }} /></span>
+            )}
+          </div>
+          <Link to={`/candidate/exams/${exam.id}/results`} className={`inline-flex min-h-hit w-full items-center justify-center gap-2 rounded-md border border-transparent bg-primary px-4 py-2 font-semibold text-on-primary hover:bg-primary-hover ${focusRing}`}>
+            {t('candidate.seeResults')}
+            <ArrowRight className="size-icon-sm" aria-hidden="true" />
+          </Link>
+        </>
+      )}
+      {exam.submitted && !published && <span className={badge}><Check className={icon} aria-hidden="true" />{t('candidate.submitted')}</span>}
+      {published ? null : exam.can_start ? (
         <Button className="w-full" disabled={busy} onClick={() => onStart(exam)}>
           {t(exam.submitted ? 'candidate.startAgain' : 'candidate.start')}
         </Button>

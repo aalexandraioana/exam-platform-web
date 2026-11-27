@@ -56,7 +56,7 @@
 
 ## PATTERN-005 · Validation errors as codes, not sentences
 - **Status:** candidate
-- **Confirmed:** 2026-11-26
+- **Confirmed:** 2026-11-27
 - **Use when:** An API request is validated (FormRequest or a thrown `ValidationException`).
 - **How:** `messages()` maps each rule to a code from docs/API.md → Errors (`required`, `invalid`, `too_short`, `mismatch`, `taken`, `not_found`, `credentials`); `bootstrap/app.php` renders every API `ValidationException` as `{"message": "The given data was invalid.", "errors": {field: [code]}}`. The SPA turns codes into RO/EN text. A new code is added to docs/API.md in the same change. Tests assert the code (`assertJsonPath('errors.email.0', 'taken')`).
 - **Example:** backend/app/Http/Requests/Auth/RegisterRequest.php; backend/tests/Feature/Auth/RegisterTest.php
@@ -100,6 +100,7 @@
 
 ## PATTERN-010 · Frontend tests run in the users' time zone
 - **Status:** candidate
+- **Confirmed:** 2026-11-27
 - **Use when:** A Vitest test checks a date or time as the user sees it (for example "30.11.2026, 14:00").
 - **How:** Write the fixture in UTC (`2026-11-30T12:00:00+00:00`) and assert the Romanian local time (14:00). `vitest.config.ts` sets `process.env.TZ = 'Europe/Bucharest'` before the workers start, as `playwright.config.ts` sets `timezoneId`. Never rely on the machine's own zone.
 - **Example:** frontend/vitest.config.ts; frontend/src/pages/examiner/GradingPage.test.tsx

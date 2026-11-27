@@ -102,7 +102,7 @@ export default function ResultsPage() {
       </div>
 
       {attempts.length > 1 && (
-        <nav aria-label={t('results.attempts')} className="flex flex-wrap gap-2">
+        <div role="group" aria-label={t('results.attempts')} className="flex flex-wrap gap-2">
           {attempts.map((a) => (
             <button key={a.id} type="button" aria-pressed={a.id === attempt.id} onClick={() => setSelected(a.id)}
               className={`inline-flex min-h-hit items-center rounded-md border px-4 py-2 font-medium ${a.id === attempt.id ? 'border-focus bg-primary-subtle' : 'border-strong bg-surface hover:bg-surface-subtle'} ${focusRing}`}>
@@ -110,7 +110,7 @@ export default function ResultsPage() {
               {a.counted && t('results.counts')}
             </button>
           ))}
-        </nav>
+        </div>
       )}
 
       {attempt && <GradeCard attempt={attempt} several={attempts.length > 1} policy={exam.score_policy} />}
@@ -158,11 +158,11 @@ function GradeCard({ attempt, several, policy }: { attempt: AttemptResult; sever
         {rows.map(([label, value]) => (
           <div key={label} className="contents">
             <dt>{label}</dt>
-            <dd aria-label={label} className="text-right font-mono">{value}</dd>
+            <dd className="text-right font-mono">{value}</dd>
           </div>
         ))}
         <dt className="border-t border-subtle pt-1 font-semibold">{t('results.total')}</dt>
-        <dd aria-label={t('results.total')} className="border-t border-subtle pt-1 text-right font-mono font-semibold">{formatPoints(attempt.total_score)} / 100</dd>
+        <dd className="border-t border-subtle pt-1 text-right font-mono font-semibold">{formatPoints(attempt.total_score)} / 100</dd>
       </dl>
     </section>
   )
@@ -207,7 +207,7 @@ function SubjectOneItem({ item }: { item: SubjectOneResult }) {
             const isRight = right.includes(shown)
             const tone = isRight ? 'border-success bg-success-bg' : isMine ? 'border-error bg-error-bg' : 'border-subtle'
             return (
-              <li key={shown} aria-label={option} className={`flex items-center gap-3 rounded-md border px-3 py-2 ${tone}`}>
+              <li key={shown} className={`flex items-center gap-3 rounded-md border px-3 py-2 ${tone}`}>
                 {isRight && <CircleCheck className="size-icon-sm text-success" aria-hidden="true" />}
                 {isMine && !isRight && <X className="size-icon-sm text-error" aria-hidden="true" />}
                 <span className="font-mono">{option}</span>
@@ -224,12 +224,12 @@ function SubjectOneItem({ item }: { item: SubjectOneResult }) {
       ) : (
         <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1">
           <dt className="text-secondary">{t('results.yours')}</dt>
-          <dd aria-label={t('results.yours')} className="flex items-center gap-2">
+          <dd className="flex items-center gap-2">
             {item.answer !== null && item.awarded_points === 0 && <X className="size-icon-sm text-error" aria-hidden="true" />}
             {show(item.answer)}
           </dd>
           <dt className="text-secondary">{t('results.correct')}</dt>
-          <dd aria-label={t('results.correct')}>{show(item.correct)}</dd>
+          <dd>{show(item.correct)}</dd>
         </dl>
       )}
       {item.explanation && (
@@ -265,13 +265,13 @@ function SubjectTwoItem({ item, attemptId }: { item: SubjectTwoResult; attemptId
               <h4 className="font-medium">{t('results.barem')}</h4>
               <ul className="grid">
                 {item.barem.map((step, index) => (
-                  <li key={index} aria-label={step.description} className="flex justify-between gap-3 border-b border-subtle py-2">
+                  <li key={index} className="flex justify-between gap-3 border-b border-subtle py-2">
                     <span>{index + 1} · {step.description}</span>
                     <span className="whitespace-nowrap font-mono">{formatPoints(step.earned)} / {formatPoints(step.points)}</span>
                   </li>
                 ))}
                 {item.adjustment !== null && item.adjustment !== 0 && (
-                  <li aria-label={t('results.adjustment')} className="flex justify-between gap-3 border-b border-subtle py-2">
+                  <li className="flex justify-between gap-3 border-b border-subtle py-2">
                     <span className="text-secondary">{t('results.adjustment')}</span>
                     <span className="font-mono">{item.adjustment > 0 ? '+' : ''}{formatPoints(item.adjustment)}</span>
                   </li>

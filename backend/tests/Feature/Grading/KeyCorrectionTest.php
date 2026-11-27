@@ -236,3 +236,21 @@ it('starts an Attempt only after a key correction running now, by locking the ex
     }
     expect(array_values(array_unique($order)))->toBe(['exams', 'questions', 'snapshot']);
 });
+
+it('accepts the editor sending back drawn named values in its own shape, and still refuses a real change (Q-089)', function () {
+    $s = keySetup();
+    // As a questions.yaml load may store them: empty lists and spaces the editor drops when it sends them back.
+    $s['questions']['values']->forceFill(['parameters' => [
+        'values' => ['a' => ['random' => ['min' => 1, 'max' => 9, 'except' => []]], 'b' => ['fixed' => 10]],
+        'conditions' => [],
+        'answer' => ' a + b ',
+    ]])->save();
+    keyAttempt($s);
+    signInAs($s['examiner']);
+    $editor = ['values' => ['a' => ['random' => ['min' => 1, 'max' => 9]], 'b' => ['fixed' => 10]], 'answer' => 'a + b'];
+
+    $this->patchJson("/api/questions/{$s['questions']['values']->id}", ['parameters' => $editor, 'explanation' => 'a + b, cu valorile tale.'])->assertOk();
+    $this->patchJson("/api/questions/{$s['questions']['values']->id}", ['parameters' => [...$editor, 'answer' => 'a + b + 1']])
+        ->assertUnprocessable()->assertJsonPath('errors.parameters.0', 'parameters_locked');
+});
+

@@ -25,12 +25,15 @@ interface Props {
   onDelete: () => Promise<void>
 }
 
+/** D-062: every Subject II problem is worth 20 points. */
+const SUBJECT_TWO_POINTS = 20
+
 // DS-008 Item editor (D-057): the criteria, with a live count of the Ready questions they match.
 export default function ItemDialog({ examId, grade, item, pools, competences, topics, onClose, onSave, onDelete }: Props) {
   const { t } = useTranslation()
   const [form, setForm] = useState({
     section: item?.section ?? ('subject_1' as Section),
-    points: item?.points ? String(item.points) : '',
+    points: item?.section === 'subject_2' ? String(SUBJECT_TWO_POINTS) : item?.points ? String(item.points) : '',
     pool_id: item?.pool ? String(item.pool.id) : '',
     competence_id: item?.competence ? String(item.competence.id) : '',
     difficulty: (item?.difficulty ?? '') as Difficulty | '',
@@ -90,10 +93,10 @@ export default function ItemDialog({ examId, grade, item, pools, competences, to
     <Modal title={item ? t('exams.itemLabel', { n: item.position }) : t('exams.itemNew')} onClose={onClose}>
       <form noValidate onSubmit={submit} className="grid gap-4">
         <div className="grid gap-3 tablet:grid-cols-2">
-          <SelectField id="item-section" label={t('exams.section')} value={form.section} onChange={(e) => { const s = e.target.value as Section; setForm((f) => ({ ...f, section: s, type: '' })) }}>
+          <SelectField id="item-section" label={t('exams.section')} value={form.section} onChange={(e) => { const s = e.target.value as Section; setForm((f) => ({ ...f, section: s, type: '', points: s === 'subject_2' ? String(SUBJECT_TWO_POINTS) : f.section === 'subject_2' ? '' : f.points })) }}>
             {SECTIONS.map((s) => <option key={s} value={s}>{t(`bank.section.${s}`)}</option>)}
           </SelectField>
-          <TextField id="item-points" label={t('exams.pointsLabel')} inputMode="decimal" className="font-mono" value={form.points} onChange={(e) => set('points', e.target.value)} />
+          <TextField id="item-points" label={t('exams.pointsLabel')} inputMode="decimal" className="font-mono" value={form.points} readOnly={form.section === 'subject_2'} help={form.section === 'subject_2' ? t('exams.subjectTwoPoints', { count: SUBJECT_TWO_POINTS }) : undefined} onChange={(e) => set('points', e.target.value)} />
         </div>
         <SelectField id="item-pool" label={t('exams.pool')} value={form.pool_id} onChange={(e) => set('pool_id', e.target.value)}>
           <option value="">{t('exams.choose')}</option>

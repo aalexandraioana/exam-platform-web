@@ -9,10 +9,12 @@ import { TextAreaField } from '../questions/ui'
 import { fromLocalInput, toLocalInput } from './format'
 
 // DS-008 "Setări" (D-012, D-015, D-021): every change is queued for autosave. Once published,
-// only the title, the description and the end of the window change (Q-060).
+// only the title, the description and the end of the window change (Q-060); once the results are
+// published, the end is locked too (Q-081).
 export default function SettingsCard({ exam, classes, onChange }: { exam: Exam; classes: Ref[]; onChange: (patch: ExamPatch) => void }) {
   const { t } = useTranslation()
   const locked = exam.status === 'published'
+  const endLocked = Boolean(exam.results_published_at)
   const [form, setForm] = useState({
     title: exam.title,
     description: exam.description ?? '',
@@ -95,7 +97,7 @@ export default function SettingsCard({ exam, classes, onChange }: { exam: Exam; 
           )}
         </div>
         <TextField id="exam-from" type="datetime-local" label={t('exams.availableFrom')} disabled={locked} value={form.available_from} onChange={(e) => set('available_from', e.target.value, { available_from: fromLocalInput(e.target.value) })} />
-        <TextField id="exam-until" type="datetime-local" label={t('exams.availableUntil')} help={t('exams.untilHelp')} value={form.available_until} onChange={(e) => set('available_until', e.target.value, { available_until: fromLocalInput(e.target.value) })} />
+        <TextField id="exam-until" type="datetime-local" label={t('exams.availableUntil')} help={t(endLocked ? 'exams.untilLocked' : 'exams.untilHelp')} disabled={endLocked} value={form.available_until} onChange={(e) => set('available_until', e.target.value, { available_until: fromLocalInput(e.target.value) })} />
         <TextField id="exam-attempts" label={t('exams.attempts')} inputMode="numeric" disabled={locked} value={form.max_attempts} onChange={(e) => { const n = number(e.target.value); setForm((f) => ({ ...f, max_attempts: e.target.value })); if (n && n >= 1) onChange({ max_attempts: n }) }} />
         <SelectField id="exam-policy" label={t('exams.policy')} help={t('exams.policyHelp')} disabled={locked || single} value={form.score_policy} onChange={(e) => set('score_policy', e.target.value as ScorePolicy, { score_policy: e.target.value as ScorePolicy })}>
           <option value="highest">{t('exams.highest')}</option>

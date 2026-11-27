@@ -1,4 +1,4 @@
-import { ArrowLeft, Eye, Info, Trash2, WifiOff } from 'lucide-react'
+import { ArrowLeft, ClipboardCheck, Eye, Info, Trash2, WifiOff } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
@@ -17,13 +17,14 @@ import {
   type ExamItem,
   type ExamPatch,
 } from '../../api/exams'
+import { getQueue } from '../../api/grading'
 import { listCompetences, listPools, listTopics, type Competence, type Ref } from '../../api/questions'
 import Alert from '../../components/Alert'
 import Button from '../../components/Button'
 import DialogActions from '../../components/DialogActions'
 import Modal from '../../components/Modal'
 import TextField from '../../components/TextField'
-import { linkClass } from '../../components/styles'
+import { focusRing, linkClass } from '../../components/styles'
 import BlueprintList from './exams/BlueprintList'
 import ChecksCard from './exams/ChecksCard'
 import { formatDateTime } from './exams/format'
@@ -57,6 +58,7 @@ export default function ExamBuilderPage() {
   const [save, setSave] = useState<SaveState>('idle')
   const [dialog, setDialog] = useState<Dialog | null>(null)
   const [preview, setPreview] = useState(false)
+  const [grading, setGrading] = useState<{ graded: number; total: number } | null>(null)
 
   useEffect(() => {
     let active = true
@@ -86,6 +88,20 @@ export default function ExamBuilderPage() {
       active = false
     }
   }, [id, reload])
+
+  // P8a: a published exam opens its grading, with the progress when it loads.
+  const isPublished = exam?.status === 'published'
+  useEffect(() => {
+    if (id === null || !isPublished) return
+    let active = true
+    getQueue(id).then(
+      (q) => active && setGrading({ graded: q.counts.graded, total: q.counts.total }),
+      () => undefined,
+    )
+    return () => {
+      active = false
+    }
+  }, [id, isPublished])
 
   // Autosave: changes wait a moment and go together in one PATCH.
   const pending = useRef<ExamPatch>({})
@@ -179,6 +195,12 @@ export default function ExamBuilderPage() {
                 {t('exams.deleteDraft')}
               </Button>
             )}
+            {published && (
+              <Link to={`/examiner/exams/${exam.id}/grading`} className={`inline-flex min-h-hit items-center gap-2 rounded-md border border-strong bg-surface px-4 py-2 font-medium text-primary hover:bg-surface-subtle ${focusRing}`}>
+                <ClipboardCheck className="size-icon-sm" aria-hidden="true" />
+                {grading ? t('exams.gradeProgress', grading) : t('exams.grade')}
+              </Link>
+            )}
             <Button onClick={() => setPreview(true)}>
               <Eye className="size-icon-sm" aria-hidden="true" />
               {t('exams.preview')}
@@ -198,7 +220,7 @@ export default function ExamBuilderPage() {
         <>
           {published ? (
             <Alert variant="info" icon={Info} role="status">
-              <Trans i18nKey="exams.publishedNotice" values={{ classes: classNames }} components={strong} />
+              <Trans i18nKey={exam.results_published_at ? 'exams.resultsNotice' : 'exams.publishedNotice'} values={{ classes: classNames }} components={strong} />
             </Alert>
           ) : (
             <ChecksCard exam={exam} />

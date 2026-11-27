@@ -4,7 +4,7 @@
 - **Interviewee:** Prof. S.F., profesor de matematică, gimnaziu (clasele 5–8)
 - **Interviewer:** A.O.
 - **Format:** mixed: in person and by phone
-- **Consent:** verbal, given before the phone interview began
+- **Consent:** verbal, given at the start of the phone part; it covered the whole interview, including what was said in person
 - **Topic:** Requirement Analysis for Assessment Engine
 
 ---

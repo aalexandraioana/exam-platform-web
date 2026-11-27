@@ -58,7 +58,8 @@ designs:
   - id: DS-010
     name: item-analysis-analytics
     kind: screen
-    status: approved
+    status: implemented
+    source: frontend/src/pages/examiner/ItemAnalysisPage.tsx
     description: Examiner's Item Analysis of one exam (P10, D-047, C-008): counted Attempts, mean and median; a foldable legend; per competence its success rate (Reușită = p) and weak Items; per Item success rate, discrimination and flags, opening to its drawn Variants with their options and unused marks; a notice when answers await re-check, one notice instead of tables below 2 graded Attempts
   - id: DS-011
     name: admin-user-management

@@ -414,7 +414,14 @@
       "grade": "Filter: grade",
       "difficulty": "Filter: difficulty",
       "status": "Filter: status"
-    }
+    },
+    "corrected_one": "<strong>The correct answer was saved:</strong> {{count}} attempt re-graded.",
+    "corrected_other": "<strong>The correct answer was saved:</strong> {{count}} attempts re-graded.",
+    "optionsLocked": "<strong>Your changes weren't saved.</strong> Candidates have already drawn this question, so options can no longer be added, removed or reordered. You can still correct which option is right and fix typos in the texts.",
+    "parametersLocked": "<strong>Your changes weren't saved.</strong> Candidates have already drawn this question, so its values and answer formula can no longer change. Everything else can.",
+    "keyCorrections": "Corrections of the correct answer",
+    "recalculated_one": "{{count}} attempt re-graded",
+    "recalculated_other": "{{count}} attempts re-graded"
   },
   "exams": {
     "title": "Exams",

@@ -76,6 +76,15 @@ export interface Question extends QuestionSummary {
   copied_from: { id: number; code: string } | null
   published: boolean
   problems: Problem[]
+  /** P8c · Q-087: the last answer-key corrections on a drawn question, newest first. */
+  key_corrections?: KeyCorrection[]
+}
+
+export interface KeyCorrection {
+  corrected_at: string
+  examiner: string
+  /** Answers graded again (submitted or graded Attempts). */
+  answers: number
 }
 
 export interface QuestionPatch {
@@ -150,6 +159,9 @@ async function one(path: string, method: 'GET' | 'POST' | 'PATCH' = 'GET', body?
 export const getQuestion = (id: number) => one(`/questions/${id}`)
 export const createQuestion = (input: { code: string; section: Section; type: QuestionType }) => one('/questions', 'POST', input)
 export const updateQuestion = (id: number, patch: QuestionPatch) => one(`/questions/${id}`, 'PATCH', patch)
+/** The editor's save: also says how many answers a barem edit or a corrected key re-graded (C-004). */
+export const saveQuestion = (id: number, patch: QuestionPatch) =>
+  apiFetch<{ question: Question; regraded?: { answers: number; flagged: number } }>(`/questions/${id}`, { method: 'PATCH', body: patch })
 export const markReady = (id: number) => one(`/questions/${id}/ready`, 'POST')
 export const markDraft = (id: number) => one(`/questions/${id}/draft`, 'POST')
 export const deleteQuestion = (id: number) => apiFetch<void>(`/questions/${id}`, { method: 'DELETE' })

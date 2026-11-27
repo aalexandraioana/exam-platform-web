@@ -10,6 +10,7 @@ import {
   markReady,
   publish,
   typesFor,
+  saveQuestion,
   updateQuestion,
   type Competence,
   type Problem,
@@ -27,6 +28,7 @@ import { focusRing } from '../../../components/styles'
 import AnswerEditor from './AnswerEditor'
 import BaremEditor from './BaremEditor'
 import { defaultKey, emptyRow, formFrom, patchFrom, type QuestionForm } from './form'
+import { formatDateTime } from '../exams/format'
 import { problemText } from './problems'
 import { ghostClass, TextAreaField } from './ui'
 import ValuesEditor from './ValuesEditor'
@@ -35,7 +37,8 @@ export type ListKind = 'competence' | 'topic' | 'pool'
 const NEW = '__new'
 const strong = { strong: <strong /> }
 
-type Notice = 'saved' | 'refused' | 'notReady' | 'locked' | 'saveFailed' | 'published' | 'alreadyPublished' | 'failed'
+type Notice = 'saved' | 'corrected' | 'refused' | 'notReady' | 'locked' | 'optionsLocked' | 'parametersLocked' | 'saveFailed' | 'published' | 'alreadyPublished' | 'failed'
+type NoticeState = { kind: Notice; code?: string; count?: number }
 
 interface Props {
   question: Question
@@ -51,10 +54,10 @@ interface Props {
 // DS-007 editor: every field an Item can match on (D-057, D-059), the answer, named values, the
 // barem, Draft ↔ Ready (Q-057), publishing (D-040) and deleting (Q-056).
 export default function QuestionEditor({ question, competences, topics, pools, onChanged, onDelete, onNewItem }: Props) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [form, setForm] = useState<QuestionForm>(() => formFrom(question))
   const [problems, setProblems] = useState<Problem[]>(question.problems)
-  const [notice, setNotice] = useState<{ kind: Notice; code?: string } | null>(null)
+  const [notice, setNotice] = useState<NoticeState | null>(null)
   const [busy, setBusy] = useState(false)
   const [samples, setSamples] = useState<Sample[]>([])
 
@@ -77,20 +80,27 @@ export default function QuestionEditor({ question, competences, topics, pools, o
     if (id !== null) apply(String(id))
   }
 
-  async function act(action: () => Promise<Question>, success: Notice | null) {
+  /** Runs a save or a status change; an action may return its own notice instead of `success`. */
+  async function act(action: () => Promise<Question | { saved: Question; notice: NoticeState }>, success: Notice | null) {
     setBusy(true)
     setNotice(null)
     try {
-      const saved = await action()
+      const result = await action()
+      const saved = 'saved' in result ? result.saved : result
       setProblems(saved.problems)
       onChanged(saved)
-      if (success) setNotice({ kind: success })
+      if ('saved' in result) setNotice(result.notice)
+      else if (success) setNotice({ kind: success })
     } catch (error) {
       if (error instanceof ApiError && error.status === 422 && error.fields.status?.[0] === 'not_ready') {
         setProblems((error.body.problems as Problem[] | undefined) ?? problems)
         setNotice({ kind: ready ? 'refused' : 'notReady' })
       } else if (error instanceof ApiError && error.status === 422 && (error.fields.barem?.[0] === 'barem_locked' || error.fields.answer_key?.[0] === 'answer_key_locked')) {
         setNotice({ kind: 'locked' })
+      } else if (error instanceof ApiError && error.status === 422 && error.fields.answer_key?.[0] === 'options_locked') {
+        setNotice({ kind: 'optionsLocked' })
+      } else if (error instanceof ApiError && error.status === 422 && error.fields.parameters?.[0] === 'parameters_locked') {
+        setNotice({ kind: 'parametersLocked' })
       } else {
         setNotice({ kind: 'saveFailed' })
       }
@@ -99,7 +109,12 @@ export default function QuestionEditor({ question, competences, topics, pools, o
     }
   }
 
-  const save = () => act(() => updateQuestion(question.id, patchFrom(form)), 'saved')
+  // P8c · Q-090: a corrected Subject I key says how many Attempts it graded again.
+  const save = () => act(async () => {
+    const { question: saved, regraded } = await saveQuestion(question.id, patchFrom(form))
+    const notice: NoticeState = regraded && saved.section === 'subject_1' ? { kind: 'corrected', count: regraded.answers } : { kind: 'saved' }
+    return { saved, notice }
+  }, null)
   // Ready checks the saved question, so the editor's changes are saved first.
   const makeReady = () => act(async () => markReady((await updateQuestion(question.id, patchFrom(form))).id), 'saved')
   const makeDraft = () => act(() => markDraft(question.id), null)
@@ -134,7 +149,12 @@ export default function QuestionEditor({ question, competences, topics, pools, o
           {t('bank.saved')}
         </Alert>
       )}
-      {(notice?.kind === 'refused' || notice?.kind === 'notReady' || notice?.kind === 'locked') && (
+      {notice?.kind === 'corrected' && (
+        <Alert variant="success" icon={CircleCheck} role="status">
+          <Trans i18nKey="bank.corrected" count={notice.count} components={strong} />
+        </Alert>
+      )}
+      {(notice?.kind === 'refused' || notice?.kind === 'notReady' || notice?.kind === 'locked' || notice?.kind === 'optionsLocked' || notice?.kind === 'parametersLocked') && (
         <Alert variant="error" icon={CircleAlert} role="alert">
           <Trans i18nKey={`bank.${notice.kind}`} components={strong} />
         </Alert>
@@ -340,6 +360,19 @@ export default function QuestionEditor({ question, competences, topics, pools, o
           {t('bank.delete')}
         </button>
       </div>
+      {(question.key_corrections ?? []).length > 0 && (
+        <div className="grid gap-2">
+          <span id="key-corrections" className="font-medium">{t('bank.keyCorrections')}</span>
+          <ul aria-labelledby="key-corrections" className="grid list-disc gap-1 pl-6 text-caption text-secondary">
+            {(question.key_corrections ?? []).map((c) => (
+              <li key={c.corrected_at}>
+                <span className="font-mono">{formatDateTime(c.corrected_at, i18n.resolvedLanguage)}</span>
+                {' · '}{c.examiner}{' · '}{t('bank.recalculated', { count: c.answers })}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="flex justify-end">
         <Button variant="primary" onClick={save} disabled={busy}>
           {busy ? (

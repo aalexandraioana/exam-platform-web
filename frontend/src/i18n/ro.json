@@ -421,7 +421,16 @@
       "grade": "Filtru: clasă",
       "difficulty": "Filtru: dificultate",
       "status": "Filtru: stare"
-    }
+    },
+    "corrected_one": "<strong>Răspunsul corect a fost salvat:</strong> {{count}} încercare recalculată.",
+    "corrected_few": "<strong>Răspunsul corect a fost salvat:</strong> {{count}} încercări recalculate.",
+    "corrected_other": "<strong>Răspunsul corect a fost salvat:</strong> {{count}} de încercări recalculate.",
+    "optionsLocked": "<strong>Nu am salvat modificările.</strong> Întrebarea a fost deja extrasă pentru candidați, așa că variantele nu se mai pot adăuga, șterge sau reordona. Poți corecta care variantă e corectă și greșelile de scriere din texte.",
+    "parametersLocked": "<strong>Nu am salvat modificările.</strong> Întrebarea a fost deja extrasă pentru candidați, așa că valorile și formula răspunsului nu se mai pot schimba. Restul îl poți modifica.",
+    "keyCorrections": "Corecturi ale răspunsului corect",
+    "recalculated_one": "{{count}} încercare recalculată",
+    "recalculated_few": "{{count}} încercări recalculate",
+    "recalculated_other": "{{count}} de încercări recalculate"
   },
   "exams": {
     "title": "Examene",

@@ -157,7 +157,25 @@ it('refuses adding, removing or reordering options, and changing a formula, once
     'an option removed' => ['single', ['answer_key' => ['options' => ['12', '36', '32'], 'correct' => 2]], 'answer_key', 'options_locked'],
     'options reordered' => ['single', ['answer_key' => ['options' => ['36', '12', '32', '64'], 'correct' => 1]], 'answer_key', 'options_locked'],
     'a formula changed' => ['values', ['parameters' => ['values' => ['a' => ['random' => ['min' => 1, 'max' => 9]], 'b' => ['fixed' => 10]], 'answer' => 'a + b + 1']], 'parameters', 'parameters_locked'],
+    // Q-092: each Attempt grades by the type it drew; another type's key would re-grade it wrongly.
+    'the type changed' => ['single', ['type' => 'multiple_choice', 'answer_key' => ['options' => ['12', '36', '32', '64'], 'correct' => [1, 3]]], 'type', 'type_locked'],
+    // Otherwise a valid Subject II problem (20 points, D-062; no barem, D-031), so only the lock can refuse it.
+    'the Subject changed' => ['single', ['section' => 'subject_2', 'type' => 'structured_problem', 'points' => 20, 'uses_barem' => false], 'section', 'type_locked'],
 ]);
+
+it('re-grades nothing when a drawn question\'s type change is refused (Q-092)', function () {
+    $s = keySetup();
+    $id = keyAttempt($s);
+    signInAs($s['examiner']);
+
+    $this->patchJson("/api/questions/{$s['questions']['single']->id}", ['type' => 'multiple_choice', 'answer_key' => ['options' => ['12', '36', '32', '64'], 'correct' => [1, 3]]])
+        ->assertUnprocessable();
+
+    expect(keyPoints($id, 1))->toBe(0.0)
+        ->and($s['questions']['single']->fresh()->type->value)->toBe('single_choice')
+        ->and(keyItem($id, 1)->expected_answer['answer_key']['correct'])->toBe(2)
+        ->and(AnswerKeyCorrection::count())->toBe(0);
+});
 
 it('logs each correction with who, when, the key before and after, and the count, shown on the question (Q-087)', function () {
     $s = keySetup();

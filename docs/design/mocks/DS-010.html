@@ -133,10 +133,11 @@
   <details class="card legend" data-show="s-data s-recheck s-one" data-open-in="s-data">
     <summary><i data-icon="info" class="sm"></i>Cum se citesc valorile<i data-icon="chevron-down" class="sm chev" style="margin-left: auto;"></i></summary>
     <dl class="t-body">
-      <dt>Dificultate</dt><dd>Procentul din punctajul itemului obținut de clasă: 90% înseamnă că aproape toți l-au rezolvat. Sub 20% itemul e prea dificil, peste 90% prea ușor.</dd>
+      <dt>Reușită</dt><dd>Procentul din punctajul itemului obținut de clasă: cu cât e mai mare, cu atât itemul a fost mai ușor. Peste 90% itemul e prea ușor, sub 20% prea dificil. În analiza itemilor se numește indicele de dificultate p.</dd>
       <dt>Discriminare</dt><dd>Cât de bine deosebește itemul candidații mai buni de cei mai slabi: corelația dintre punctajul itemului și restul punctajului, de la −1 la 1. Sub 0,20 discriminarea e slabă.</dd>
       <dt>Discriminare negativă</dt><dd>Candidații mai buni au greșit itemul mai des decât cei mai slabi. De obicei înseamnă un răspuns corect greșit sau un enunț neclar: verifică întrebarea.</dd>
-      <dt>Variantă nefolosită</dt><dd>Un răspuns greșit ales de mai puțin de 5% dintre candidați; nu atrage pe nimeni, deci nu verifică nimic.</dd>
+      <dt>Opțiune nefolosită</dt><dd>Un răspuns greșit ales de mai puțin de 5% dintre candidați; nu atrage pe nimeni, deci nu verifică nimic.</dd>
+      <dt>Variante</dt><dd>Întrebările extrase pentru un item: fiecare candidat a primit una dintre ele, așa că fiecare variantă are propriile valori, calculate pe candidații care au primit-o.</dd>
       <dt>Date insuficiente</dt><dd>Sub 2 încercări, sau toți au obținut același punctaj, valoarea nu se poate calcula.</dd>
     </dl>
   </details>
@@ -145,24 +146,25 @@
   <section class="card" style="padding: 0;" data-show="s-data s-recheck" aria-labelledby="c1">
     <div class="comp-head">
       <h2 class="t-h2 text-wrap" id="c1"><span class="code" style="font-size: inherit;">C1</span> · Calculează fracții dintr-un număr</h2>
-      <span class="t-body secondary">Dificultate <span class="num">74%</span> · <span class="badge warning"><i data-icon="triangle-alert" class="sm"></i>1 item slab</span></span>
+      <span class="t-body secondary">Reușită <span class="num">74%</span> · <span class="badge warning"><i data-icon="triangle-alert" class="sm"></i>1 item slab</span></span>
     </div>
     <div class="table-wrap">
       <table class="items">
-        <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Dificultate</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
+        <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Reușită</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
         <tbody>
           <tr class="row-item">
             <td class="cell-item" data-label="Item"><span class="t-body-m">Itemul 1</span><span class="t-caption secondary">Subiectul I</span></td>
             <td class="num" data-label="Puncte">5</td>
-            <td class="num" data-label="Dificultate">93%</td>
+            <td class="num" data-label="Reușită">93%</td>
             <td class="num" data-label="Discriminare">0,12</td>
             <td class="wide" data-label="Semnalări"><div class="flags"><span class="badge warning"><i data-icon="arrow-up" class="sm"></i>Prea ușor</span><span class="badge warning"><i data-icon="circle-alert" class="sm"></i>Discriminare slabă</span></div></td>
-            <td class="wide"><button type="button" class="expand" aria-expanded="true" aria-controls="d1">2 întrebări<i data-icon="chevron-down" class="sm chev"></i></button></td>
+            <td class="wide"><button type="button" class="expand" aria-expanded="true" aria-controls="d1">2 variante<i data-icon="chevron-down" class="sm chev"></i></button></td>
           </tr>
           <tr class="detail" id="d1"><td colspan="6">
+            <p class="t-caption secondary" style="margin: 0 0 var(--space-3);">Variantele extrase pentru itemul 1: fiecare candidat a primit una dintre ele.</p>
             <div class="q">
-              <div class="q-head"><span class="code">M6-FR-001</span><span class="t-caption secondary">Alegere unică · 8 candidați</span><span class="t-caption">Dificultate <span class="num">100%</span> · Discriminare <span class="nodata">date insuficiente</span></span><span class="badge warning"><i data-icon="arrow-up" class="sm"></i>Prea ușor</span></div>
-              <div class="options" aria-label="Variantele întrebării M6-FR-001">
+              <div class="q-head"><span class="code">M6-FR-001</span><span class="t-caption secondary">Alegere unică · 8 candidați</span><span class="t-caption">Reușită <span class="num">100%</span> · Discriminare <span class="nodata">date insuficiente</span></span><span class="badge warning"><i data-icon="arrow-up" class="sm"></i>Prea ușor</span></div>
+              <div class="options" aria-label="Opțiunile întrebării M6-FR-001">
                 <div class="opt"><span class="opt-label"><span class="t-math">12</span></span><div class="bar" aria-hidden="true"><span style="width: 0%;"></span></div><span class="row" style="gap: var(--space-2);"><span class="num t-caption">0 · 0%</span><span class="badge"><i data-icon="minus" class="sm"></i>Nefolosită</span></span></div>
                 <div class="opt correct"><span class="opt-label"><span class="t-math">36</span><span class="badge success"><i data-icon="check" class="sm"></i>Corect</span></span><div class="bar" aria-hidden="true"><span style="width: 100%;"></span></div><span class="num t-caption">8 · 100%</span></div>
                 <div class="opt"><span class="opt-label"><span class="t-math">32</span></span><div class="bar" aria-hidden="true"><span style="width: 0%;"></span></div><span class="row" style="gap: var(--space-2);"><span class="num t-caption">0 · 0%</span><span class="badge"><i data-icon="minus" class="sm"></i>Nefolosită</span></span></div>
@@ -170,24 +172,24 @@
               </div>
             </div>
             <div class="q">
-              <div class="q-head"><span class="code">M6-FR-002</span><span class="t-caption secondary">Răspuns scurt · 6 candidați</span><span class="t-caption">Dificultate <span class="num">83%</span> · Discriminare <span class="num">0,31</span></span></div>
+              <div class="q-head"><span class="code">M6-FR-002</span><span class="t-caption secondary">Răspuns scurt · 6 candidați</span><span class="t-caption">Reușită <span class="num">83%</span> · Discriminare <span class="num">0,31</span></span></div>
             </div>
           </td></tr>
           <tr class="row-item">
             <td class="cell-item" data-label="Item"><span class="t-body-m">Itemul 2</span><span class="t-caption secondary">Subiectul I</span></td>
             <td class="num" data-label="Puncte">5</td>
-            <td class="num" data-label="Dificultate">64%</td>
+            <td class="num" data-label="Reușită">64%</td>
             <td class="num" data-label="Discriminare">0,48</td>
             <td class="wide" data-label="Semnalări"><span class="t-caption secondary">Fără</span></td>
-            <td class="wide"><button type="button" class="expand" aria-expanded="false">1 întrebare<i data-icon="chevron-down" class="sm chev"></i></button></td>
+            <td class="wide"><button type="button" class="expand" aria-expanded="false">1 variantă<i data-icon="chevron-down" class="sm chev"></i></button></td>
           </tr>
           <tr class="row-item">
             <td class="cell-item" data-label="Item"><span class="t-body-m">Itemul 7</span><span class="t-caption secondary">Subiectul II</span></td>
             <td class="num" data-label="Puncte">20</td>
-            <td class="num" data-label="Dificultate">68%</td>
+            <td class="num" data-label="Reușită">68%</td>
             <td class="num" data-label="Discriminare">0,71</td>
             <td class="wide" data-label="Semnalări"><span class="t-caption secondary">Fără</span></td>
-            <td class="wide"><button type="button" class="expand" aria-expanded="false">2 întrebări<i data-icon="chevron-down" class="sm chev"></i></button></td>
+            <td class="wide"><button type="button" class="expand" aria-expanded="false">2 variante<i data-icon="chevron-down" class="sm chev"></i></button></td>
           </tr>
         </tbody>
       </table>
@@ -197,24 +199,25 @@
   <section class="card" style="padding: 0;" data-show="s-data s-recheck" aria-labelledby="c2">
     <div class="comp-head">
       <h2 class="t-h2 text-wrap" id="c2"><span class="code" style="font-size: inherit;">C2</span> · Compară rapoarte și recunoaște proporții, inclusiv în probleme cu mărimi direct proporționale</h2>
-      <span class="t-body secondary">Dificultate <span class="num">41%</span> · <span class="badge warning"><i data-icon="triangle-alert" class="sm"></i>2 itemi slabi</span></span>
+      <span class="t-body secondary">Reușită <span class="num">41%</span> · <span class="badge warning"><i data-icon="triangle-alert" class="sm"></i>2 itemi slabi</span></span>
     </div>
     <div class="table-wrap">
       <table class="items">
-        <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Dificultate</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
+        <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Reușită</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
         <tbody>
           <tr class="row-item">
             <td class="cell-item" data-label="Item"><span class="t-body-m">Itemul 3</span><span class="t-caption secondary">Subiectul I</span></td>
             <td class="num" data-label="Puncte">5</td>
-            <td class="num" data-label="Dificultate">36%</td>
+            <td class="num" data-label="Reușită">36%</td>
             <td class="num" data-label="Discriminare">−0,18</td>
             <td class="wide" data-label="Semnalări"><div class="flags"><span class="badge error"><i data-icon="triangle-alert" class="sm"></i>Discriminare negativă: verifică întrebarea</span></div></td>
-            <td class="wide"><button type="button" class="expand" aria-expanded="true" aria-controls="d3">1 întrebare<i data-icon="chevron-down" class="sm chev"></i></button></td>
+            <td class="wide"><button type="button" class="expand" aria-expanded="true" aria-controls="d3">1 variantă<i data-icon="chevron-down" class="sm chev"></i></button></td>
           </tr>
           <tr class="detail" id="d3"><td colspan="6">
+            <p class="t-caption secondary" style="margin: 0 0 var(--space-3);">Variantele extrase pentru itemul 3: fiecare candidat a primit una dintre ele.</p>
             <div class="q">
-              <div class="q-head"><span class="code">M6-RP-003</span><span class="t-caption secondary">Alegere unică · 14 candidați</span><span class="t-caption">Dificultate <span class="num">36%</span> · Discriminare <span class="num">−0,18</span></span><span class="badge error"><i data-icon="triangle-alert" class="sm"></i>Discriminare negativă</span></div>
-              <div class="options" aria-label="Variantele întrebării M6-RP-003">
+              <div class="q-head"><span class="code">M6-RP-003</span><span class="t-caption secondary">Alegere unică · 14 candidați</span><span class="t-caption">Reușită <span class="num">36%</span> · Discriminare <span class="num">−0,18</span></span><span class="badge error"><i data-icon="triangle-alert" class="sm"></i>Discriminare negativă</span></div>
+              <div class="options" aria-label="Opțiunile întrebării M6-RP-003">
                 <div class="opt"><span class="opt-label"><span class="t-math">2 : 3</span></span><div class="bar" aria-hidden="true"><span style="width: 14%;"></span></div><span class="num t-caption">2 · 14%</span></div>
                 <div class="opt correct"><span class="opt-label"><span class="t-math">3 : 2</span><span class="badge success"><i data-icon="check" class="sm"></i>Corect</span></span><div class="bar" aria-hidden="true"><span style="width: 36%;"></span></div><span class="num t-caption">5 · 36%</span></div>
                 <div class="opt"><span class="opt-label"><span class="t-math">6 : 4 = 4 : 6, deoarece produsul mezilor este egal cu produsul extremilor</span></span><div class="bar" aria-hidden="true"><span style="width: 50%;"></span></div><span class="num t-caption">7 · 50%</span></div>
@@ -225,10 +228,10 @@
           <tr class="row-item">
             <td class="cell-item" data-label="Item"><span class="t-body-m">Itemul 8</span><span class="t-caption secondary">Subiectul II</span></td>
             <td class="num" data-label="Puncte">20</td>
-            <td class="num" data-label="Dificultate">15%</td>
+            <td class="num" data-label="Reușită">15%</td>
             <td class="num" data-label="Discriminare">0,44</td>
             <td class="wide" data-label="Semnalări"><div class="flags"><span class="badge warning"><i data-icon="arrow-down" class="sm"></i>Prea dificil</span></div></td>
-            <td class="wide"><button type="button" class="expand" aria-expanded="false">1 întrebare<i data-icon="chevron-down" class="sm chev"></i></button></td>
+            <td class="wide"><button type="button" class="expand" aria-expanded="false">1 variantă<i data-icon="chevron-down" class="sm chev"></i></button></td>
           </tr>
         </tbody>
       </table>
@@ -239,19 +242,19 @@
   <section class="card" style="padding: 0;" data-show="s-one" aria-labelledby="c1b">
     <div class="comp-head">
       <h2 class="t-h2 text-wrap" id="c1b"><span class="code" style="font-size: inherit;">C1</span> · Calculează fracții dintr-un număr</h2>
-      <span class="t-body secondary">Dificultate <span class="nodata">date insuficiente</span></span>
+      <span class="t-body secondary">Reușită <span class="nodata">date insuficiente</span></span>
     </div>
     <div class="table-wrap">
       <table class="items">
-        <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Dificultate</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
+        <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Reușită</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
         <tbody>
           <tr class="row-item">
             <td class="cell-item" data-label="Item"><span class="t-body-m">Itemul 1</span><span class="t-caption secondary">Subiectul I</span></td>
             <td class="num" data-label="Puncte">5</td>
-            <td class="num" data-label="Dificultate"><span class="nodata">date insuficiente</span></td>
+            <td class="num" data-label="Reușită"><span class="nodata">date insuficiente</span></td>
             <td class="num" data-label="Discriminare"><span class="nodata">date insuficiente</span></td>
             <td class="wide" data-label="Semnalări"><span class="row" style="gap: var(--space-1);"><i data-icon="info" class="sm secondary"></i><span class="t-caption secondary">Sunt necesare cel puțin 2 încercări corectate</span></span></td>
-            <td class="wide"><button type="button" class="expand" aria-expanded="false">1 întrebare<i data-icon="chevron-down" class="sm chev"></i></button></td>
+            <td class="wide"><button type="button" class="expand" aria-expanded="false">1 variantă<i data-icon="chevron-down" class="sm chev"></i></button></td>
           </tr>
         </tbody>
       </table>

@@ -11,6 +11,7 @@ use App\Models\ExamItem;
 use App\Models\Question;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
@@ -259,6 +260,26 @@ it('publishes the results with the cohort note, once', function () {
     expect($s['exam']->fresh()->results_published_at)->not->toBeNull();
     $this->postJson("/api/exams/{$s['exam']->id}/results")->assertConflict()->assertJsonPath('code', 'results_published');
     $this->putJson('/api/grading/items/'.gradingItem($s['attempts'][0], 8)->id, ['points' => 10])->assertConflict()->assertJsonPath('code', 'results_published');
+});
+
+it('refuses a grade when the results are published while it is being saved (D-019, PATTERN-007)', function () {
+    $s = gradingSetup(1);
+    gradeAll($s, $s['attempts'][0], [6, 6, 8], 20, [10, 10]);
+    $item = gradingItem($s['attempts'][0], 8);
+
+    // The race: another request publishes right after this one's first check, as its transaction starts.
+    $outside = DB::transactionLevel();
+    $published = false;
+    DB::beforeExecuting(function () use (&$published, $outside, $s) {
+        if (! $published && DB::transactionLevel() > $outside) {
+            $published = true;
+            DB::table('exams')->where('id', $s['exam']->id)->update(['results_published_at' => now()]);
+        }
+    });
+
+    $this->putJson("/api/grading/items/{$item->id}", ['points' => 5])->assertConflict()->assertJsonPath('code', 'results_published');
+    expect((float) $item->answer->fresh()->awarded_points)->toBe(20.0)
+        ->and($s['attempts'][0]->fresh()->total_score)->toBe('95.00');
 });
 
 it('gives the mean and median of the grades, counting each Candidate\'s Attempt by the score policy (D-012)', function (string $policy, int|float $mean) {

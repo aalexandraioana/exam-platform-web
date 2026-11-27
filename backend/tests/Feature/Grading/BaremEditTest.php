@@ -250,4 +250,3 @@ it('locks the exam, then the question, before a barem edit or a grade reads the 
         'steps' => $s['steps']->map(fn ($step) => ['id' => $step->id, 'points' => 0])->all(),
     ])->assertOk()))->toBe(['exams', 'attempts', 'questions', 'steps read']);
 });
-

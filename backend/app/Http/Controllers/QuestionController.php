@@ -76,11 +76,15 @@ class QuestionController extends Controller
         $question = $this->find($request, $id);
         $data = $request->validated();
         $this->checkOwnership($request, $data, $question);
-        $this->checkLocks($question, $data);
         $regraded = null;
 
         try {
             $question = DB::transaction(function () use ($question, $data, &$regraded) {
+                // PATTERN-007: the exams that drew it, then the question itself, before the lock check
+                // and the barem read, so a publication or a grade running now is waited for (D-031, D-046).
+                Scorer::lockExamsOf($question->id);
+                $question = Question::lockForUpdate()->findOrFail($question->id);
+                $this->checkLocks($question, $data);
                 $question->fill(collect($data)->except(['barem', 'pool_ids'])->all());
                 // C-004 (P8a): a step sent with its id keeps its row, so the scores given on it stay.
                 $current = $question->baremSteps->keyBy('id');

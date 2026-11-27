@@ -64,6 +64,7 @@
       <button type="button" class="mock-btn" data-state-btn="s-corrected">Răspuns corectat</button>
       <button type="button" class="mock-btn" data-state-btn="s-optlocked">Variante blocate</button>
       <button type="button" class="mock-btn" data-state-btn="s-paramlocked">Valori blocate</button>
+      <button type="button" class="mock-btn" data-state-btn="s-typelocked">Tip blocat</button>
       <button type="button" class="mock-btn" data-state-btn="s-number">Număr / fracție</button>
       <button type="button" class="mock-btn" data-state-btn="s-s2">Subiectul II cu barem</button>
       <button type="button" class="mock-btn" data-state-btn="s-draft">Ciornă incompletă</button>
@@ -99,13 +100,13 @@
 <main class="page">
   <div class="page-head">
     <div class="stack-sm"><h1 class="t-display">Bancă de întrebări</h1>
-      <span class="t-caption secondary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked">64 de întrebări · 58 finalizate · 6 ciorne</span></div>
-    <button type="button" class="btn btn-primary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-empty s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked">+ Întrebare nouă</button>
+      <span class="t-caption secondary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked">64 de întrebări · 58 finalizate · 6 ciorne</span></div>
+    <button type="button" class="btn btn-primary" data-show="s-short s-param s-param-missing s-s2 s-draft s-error s-empty s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked">+ Întrebare nouă</button>
   </div>
 
   <div class="tabs" role="tablist">
-    <a href="#" role="tab" aria-selected="true" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked">Întrebările mele</a>
-    <a href="#" role="tab" aria-selected="false" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked">Bibliotecă comună</a>
+    <a href="#" role="tab" aria-selected="true" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked">Întrebările mele</a>
+    <a href="#" role="tab" aria-selected="false" data-show="s-short s-param s-param-missing s-s2 s-draft s-empty s-error s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked">Bibliotecă comună</a>
     <a href="#" role="tab" aria-selected="false" data-show="s-library s-copy">Întrebările mele</a>
     <a href="#" role="tab" aria-selected="true" data-show="s-library s-copy">Bibliotecă comună</a>
   </div>
@@ -116,30 +117,30 @@
       <input class="input search" placeholder="Caută după cod sau text" aria-label="Caută întrebări">
       <select class="select" aria-label="Competență"><option>Toate competențele</option><option>C1 · Compară numere întregi</option><option>C2 · Folosește proporțiile directe</option><option>C3 · Recunoaște unghiuri opuse la vârf</option><option>C4 · Folosește proprietățile triunghiului isoscel</option></select>
       <select class="select" aria-label="Temă"><option>Toate temele</option><option>Mulțimi de numere întregi</option><option>Rapoarte și proporții</option><option>Unghiuri</option><option>Triunghiuri</option></select>
-      <select data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked" class="select" aria-label="Set de întrebări"><option>Toate seturile</option><option>Unghiuri – ușor</option><option>Proporții – mediu</option><option>Fără set</option></select>
+      <select data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked" class="select" aria-label="Set de întrebări"><option>Toate seturile</option><option>Unghiuri – ușor</option><option>Proporții – mediu</option><option>Fără set</option></select>
       <select class="select" aria-label="Tip"><option>Toate tipurile</option><option>Adevărat / Fals</option><option>Alegere unică</option><option>Alegere multiplă</option><option>Completare</option><option>Problemă</option></select>
       <select class="select" aria-label="Clasa"><option>Toate clasele</option><option>Clasa a V-a</option><option>Clasa a VI-a</option><option>Clasa a VII-a</option><option>Clasa a VIII-a</option></select>
       <select class="select" aria-label="Dificultate"><option>Orice dificultate</option><option>Ușor</option><option>Mediu</option><option>Dificil</option></select>
-      <select data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked" class="select" aria-label="Stare"><option>Toate stările</option><option>Doar finalizate</option><option>Doar ciorne</option></select>
+      <select data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked" class="select" aria-label="Stare"><option>Toate stările</option><option>Doar finalizate</option><option>Doar ciorne</option></select>
     </div>
   </div>
 
   <!-- ===== MY QUESTIONS: list + editor ===== -->
-  <div class="bank" data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked">
+  <div class="bank" data-show="s-short s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked">
     <div class="card" style="padding: 0;">
       <div class="table-wrap">
         <table>
           <thead><tr><th>Cod</th><th>Enunț</th><th>Competență · temă</th><th>Stare</th><th>Seturi</th></tr></thead>
           <tbody>
             <tr data-show="s-short s-refused s-new s-new-comp s-delete" class="selected"><td class="code">M6-UG-012</td><td><span class="stmt" title="Diagonalele paralelogramului …">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Unghiuri – ușor</td></tr>
-            <tr data-show="s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-corrected s-optlocked s-paramlocked"><td class="code">M6-UG-012</td><td><span class="stmt">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Unghiuri – ușor</td></tr>
+            <tr data-show="s-param s-param-missing s-s2 s-draft s-single s-multi s-dual s-number s-corrected s-optlocked s-paramlocked s-typelocked"><td class="code">M6-UG-012</td><td><span class="stmt">Diagonalele paralelogramului …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Unghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Unghiuri – ușor</td></tr>
             <tr data-show="s-param s-param-missing s-paramlocked" class="selected"><td class="code">M6-RP-014</td><td><span class="stmt" title="Numerele a și b sunt direct proporționale cu 3 și 5 …">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Proporții – mediu</td></tr>
-            <tr data-show="s-short s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked"><td class="code">M6-RP-014</td><td><span class="stmt">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Proporții – mediu</td></tr>
+            <tr data-show="s-short s-s2 s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-typelocked"><td class="code">M6-RP-014</td><td><span class="stmt">Numerele a și b sunt direct proporționale cu 3 și 5 …</span></td><td><div class="comp"><span class="tag">C2</span><span class="t-caption secondary">Rapoarte și proporții</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Proporții – mediu</td></tr>
             <tr data-show="s-s2" class="selected"><td class="code">M6-TR-004</td><td><span class="stmt" title="În triunghiul ABC, AB = AC și ∢A = 40° …">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Triunghiuri – probleme</td></tr>
-            <tr data-show="s-short s-param s-param-missing s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked"><td class="code">M6-TR-004</td><td><span class="stmt">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Triunghiuri – probleme</td></tr>
+            <tr data-show="s-short s-param s-param-missing s-draft s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked"><td class="code">M6-TR-004</td><td><span class="stmt">În triunghiul ABC, AB = AC și ∢A = 40° …</span></td><td><div class="comp"><span class="tag">C4</span><span class="t-caption secondary">Triunghiuri</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Triunghiuri – probleme</td></tr>
             <tr data-show="s-draft" class="selected"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td class="t-caption">—</td></tr>
-            <tr data-show="s-short s-param s-param-missing s-s2 s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td class="t-caption">—</td></tr>
-            <tr data-show="s-single s-multi s-dual s-number s-corrected s-optlocked" class="selected"><td class="code">M6-MN-007</td><td><span class="stmt">Cât face −3 + 8?</span></td><td><div class="comp"><span class="tag">C1</span><span class="t-caption secondary">Mulțimi de numere întregi</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Numere întregi – ușor</td></tr>
+            <tr data-show="s-short s-param s-param-missing s-s2 s-single s-multi s-dual s-number s-refused s-new s-new-comp s-delete s-corrected s-optlocked s-paramlocked s-typelocked"><td class="code">M6-UG-025</td><td><span class="stmt">Unghiurile AOB și BOC sunt opuse la vârf …</span></td><td><div class="comp"><span class="tag">C3</span><span class="t-caption secondary">Fără temă</span></div></td><td><span class="badge">Ciornă</span></td><td class="t-caption">—</td></tr>
+            <tr data-show="s-single s-multi s-dual s-number s-corrected s-optlocked s-typelocked" class="selected"><td class="code">M6-MN-007</td><td><span class="stmt">Cât face −3 + 8?</span></td><td><div class="comp"><span class="tag">C1</span><span class="t-caption secondary">Mulțimi de numere întregi</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Numere întregi – ușor</td></tr>
             <tr><td class="code">M6-MN-003</td><td><span class="stmt" title="Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …">Cel mai mare număr întreg negativ de două cifre care se divide cu 7 este …</span></td><td><div class="comp"><span class="tag">C1</span><span class="t-caption secondary">Mulțimi de numere întregi</span></div></td><td><span class="badge success">Finalizat</span></td><td class="t-caption">Numere întregi – ușor</td></tr>
           </tbody>
         </table>
@@ -219,11 +220,13 @@
     </section>
 
     <!-- Editor: multiple choice (every correct option, all or nothing, D-005) -->
-    <section class="card editor" aria-label="M6-MN-007, alegere multiplă" data-show="s-multi s-corrected s-optlocked">
+    <section class="card editor" aria-label="M6-MN-007, alegere multiplă" data-show="s-multi s-corrected s-optlocked s-typelocked">
       <div class="row between"><h2 class="t-h2">M6-MN-007</h2><span class="badge success">Finalizat</span></div>
       <!-- P8c (D-046, Q-090): after a corrected key on a drawn question -->
       <div class="alert success t-caption" role="status" data-show="s-corrected"><span><strong>Răspunsul corect a fost salvat:</strong> 14 încercări recalculate.</span></div>
       <!-- P8c (Q-088): options added, removed or reordered once drawn -->
+      <!-- Q-092: type or Subject changed once drawn -->
+      <div class="alert error t-caption" role="alert" data-show="s-typelocked"><span><strong>Nu am salvat modificările.</strong> Întrebarea a fost deja extrasă pentru candidați, așa că tipul și subiectul nu se mai pot schimba. Pentru alt tip, creează o întrebare nouă.</span></div>
       <div class="alert error t-caption" role="alert" data-show="s-optlocked"><span><strong>Nu am salvat modificările.</strong> Întrebarea a fost deja extrasă pentru candidați, așa că variantele nu se mai pot adăuga, șterge sau reordona. Poți corecta care variantă e corectă și greșelile de scriere din texte.</span></div>
       <div class="grid-2">
         <div class="field"><label>Subiect</label><select class="select"><option>Subiectul I</option></select></div>

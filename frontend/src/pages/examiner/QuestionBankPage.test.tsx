@@ -17,7 +17,7 @@ const summary = {
 const question = {
   ...summary, competence, points: 5, explanation: null,
   answer_key: { kind: 'text', accepted: ['se înjumătățesc'] }, parameters: null,
-  uses_barem: false, barem: [], copied_from: null, published: false, problems: [],
+  uses_barem: false, barem: [], copied_from: null, published: false, problems: [], key_corrections: [],
 }
 const draft = {
   ...question, id: 13, code: 'M6-MN-007', type: 'single_choice', status: 'draft', topic: null,
@@ -163,6 +163,35 @@ describe('QuestionBankPage (DS-007)', () => {
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent('Nu am salvat modificările.')
     expect(alert).toHaveTextContent('Rezultatele unui examen care a folosit această întrebare sunt publicate, așa că baremul și răspunsul corect nu se mai pot schimba.')
+  })
+
+  it('says how many Attempts a corrected key re-graded, and lists the last corrections (P8c, D-046, Q-087, Q-090)', async () => {
+    const corrections = [
+      { corrected_at: '2026-11-27T12:20:00+00:00', examiner: 'Maria Popa', answers: 14 },
+      { corrected_at: '2026-11-26T07:05:00+00:00', examiner: 'Maria Popa', answers: 3 },
+    ]
+    mockApi({ ...base, 'PATCH /questions/12': json(200, { question: { ...question, key_corrections: corrections }, regraded: { answers: 14, flagged: 0 } }) })
+    renderAt('?q=12')
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Salvează' }))
+
+    expect(await screen.findByRole('status')).toHaveTextContent('Răspunsul corect a fost salvat: 14 încercări recalculate.')
+    const history = screen.getByRole('list', { name: 'Corecturi ale răspunsului corect' })
+    expect(within(history).getAllByRole('listitem').map((li) => li.textContent)).toEqual([
+      '27.11.2026, 14:20 · Maria Popa · 14 încercări recalculate',
+      '26.11.2026, 09:05 · Maria Popa · 3 încercări recalculate',
+    ])
+  })
+
+  it('explains why options and named values can no longer change once drawn (Q-088, Q-089)', async () => {
+    mockApi({ ...base, 'PATCH /questions/12': json(422, { message: 'x', errors: { answer_key: ['options_locked'] } }) })
+    renderAt('?q=12')
+    fireEvent.click(await screen.findByRole('button', { name: 'Salvează' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('Întrebarea a fost deja extrasă pentru candidați, așa că variantele nu se mai pot adăuga, șterge sau reordona.')
+
+    mockApi({ ...base, 'PATCH /questions/12': json(422, { message: 'x', errors: { parameters: ['parameters_locked'] } }) })
+    fireEvent.click(screen.getByRole('button', { name: 'Salvează' }))
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Întrebarea a fost deja extrasă pentru candidați, așa că valorile și formula răspunsului nu se mai pot schimba.'))
   })
 
   it('edits single choice options and the correct one', async () => {

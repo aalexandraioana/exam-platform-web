@@ -47,12 +47,13 @@ designs:
     kind: screen
     status: implemented
     source: frontend/src/pages/examiner/ExamsPage.tsx, ExamBuilderPage.tsx (+ exams/)
-    description: Exam builder: settings with grade level, blueprint Items drawing from a pool by competence, difficulty, type and topic (each may be any) with live match counts, Item editor, publish checks, preview as a Candidate, Examene list, publish confirmation, locked published exam, deleting a draft (D-057, Q-059–Q-062)
+    description: Exam builder: settings with grade level, blueprint Items drawing from a pool by competence, difficulty, type and topic (each may be any) with live match counts, Item editor, publish checks, preview as a Candidate, Examene list, publish confirmation, locked published exam, deleting a draft, link to grading with progress, end date locked once results are published, Subject II Item fixed at 20 points (D-057, D-062, Q-059–Q-062, Q-081)
   - id: DS-009
     name: manual-grading-queue
     kind: screen
-    status: approved
-    description: Examiner interface for reviewing Subject 2 multi-step submissions with rubric scoring, partial credit, and individualized feedback
+    status: implemented
+    source: frontend/src/pages/examiner/GradingPage.tsx (+ grading/)
+    description: Examiner grading of Subject II answers by item or by Candidate, barem ticked Nu / Parțial / Da or one score, adjustment and comment, hidden names, re-check marks, inline barem editor, publish readiness (re-check, running Attempts, end date) and publishing with the cohort note (D-019, D-031, Q-076, Q-078, Q-079, Q-080)
   - id: DS-010
     name: item-analysis-analytics
     kind: screen

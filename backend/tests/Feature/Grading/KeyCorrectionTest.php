@@ -255,3 +255,19 @@ it('accepts the editor sending back drawn named values in its own shape, and sti
     $this->patchJson("/api/questions/{$s['questions']['values']->id}", ['parameters' => [...$editor, 'answer' => 'a + b + 1']])
         ->assertUnprocessable()->assertJsonPath('errors.parameters.0', 'parameters_locked');
 });
+
+it('re-grades only the corrected item, leaving the Attempt\'s other Subject I answers untouched', function () {
+    $s = keySetup();
+    $id = keyAttempt($s);
+    $others = collect([2, 3, 4, 5])->mapWithKeys(fn ($p) => [$p => keyItem($id, $p)->answer->fresh()->only('awarded_points', 'graded_at', 'updated_at')]);
+    $this->travel(1)->minutes();
+
+    keyPatch($s, 'single', ['options' => ['12', '36', '32', '64'], 'correct' => 1])->assertOk();
+
+    expect(keyPoints($id, 1))->toBe(5.0)
+        ->and((float) Attempt::find($id)->subject_1_score)->toBe(5.0);
+    foreach ($others as $position => $before) {
+        expect(keyItem($id, $position)->answer->fresh()->only('awarded_points', 'graded_at', 'updated_at'))->toEqual($before);
+    }
+});
+

@@ -270,4 +270,3 @@ it('re-grades only the corrected item, leaving the Attempt\'s other Subject I an
         expect(keyItem($id, $position)->answer->fresh()->only('awarded_points', 'graded_at', 'updated_at'))->toEqual($before);
     }
 });
-

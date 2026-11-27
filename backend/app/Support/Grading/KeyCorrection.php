@@ -3,6 +3,7 @@
 namespace App\Support\Grading;
 
 use App\Enums\AttemptStatus;
+use App\Models\Answer;
 use App\Models\AnswerKeyCorrection;
 use App\Models\Attempt;
 use App\Models\AttemptItem;
@@ -67,7 +68,7 @@ final class KeyCorrection
     {
         $after = (array) $question->answer_key;
         /** @var Collection<int, AttemptItem> $items */
-        $items = self::items($question)->with('attempt')->get();
+        $items = self::items($question)->with(['attempt', 'answer'])->get();
         foreach ($items as $item) {
             $expected = $item->expected_answer ?? [];
             $shown = $expected['answer_key']['options'] ?? null;
@@ -76,13 +77,25 @@ final class KeyCorrection
             $item->save();
         }
 
+        // Only this item is graded again (D-005: full points or 0, from the snapshot); the Attempt's
+        // Subject I score and total move by the difference, so its other answers stay untouched.
         $handedIn = $items->filter(fn (AttemptItem $i) => in_array($i->attempt->status, [AttemptStatus::Submitted, AttemptStatus::Graded], true));
-        foreach ($handedIn->pluck('attempt')->unique('id') as $attempt) {
-            Grader::subjectOne($attempt);
-            if ($attempt->status === AttemptStatus::Graded) {
-                $attempt->total_score = Scorer::BASELINE + (float) $attempt->subject_1_score + (float) $attempt->subject_2_score;
+        foreach ($handedIn as $item) {
+            $answer = $item->answer ?? tap(new Answer, fn (Answer $a) => $a->attempt_item_id = $item->id);
+            $given = $answer->answer['value'] ?? null;
+            $points = $given !== null && Grader::isCorrect($item, $given) ? (float) $item->question_snapshot['points'] : 0.0;
+            $delta = $points - (float) ($answer->awarded_points ?? 0);
+            $answer->awarded_points = $points;
+            $answer->graded_at = now();
+            $answer->save();
+            if ($delta != 0.0) {
+                $attempt = $item->attempt;
+                $attempt->subject_1_score = (float) $attempt->subject_1_score + $delta;
+                if ($attempt->status === AttemptStatus::Graded) {
+                    $attempt->total_score = (float) $attempt->total_score + $delta;
+                }
+                $attempt->save();
             }
-            $attempt->save();
         }
 
         $log = new AnswerKeyCorrection;

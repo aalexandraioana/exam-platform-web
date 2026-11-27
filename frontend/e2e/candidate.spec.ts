@@ -4,7 +4,7 @@ import { expect, test, type Page } from '@playwright/test'
 // DS-003 screenshots (P7a) with the mock's sample data, compared by eye with
 // docs/design/mocks/DS-003.html.
 const me = { id: 7, first_name: 'Andrei', last_name: 'Ionescu', name: 'Andrei Ionescu', email: 'andrei@exemplu.ro', role: 'candidate', is_active: true, must_change_password: false }
-const struct = { item_counts: { subject_1: 6, subject_2: 3 }, results_published: false, open_attempt_id: null, open_attempt: null }
+const struct = { item_counts: { subject_1: 6, subject_2: 3 }, results_published: false, grade: null, open_attempt_id: null, open_attempt: null }
 const at = (minutes: number) => new Date(Date.now() + minutes * 60_000).toISOString()
 
 function exams() {
@@ -20,6 +20,9 @@ function exams() {
       max_attempts: 1, attempts_used: 1, state: 'open', can_start: false, submitted: true, topics: ['Unghiuri'] },
     { ...struct, id: 5, title: 'Exersare: Rapoarte și proporții', description: null, duration_minutes: 30, available_from: at(-60), available_until: '2026-11-28T18:00:00Z',
       max_attempts: 3, attempts_used: 1, state: 'open', can_start: true, submitted: true, topics: ['Rapoarte', 'Proporții'] },
+    // P8b: results published, with the counted grade.
+    { ...struct, id: 6, title: 'Evaluare Unitatea 2: Fracții și procente', description: null, duration_minutes: 50, available_from: null, available_until: '2026-11-20T12:00:00Z',
+      max_attempts: 1, attempts_used: 1, state: 'closed', can_start: false, submitted: true, results_published: true, grade: 7.9, topics: ['Rapoarte', 'Proporții'] },
   ]
 }
 
@@ -54,7 +57,7 @@ for (const theme of ['light', 'dark'] as const) {
 
     test(`DS-003 ${theme} at ${width} px`, async ({ page }) => {
       await open(page, theme, width, { accepted: 1, pending: 0 }, exams)
-      await expect(page.getByRole('heading', { name: 'Examenele tale (4)' })).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Examenele tale (5)' })).toBeVisible()
       await page.screenshot({ path: screenshotPath(`DS-003.${theme}${suffix}.png`), fullPage: true })
     })
 

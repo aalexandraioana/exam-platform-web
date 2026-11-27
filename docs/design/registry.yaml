@@ -19,7 +19,7 @@ designs:
     kind: screen
     status: implemented
     source: frontend/src/pages/candidate/DashboardPage.tsx
-    description: Candidate dashboard - the in-progress Attempt, exam cards by state (open, upcoming, submitted awaiting grading, submitted with attempts left) with topic chips only (Q-069) and the description (Q-064), empty states (no class, request waiting, no exams) and the join-class dialog (D-028); no submitted-exams table until P9 (Q-070). P7a additions drawn 2026-11-25; the app's own header is kept (user, 2026-11-25), not the mock's name and avatar
+    description: Candidate dashboard - the in-progress Attempt, exam cards by state (open, upcoming, submitted awaiting grading, submitted with attempts left) with topic chips only (Q-069) and the description (Q-064), empty states (no class, request waiting, no exams) and the join-class dialog (D-028); no submitted-exams table until P9 (Q-070). P7a additions drawn 2026-11-25; the app's own header is kept (user, 2026-11-25), not the mock's name and avatar; P8b: a results-published card with the counted grade and "Vezi rezultatele"
   - id: DS-004
     name: exam-room
     kind: screen
@@ -29,8 +29,9 @@ designs:
   - id: DS-005
     name: exam-results-review
     kind: screen
-    status: draft
-    description: Candidate post-grading read-only review with score breakdown, correct answers, and examiner feedback
+    status: implemented
+    source: frontend/src/pages/candidate/ResultsPage.tsx
+    description: The Candidate's results after publication (P8b, D-019): grade and scores, cohort note, Subject I answers with the correct answer and the explanation (Q-082), Subject II steps, photos, barem points earned, adjustment and comment (Q-083), several Attempts with the counted one (D-012, Q-084), no class statistics (Q-085); not published yet, loading, error
   - id: DS-006
     name: examiner-dashboard
     kind: screen

@@ -65,7 +65,8 @@ describe('ResultsPage (DS-005, P8b)', () => {
     expect(screen.getByRole('definition', { name: 'Subiectul II' })).toHaveTextContent('44 / 60')
     expect(screen.getByText('Scrieți concluzia fiecărei demonstrații.')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Tablou de bord' })).toHaveAttribute('href', '/candidate')
-    expect(screen.queryByText(/[Mm]edia/)).not.toBeInTheDocument()
+    // Q-085: no class statistics (the Examiner's "Media: … · mediana: …"); "mediană" in a barem step is not one.
+    expect(screen.queryByText(/Media:|mediana:/)).not.toBeInTheDocument()
   })
 
   it('shows each Subject I item with the answer, the correct answer, the points and the explanation (Q-082)', async () => {

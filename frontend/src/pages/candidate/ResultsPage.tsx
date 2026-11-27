@@ -146,7 +146,7 @@ function GradeCard({ attempt, several, policy }: { attempt: AttemptResult; sever
     [t('results.baseline'), '10'],
   ]
   return (
-    <section className={`${card} flex flex-wrap items-center justify-between gap-6`} aria-labelledby="grade-h">
+    <section className="flex flex-wrap items-center justify-between gap-6 rounded-lg border border-subtle bg-surface p-4 shadow-subtle tablet:p-6" aria-labelledby="grade-h">
       <div className="grid gap-2">
         <h2 id="grade-h" className="text-h3 text-secondary">{t('results.yourGrade')}</h2>
         <span data-testid="grade" className="font-mono text-[48px] font-bold leading-[56px] text-accent">{formatGrade(attempt.grade)}</span>
@@ -316,7 +316,7 @@ function Photos({ attemptId, images }: { attemptId: number; images: AttemptImage
   }, [attemptId, images])
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-3" aria-label={t('results.photos', { count: images.length })}>
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] gap-3" aria-label={t('results.photos', { count: images.length })}>
       {images.map((image, index) => (
         <a key={image.id} href={urls[image.id]} target="_blank" rel="noreferrer" className={`overflow-hidden rounded-md border border-subtle bg-surface-subtle ${focusRing}`}>
           {urls[image.id]

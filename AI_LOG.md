@@ -219,3 +219,39 @@ Unealta: Claude Code (prompt liber).
 Ce am cerut (pe scurt): Completarea antetului din INTERVIEW.md cu datele pe care i le-am dat și o secțiune care leagă răspunsurile profesorului de deciziile din proiect.
 Ce am primit: Asistentul a verificat întâi în catalog că poate scrie fișierul fără să încalce regulile (contează ca datele să fie reale, nu cine le scrie) și a lăsat câmpul de acord gol până i l-am spus. Răspunsurile au rămas neschimbate. Secțiunea „Ce am decis din interviu” leagă 10 răspunsuri de decizii, fiecare verificată în textul deciziei; o legătură greșită (D-013 la întrebarea 5) a corectat-o singur înainte să o scrie, iar analiza itemilor e marcată ca încă de construit.
 Ce am făcut cu ea: Am dat data, inițialele, modul de desfășurare și acordul verbal, și am cerut secțiunea cu deciziile. Follow-up-ul îl adaug eu mai târziu.
+
+## 2026-11-27 · P8a: ecranul de corectare și trei întrebări rămase deschise
+Unealta: Claude Code (/build, Playwright în Docker).
+Ce am cerut (pe scurt): Să continui P8a de unde rămăsese și să-mi explice întrebările deschise Q-079 și Q-080.
+Ce am primit: Asistentul a construit ecranul de corectare (DS-009) din testele scrise deja, a comparat capturile cu mock-ul și a reparat trei diferențe de aranjare. A găsit singur o problemă nouă: după publicarea rezultatelor, data de încheiere se putea muta, redeschizând examenul cu notele deja vizibile (Q-081). Testele unui ecran au trecut local, dar au picat în CI pentru că mașina CI rulează în UTC; a fixat fusul orar al testelor la Europe/Bucharest și a notat practica drept PATTERN-010.
+Ce am făcut cu ea: Am decis că răspunsurile de reverificat blochează publicarea (Q-079), că examinatorul trebuie să seteze data de încheiere înainte de publicare (Q-080) și că data se blochează după publicare (Q-081). Am confirmat textele noi din mock-uri.
+
+## 2026-11-27 · Deploy-uri: întâi după CI, apoi manuale (D-063)
+Unealta: Claude Code (prompt liber, un sub-agent care a citit documentația Render).
+Ce am cerut (pe scurt): Ca API-ul să se deployeze doar la schimbări în backend, site-ul doar la schimbări în frontend, iar documentația deloc.
+Ce am primit: Asistentul a verificat în documentația Render și în istoricul deploy-urilor că regula exista deja prin rootDir și mi-a arătat că problema reală era numărul de merge-uri (31 de deploy-uri în 5 zile) și faptul că un push cu CI roșu se deploya oricum. După primul release grupat, site-ul s-a deployat singur, dar API-ul nu, iar cele două au fost nesincronizate aproximativ 11 minute, până am făcut deploy-ul API-ului de mână. M-a întrebat dacă deploy-urile manuale contravin cerințelor și a verificat catalogul: nu contravin, dar URL-ul live trebuie să fie la zi la predare.
+Ce am făcut cu ea: Am ales merge-uri grupate și deploy după CI, apoi deploy-uri manuale pentru ambele servicii, întâi API-ul și apoi site-ul (D-063). Am făcut eu deploy-urile din Render.
+
+## 2026-11-27 · P8b: pagina de rezultate a candidatului
+Unealta: Claude Code (/plan, /build, Playwright în Docker).
+Ce am cerut (pe scurt): Planul și construirea paginii de rezultate (DS-005).
+Ce am primit: Asistentul mi-a pus patru întrebări înainte de plan: ce vede candidatul la Subiectul I și la Subiectul II, ce încercări apar și dacă vede statistici de clasă. Mock-ul DS-005 a fost desenat și confirmat înainte de cod. Un test scris de el a picat din cauza unui tipar prea larg („mediană” dintr-un pas de barem) și mi-a spus deschis că a îngustat testul.
+Ce am făcut cu ea: Am ales răspunsul corect și explicația la Subiectul I, pașii din barem cu punctajul la Subiectul II, toate încercările cu cea care contează marcată și fără statistici de clasă (Q-082–Q-085). Am aprobat planul și mock-ul și am cerut un singur release pentru P8a și P8b.
+
+## 2026-11-27 · Review cu trei sub-agenți pe release-ul P8a + P8b
+Unealta: Claude Code (trei sub-agenți în paralel: performanță, securitate, SEO și GEO).
+Ce am cerut (pe scurt): Un review al PR #16 față de plan și de fișa din README.
+Ce am primit: Asistentul a verificat fiecare problemă în cod înainte să mi-o raporteze. Cele mai importante: o notă se putea schimba după publicare dacă două taburi lucrau în același timp, o editare de barem se putea suprapune cu publicarea, iar răspunsurile notate cu un singur punctaj nu erau marcate când întrebarea trecea pe barem. A explicat că o cursă între două cereri nu se poate reproduce într-un singur test, așa că testele verifică ordinea blocărilor. Ulterior, două teste vechi au picat în CI din cauza vitezei mașinii; nu le-a putut reproduce local și mi-a spus asta deschis.
+Ce am făcut cu ea: Am cerut reparațiile pe rând. Am decis ca răspunsurile trecute pe barem să revină la corectare și să blocheze publicarea până primesc punctaj pe pași (Q-086). Am acceptat schimbarea testelor de accesibilitate. Am cerut ca reparația testelor instabile să intre în același release și am dat merge.
+
+## 2026-11-27 · P8c: corectarea cheii după examen
+Unealta: Claude Code (/plan, /build, Playwright în Docker).
+Ce am cerut (pe scurt): P8c, recalcularea Subiectului I când corectez răspunsul corect după predare (D-046).
+Ce am primit: Patru întrebări înainte de plan: unde se păstrează jurnalul corecturilor, ce se mai poate schimba la variante, dacă se recalculează și formulele și dacă editorul arată câte încercări s-au recalculat. Asistentul a observat că recalcularea trebuie să blocheze încercările înaintea întrebării, ca la corectare, altfel cele două s-ar fi putut bloca reciproc. Mock-ul DS-007 a fost confirmat înainte de cod.
+Ce am făcut cu ea: Am ales un jurnal salvat și afișat în editor, corectarea variantei corecte și a greșelilor de scriere dar fără reordonare, formulele în afara P8c (Q-091) și un mesaj cu numărul de încercări recalculate (Q-087–Q-090).
+
+## 2026-11-27 · Review cu trei sub-agenți pe release-ul P8c, problemă cu problemă
+Unealta: Claude Code (trei sub-agenți în paralel).
+Ce am cerut (pe scurt): Același review pe PR #18, apoi să discutăm problemele separat, pas cu pas.
+Ce am primit: Șapte probleme, fiecare explicată cu un exemplu și o recomandare. Prima variantă propusă pentru a doua problemă (o blocare doar pe întrebare) ar fi putut bloca reciproc două cereri; asistentul a observat asta singur și a schimbat ordinea. Două teste ale lui au picat inițial din alt motiv decât cel urmărit și le-a corectat înainte de reparație.
+Ce am făcut cu ea: Am ales ca tipul și subiectul unei întrebări extrase să nu se mai poată schimba (Q-092), am cerut celelalte reparații, am lăsat neschimbată o problemă minoră (o blocare scurtă la fiecare salvare) și am clarificat acordul din INTERVIEW.md. Am dat merge și am făcut deploy-urile.

@@ -305,4 +305,3 @@ it('leaves graded answers alone when a save sends the same barem, as the editor 
         ->and($answer->fresh()->updated_at->equalTo($before))->toBeTrue()
         ->and($answer->baremScores()->count())->toBe(3);
 });
-

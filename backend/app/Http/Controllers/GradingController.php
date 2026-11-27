@@ -74,6 +74,8 @@ class GradingController extends Controller
             ])->all();
         $statuses = collect($answers)->countBy('status');
 
+        $missing = $this->missing($exam);
+
         return response()->json([
             'exam' => [
                 'id' => $exam->id,
@@ -92,7 +94,7 @@ class GradingController extends Controller
                 'to_grade' => $statuses['to_grade'] ?? 0,
                 'recheck' => $statuses['recheck'] ?? 0,
             ],
-            'publish' => ['ready' => ! $this->missing($exam), 'missing' => $this->missing($exam), ...self::stats($exam)],
+            'publish' => ['ready' => ! $missing, 'missing' => $missing, ...self::stats($exam)],
         ]);
     }
 

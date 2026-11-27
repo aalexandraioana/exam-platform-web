@@ -89,7 +89,9 @@ class QuestionController extends Controller
                 $question->fill(collect($data)->except(['barem', 'pool_ids'])->all());
                 // C-004 (P8a): a step sent with its id keeps its row, so the scores given on it stay.
                 $current = $question->baremSteps->keyBy('id');
-                $steps = array_key_exists('barem', $data)
+                // The editor sends the whole question on every save: an unchanged barem rewrites nothing
+                // and regrades nothing.
+                $steps = array_key_exists('barem', $data) && ! self::sameBarem($question, array_values($data['barem'] ?? []))
                     ? collect(array_values($data['barem'] ?? []))->map(function ($step, $i) use ($current) {
                         $model = isset($step['id']) ? $current[$step['id']] : new BaremStep;
                         $model->fill(['position' => $i + 1, 'description' => $step['description'], 'points' => $step['points']]);

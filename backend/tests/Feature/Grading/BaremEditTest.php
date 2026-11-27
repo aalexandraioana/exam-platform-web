@@ -292,4 +292,3 @@ it('publishes once those answers are graded on the barem steps (Q-086, Q-079)', 
 
     $this->postJson("/api/exams/{$s['exam']->id}/results")->assertOk();
 });
-

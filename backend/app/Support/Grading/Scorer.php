@@ -126,6 +126,16 @@ final class Scorer
             ->exists();
     }
 
+    /**
+     * Q-086: when a question switches from one score to a barem, its answers graded with one score are
+     * marked for re-check, keeping their points; publishing waits for them (Q-079), and grading them
+     * again needs points on every barem step, so a Candidate never sees zero steps.
+     */
+    public static function flagForBarem(Question $question): int
+    {
+        return self::regradable($question)->whereDoesntHave('baremScores')->update(['needs_recheck' => true]);
+    }
+
     /** Graded answers to this question in exams whose results aren't published. */
     private static function regradable(Question $question): Builder
     {

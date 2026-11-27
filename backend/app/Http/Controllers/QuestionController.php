@@ -85,6 +85,7 @@ class QuestionController extends Controller
                 Scorer::lockExamsOf($question->id);
                 $question = Question::lockForUpdate()->findOrFail($question->id);
                 $this->checkLocks($question, $data);
+                $usedBarem = $question->uses_barem;
                 $question->fill(collect($data)->except(['barem', 'pool_ids'])->all());
                 // C-004 (P8a): a step sent with its id keeps its row, so the scores given on it stay.
                 $current = $question->baremSteps->keyBy('id');
@@ -108,6 +109,11 @@ class QuestionController extends Controller
                 $question->save();
                 if ($steps !== null) {
                     $regraded = $this->saveBarem($question, $steps);
+                }
+                // Q-086: answers graded with one score go back to the queue to be graded on the new barem.
+                if (! $usedBarem && $question->uses_barem) {
+                    $flagged = Scorer::flagForBarem($question);
+                    $regraded = ['answers' => $regraded['answers'] ?? 0, 'flagged' => ($regraded['flagged'] ?? 0) + $flagged];
                 }
                 if (array_key_exists('pool_ids', $data)) {
                     $question->pools()->sync($data['pool_ids']);

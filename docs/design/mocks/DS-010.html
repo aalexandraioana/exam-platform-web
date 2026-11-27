@@ -22,6 +22,9 @@
   th.num { font-family: inherit; }
   td.cell-item > span { display: block; }
   .flags .badge { white-space: normal; }
+  .items { table-layout: fixed; }
+  .items td { vertical-align: middle; }
+  .items col.c-item { width: 22%; } .items col.c-pts { width: 10%; } .items col.c-p { width: 12%; } .items col.c-r { width: 14%; } .items col.c-more { width: 15%; }
   .flags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
   .nodata { font-family: var(--font-ui); color: var(--text-secondary); font-size: 13px; line-height: 18px; }
   .expand { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1); border: 1px solid transparent; border-radius: var(--radius-md); background: transparent; color: var(--text-primary-accent); cursor: pointer; font: inherit; font-weight: 500; }
@@ -40,6 +43,7 @@
   .opt.correct .bar > span { background: var(--status-success); }
   .opt-label { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); min-width: 0; }
   @media (max-width: 639px) {
+    .items, .items tbody { display: block; table-layout: auto; } .items colgroup { display: none; }
     .items thead { display: none; }
     .items tr.row-item { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle); }
     .items tr.row-item > td { display: grid; gap: 0; padding: 0; border: 0; text-align: left; }
@@ -121,7 +125,6 @@
     <div class="stat"><span class="t-caption secondary">Media notelor</span><span class="val" data-show="s-data s-recheck">7,20</span><span class="val" data-show="s-one">8,50</span></div>
     <div class="stat"><span class="t-caption secondary">Mediana</span><span class="val" data-show="s-data s-recheck">7,50</span><span class="val" data-show="s-one">8,50</span></div>
   </div>
-  <p class="help" data-show="s-one" style="margin: 0;">2 încercări predate așteaptă corectarea; analiza le include după ce le corectezi.</p>
 
   <!-- Re-check notice -->
   <div class="alert info" role="status" data-show="s-recheck">
@@ -130,7 +133,7 @@
   </div>
 
   <!-- Legend -->
-  <details class="card legend" data-show="s-data s-recheck s-one" data-open-in="s-data">
+  <details class="card legend" data-show="s-data s-recheck" data-open-in="s-data">
     <summary><i data-icon="info" class="sm"></i>Cum se citesc valorile<i data-icon="chevron-down" class="sm chev" style="margin-left: auto;"></i></summary>
     <dl class="t-body">
       <dt>Reușită</dt><dd>Procentul din punctajul itemului obținut de clasă: cu cât e mai mare, cu atât itemul a fost mai ușor. Peste 90% itemul e prea ușor, sub 20% prea dificil. În analiza itemilor se numește indicele de dificultate p.</dd>
@@ -149,7 +152,7 @@
       <span class="t-body secondary">Reușită <span class="num">74%</span> · <span class="badge warning"><i data-icon="triangle-alert" class="sm"></i>1 item slab</span></span>
     </div>
     <div class="table-wrap">
-      <table class="items">
+      <table class="items"><colgroup><col class="c-item"><col class="c-pts"><col class="c-p"><col class="c-r"><col><col class="c-more"></colgroup>
         <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Reușită</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
         <tbody>
           <tr class="row-item">
@@ -202,7 +205,7 @@
       <span class="t-body secondary">Reușită <span class="num">41%</span> · <span class="badge warning"><i data-icon="triangle-alert" class="sm"></i>2 itemi slabi</span></span>
     </div>
     <div class="table-wrap">
-      <table class="items">
+      <table class="items"><colgroup><col class="c-item"><col class="c-pts"><col class="c-p"><col class="c-r"><col><col class="c-more"></colgroup>
         <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Reușită</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
         <tbody>
           <tr class="row-item">
@@ -210,7 +213,7 @@
             <td class="num" data-label="Puncte">5</td>
             <td class="num" data-label="Reușită">36%</td>
             <td class="num" data-label="Discriminare">−0,18</td>
-            <td class="wide" data-label="Semnalări"><div class="flags"><span class="badge error"><i data-icon="triangle-alert" class="sm"></i>Discriminare negativă: verifică întrebarea</span></div></td>
+            <td class="wide" data-label="Semnalări"><div class="flags"><span class="badge error"><i data-icon="triangle-alert" class="sm"></i>Discriminare negativă</span></div></td>
             <td class="wide"><button type="button" class="expand" aria-expanded="true" aria-controls="d3">1 variantă<i data-icon="chevron-down" class="sm chev"></i></button></td>
           </tr>
           <tr class="detail" id="d3"><td colspan="6">
@@ -238,28 +241,11 @@
     </div>
   </section>
 
-  <!-- One Candidate: not enough data everywhere -->
-  <section class="card" style="padding: 0;" data-show="s-one" aria-labelledby="c1b">
-    <div class="comp-head">
-      <h2 class="t-h2 text-wrap" id="c1b"><span class="code" style="font-size: inherit;">C1</span> · Calculează fracții dintr-un număr</h2>
-      <span class="t-body secondary">Reușită <span class="nodata">date insuficiente</span></span>
-    </div>
-    <div class="table-wrap">
-      <table class="items">
-        <thead><tr><th>Item</th><th class="num">Puncte</th><th class="num">Reușită</th><th class="num">Discriminare</th><th>Semnalări</th><th><span class="sr-only">Detalii</span></th></tr></thead>
-        <tbody>
-          <tr class="row-item">
-            <td class="cell-item" data-label="Item"><span class="t-body-m">Itemul 1</span><span class="t-caption secondary">Subiectul I</span></td>
-            <td class="num" data-label="Puncte">5</td>
-            <td class="num" data-label="Reușită"><span class="nodata">date insuficiente</span></td>
-            <td class="num" data-label="Discriminare"><span class="nodata">date insuficiente</span></td>
-            <td class="wide" data-label="Semnalări"><span class="row" style="gap: var(--space-1);"><i data-icon="info" class="sm secondary"></i><span class="t-caption secondary">Sunt necesare cel puțin 2 încercări corectate</span></span></td>
-            <td class="wide"><button type="button" class="expand" aria-expanded="false">1 variantă<i data-icon="chevron-down" class="sm chev"></i></button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <!-- Fewer than 2 graded Attempts: nothing can be computed, so one notice instead of empty tables -->
+  <div class="alert info" role="status" data-show="s-one">
+    <i data-icon="info"></i>
+    <div class="row between"><span>Analiza are nevoie de cel puțin 2 încercări corectate. Acum este corectată 1 din 3; celelalte 2 așteaptă corectarea.</span><a href="#" class="btn">Mergi la corectare</a></div>
+  </div>
 </main>
 
 <script src="shared/mock.js"></script>

@@ -255,7 +255,8 @@ describe('QuestionBankPage (DS-007)', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: 'Șterge întrebarea' }))
     await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument())
     expect(fetchMock.mock.calls.filter(([, init]) => init?.method === 'DELETE')).toHaveLength(2)
-    expect(screen.getByTestId('where')).toHaveTextContent('')
+    // The router applies the cleared ?q= as a transition, which can land after the dialog closes.
+    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent(''))
   })
 
   it('browses the library and copies an entry with a new code (D-040)', async () => {

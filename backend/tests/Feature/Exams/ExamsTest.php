@@ -181,6 +181,19 @@ it('publishes a complete exam, then only lets the title, description and end cha
     $this->putJson("/api/exams/{$exam->id}/items/order", ['item_ids' => $exam->items()->pluck('id')->reverse()->values()->all()])->assertConflict();
 });
 
+it('locks the end once the results are published, keeping the title and description editable (Q-081)', function () {
+    $s = examSetup(0, 0);
+    $exam = Exam::factory()->published()->for($s['examiner'], 'examiner')
+        ->create(['available_from' => '2026-11-30 08:00', 'available_until' => '2026-11-30 14:00', 'results_published_at' => now()]);
+
+    foreach (['2026-12-07T14:00:00+00:00', null] as $until) {
+        $this->patchJson("/api/exams/{$exam->id}", ['available_until' => $until])->assertConflict()->assertJsonPath('code', 'results_published');
+    }
+    $this->patchJson("/api/exams/{$exam->id}", ['title' => 'Evaluare finală', 'description' => 'Recapitulare', 'available_until' => '2026-11-30T14:00:00+00:00'])
+        ->assertOk()->assertJsonPath('exam.title', 'Evaluare finală');
+    expect($exam->fresh()->available_until->toIso8601String())->toBe('2026-11-30T14:00:00+00:00');
+});
+
 it('deletes a draft and keeps a published exam (Q-061)', function () {
     $s = examSetup(0, 0);
     $draft = Exam::factory()->for($s['examiner'], 'examiner')->create();

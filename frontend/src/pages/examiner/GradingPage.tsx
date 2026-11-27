@@ -148,7 +148,7 @@ export default function GradingPage() {
         <div className="grid justify-items-end gap-2">
           <div className="flex items-center gap-3">
             <span className="font-medium">{t('grading.progress', { graded: counts.graded, count: counts.total })}</span>
-            <div className="h-2 w-40 overflow-hidden rounded-full bg-surface-subtle" aria-hidden="true">
+            <div className="h-2 w-[10rem] overflow-hidden rounded-full bg-surface-subtle" aria-hidden="true">
               <span className="block h-full bg-primary" style={{ width: `${Math.round((counts.graded / counts.total) * 100)}%` }} />
             </div>
           </div>
@@ -215,9 +215,9 @@ export default function GradingPage() {
             </button>
           ))}
         </div>
-        <div className="min-w-64">
+        <div className="min-w-[16rem]">
           {mode === 'item' ? (
-            <SelectField id="grading-item" label={t('grading.item')} value={current?.position ?? ''}
+            <SelectField id="grading-item" label={t('grading.item')} className="!pr-[2.75rem]" value={current?.position ?? ''}
               onChange={(e) => go(firstOpen(answers.filter((a) => a.position === Number(e.target.value))))}>
               {queue.items.map((i) => (
                 <option key={i.position} value={i.position}>
@@ -226,7 +226,7 @@ export default function GradingPage() {
               ))}
             </SelectField>
           ) : (
-            <SelectField id="grading-candidate" label={t('grading.candidate')} value={current?.attempt_id ?? ''}
+            <SelectField id="grading-candidate" label={t('grading.candidate')} className="!pr-[2.75rem]" value={current?.attempt_id ?? ''}
               onChange={(e) => { const c = candidates.find((x) => x[0].attempt_id === Number(e.target.value)); if (c) go(firstOpen(c)) }}>
               {candidates.map((c) => (
                 <option key={c[0].attempt_id} value={c[0].attempt_id}>
@@ -237,18 +237,18 @@ export default function GradingPage() {
           )}
         </div>
         <label className="ml-auto inline-flex min-h-hit items-center gap-2">
-          <input type="checkbox" checked={hideNames} onChange={(e) => setHideNames(e.target.checked)} className={`size-5 accent-primary ${focusRing}`} />
+          <input type="checkbox" checked={hideNames} onChange={(e) => setHideNames(e.target.checked)} className={`size-icon-md ${focusRing}`} />
           {t('grading.hideNames')}
         </label>
       </div>
 
       {current && (
-        <div className={`${cardClass} flex flex-wrap items-center justify-between gap-3 !py-3`}>
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-subtle bg-surface px-4 py-3 tablet:px-6">
           <Button aria-label={t('grading.previousAnswer')} disabled={atStart} onClick={() => step(-1)}>
             <ArrowLeft className="size-icon-sm" aria-hidden="true" />
             {t('grading.previous')}
           </Button>
-          <div className="grid flex-1 gap-0.5">
+          <div className="grid flex-1">
             <span className="font-medium">{nameOf(current)}</span>
             <span className="text-caption text-secondary">
               {mode === 'item'
@@ -268,7 +268,7 @@ export default function GradingPage() {
           {candidateAnswers.map((a) => (
             <a key={a.attempt_item_id} href={`#item-${a.position}`} aria-current={a.attempt_item_id === currentId ? 'true' : undefined}
               onClick={(e) => { e.preventDefault(); go(a) }}
-              className={`inline-flex min-h-hit items-center rounded-md border px-3 ${a.attempt_item_id === currentId ? 'border-primary bg-success-bg font-semibold' : 'border-subtle bg-surface'} ${focusRing}`}>
+              className={`inline-flex min-h-hit items-center rounded-md border px-3 ${a.attempt_item_id === currentId ? 'border-strong bg-success-bg font-semibold' : 'border-subtle bg-surface'} ${focusRing}`}>
               {t('grading.problemLink', { position: a.position, competence: competence(a.position) })}
               {' · '}
               {a.status === 'graded' && a.awarded_points !== null ? `${formatPoints(a.awarded_points)} / ${queue.items.find((i) => i.position === a.position)?.points ?? 20}`
@@ -294,7 +294,7 @@ export default function GradingPage() {
           onBaremSaved={(notice) => { setBaremNotice(notice); setItemReload((n) => n + 1); refresh().catch(() => undefined) }}
         />
       ) : (
-        <div aria-busy="true" aria-label={t('grading.loading')} className="h-48 animate-pulse rounded-lg bg-surface-subtle motion-reduce:animate-none" />
+        <div aria-busy="true" aria-label={t('grading.loading')} className="h-[12rem] animate-pulse rounded-lg bg-surface-subtle motion-reduce:animate-none" />
       )}
     </main>
   )
@@ -349,7 +349,7 @@ function PublishCard({ queue, why, date, onPublished }: { queue: GradingQueue; w
       <h2 id="pub-h" className="text-h2 font-semibold">{t('grading.publish')}</h2>
       <div className="grid gap-1">
         <label htmlFor="cohort-note" className="font-medium">{t('grading.cohortNote')}</label>
-        <textarea id="cohort-note" aria-describedby="cohort-note-help" value={note} onChange={(e) => setNote(e.target.value)} className={`min-h-24 rounded-md border border-input bg-surface px-3 py-2 ${focusRing}`} />
+        <textarea id="cohort-note" aria-describedby="cohort-note-help" value={note} onChange={(e) => setNote(e.target.value)} className={`min-h-[6rem] rounded-md border border-input bg-surface px-3 py-2 ${focusRing}`} />
         <span id="cohort-note-help" className="text-caption text-secondary">{t('grading.cohortNoteHelp')}</span>
       </div>
       <ul className="list-disc pl-6 text-secondary">

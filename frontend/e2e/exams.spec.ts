@@ -41,6 +41,7 @@ const errors = {
   },
 }
 const published = { ...exam, status: 'published', published_at: '2026-11-24T16:40:00Z' }
+const results = { ...published, results_published_at: '2026-12-01T16:20:00Z' }
 const list = [
   { ...exam, item_count: 9 },
   { id: 2, title: 'Test inițial · clasa a VI-a', status: 'published', grade_level: 6, available_from: '2026-09-15T05:00:00Z', available_until: '2026-09-20T17:00:00Z', published_at: '2026-09-14T10:00:00Z', classes: [classes[0]], item_count: 9 },
@@ -64,6 +65,7 @@ async function mockExams(page: Page, current: object, exams = list) {
       : path === '/topics' ? { topics }
       : path.endsWith('/match') ? { count: 3 }
       : path.endsWith('/preview') ? preview
+      : path.endsWith('/grading') ? { counts: { total: 75, graded: 37, to_grade: 36, recheck: 2 } }
       : { exam: current }
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) })
   })
@@ -80,6 +82,8 @@ const states = [
   { name: 'errors', path: '/examiner/exams/4', exam: errors, ready: (p: Page) => expect(p.getByText('Subiectul II: 45 / 60')).toBeVisible() },
   { name: 'item', path: '/examiner/exams/4', exam, ready: async (p: Page) => { await p.getByRole('button', { name: 'Editează itemul 3' }).click(); await expect(p.getByRole('dialog').getByText('3 întrebări finalizate se potrivesc', { exact: false })).toBeVisible({ timeout: 5000 }) }, viewport: true },
   { name: 'published', path: '/examiner/exams/4', exam: published, ready: (p: Page) => expect(p.getByText('Examenul este publicat pentru', { exact: false })).toBeVisible() },
+  { name: 'results', path: '/examiner/exams/4', exam: results, ready: (p: Page) => expect(p.getByText('Rezultatele sunt publicate, așa că data de încheiere nu se mai poate schimba.')).toBeVisible() },
+  { name: 'item2', path: '/examiner/exams/4', exam, ready: async (p: Page) => { await p.getByRole('button', { name: 'Editează itemul 8' }).click(); await expect(p.getByRole('dialog').getByText('La Subiectul II, fiecare problemă are 20 de puncte.')).toBeVisible() }, viewport: true },
   { name: 'preview', path: '/examiner/exams/4', exam, ready: async (p: Page) => { await p.getByRole('button', { name: 'Previzualizează ca un candidat' }).click(); await expect(p.getByText('M6-RP-014', { exact: false })).toBeVisible() } },
 ]
 

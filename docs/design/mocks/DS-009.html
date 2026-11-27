@@ -59,6 +59,7 @@
       <button type="button" class="mock-btn" data-state-btn="s-anon">Nume ascunse</button>
       <button type="button" class="mock-btn" data-state-btn="s-recheck">Barem modificat</button>
       <button type="button" class="mock-btn" data-state-btn="s-wait">Tot corectat · fereastra deschisă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-noend">Tot corectat · fără dată de încheiere</button>
       <button type="button" class="mock-btn" data-state-btn="s-done">Tot corectat · publicare</button>
       <button type="button" class="mock-btn" data-state-btn="s-published">Publicat (blocat)</button>
       <button type="button" class="mock-btn" data-state-btn="s-empty">Nicio predare</button>
@@ -93,11 +94,11 @@
     <div class="stack-sm" style="justify-items: end;" data-show="s-barem s-list s-candidate s-edit s-nobarem s-anon s-recheck">
       <div class="row"><span class="t-body-m">Subiectul II: 37 / 75 de răspunsuri corectate</span><div class="progress" aria-hidden="true"><span style="width: 49%;"></span></div></div>
       <button type="button" class="btn btn-primary" aria-disabled="true" aria-describedby="pub-why">Publică rezultatele</button>
-      <span id="pub-why" class="help">Poți publica după ce corectezi toate răspunsurile (38 rămase) și se încheie examenul (30.11.2026, 14:00).</span>
+      <span id="pub-why" class="help"><span data-show="s-barem s-list s-candidate s-edit s-nobarem s-anon">Poți publica după ce corectezi toate răspunsurile (38 rămase) și se încheie examenul (30.11.2026, 14:00).</span><span data-show="s-recheck">Poți publica după ce corectezi toate răspunsurile (38 rămase), reverifici cele 2 marcate și se încheie examenul (30.11.2026, 14:00).</span></span>
     </div>
     <div class="row" data-show="s-wait"><span class="t-body-m">Subiectul II: 75 / 75 de răspunsuri corectate</span><div class="progress" aria-hidden="true"><span style="width: 100%;"></span></div></div>
     <div class="row" data-show="s-published"><span class="badge success"><i data-icon="check" class="sm"></i>Rezultate publicate</span></div>
-    <div class="row" data-show="s-done"><span class="t-body-m">Subiectul II: 75 / 75 de răspunsuri corectate</span><div class="progress" aria-hidden="true"><span style="width: 100%;"></span></div></div>
+    <div class="row" data-show="s-done s-noend"><span class="t-body-m">Subiectul II: 75 / 75 de răspunsuri corectate</span><div class="progress" aria-hidden="true"><span style="width: 100%;"></span></div></div>
   </div>
 
   <!-- Toolbar: grade by item (S-6), hide names (S-7) -->
@@ -264,7 +265,7 @@ b) AD bisectoare. ΔABD și ΔACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ cong
   </div>
 
   <!-- ALL GRADED: cohort note + publish (D-019) -->
-  <section class="card stack" data-show="s-done s-wait" aria-labelledby="pub-h" style="max-width: 760px;">
+  <section class="card stack" data-show="s-done s-wait s-noend" aria-labelledby="pub-h" style="max-width: 760px;">
     <div class="alert success"><i data-icon="check"></i>
       <span>Toate cele 75 de răspunsuri sunt corectate. Media: <strong class="t-math">7,64</strong> · mediana: <strong class="t-math">7,90</strong></span></div>
     <h2 id="pub-h" class="t-h2">Publică rezultatele</h2>
@@ -273,10 +274,12 @@ b) AD bisectoare. ΔABD și ΔACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ cong
       <span class="help">O singură notă, vizibilă tuturor candidaților din clasele examenului.</span></div>
     <ul class="secondary" style="margin: 0; padding-left: var(--space-6);">
       <li>Fiecare candidat își vede nota, punctajul pe itemi și comentariile tale.</li>
-      <li>După publicare, baremele acestui examen nu mai pot fi modificate.</li>
+      <li>După publicare, baremele și data de încheiere a acestui examen nu mai pot fi modificate.</li>
     </ul>
     <div class="row" style="justify-content: flex-end;" data-show="s-done"><button type="button" class="btn">Înapoi la corectare</button><button type="button" class="btn btn-primary">Publică rezultatele pentru 25 de candidați</button></div>
     <div class="alert warning t-caption" data-show="s-wait"><i data-icon="info"></i><span>Poți publica după ce se încheie examenul (30.11.2026, 14:00) și nu mai lucrează nimeni la el: 1 candidat lucrează acum. Nota pentru clasă rămâne aici până atunci.</span></div>
+    <div class="alert warning t-caption" data-show="s-noend"><i data-icon="info"></i><span>Examenul nu are dată de încheiere. Setează „Disponibil până la” în setările examenului; după ce trece, poți publica. Nota pentru clasă rămâne aici până atunci.</span></div>
+    <div class="row" style="justify-content: flex-end;" data-show="s-noend"><a href="#" class="btn">Setează data de încheiere</a><button type="button" class="btn btn-primary" aria-disabled="true">Publică rezultatele pentru 25 de candidați</button></div>
     <div class="row" style="justify-content: flex-end;" data-show="s-wait"><button type="button" class="btn">Înapoi la corectare</button><button type="button" class="btn btn-primary" aria-disabled="true">Publică rezultatele pentru 25 de candidați</button></div>
   </section>
 

@@ -87,8 +87,9 @@
 - Q-076 · When may the Examiner publish an exam's results? · _answered_
 - Q-077 · Is P8 built in one piece? · _answered_
 - Q-078 · Which DS-009 parts may be cut to save time? · _answered_
-- Q-079 · Do answers marked for re-check block publishing results? · _investigating_
-- Q-080 · Can an exam without an end date publish its results? · _investigating_
+- Q-079 · Do answers marked for re-check block publishing results? · _answered_
+- Q-080 · Can an exam without an end date publish its results? · _answered_
+- Q-081 · Is "Disponibil până la" locked once results are published? · _answered_
 
 ---
 
@@ -582,15 +583,22 @@
 - **Answer:** None: both views are built, and the barem is edited inline on the grading screen, as in the mock. (Answered 2026-11-26.)
 
 ## Q-079 · Do answers marked for re-check block publishing results?
-- **Status:** investigating
+- **Status:** answered
 - **Date:** 2026-11-26
 - **Blocks:** P8a
 - **Context:** Q-076 requires every submitted Attempt to be graded; a barem edit can flag graded answers for re-check (D-031).
-- **Proposed answer:** No; as built, flagged answers count as graded and the queue shows them as "de reverificat". To confirm with the user.
+- **Answer:** Yes (user, 2026-11-27): an answer marked for re-check blocks publishing results until the Examiner grades it again. Needs a C-007 change (a `recheck` reason in `missing`) and DS-009 copy.
 
 ## Q-080 · Can an exam without an end date publish its results?
-- **Status:** investigating
+- **Status:** answered
 - **Date:** 2026-11-26
 - **Blocks:** P8a
 - **Context:** Q-076 requires the availability window to have closed; `available_until` may be empty.
-- **Proposed answer:** No; as built, the Examiner sets "Disponibil până la" first (still editable after publishing, Q-060). To confirm with the user.
+- **Answer:** No (user, 2026-11-27): before publishing, the Examiner must set an end date ("Disponibil până la") first; publishing never sets it for them. Matches the code (`window_open` when `available_until` is empty or in the future); DS-009 needs copy for the no-end-date case.
+
+## Q-081 · Is "Disponibil până la" locked once results are published?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8a
+- **Context:** Q-060 keeps `available_until` editable after an exam is published (`ExamController::EDITABLE_WHEN_PUBLISHED`). After results are published, clearing it or moving it into the future reopens the exam while grades (and later answer keys) are visible.
+- **Answer:** Yes (user, 2026-11-27): once results are published, `available_until` is locked; title and description stay editable. Before results are published nothing changes (Q-060). Needs a C-005 change.

@@ -13,6 +13,7 @@ use App\Support\Math\ValueDrawer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -49,6 +50,9 @@ class ExamController extends Controller
         $data = $request->validated();
         if ($exam->isPublished() && array_diff(array_keys($data), self::EDITABLE_WHEN_PUBLISHED)) {
             return self::published();
+        }
+        if ($exam->results_published_at !== null && array_key_exists('available_until', $data) && self::changesEnd($exam, $data['available_until'])) {
+            return response()->json(['code' => 'results_published', 'message' => 'The results are published.'], 409);
         }
 
         DB::transaction(function () use ($exam, $data) {
@@ -127,6 +131,16 @@ class ExamController extends Controller
     public static function find(Request $request, int $id): Exam
     {
         return $request->user()->exams()->findOrFail($id);
+    }
+
+    /** Whether a new `available_until` differs from the stored one; resending the same moment is no change (Q-081). */
+    private static function changesEnd(Exam $exam, ?string $until): bool
+    {
+        if ($until === null || $exam->available_until === null) {
+            return $until !== null || $exam->available_until !== null;
+        }
+
+        return ! Carbon::parse($until)->equalTo($exam->available_until);
     }
 
     public static function published(): JsonResponse

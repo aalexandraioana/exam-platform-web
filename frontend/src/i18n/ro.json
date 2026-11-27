@@ -430,7 +430,8 @@
     "keyCorrections": "Corecturi ale răspunsului corect",
     "recalculated_one": "{{count}} încercare recalculată",
     "recalculated_few": "{{count}} încercări recalculate",
-    "recalculated_other": "{{count}} de încercări recalculate"
+    "recalculated_other": "{{count}} de încercări recalculate",
+    "typeLocked": "<strong>Nu am salvat modificările.</strong> Întrebarea a fost deja extrasă pentru candidați, așa că tipul și subiectul nu se mai pot schimba. Pentru alt tip, creează o întrebare nouă."
   },
   "exams": {
     "title": "Examene",

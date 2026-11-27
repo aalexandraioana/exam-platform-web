@@ -37,7 +37,7 @@ export type ListKind = 'competence' | 'topic' | 'pool'
 const NEW = '__new'
 const strong = { strong: <strong /> }
 
-type Notice = 'saved' | 'corrected' | 'refused' | 'notReady' | 'locked' | 'optionsLocked' | 'parametersLocked' | 'saveFailed' | 'published' | 'alreadyPublished' | 'failed'
+type Notice = 'saved' | 'corrected' | 'refused' | 'notReady' | 'locked' | 'typeLocked' | 'optionsLocked' | 'parametersLocked' | 'saveFailed' | 'published' | 'alreadyPublished' | 'failed'
 type NoticeState = { kind: Notice; code?: string; count?: number }
 
 interface Props {
@@ -97,6 +97,8 @@ export default function QuestionEditor({ question, competences, topics, pools, o
         setNotice({ kind: ready ? 'refused' : 'notReady' })
       } else if (error instanceof ApiError && error.status === 422 && (error.fields.barem?.[0] === 'barem_locked' || error.fields.answer_key?.[0] === 'answer_key_locked')) {
         setNotice({ kind: 'locked' })
+      } else if (error instanceof ApiError && error.status === 422 && (error.fields.type?.[0] === 'type_locked' || error.fields.section?.[0] === 'type_locked')) {
+        setNotice({ kind: 'typeLocked' })
       } else if (error instanceof ApiError && error.status === 422 && error.fields.answer_key?.[0] === 'options_locked') {
         setNotice({ kind: 'optionsLocked' })
       } else if (error instanceof ApiError && error.status === 422 && error.fields.parameters?.[0] === 'parameters_locked') {
@@ -154,7 +156,7 @@ export default function QuestionEditor({ question, competences, topics, pools, o
           <Trans i18nKey="bank.corrected" count={notice.count} components={strong} />
         </Alert>
       )}
-      {(notice?.kind === 'refused' || notice?.kind === 'notReady' || notice?.kind === 'locked' || notice?.kind === 'optionsLocked' || notice?.kind === 'parametersLocked') && (
+      {(notice?.kind === 'refused' || notice?.kind === 'notReady' || notice?.kind === 'locked' || notice?.kind === 'typeLocked' || notice?.kind === 'optionsLocked' || notice?.kind === 'parametersLocked') && (
         <Alert variant="error" icon={CircleAlert} role="alert">
           <Trans i18nKey={`bank.${notice.kind}`} components={strong} />
         </Alert>

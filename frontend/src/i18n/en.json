@@ -421,7 +421,8 @@
     "parametersLocked": "<strong>Your changes weren't saved.</strong> Candidates have already drawn this question, so its values and answer formula can no longer change. Everything else can.",
     "keyCorrections": "Corrections of the correct answer",
     "recalculated_one": "{{count}} attempt re-graded",
-    "recalculated_other": "{{count}} attempts re-graded"
+    "recalculated_other": "{{count}} attempts re-graded",
+    "typeLocked": "<strong>Your changes weren't saved.</strong> Candidates have already drawn this question, so its type and Subject can no longer change. For another type, create a new question."
   },
   "exams": {
     "title": "Exams",

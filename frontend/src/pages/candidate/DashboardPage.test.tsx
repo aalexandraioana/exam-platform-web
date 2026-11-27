@@ -33,7 +33,7 @@ function exam(id: number, overrides: Partial<CandidateExam> = {}): CandidateExam
     id, title: `Examen ${id}`, description: null, duration_minutes: 50,
     available_from: '2026-11-25T06:00:00Z', available_until: '2026-11-25T12:00:00Z',
     max_attempts: 1, attempts_used: 0, state: 'open', open_attempt_id: null, open_attempt: null,
-    can_start: true, submitted: false, results_published: false, topics: [],
+    can_start: true, submitted: false, results_published: false, grade: null, topics: [],
     item_counts: { subject_1: 6, subject_2: 2 }, ...overrides,
   }
 }
@@ -70,6 +70,25 @@ describe('DashboardPage (DS-003, P7a)', () => {
 
     fireEvent.click(within(banner).getByRole('link', { name: /Reia examenul/ }))
     expect(screen.getByTestId('where')).toHaveTextContent('/candidate/attempts/12')
+  })
+
+  it('shows the grade and the way to the results once they are published (P8b, D-019)', async () => {
+    mockApi({
+      'GET /user': json(200, { user: candidate }),
+      'GET /candidate/exams': list([
+        exam(5, { title: 'Publicat', state: 'closed', can_start: false, submitted: true, attempts_used: 1, results_published: true, grade: 7.9 }),
+        exam(6, { title: 'Se corectează', state: 'closed', can_start: false, submitted: true, attempts_used: 1 }),
+      ]),
+    })
+    renderPage()
+
+    await screen.findByRole('heading', { level: 3, name: 'Publicat' })
+    const done = card('Publicat')
+    expect(within(done).getByText('Rezultate publicate')).toBeInTheDocument()
+    expect(within(done).getByText(/^Nota/)).toHaveTextContent('Nota 7,90')
+    expect(within(done).getByRole('link', { name: 'Vezi rezultatele' })).toHaveAttribute('href', '/candidate/exams/5/results')
+    expect(within(done).queryByText('Rezultatul apare aici după ce examinatorul îl publică.')).not.toBeInTheDocument()
+    expect(within(card('Se corectează')).getByText('Rezultatul apare aici după ce examinatorul îl publică.')).toBeInTheDocument()
   })
 
   it('shows each card by its state, with the description and topic chips', async () => {

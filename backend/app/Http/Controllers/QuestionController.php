@@ -283,8 +283,9 @@ class QuestionController extends Controller
     }
 
     /**
-     * Q-088, Q-089: once an Attempt has drawn the question, its options keep their number and order
-     * (Attempts store them by position) and its named values stay as they are (Q-091 is open).
+     * Q-088, Q-089, Q-092: once an Attempt has drawn the question, its type and Subject stay, its
+     * options keep their number and order (Attempts store them by position) and its named values stay
+     * as they are (Q-091 is open).
      */
     private function checkDrawn(Question $question, array $data): void
     {
@@ -292,6 +293,12 @@ class QuestionController extends Controller
             return;
         }
         $errors = [];
+        // Q-092: each Attempt grades by the type it drew, so a drawn question keeps its type and Subject.
+        foreach (['type', 'section'] as $field) {
+            if (array_key_exists($field, $data) && $data[$field] !== $question->{$field}->value) {
+                $errors[$field] = ['type_locked'];
+            }
+        }
         if (array_key_exists('answer_key', $data) && KeyCorrection::optionsMoved((array) $question->answer_key, (array) $data['answer_key'])) {
             $errors['answer_key'] = ['options_locked'];
         }

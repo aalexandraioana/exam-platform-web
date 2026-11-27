@@ -140,8 +140,8 @@ it('measures each question on the Attempts that drew it, with its options counte
         ->and($questions['M6-A']['options'])->toBe([
             ['option' => 1, 'label' => '12', 'correct' => false, 'count' => 1, 'share' => 0.5, 'unused' => false],
             ['option' => 2, 'label' => '36', 'correct' => true, 'count' => 1, 'share' => 0.5, 'unused' => false],
-            ['option' => 3, 'label' => '32', 'correct' => false, 'count' => 0, 'share' => 0.0, 'unused' => true],
-            ['option' => 4, 'label' => '64', 'correct' => false, 'count' => 0, 'share' => 0.0, 'unused' => true],
+            ['option' => 3, 'label' => '32', 'correct' => false, 'count' => 0, 'share' => 0, 'unused' => true], // JSON has no 0.0
+            ['option' => 4, 'label' => '64', 'correct' => false, 'count' => 0, 'share' => 0, 'unused' => true],
         ])
         ->and(array_column($questions['M6-B']['options'], 'count'))->toBe([0, 1, 0, 0]); // the unanswered one chose nothing
     expect(collect(analysisItem($this->getJson("/api/exams/{$s['exam']->id}/analysis")->json(), 2)['questions'])->first()['options'])->toBeNull();

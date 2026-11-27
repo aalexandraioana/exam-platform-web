@@ -376,6 +376,57 @@ undone; afterwards the barem and answer key of the exam's questions are locked (
 ### GET /api/grading/images/{imageId}
 A Subject II photo of an answer in one of the Examiner's exams, streamed with its type.
 
+## Item Analysis (Examiner)
+
+C-008 (P10). Difficulty, discrimination and distractors of one of the Examiner's exams (D-047), from
+each Candidate's counted, graded Attempt: the latest, or the highest total with a tie going to the
+later Attempt (D-012, Q-093, Q-097). Ungraded Attempts are left out (Q-094). Available any time,
+also before the results are published; computed on every read. Another Examiner's exam is `404`, a
+Candidate `403`.
+
+### GET /api/exams/{id}/analysis
+- `graded` (graded Attempts), `submissions` (submitted or graded Attempts), `recheck` (answers
+  marked for re-check in the counted Attempts; the figures may change once they are graded again),
+  `mean` and `median` grade 1–10 (as on the grading screen; null before any Attempt is graded).
+- `competences`, by code (D-058): `code`, `description`, `p` (points earned / maximum over its
+  Items), `weak` (its Items with a flag), `items`.
+- Each Item, by position: `position`, `section`, `points`, `n` (counted Attempts), `p`, `r`,
+  `flags`, `not_enough_data`, `questions` (each question drawn for it, by code, on the Attempts that
+  drew it: `id`, `code`, `type`, `n`, `p`, `r`, `flags`, `not_enough_data`, `options`).
+- `p` = mean points / the item's points, 0–1 (4 decimals); `r` = the correlation of the item's
+  points with the rest of the Attempt's score (total − 10 − the item), 4 decimals. Both are `null`
+  with fewer than 2 Attempts; `r` is also `null` when the item or the rest doesn't vary (everyone
+  correct: `p` 1 and `too_easy`, `r` null; Q-095). `not_enough_data` is true when either is null.
+- `flags`, from the unrounded values: `too_hard` (p < 0.20), `too_easy` (p > 0.90),
+  `low_discrimination` (r < 0.20), `negative_discrimination` (r < 0: likely a faulty question).
+- `options`, for choice questions only (else `null`), in original order (D-045): `option` (1, 2, …;
+  `true` / `false` for a true/false question), `label`, `correct`, `count` (Candidates who chose it;
+  each ticked option of a multiple choice answer), `share` (of the Candidates who got the
+  question, unanswered included), `unused` (a wrong option with a share under 5%).
+
+```json
+{
+  "exam": { "id": 12, "title": "Evaluare Unitatea 3" },
+  "graded": 14, "submissions": 14, "recheck": 0, "mean": 7.2, "median": 7.5,
+  "competences": [{
+    "code": "C1", "description": "Calculează fracții dintr-un număr", "p": 0.71, "weak": 1,
+    "items": [{
+      "position": 1, "section": "subject_1", "points": 5, "n": 14, "p": 0.9286, "r": 0.1203,
+      "flags": ["too_easy", "low_discrimination"], "not_enough_data": false,
+      "questions": [{
+        "id": 31, "code": "M6-FR-001", "type": "single_choice", "n": 14, "p": 0.9286, "r": 0.1203,
+        "flags": ["too_easy", "low_discrimination"], "not_enough_data": false,
+        "options": [
+          { "option": 1, "label": "12", "correct": false, "count": 1, "share": 0.0714, "unused": false },
+          { "option": 2, "label": "36", "correct": true, "count": 13, "share": 0.9286, "unused": false },
+          { "option": 3, "label": "32", "correct": false, "count": 0, "share": 0, "unused": true }
+        ]
+      }]
+    }]
+  }]
+}
+```
+
 ## Attempts (Candidate)
 
 Bearer token of an **active Candidate** with a current password; own data only. C-006 (P6a: list,

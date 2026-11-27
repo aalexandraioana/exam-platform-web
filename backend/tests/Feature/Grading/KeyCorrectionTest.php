@@ -10,6 +10,7 @@ use App\Models\ExamItem;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
@@ -213,3 +214,26 @@ it('does not re-grade or log when the question was never drawn, or the same key 
 
     expect(AnswerKeyCorrection::count())->toBe(0);
 });
+
+it('starts an Attempt only after a key correction running now, by locking the exam, then the questions it draws (PATTERN-007)', function () {
+    $s = keySetup();
+    signInAs($s['candidate']);
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+    $this->postJson("/api/candidate/exams/{$s['exam']->id}/attempts")->assertCreated();
+    DB::disableQueryLog();
+
+    // A correction holds the exam (and the question) for update while it writes, so these shared
+    // locks wait for it and the snapshot gets the corrected key; two starts don't wait for each other.
+    $order = [];
+    foreach (DB::getQueryLog() as $query) {
+        $sql = strtolower($query['query']);
+        if (preg_match('/from "(exams|questions)".* for share/', $sql, $m)) {
+            $order[] = $m[1];
+        } elseif (str_starts_with($sql, 'insert into "attempt_items"')) {
+            $order[] = 'snapshot';
+        }
+    }
+    expect(array_values(array_unique($order)))->toBe(['exams', 'questions', 'snapshot']);
+});
+

@@ -250,3 +250,46 @@ it('locks the exam, then the question, before a barem edit or a grade reads the 
         'steps' => $s['steps']->map(fn ($step) => ['id' => $step->id, 'points' => 0])->all(),
     ])->assertOk()))->toBe(['exams', 'attempts', 'questions', 'steps read']);
 });
+
+/** baremSetup() with the question still graded by one score: no steps yet, and one answer given 15. */
+function singleScoreSetup(): array
+{
+    $s = baremSetup(['available_until' => now()->subHour()]);
+    $s['question']->baremSteps()->delete();
+    $s['question']->forceFill(['uses_barem' => false])->save();
+    $answer = gradedAnswer($s, []);
+    $answer->forceFill(['awarded_points' => 15])->save();
+    $answer->attemptItem->attempt->forceFill(['status' => 'graded', 'subject_1_score' => 25, 'subject_2_score' => 15, 'total_score' => 50])->save();
+
+    return [...$s, 'answer' => $answer->fresh()];
+}
+
+it('marks answers graded with one score for re-check when the question switches to a barem, keeping their points (Q-086)', function () {
+    $s = singleScoreSetup();
+
+    $this->patchJson("/api/questions/{$s['question']->id}", ['uses_barem' => true, 'barem' => [
+        ['description' => 'Triunghi isoscel', 'points' => 6], ['description' => '∢B + ∢C = 140°', 'points' => 6], ['description' => '∢B = 70°', 'points' => 8],
+    ]])->assertOk()->assertJsonPath('regraded.flagged', 1);
+
+    $answer = $s['answer']->fresh();
+    expect($answer->needs_recheck)->toBeTrue()
+        ->and((float) $answer->awarded_points)->toBe(15.0)
+        ->and($answer->baremScores()->count())->toBe(0);
+    $this->getJson("/api/exams/{$s['exam']->id}/grading")->assertJsonPath('counts.recheck', 1)->assertJsonPath('publish.missing', ['recheck']);
+    $this->postJson("/api/exams/{$s['exam']->id}/results")->assertUnprocessable()->assertJsonPath('missing', ['recheck']);
+});
+
+it('publishes once those answers are graded on the barem steps (Q-086, Q-079)', function () {
+    $s = singleScoreSetup();
+    $this->patchJson("/api/questions/{$s['question']->id}", ['uses_barem' => true, 'barem' => [
+        ['description' => 'Triunghi isoscel', 'points' => 6], ['description' => '∢B + ∢C = 140°', 'points' => 6], ['description' => '∢B = 70°', 'points' => 8],
+    ]])->assertOk();
+    $steps = $s['question']->baremSteps()->orderBy('position')->get();
+
+    $this->putJson("/api/grading/items/{$s['answer']->attempt_item_id}", ['points' => 15])->assertUnprocessable()->assertJsonPath('errors.steps.0', 'required');
+    $this->putJson("/api/grading/items/{$s['answer']->attempt_item_id}", ['steps' => $steps->map(fn ($step, $i) => ['id' => $step->id, 'points' => [6, 6, 4][$i]])->all()])
+        ->assertOk()->assertJsonPath('item.needs_recheck', false)->assertJsonPath('item.awarded_points', 16);
+
+    $this->postJson("/api/exams/{$s['exam']->id}/results")->assertOk();
+});
+

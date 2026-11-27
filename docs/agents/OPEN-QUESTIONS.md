@@ -90,6 +90,10 @@
 - Q-079 · Do answers marked for re-check block publishing results? · _answered_
 - Q-080 · Can an exam without an end date publish its results? · _answered_
 - Q-081 · Is "Disponibil până la" locked once results are published? · _answered_
+- Q-082 · What does a Candidate see for each Subject I item after results are published? · _answered_
+- Q-083 · What does a Candidate see for each Subject II problem after results are published? · _answered_
+- Q-084 · Which Attempts does the results page show when an Exam allowed several? · _answered_
+- Q-085 · Does a Candidate see class statistics with their results? · _answered_
 
 ---
 
@@ -571,6 +575,7 @@
 ## Q-077 · Is P8 built in one piece?
 - **Status:** answered
 - **Date:** 2026-11-26
+- **Confirmed:** 2026-11-27
 - **Blocks:** P8
 - **Context:** P8 is large and Subject II grading happens on 1 Dec (Q-039).
 - **Answer:** No. P8a: grading and publishing results (now). P8b: the Candidate's results page (DS-005 mock confirmed first), right after. P8c: answer-key correction recalculation (D-046), after the pilot. (Answered 2026-11-26.)
@@ -602,3 +607,31 @@
 - **Blocks:** P8a
 - **Context:** Q-060 keeps `available_until` editable after an exam is published (`ExamController::EDITABLE_WHEN_PUBLISHED`). After results are published, clearing it or moving it into the future reopens the exam while grades (and later answer keys) are visible.
 - **Answer:** Yes (user, 2026-11-27): once results are published, `available_until` is locked; title and description stay editable. Before results are published nothing changes (Q-060). Needs a C-005 change.
+
+## Q-082 · What does a Candidate see for each Subject I item after results are published?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8b
+- **Context:** The Candidate's results page (DS-005) has no mock yet; D-019 sets the minimum (cohort note, per-problem points and comments).
+- **Answer:** The question as they saw it, their answer, the correct answer, the points, and the question's explanation when it has one (the editor already promises it after publication). (User, 2026-11-27.)
+
+## Q-083 · What does a Candidate see for each Subject II problem after results are published?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8b
+- **Context:** The Candidate's results page (DS-005) has no mock yet; D-019 sets the minimum (cohort note, per-problem points and comments).
+- **Answer:** Their written steps and their own photos, the points out of 20, the Examiner's comment, and the barem steps with the points earned on each; one score when the question has no barem. (User, 2026-11-27.)
+
+## Q-084 · Which Attempts does the results page show when an Exam allowed several?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8b
+- **Context:** The Candidate's results page (DS-005) has no mock yet; D-019 sets the minimum (cohort note, per-problem points and comments).
+- **Answer:** All of the Candidate's Attempts at the Exam, each with its grade, the one that counts under the score policy (D-012) marked; each can be opened. (User, 2026-11-27.)
+
+## Q-085 · Does a Candidate see class statistics with their results?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8b
+- **Context:** The Candidate's results page (DS-005) has no mock yet; D-019 sets the minimum (cohort note, per-problem points and comments).
+- **Answer:** No. Only their own grade, points and comments, plus the cohort note (D-019); the mean and median stay on the Examiner's grading screen. (User, 2026-11-27.)

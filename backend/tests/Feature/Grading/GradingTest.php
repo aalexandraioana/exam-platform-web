@@ -236,6 +236,19 @@ it('publishes only when every Attempt is graded, none is running and the window 
     expect($open->fresh()->status)->toBe(AttemptStatus::Submitted);
 });
 
+it('does not publish while an answer is marked for re-check, until it is graded again (Q-079)', function () {
+    $s = gradingSetup(1);
+    gradeAll($s, $s['attempts'][0], [6, 6, 8], 20, [10, 10]);
+    $item = gradingItem($s['attempts'][0], 8);
+    $item->answer->forceFill(['needs_recheck' => true])->save();
+
+    $this->getJson("/api/exams/{$s['exam']->id}/grading")->assertJsonPath('publish.ready', false)->assertJsonPath('publish.missing', ['recheck']);
+    $this->postJson("/api/exams/{$s['exam']->id}/results")->assertUnprocessable()->assertJsonPath('missing', ['recheck']);
+
+    $this->putJson("/api/grading/items/{$item->id}", ['points' => 18])->assertOk();
+    $this->postJson("/api/exams/{$s['exam']->id}/results")->assertOk();
+});
+
 it('publishes the results with the cohort note, once', function () {
     $s = gradingSetup(1);
     gradeAll($s, $s['attempts'][0], [6, 6, 8], 20, [10, 10]);

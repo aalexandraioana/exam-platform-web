@@ -94,6 +94,7 @@
 - Q-083 · What does a Candidate see for each Subject II problem after results are published? · _answered_
 - Q-084 · Which Attempts does the results page show when an Exam allowed several? · _answered_
 - Q-085 · Does a Candidate see class statistics with their results? · _answered_
+- Q-086 · What happens to answers graded with one score when the question switches to a barem? · _answered_
 
 ---
 
@@ -635,3 +636,11 @@
 - **Blocks:** P8b
 - **Context:** The Candidate's results page (DS-005) has no mock yet; D-019 sets the minimum (cohort note, per-problem points and comments).
 - **Answer:** No. Only their own grade, points and comments, plus the cohort note (D-019); the mean and median stay on the Examiner's grading screen. (User, 2026-11-27.)
+
+## Q-086 · What happens to answers graded with one score when the question switches to a barem?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8a (review of PR #16)
+- **Context:** D-031 recalculates graded answers after a barem edit from their ticked steps; an answer graded with one score has none, so it kept its points unflagged, and a Candidate would see every barem step at 0 next to those points.
+- **Answer:** Every answer graded with one score is marked for re-check when its question switches to a barem (exams whose results aren't published), keeping its points until it is graded again; it goes back to the grading queue, and publishing waits until the Examiner gives points on the barem steps (Q-079), so a Candidate never sees zero barem steps. (User, 2026-11-27.)
+

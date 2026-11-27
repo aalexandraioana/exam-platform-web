@@ -238,6 +238,27 @@ describe('GradingPage (DS-009)', () => {
     expect(screen.getByRole('button', { name: 'Publică rezultatele pentru 2 candidați' })).toBeDisabled()
   })
 
+  it('names the answers to check again among the reasons publishing is closed (Q-079)', async () => {
+    mockApi({ ...base, 'GET /exams/4/grading': json(200, {
+      ...queue, counts: { ...queue.counts, recheck: 2 }, publish: { ready: false, missing: ['ungraded', 'recheck', 'window_open'], mean: null, median: null },
+    }) })
+    renderAt()
+
+    expect(await screen.findByText('Poți publica după ce corectezi toate răspunsurile (3 rămase), reverifici cele 2 marcate și se încheie examenul (30.11.2026, 14:00).')).toBeInTheDocument()
+  })
+
+  it('asks for an end date first when the exam has none (Q-080)', async () => {
+    mockApi({ ...base, 'GET /exams/4/grading': json(200, {
+      ...queue, exam: { ...queue.exam, available_until: null }, answers: queue.answers.map((a) => ({ ...a, status: 'graded' })),
+      counts: { total: 4, graded: 4, to_grade: 0, recheck: 0 }, publish: { ready: false, missing: ['window_open'], mean: 7, median: 7 },
+    }) })
+    renderAt()
+
+    expect(await screen.findByText('Examenul nu are dată de încheiere. Setează „Disponibil până la” în setările examenului; după ce trece, poți publica. Nota pentru clasă rămâne aici până atunci.')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Setează data de încheiere' })).toHaveAttribute('href', '/examiner/exams/4')
+    expect(screen.getByRole('button', { name: 'Publică rezultatele pentru 2 candidați' })).toBeDisabled()
+  })
+
   it('shows an empty queue', async () => {
     mockApi({ ...base, 'GET /exams/4/grading': json(200, { ...queue, answers: [], items: [], counts: { total: 0, graded: 0, to_grade: 0, recheck: 0 }, exam: { ...queue.exam, submissions: 0 } }) })
     renderAt()

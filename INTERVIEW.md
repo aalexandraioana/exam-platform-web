@@ -1,8 +1,10 @@
 # Interview Notes
 
-- **Date:** 
-- **Interviewee:** 
-- **Interviewer:** 
+- **Date:** 2026-11-17
+- **Interviewee:** Prof. S.F., profesor de matematică, gimnaziu (clasele 5–8)
+- **Interviewer:** A.O.
+- **Format:** mixed: in person and by phone
+- **Consent:** verbal, given before the phone interview began
 - **Topic:** Requirement Analysis for Assessment Engine
 
 ---
@@ -69,6 +71,25 @@ General la test, incerc sa fac o distinctie foarte fina intre randuri, care sa n
 
 16. **Question:** Cand si ce fel de feedback vor primi studentii in urma evaluarii?
     - **Answer:** Dupa corectarea testelor vor primi feedback. De obicei, feedback-ul e general, pentru toata clasa, in privinta greselilor frecvente, bazat pe subiectul 1, de cele mai multe ori la tabla. In plus, dau un feedback particular strict la cerere elevilor, punctual la ce are pe test (la subiectul 2). 
+
+---
+
+## Ce am decis din interviu
+
+Legătura dintre răspunsuri și deciziile din `docs/agents/DECISIONS.md` (și întrebările din `docs/agents/OPEN-QUESTIONS.md`).
+
+| Întrebarea | Ce a spus | Ce am decis |
+|---|---|---|
+| 1 | Matematică, gimnaziu, clasele 5–8 | Întrebările și examenele au un nivel, clasa a V-a … a VIII-a (D-058). |
+| 5 | La valorile generate trebuie condiții (de exemplu a > b la scădere), iar verificarea fiecărei variante ar dura prea mult | Valori aleatoare între min și max, cu condiții simple de tipul a > b, și previzualizarea valorilor înainte de salvare (Q-004, D-057). |
+| 7 | La Subiectul I: răspuns scurt, completare, alegere multiplă, alegere duală | Tipurile de la Subiectul I: alegere duală, simplă, multiplă, răspuns scurt și completare (README, secțiunea 5). |
+| 8, 13 | Teste pe rânduri, cu variante care diferă foarte fin | Fiecare item extrage la întâmplare o întrebare dintr-un set, deci colegii pot primi variante diferite (D-057); variantele de răspuns sunt amestecate la fiecare încercare (D-045); răspunsurile scurte se acceptă și fără diacritice, de exemplu „se injumatatesc” (D-017). |
+| 9, 10 | Fără punctaj parțial la Subiectul I; minimul e 0, fără punctaj negativ | Subiectul I: punctaj întreg sau 0; fără punctaj negativ (D-005). |
+| 11 | La Subiectul II contează cum a ajuns elevul la rezultat | Subiectul II se corectează manual, cu punctaj parțial (D-005), după un barem opțional pe pași (D-031). |
+| 12 | Structură fixă: Subiectul I 30 de puncte (6 itemi × 5), Subiectul II 60 de puncte (3 sau 4 probleme), plus punctul din oficiu | Structura 10 + 30 + 60 (D-005); Subiectul II fixat la 3 probleme de câte 20 de puncte (D-062). Problema de departajare apare cu dificultatea „Dificil”, fără etichetă separată (Q-062). |
+| 14 | Limită de timp pe tot testul, pornită pe fiecare dispozitiv când se conectează elevul | Cronometrul e pe server (D-004); fiecare încercare primește toată durata de la pornirea ei (D-021). |
+| 15 | Media și mediana; procentul clasei pe fiecare exercițiu, mai ales la Subiectul I | Media și mediana apar pe ecranul de corectare (P8a); procentul clasei pe fiecare item va fi dificultatea din analiza itemilor (D-047; P10, încă de construit). |
+| 16 | Feedback general pentru clasă; feedback particular la Subiectul II, la cerere | O notă pentru toată clasa și comentarii private pe fiecare problemă de la Subiectul II, vizibile doar după publicarea rezultatelor (D-019); clasa este cea căreia i s-a publicat examenul (D-015). |
 
 ---
 

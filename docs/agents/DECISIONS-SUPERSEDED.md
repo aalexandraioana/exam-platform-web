@@ -34,7 +34,7 @@
 - **Rule:** Feedback is published by the Examiner in two channels after full grading is complete: (1) a single global cohort note published all at once, visible to all candidates who took the exam; (2) private per-problem partial points and comments on each Subject 2 submission, released to each candidate only upon explicit publication by the Examiner.
 - **Why:** Confirmed by client interview and repository owner; matches Romanian classroom grading practices where general feedback on common errors is shared with the entire cohort, while detailed per-item proof feedback is individual.
 - **Rejected:** Real-time feedback before all submissions are graded; publishing partial grades piece-by-piece.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-005, INTERVIEW.md:Q16
+- **Evidence:** docs/agents/questions/grading-and-results.md:Q-005, INTERVIEW.md:Q16
 - **Source:** user · confidence high
 
 ## D-016 · Random question draw per Attempt
@@ -43,7 +43,7 @@
 - **Rule:** Each Attempt draws its own questions from the question pool by rules the Examiner sets on the Exam (rule format: Q-020). The drawn list is stored per Attempt.
 - **Why:** Delivers the catalog requirement of Exams generated from question pools and reduces copying.
 - **Rejected:** One fixed question list shared by every Attempt; mixing pinned and drawn questions.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-006, README.md §6 (randomized pool criteria)
+- **Evidence:** docs/agents/questions/exams.md:Q-006, README.md §6 (randomized pool criteria)
 - **Source:** user · confidence high
 
 ## D-018 · Fixed questions by default, two parameterization forms
@@ -52,7 +52,7 @@
 - **Rule:** Questions are fixed by default (`is_parameterized = false`). When parameterized, a question uses either examiner-written Variants (wording or values differ) or values drawn per Attempt from min/max bounds with at most simple conditions (e.g. `a > b`). Drawn values are previewed by the Examiner before the Exam is published. The assigned Variant or drawn values and the expected answer are snapshotted per Attempt (D-006) and evaluated by the sandboxed library (D-013).
 - **Why:** The interview showed teachers already use two rows of Variants and fear generated values they cannot check; simple bounds plus a preview keep generated items correct without complex rules.
 - **Rejected:** Complex constraint rule languages; parameterization without examiner preview.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-004; INTERVIEW.md:Q5, Q8, Q13
+- **Evidence:** docs/agents/questions/question-bank.md:Q-004; INTERVIEW.md:Q5, Q8, Q13
 - **Source:** user · confidence high
 
 ## D-023 · Exam blueprint with equivalent alternatives per slot
@@ -61,7 +61,7 @@
 - **Rule:** An Exam is a blueprint: an ordered list of slots, each fixing section, specific competence, difficulty and points. Each slot lists one or more equivalent questions (its alternatives, labelled A, B, …); each Attempt gets exactly one question per slot. A one-question slot is the same for everyone. Which alternative an Attempt gets follows the letter rule in D-024. The picked list is stored per Attempt. Item Analysis reports per question and per slot.
 - **Why:** Every Attempt must cover all specific competences of the unit within the time limit, with the same difficulty curve, while neighbours get different papers (INTERVIEW.md Q2, Q12, Q13).
 - **Rejected:** Free random draw by topic and difficulty (D-016: no coverage guarantee); one fixed list for everyone (loses pool-generated Exams).
-- **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-020
+- **Evidence:** Conversation 2026-11-22; docs/agents/questions/exams.md:Q-020
 - **Source:** user · confidence high
 
 ## D-024 · Variants as slot alternatives, letters by alternation with Examiner override
@@ -70,7 +70,7 @@
 - **Rule:** Questions are fixed by default (`is_parameterized = false`). Written Variants are not a mechanism inside a question: they are equivalent questions placed as alternatives in the same blueprint slot (D-023). Each Attempt gets one letter (A, B, …) used for every slot; letters are handed out alternately in the order Attempts start within a class, and the Examiner can override any Candidate's letter before the Exam starts. Separately, a question may draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`); the Examiner previews the drawn values before publishing. The picked question, the drawn values and the expected answer are snapshotted per Attempt (D-006) and evaluated by the sandboxed library (D-013).
 - **Why:** One mechanism for written versions instead of two; an even automatic split with a manual override for classroom seating; a clear letter per Attempt helps spot copying while grading Subject 2 (INTERVIEW.md Q13).
 - **Rejected:** Variants inside a question alongside slot alternatives (D-018); random letter per question; Examiner-only assignment.
-- **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-004, Q-016
+- **Evidence:** Conversation 2026-11-22; docs/agents/questions/question-bank.md:Q-004, Q-016
 - **Source:** user · confidence high
 
 ## D-007 · Visual design tokens and calm anxiety-reducing UI system
@@ -106,7 +106,7 @@
 - **Rule:** Competences come from a small fixed list covering only the planned topics and scope (e.g. C1–C4 per chapter), not the full curriculum. Questions and blueprint Items are tagged from this list, and Item Analysis groups by it.
 - **Why:** Enough structure for blueprint coverage (D-025) and Item Analysis without loading and maintaining the full curriculum.
 - **Rejected:** The full official curriculum list; each Examiner's own list; free text per question.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-023
+- **Evidence:** docs/agents/questions/question-bank.md:Q-023
 - **Source:** user · confidence high
 
 ## D-025 · Exam blueprint with a random Variant per Item
@@ -115,7 +115,7 @@
 - **Rule:** An Exam is a blueprint: an ordered list of Items, each fixing section, competence (the Examiner's own, D-039), difficulty and points. Each Item holds one or more similar, equivalent questions (its Variants). When an Attempt starts, the server picks one Variant per Item at random, independently per Item; an Item with one question is the same for everyone. There are no letters, rows or manual assignment. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked questions, any drawn values and the expected answers are stored per Attempt (D-006, D-013), so the Examiner sees which Variant each Candidate got. Item Analysis reports per question and per Item.
 - **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), while similar questions are randomly assigned to different Candidates to make copying harder (INTERVIEW.md Q13).
 - **Rejected:** Free random draw by topic (D-016, no coverage guarantee); one letter per Attempt by alternation with Examiner override (D-024); a fixed list for everyone.
-- **Evidence:** Conversation 2026-11-22; docs/agents/OPEN-QUESTIONS.md:Q-016, Q-020, Q-023
+- **Evidence:** Conversation 2026-11-22; docs/agents/questions/exams.md:Q-016, Q-020, Q-023
 - **Source:** user · confidence high
 
 ## D-032 · Draft and Ready question status
@@ -142,7 +142,7 @@
 - **Rule:** Only an Administrator creates Examiner accounts; there is no Examiner self-registration and no pending-approval state. There is no email password reset: an Administrator, or the Examiner for Candidates in their class, sets a new password.
 - **Why:** Keeps account control with the school and avoids a mail service.
 - **Rejected:** Examiner self-registration with approval; email reset links.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-012, Q-013
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-012, Q-013
 - **Source:** user · confidence high
 
 ## D-039 · Examiner-defined competences and topic labels
@@ -169,7 +169,7 @@
 - **Rule:** An Exam is a blueprint of ordered Items. Each Item fixes section, competence (the Examiner's own, D-039), difficulty and points, and draws from one of the Examiner's pools (D-041). When an Attempt starts, the server picks for each Item one random Ready question from that pool whose competence and difficulty match the Item's. No question appears twice in the same Attempt, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question. Questions are fixed by default; a question may also draw values per Attempt from simple min/max bounds with at most simple conditions (e.g. `a > b`), which the Examiner previews before publishing. The picked question, any drawn values and the expected answer are stored per Attempt (D-006, D-013), so the Examiner sees which question each Candidate got. Item Analysis reports per question and per Item. "8 easy questions from pool A" = 8 Items on pool A.
 - **Why:** Every Attempt covers all competences with the same difficulty curve (INTERVIEW.md Q2, Q12), similar questions go to different Candidates (Q13), and it delivers the catalog's "8 întrebări din pool-ul A (ușor), 4 din B (greu)".
 - **Rejected:** Hand-listed Variants per Item (D-025); a blueprint row drawing N questions from a pool (weakens per-Item coverage); repeats within one Attempt.
-- **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/agents/OPEN-QUESTIONS.md:Q-036, Q-037; catalog-de-proiecte-web.md:893
+- **Evidence:** Conversation 2026-11-22 (P1b plan gate); docs/agents/questions/exams.md:Q-036, Q-037; catalog-de-proiecte-web.md:893
 - **Source:** user · confidence high
 
 ## D-060 · Maths as plain text in JetBrains Mono
@@ -178,5 +178,5 @@
 - **Rule:** Question statements, options, answers and barem steps are plain text with Unicode symbols (∢ ° ² ³ · : ≤ ≥ ≠ −), shown in JetBrains Mono (DESIGN.md `font-math`) wherever maths appears. No rendering library (KaTeX, MathJax) and no markup.
 - **Why:** The user's answer to Q-032; no new dependency before the 3 Dec deadline, and questions stay easy to type.
 - **Rejected:** KaTeX (a new dependency, and `\frac{3}{4}` to type in questions); MathJax.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-032; docs/design/mocks/DS-007.html
+- **Evidence:** docs/agents/questions/ui-and-language.md:Q-032; docs/design/mocks/DS-007.html
 - **Source:** user · confidence high

@@ -163,7 +163,7 @@
 - **Rule:** Candidates belong to classes. An Exam is published to one or more classes, and only Candidates of those classes see it. The cohort for feedback (D-019) is the Candidates of the classes the Exam was published to.
 - **Why:** Matches the classroom reality from the interview and the approved DS-003 mock ("Clasa a VI-a B", "pentru clasa ta").
 - **Rejected:** Published Exams visible to every Candidate; grade level as the only filter.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-007
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-007
 - **Source:** user · confidence high
 
 ## D-017 · Answer matching rules for numbers and text
@@ -173,7 +173,7 @@
 - **Rule:** Numeric answers accept both decimal separators ("2,5" and "2.5"); a fraction answer must be in the form the Examiner expects (an equal value in another form is wrong). Text answers are compared after ignoring case, extra whitespace and diacritics, against an Examiner-defined list of accepted answers. D-006 (tolerance 0) still holds.
 - **Why:** Romanian notation uses the decimal comma, and 6th-grade ratio work often expects a specific fraction form; short answers such as "se înjumătățesc" are often typed without diacritics.
 - **Rejected:** Accepting any equal-valued fraction; strict exact text matching; numeric-only short answers.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-008, Q-010; INTERVIEW.md:Q13
+- **Evidence:** docs/agents/questions/question-bank.md:Q-008, Q-010; INTERVIEW.md:Q13
 - **Source:** user · confidence high
 
 ## D-019 · Results and feedback released only on publication
@@ -183,7 +183,7 @@
 - **Rule:** After full grading the Examiner publishes, in two channels: (1) one cohort note, visible to the whole cohort (D-015); (2) private per-problem partial points and comments on each Subject 2 answer. No score, Subject 1 included, is visible to a Candidate before publication; until then the Candidate sees "submitted, awaiting grading".
 - **Why:** Keeps D-010's classroom practice and closes the gap about the instantly auto-graded Subject 1 score.
 - **Rejected:** Showing the Subject 1 score at Submission; publishing grades piece by piece.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-005, Q-009; INTERVIEW.md:Q16
+- **Evidence:** docs/agents/questions/grading-and-results.md:Q-005, Q-009; INTERVIEW.md:Q16
 - **Source:** user · confidence high
 
 ## D-021 · Full duration per Attempt regardless of available_until
@@ -193,7 +193,7 @@
 - **Rule:** Every Attempt gets the Exam's full duration from its own start, plus the Grace Period (D-004). The Exam's `available_until` only stops new Attempts from starting.
 - **Why:** The interview asks for the timer to start per device when the Candidate connects, for fairness.
 - **Rejected:** Cutting Attempts at `available_until`.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-014; INTERVIEW.md:Q14
+- **Evidence:** docs/agents/questions/attempts.md:Q-014; INTERVIEW.md:Q14
 - **Source:** user · confidence high
 
 ## D-022 · Bilingual Romanian and English UI
@@ -203,7 +203,7 @@
 - **Rule:** The UI is available in Romanian and English with a language toggle. CONTEXT.md holds the Romanian and English word for each term (words: Q-017).
 - **Why:** Romanian classroom users plus English project documentation and review.
 - **Rejected:** Romanian-only or English-only UI.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-015
+- **Evidence:** docs/agents/questions/ui-and-language.md:Q-015
 - **Source:** user · confidence high
 
 ## D-026 · Subject 2 photo upload limits
@@ -213,7 +213,7 @@
 - **Rule:** A Candidate can upload up to 3 images per Subject 2 problem, 10 MB each, in JPG, PNG or HEIC. HEIC is converted to JPG on the server so the Examiner's browser can display it. D-048 still holds (photos in object storage in production).
 - **Why:** Multi-page handwritten solutions from phones (often HEIC on iPhones) must reach the Examiner readable.
 - **Rejected:** 5 images per problem; 5 MB JPG/PNG only without HEIC conversion; 1 image per problem.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-018
+- **Evidence:** docs/agents/questions/attempts.md:Q-018
 - **Source:** user · confidence high
 
 ## D-027 · Private question pools with a shared library
@@ -223,7 +223,7 @@
 - **Rule:** Each Examiner's questions are private to them. An Examiner can publish a question to a shared library; other Examiners copy it into their own bank, and the copy is theirs to edit.
 - **Why:** Keeps each Examiner in control of their questions while making it easier to fill blueprint Items with Variants.
 - **Rejected:** One shared pool where only the author edits; one shared pool anyone edits; fully private pools.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-019
+- **Evidence:** docs/agents/questions/question-bank.md:Q-019
 - **Source:** user · confidence high
 
 ## D-028 · Examiner-created classes with join code and approval
@@ -233,7 +233,7 @@
 - **Rule:** Examiners create their classes; each class has a short join code. A Candidate enters the code at registration or later from the dashboard and stays pending until the Examiner accepts them. D-015 still holds.
 - **Why:** Self-registered Candidates need a way into a class, and approval blocks strangers who got the code.
 - **Rejected:** Join code without approval; Examiner adds Candidates by email; Administrator-managed classes.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-021
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-021
 - **Source:** user · confidence high
 
 ## D-029 · Database as question source, BANK.md as validation and pilot log
@@ -243,7 +243,7 @@
 - **Rule:** The database is the source of truth for questions. The initial pool is loaded by an insert-only seeder keyed on a stable, unique question code; it never updates or deletes, so questions added or edited in the UI are safe. BANK.md holds no question text: it is the validation and pilot log (per validated question: code, competence, the 2+ colleagues who validated it, when, what they corrected; plus the results of the pilot with 10+ Candidates).
 - **Why:** Avoids two sources of truth while meeting the catalog requirement to record peer validation and pilot results in BANK.md.
 - **Rejected:** BANK.md as the re-seeded question source; generating the question list into BANK.md.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-022; catalog-de-proiecte-web.md:882, 916
+- **Evidence:** docs/agents/questions/question-bank.md:Q-022; catalog-de-proiecte-web.md:882, 916
 - **Source:** user · confidence high
 
 ## D-031 · Optional barem for Subject 2 questions
@@ -333,7 +333,7 @@
 - **Rule:** Any request that touches an Attempt, or lists Attempts, first seals those past their duration plus the Grace Period (D-004, D-021). A Laravel scheduled job seals the rest; a free external cron service triggers it every few minutes through a secret-protected endpoint, which also keeps the free API awake. Correctness never depends on the job running on time.
 - **Why:** Render's cron jobs and workers are paid and the free API sleeps after 15 minutes idle, while the catalog requires a scheduled job that submits expired Attempts even when the browser is closed.
 - **Rejected:** A Render cron job or worker (paid); sealing only on read (no real scheduled job).
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-028; catalog-de-proiecte-web.md (P13 technical requirements)
+- **Evidence:** docs/agents/questions/attempts.md:Q-028; catalog-de-proiecte-web.md (P13 technical requirements)
 - **Source:** user · confidence high
 
 ## D-045 · Answer options shuffled per Attempt
@@ -343,7 +343,7 @@
 - **Rule:** The options of dual, single and multiple choice questions are shuffled per Attempt, and the order is stored with the Attempt so review and contests show exactly what the Candidate saw. Items keep the blueprint order (D-043).
 - **Why:** Delivers the catalog's random order without changing item numbers in grading or the shared difficulty curve.
 - **Rejected:** Also shuffling Items within each Subject; no shuffling.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-029; catalog-de-proiecte-web.md:893
+- **Evidence:** docs/agents/questions/exams.md:Q-029; catalog-de-proiecte-web.md:893
 - **Source:** user · confidence high
 
 ## D-046 · Subject I answer-key corrections recalculate until publication
@@ -353,7 +353,7 @@
 - **Rule:** Correcting a Subject I answer key after Attempts were submitted recalculates that question's scores in every Attempt and logs the change. Once results are published, the answer key is locked. Same rule as barem edits (D-031).
 - **Why:** The catalog requires recalculation when the teacher corrects a question after the exam; locking at publication keeps published grades stable.
 - **Rejected:** Recalculating after publication; no recalculation.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-030
+- **Evidence:** docs/agents/questions/grading-and-results.md:Q-030
 - **Source:** user · confidence high
 
 ## D-047 · Weak-item thresholds
@@ -363,7 +363,7 @@
 - **Rule:** Difficulty p = average score / maximum score (Subject II uses partial scores). Discrimination = correlation between the item score and the rest of the exam score (corrected item-total). An item is weak if p < 0.20 or p > 0.90, or discrimination < 0.20; negative discrimination is flagged as a likely faulty question. A distractor chosen by fewer than 5% of Candidates is flagged unused. With fewer than 2 Attempts, or no variation in the answers, the item shows "not enough data" instead of a value. Item Analysis groups by the Examiner's competences (D-039) and reports per question and per Item (D-043).
 - **Why:** The catalog requires weak items to be flagged, degenerate cases handled (everyone correct, one student) and at least one weak item found in the pilot.
 - **Rejected:** Flagging on discrimination only; stricter thresholds (p < 0.30 or > 0.80, discrimination < 0.30).
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-031; catalog-de-proiecte-web.md:907, 916
+- **Evidence:** docs/agents/questions/item-analysis.md:Q-031; catalog-de-proiecte-web.md:907, 916
 - **Source:** user · confidence high
 
 ## D-048 · Subject II photos in object storage in production
@@ -373,7 +373,7 @@
 - **Rule:** Subject II solutions keep their step-by-step text and up to 3 handwritten photos per problem (D-011, D-026). In production the photos are stored in S3-compatible object storage with a free tier (provider chosen in P6); in development they stay on the local disk. The Examiner's grading queue shows them either way.
 - **Why:** Render's free web service loses its disk on every deploy, so photos uploaded in the pilot would be deleted before grading (Q-027).
 - **Rejected:** Local disk on Render with no deploys between pilot and grading; a paid Render persistent disk.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-027; conversation 2026-11-22
+- **Evidence:** docs/agents/questions/attempts.md:Q-027; conversation 2026-11-22
 - **Source:** user · confidence high
 
 ## D-049 · A class linked to an Exam can't be deleted
@@ -383,7 +383,7 @@
 - **Rule:** The database refuses to delete a class that is still linked to any Exam. Deleting a class first unlinks it from draft (unpublished) Exams; a class linked to a published Exam can't be deleted, so its Candidates keep seeing the Exam and its results (D-015, D-019).
 - **Why:** Deleting a class used to remove its links silently, hiding a published Exam and its results from that class's Candidates.
 - **Rejected:** Deleting the class and its links silently (the earlier P1c rule).
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-038; P1c review 2026-11-22
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-038; P1c review 2026-11-22
 - **Source:** user · confidence high
 
 ## D-050 · The SPA authenticates with a Sanctum bearer token
@@ -393,7 +393,7 @@
 - **Rule:** Login and registration return a Sanctum personal access token. The SPA stores it in localStorage and sends it as `Authorization: Bearer <token>` on every API request; protected routes use `auth:sanctum`. Logout revokes the current token. The API does not use `statefulApi()` or session cookies.
 - **Why:** The site and the API run on different onrender.com domains (D-014). onrender.com is a public suffix, so a session cookie would be cross-site (`SameSite=None`), which Safari blocks.
 - **Rejected:** Sanctum SPA cookie session (needs one custom domain for the site and the API).
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-026; docs/plans/auth-part-1-backend.md
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-026; docs/plans/auth-part-1-backend.md
 - **Source:** user · confidence high
 
 ## D-051 · The API is documented in a hand-written docs/API.md
@@ -403,7 +403,7 @@
 - **Rule:** Every API endpoint has a section in `docs/API.md` with its method, path, auth and role, a request example, and response examples for success and for each error status. Each backend part updates it in the same change; C- entries link to the section.
 - **Why:** The catalog accepts an API.md with examples; it needs no new dependency.
 - **Rejected:** An OpenAPI spec with a generator such as Scribe (a new dependency).
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-033
+- **Evidence:** docs/agents/questions/platform-and-delivery.md:Q-033
 - **Source:** user · confidence high
 
 ## D-052 · No page may be indexed by search engines
@@ -413,7 +413,7 @@
 - **Rule:** Every page, login and registration included, carries `noindex, nofollow`.
 - **Why:** The platform is a pilot tool with no public landing page; pages behind login must stay out of indexes.
 - **Rejected:** Letting the login and registration pages be indexed.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-034; frontend/index.html
+- **Evidence:** docs/agents/questions/platform-and-delivery.md:Q-034; frontend/index.html
 - **Source:** user · confidence high
 
 ## D-053 · A class code at registration that matches no class refuses the registration
@@ -423,7 +423,7 @@
 - **Rule:** The class code at registration is optional. When one is entered and matches no class, the registration is refused with a validation error on the code field and no account is created. When it matches, the account is created with a pending join request for that class (D-028).
 - **Why:** A mistyped code is caught while the teacher's code is still at hand, so no Candidate ends up outside their class unnoticed.
 - **Rejected:** Creating the account anyway and telling the Candidate the code was not found.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-040; docs/design/mocks/DS-002.html
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-040; docs/design/mocks/DS-002.html
 - **Source:** user · confidence high
 
 ## D-054 · Only the Administrator sets a new password, and it is temporary
@@ -432,7 +432,7 @@
 - **Rule:** Only an Administrator creates Examiner accounts (no self-registration, no pending approval) and only an Administrator sets a new password, for any user, on the Administrator screen (DS-011). There is no email reset. The Administrator types the password twice, hidden, with show/hide. A password set by the Administrator, including the first password of an account created with `app:create-user`, is temporary: at the next sign-in the user must choose a new password, different from the temporary one, before doing anything else. A temporary password does not expire. Examiners no longer set passwords for Candidates.
 - **Why:** Keeps password resets with one role, and a password someone else knows does not stay in use.
 - **Rejected:** Examiner sets a Candidate's password (D-020); a password generated by the system; expiring temporary passwords; email reset links.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-042, Q-013
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-042, Q-013
 - **Source:** user · confidence high
 
 ## D-055 · A user's role is fixed when the account is created
@@ -452,7 +452,7 @@
 - **Rule:** An Administrator can deactivate Candidates and Examiners only. A deactivated account can't be reactivated: it is signed out everywhere and refused at login, and its data stays. The API refuses deactivating an Administrator (403) and reactivating anyone.
 - **Why:** The user's answers to Q-043 and Q-044.
 - **Rejected:** Reactivation; deactivating Administrators, including oneself.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-043, Q-044; docs/design/mocks/DS-011.html
+- **Evidence:** docs/agents/questions/accounts-and-classes.md:Q-043, Q-044; docs/design/mocks/DS-011.html
 - **Source:** user · confidence high
 
 ## D-057 · Exam blueprint drawing from pools by competence, difficulty, type and topic
@@ -462,7 +462,7 @@
 - **Rule:** An Exam is a blueprint of ordered Items. Each Item fixes section, points, competence (the Examiner's own, D-058), difficulty and one of the Examiner's pools (D-041), plus a question type and a topic, each of which may be "any". When an Attempt starts, the server picks for each Item one random Ready question from that pool whose competence and difficulty match the Item's, whose type and topic match unless the Item says "any", and whose grade level matches the Exam's. No question appears twice in the same Attempt, also when several Items draw from the same pool. An Exam can be published only if every Item can get its own distinct eligible question. Questions are fixed by default. A parameterised question names its values in braces in the statement ({p}); each named value is fixed (one value), random (a whole number between min and max, with optional excluded values, under simple conditions such as `a > b`) or calculated from the others (D-013). The Examiner previews sample values before saving. The picked question, its values and the expected answer are stored per Attempt (D-006), so the Examiner sees which question each Candidate got. Item Analysis reports per question and per Item. "8 easy questions from pool A" = 8 Items on pool A.
 - **Why:** The user's description of the exam template (2026-11-24): Items draw by difficulty, type, topic and competence; values are marked as fixed, random or calculated. Keeps D-043's coverage: every Attempt has the same competences and difficulty curve, and similar questions go to different Candidates.
 - **Rejected:** Drawing from the whole bank without a pool (Q-045); decimal values, steps or value lists (Q-048); fixed numbers as unnamed text (Q-047); hand-listed Variants per Item (D-025); repeats within one Attempt.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-045, Q-046, Q-047, Q-048; supersedes D-043
+- **Evidence:** docs/agents/questions/exams.md:Q-045, Q-046, Q-047, Q-048; supersedes D-043
 - **Source:** user · confidence high
 
 ## D-058 · Examiner-defined competences; one topic per question
@@ -472,7 +472,7 @@
 - **Rule:** Each Examiner keeps their own list of competences: a short code (e.g. C1, unique for that Examiner) and a Romanian description of what is assessed. Questions and blueprint Items are tagged with one of the Examiner's competences, and Item Analysis groups by them. Each Examiner also keeps their own list of topics (chapters such as Mulțimi de numere întregi, Drepte, Unghiuri); a question has exactly one topic, and Items can match on it (D-057). Questions and exams carry a grade level (5–8).
 - **Why:** Competences are what the teacher decides to assess; the user wants Items to draw by topic, with one topic per question (Q-046).
 - **Rejected:** Several topics per question (D-039); a small fixed competence list (D-030); topics as a seeded curriculum structure; competences tied to a topic.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-046; supersedes D-039
+- **Evidence:** docs/agents/questions/question-bank.md:Q-046; supersedes D-039
 - **Source:** user · confidence high
 
 ## D-059 · Draft and Ready question status
@@ -502,7 +502,7 @@
 - **Rule:** An Exam's Subject II has exactly 3 Items (problems) of 20 points each. A Subject II question can be Ready only when it is worth 20 points, so its barem adds up to 20 (D-031). Subject I is unchanged (D-057: any Item points, Subject total 30). D-057 and D-059 stay approved; this adds to them.
 - **Why:** Grading needs the barem and the Item on the same scale (Q-075); the user chose a fixed structure, matching the 6th-grade exam model (D-005) and the DS-009 mock (items 7–9 at 20 points).
 - **Rejected:** Matching a Subject II Item only to questions of equal points with any Item value (agent proposal); scaling a question's score to the Item's points; grading on the Item's points with the barem scaled.
-- **Evidence:** docs/agents/OPEN-QUESTIONS.md:Q-075; docs/plans/p8a-grading-and-publishing.md
+- **Evidence:** docs/agents/questions/grading-and-results.md:Q-075; docs/plans/p8a-grading-and-publishing.md
 - **Source:** user · confidence high
 
 ## D-063 · Develop locally in Docker; Render only for grouped releases and the pilot, deployed by hand

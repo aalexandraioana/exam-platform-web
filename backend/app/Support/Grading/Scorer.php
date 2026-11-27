@@ -7,6 +7,7 @@ use App\Enums\Section;
 use App\Models\Answer;
 use App\Models\Attempt;
 use App\Models\AttemptItem;
+use App\Models\Exam;
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -107,6 +108,17 @@ final class Scorer
     }
 
     /** True when an Attempt of an exam with published results drew this question (D-031, D-046). */
+    /**
+     * PATTERN-007: locks the exams that drew this question, in id order, before a barem or answer-key
+     * edit decides anything, so it waits for a publication in progress (publish() locks the exam) and
+     * a publication waits for it. Exams are locked before the question everywhere, so no deadlock.
+     */
+    public static function lockExamsOf(int $questionId): void
+    {
+        Exam::whereIn('id', Attempt::select('exam_id')->whereIn('id', AttemptItem::select('attempt_id')->where('question_id', $questionId)))
+            ->orderBy('id')->lockForUpdate()->get();
+    }
+
     public static function locked(Question $question): bool
     {
         return AttemptItem::where('question_id', $question->id)

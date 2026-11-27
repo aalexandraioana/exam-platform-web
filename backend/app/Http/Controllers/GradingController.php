@@ -15,6 +15,7 @@ use App\Models\AnswerImage;
 use App\Models\Attempt;
 use App\Models\AttemptItem;
 use App\Models\Exam;
+use App\Models\Question;
 use App\Support\Attempts\Sealer;
 use App\Support\Attempts\Starter;
 use App\Support\Grading\Scorer;
@@ -119,7 +120,8 @@ class GradingController extends Controller
             if (! in_array($attempt->status, [AttemptStatus::Submitted, AttemptStatus::Graded], true)) {
                 return response()->json(['code' => 'attempt_open', 'message' => 'The Attempt is still running.'], 409);
             }
-            $question = $item->question;
+            // Then the question, so a barem edit running now is waited for and its recalculation sees this grade.
+            $question = Question::lockForUpdate()->findOrFail($item->question_id);
             $max = (float) $item->question_snapshot['points'];
             $data = $request->validated();
             $adjustment = isset($data['adjustment']) ? (float) $data['adjustment'] : null;

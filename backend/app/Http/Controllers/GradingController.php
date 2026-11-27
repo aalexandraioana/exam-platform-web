@@ -108,8 +108,13 @@ class GradingController extends Controller
             return self::resultsPublished();
         }
 
-        return DB::transaction(function () use ($request, $item) {
-            // PATTERN-007: the Attempt's status and totals depend on its other answers.
+        return DB::transaction(function () use ($request, $item, $exam) {
+            // PATTERN-007, same order as publish(): the exam first, so a publication that won the race
+            // is seen here and no grade changes after it (D-019); then the Attempt, whose status and
+            // totals depend on its other answers.
+            if (Exam::lockForUpdate()->findOrFail($exam->id)->results_published_at !== null) {
+                return self::resultsPublished();
+            }
             $attempt = Attempt::lockForUpdate()->findOrFail($item->attempt_id);
             if (! in_array($attempt->status, [AttemptStatus::Submitted, AttemptStatus::Graded], true)) {
                 return response()->json(['code' => 'attempt_open', 'message' => 'The Attempt is still running.'], 409);

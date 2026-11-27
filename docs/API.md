@@ -242,6 +242,7 @@ Examiner's competence, topic or pool; a barem on Subject I; a barem step id that
 question's); `barem: barem_locked` / `answer_key: answer_key_locked` when an exam that drew the
 question has published results and the barem, `uses_barem` or the answer key would change (an
 unchanged value is not a change; D-031, D-046); once an Attempt has drawn the question,
+`type: type_locked` / `section: type_locked` when its type or Subject would change (Q-092),
 `answer_key: options_locked` when options are added, removed or reordered, and `parameters:
 parameters_locked` when its named values or formula change (Q-088, Q-089); `status: not_ready` with `problems` when a Ready
 question would become incomplete: nothing is saved; move it to Draft first (Q-057).

@@ -11,8 +11,10 @@ use App\Http\Requests\Questions\StoreQuestionRequest;
 use App\Http\Requests\Questions\TypeFitsSection;
 use App\Http\Requests\Questions\UpdateQuestionRequest;
 use App\Http\Resources\QuestionResource;
+use App\Models\AttemptItem;
 use App\Models\BaremStep;
 use App\Models\Question;
+use App\Support\Grading\KeyCorrection;
 use App\Support\Grading\Scorer;
 use App\Support\Math\AnswerMatcher;
 use App\Support\Math\NoValidDraw;
@@ -79,13 +81,19 @@ class QuestionController extends Controller
         $regraded = null;
 
         try {
-            $question = DB::transaction(function () use ($question, $data, &$regraded) {
-                // PATTERN-007: the exams that drew it, then the question itself, before the lock check
-                // and the barem read, so a publication or a grade running now is waited for (D-031, D-046).
+            $question = DB::transaction(function () use ($question, $data, $request, &$regraded) {
+                // PATTERN-007: the exams that drew it, then (for a key correction, which writes them) its
+                // Attempts, then the question itself, before the lock checks and the barem read, so a
+                // publication or a grade running now is waited for (D-031, D-046). Same order as grading.
                 Scorer::lockExamsOf($question->id);
+                if ($question->section === Section::SubjectOne && array_key_exists('answer_key', $data)) {
+                    KeyCorrection::lockAttempts($question);
+                }
                 $question = Question::lockForUpdate()->findOrFail($question->id);
                 $this->checkLocks($question, $data);
+                $this->checkDrawn($question, $data);
                 $usedBarem = $question->uses_barem;
+                $keyBefore = (array) $question->answer_key;
                 $question->fill(collect($data)->except(['barem', 'pool_ids'])->all());
                 // C-004 (P8a): a step sent with its id keeps its row, so the scores given on it stay.
                 $current = $question->baremSteps->keyBy('id');
@@ -116,6 +124,11 @@ class QuestionController extends Controller
                 if (! $usedBarem && $question->uses_barem) {
                     $flagged = Scorer::flagForBarem($question);
                     $regraded = ['answers' => $regraded['answers'] ?? 0, 'flagged' => ($regraded['flagged'] ?? 0) + $flagged];
+                }
+                // P8c · D-046: a corrected Subject I key re-grades the Attempts that drew the question.
+                if ($question->section === Section::SubjectOne && array_key_exists('answer_key', $data)
+                    && KeyCorrection::changes($keyBefore, (array) $question->answer_key) && KeyCorrection::items($question)->exists()) {
+                    $regraded = ['answers' => KeyCorrection::apply($question, $keyBefore, $request->user()), 'flagged' => 0];
                 }
                 if (array_key_exists('pool_ids', $data)) {
                     $question->pools()->sync($data['pool_ids']);
@@ -267,6 +280,27 @@ class QuestionController extends Controller
         }
 
         throw ValidationException::withMessages($errors);
+    }
+
+    /**
+     * Q-088, Q-089: once an Attempt has drawn the question, its options keep their number and order
+     * (Attempts store them by position) and its named values stay as they are (Q-091 is open).
+     */
+    private function checkDrawn(Question $question, array $data): void
+    {
+        if (! AttemptItem::where('question_id', $question->id)->exists()) {
+            return;
+        }
+        $errors = [];
+        if (array_key_exists('answer_key', $data) && KeyCorrection::optionsMoved((array) $question->answer_key, (array) $data['answer_key'])) {
+            $errors['answer_key'] = ['options_locked'];
+        }
+        if (array_key_exists('parameters', $data) && ($data['parameters'] ?? []) != ($question->parameters ?? [])) {
+            $errors['parameters'] = ['parameters_locked'];
+        }
+        if ($errors) {
+            throw ValidationException::withMessages($errors);
+        }
     }
 
     /** The editor sends the whole question on every save; an unchanged barem is not a change. */

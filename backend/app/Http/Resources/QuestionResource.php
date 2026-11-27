@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\AnswerKeyCorrection;
 use App\Models\Question;
 use App\Support\Questions\Readiness;
 use Illuminate\Http\Request;
@@ -55,6 +56,13 @@ class QuestionResource extends JsonResource
             'copied_from' => $q->copiedFrom ? ['id' => $q->copiedFrom->id, 'code' => $q->copiedFrom->code] : null,
             'published' => Question::where('copied_from_id', $q->id)->whereNotNull('published_to_library_at')->exists(),
             'problems' => Readiness::problems($q),
+            // P8c · Q-087: the last answer-key corrections on a drawn question, newest first.
+            'key_corrections' => AnswerKeyCorrection::where('question_id', $q->id)->with('examiner')->latest('id')->limit(5)->get()
+                ->map(fn (AnswerKeyCorrection $c) => [
+                    'corrected_at' => $c->created_at->toIso8601String(),
+                    'examiner' => $c->examiner->name,
+                    'answers' => $c->answers,
+                ])->all(),
         ];
     }
 }

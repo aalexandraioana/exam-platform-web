@@ -231,11 +231,19 @@ recalculated (points above a step's new maximum are capped; a removed step that 
 step or a clamped total marks the answer `needs_recheck`), and the response adds
 `"regraded": {"answers", "flagged"}`. When `uses_barem` turns on, answers graded with one score are
 also marked `needs_recheck` (counted in `flagged`), keeping their points until they are graded on the
-steps; publishing waits for them (Q-086, Q-079). `200 { "question" }`. `422`: a field `invalid` (another
+steps; publishing waits for them (Q-086, Q-079). P8c (D-046): when a drawn Subject I question's
+correct answer changes (`correct`, `kind`, `accepted` or `value`), every Attempt of an exam whose results
+aren't published gets the new key in its snapshot, keeping the options it showed; submitted and graded
+Attempts are graded again on Subject I, the correction is logged and the response adds
+`"regraded": {"answers", "flagged": 0}` (answers re-graded; running Attempts only get the key). A fix
+to an option's text alone changes no Attempt. The question carries `key_corrections`: the last 5,
+newest first, `{corrected_at, examiner, answers}` (Q-087). `200 { "question" }`. `422`: a field `invalid` (another
 Examiner's competence, topic or pool; a barem on Subject I; a barem step id that isn't this
 question's); `barem: barem_locked` / `answer_key: answer_key_locked` when an exam that drew the
 question has published results and the barem, `uses_barem` or the answer key would change (an
-unchanged value is not a change; D-031, D-046); `status: not_ready` with `problems` when a Ready
+unchanged value is not a change; D-031, D-046); once an Attempt has drawn the question,
+`answer_key: options_locked` when options are added, removed or reordered, and `parameters:
+parameters_locked` when its named values or formula change (Q-088, Q-089); `status: not_ready` with `problems` when a Ready
 question would become incomplete: nothing is saved; move it to Draft first (Q-057).
 
 ### POST /api/questions/{id}/ready · POST /api/questions/{id}/draft

@@ -10,6 +10,7 @@ use App\Models\ExamItem;
 use App\Models\Question;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
@@ -168,7 +169,7 @@ it('locks the barem and the answer key once results are published, and allows ot
     $id = $s['question']->id;
 
     $this->patchJson("/api/questions/{$id}", ['barem' => [...array_slice($barem, 0, 2), ['id' => $barem[2]['id'], 'description' => '∢B = 70°', 'points' => 7]]])
-        ->assertUnprocessable()->assertJsonPath('errors.barem.0', 'barem_locked');
+        ->dump()->assertUnprocessable()->assertJsonPath('errors.barem.0', 'barem_locked');
     $this->patchJson("/api/questions/{$id}", ['uses_barem' => false])
         ->assertUnprocessable()->assertJsonPath('errors.barem.0', 'barem_locked');
     $this->patchJson("/api/questions/{$id}", ['statement' => 'Enunț corectat.', 'uses_barem' => true, 'barem' => $barem])
@@ -192,3 +193,61 @@ it('lets the barem and answer key change while results are not published', funct
 
     $this->patchJson("/api/questions/{$s['question']->id}", ['uses_barem' => false])->assertOk();
 });
+
+it('refuses a barem edit when the results are published while it is being saved (D-031, PATTERN-007)', function () {
+    $s = baremSetup();
+    $answer = gradedAnswer($s, [6, 6, 8]);
+    $barem = baremOf($s['question']);
+
+    // The race: another request publishes right after this one's first check, as its transaction starts.
+    $outside = DB::transactionLevel();
+    $published = false;
+    DB::beforeExecuting(function () use (&$published, $outside, $s) {
+        if (! $published && DB::transactionLevel() > $outside) {
+            $published = true;
+            DB::table('exams')->where('id', $s['exam']->id)->update(['results_published_at' => now()]);
+        }
+    });
+
+    // Still 20 in all (D-062): only the lock may refuse it.
+    $edited = [[...$barem[0], 'points' => 5], [...$barem[1], 'points' => 7], $barem[2]];
+    $this->patchJson("/api/questions/{$s['question']->id}", ['barem' => $edited])
+        ->assertUnprocessable()->assertJsonPath('errors.barem.0', 'barem_locked');
+    expect((float) $answer->fresh()->awarded_points)->toBe(20.0)
+        ->and($answer->fresh()->needs_recheck)->toBeFalse()
+        ->and((float) $s['steps'][0]->fresh()->points)->toBe(6.0);
+});
+
+it('locks the exam, then the question, before a barem edit or a grade reads the barem (PATTERN-007)', function () {
+    $s = baremSetup();
+    $answer = gradedAnswer($s, [6, 6, 8]);
+    $locks = function (callable $request): array {
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+        $request();
+        DB::disableQueryLog();
+        $order = [];
+        foreach (DB::getQueryLog() as $query) {
+            $sql = strtolower($query['query']);
+            if (preg_match('/from "(exams|attempts|questions)".* for update/', $sql, $m)) {
+                $order[] = $m[1];
+            } elseif (str_contains($sql, 'from "barem_steps"')) {
+                $order[] = 'steps read';
+            }
+        }
+        // An earlier read (loading the item to show it) is harmless; the barem the request decides on
+        // is its last read, which must come after the locks.
+        $last = array_search('steps read', array_reverse($order, true), true);
+
+        return array_values(array_filter(array_slice($order, 0, $last + 1), fn ($e, $i) => $e !== 'steps read' || $i === $last, ARRAY_FILTER_USE_BOTH));
+    };
+
+    // Same order in both requests (exam before question), so they wait for each other and never deadlock.
+    $barem = baremOf($s['question']);
+    expect($locks(fn () => $this->patchJson("/api/questions/{$s['question']->id}", ['barem' => $barem])->assertOk()))
+        ->toBe(['exams', 'questions', 'steps read']);
+    expect($locks(fn () => $this->putJson('/api/grading/items/'.$answer->attempt_item_id, [
+        'steps' => $s['steps']->map(fn ($step) => ['id' => $step->id, 'points' => 0])->all(),
+    ])->assertOk()))->toBe(['exams', 'attempts', 'questions', 'steps read']);
+});
+

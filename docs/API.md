@@ -229,7 +229,9 @@ given on it; one without an id is new; a step left out is deleted with only its 
 `barem` is sent, graded answers to the question in exams whose results aren't published are
 recalculated (points above a step's new maximum are capped; a removed step that had points, a new
 step or a clamped total marks the answer `needs_recheck`), and the response adds
-`"regraded": {"answers", "flagged"}`. `200 { "question" }`. `422`: a field `invalid` (another
+`"regraded": {"answers", "flagged"}`. When `uses_barem` turns on, answers graded with one score are
+also marked `needs_recheck` (counted in `flagged`), keeping their points until they are graded on the
+steps; publishing waits for them (Q-086, Q-079). `200 { "question" }`. `422`: a field `invalid` (another
 Examiner's competence, topic or pool; a barem on Subject I; a barem step id that isn't this
 question's); `barem: barem_locked` / `answer_key: answer_key_locked` when an exam that drew the
 question has published results and the barem, `uses_barem` or the answer key would change (an

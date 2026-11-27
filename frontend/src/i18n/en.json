@@ -617,7 +617,10 @@
       "failed": "The request didn't reach the server. Try again.",
       "sent": "<strong>Your request for {{name}} was sent.</strong> The examiner has to accept it; the class's exams appear here after that.",
       "already": "<strong>You're already in {{name}}.</strong> The class's exams appear here."
-    }
+    },
+    "resultsPublished": "Results published",
+    "grade": "Grade <strong>{{grade}}</strong>",
+    "seeResults": "See the results"
   },
   "room": {
     "loading": "Loading the exam",
@@ -814,5 +817,45 @@
       "saved": "The barem of variant {{code}} was saved: {{answers}} scores recalculated, {{flagged}} marked to check again.",
       "failed": "We couldn't save the barem. Try again."
     }
+  },
+  "results": {
+    "back": "Dashboard",
+    "publishedOn": "Results published on {{date}} at {{time}}",
+    "loading": "Loading the results",
+    "loadFailed": "<strong>We couldn't load the results.</strong> Check your internet connection and try again.",
+    "notYet": "The results aren't published yet",
+    "notYetText": "The Examiner is grading Subject II. Your result appears on the dashboard once it is published.",
+    "backToDashboard": "Back to the dashboard",
+    "attempts": "Your attempts",
+    "attempt": "Attempt {{number}} · {{grade}}",
+    "counts": " · counts",
+    "policy": {
+      "highest": "Your highest grade counts.",
+      "latest": "Your latest attempt's grade counts."
+    },
+    "yourGrade": "Your grade",
+    "submittedOn": "Submitted on {{date}} at {{time}}",
+    "subject_1": "Subject I",
+    "subject_2": "Subject II",
+    "baseline": "Baseline points",
+    "total": "Total",
+    "cohortNote": "The Examiner's note for the class",
+    "item": "Item {{position}}",
+    "problem": "Problem {{position}}",
+    "yours": "Your answer",
+    "correct": "Correct answer",
+    "yoursCorrect": "Your answer · correct",
+    "yoursWrong": "Your answer",
+    "correctOption": "Correct answer",
+    "noAnswer": "No answer",
+    "explanation": "Explanation.",
+    "written": "Your solution",
+    "photos": "Your photos ({{count}})",
+    "photo": "Photo {{index}} of {{total}}",
+    "barem": "Barem",
+    "adjustment": "Adjustment",
+    "holistic": "Graded without a barem: one score for the whole problem.",
+    "comment": "The Examiner's comment.",
+    "nothing": "You wrote nothing and uploaded no photos."
   }
 }

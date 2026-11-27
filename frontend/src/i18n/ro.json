@@ -631,7 +631,10 @@
       "failed": "Cererea nu a ajuns la server. Încearcă din nou.",
       "sent": "<strong>Cererea pentru {{name}} a fost trimisă.</strong> Examinatorul trebuie să o accepte; examenele clasei apar aici după aceea.",
       "already": "<strong>Ești deja în {{name}}.</strong> Examenele clasei apar aici."
-    }
+    },
+    "resultsPublished": "Rezultate publicate",
+    "grade": "Nota <strong>{{grade}}</strong>",
+    "seeResults": "Vezi rezultatele"
   },
   "room": {
     "loading": "Se încarcă examenul",
@@ -838,5 +841,45 @@
       "saved": "Baremul variantei {{code}} a fost salvat: {{answers}} punctaje recalculate, {{flagged}} marcat pentru reverificare.",
       "failed": "Nu am putut salva baremul. Încearcă din nou."
     }
+  },
+  "results": {
+    "back": "Tablou de bord",
+    "publishedOn": "Rezultate publicate pe {{date}}, ora {{time}}",
+    "loading": "Se încarcă rezultatele",
+    "loadFailed": "<strong>Nu am putut încărca rezultatele.</strong> Verifică conexiunea la internet și încearcă din nou.",
+    "notYet": "Rezultatele nu sunt publicate încă",
+    "notYetText": "Examinatorul corectează Subiectul II. Rezultatul apare în tabloul de bord după ce îl publică.",
+    "backToDashboard": "Înapoi la tabloul de bord",
+    "attempts": "Încercările tale",
+    "attempt": "Încercarea {{number}} · {{grade}}",
+    "counts": " · contează",
+    "policy": {
+      "highest": "Contează nota cea mai mare dintre încercări.",
+      "latest": "Contează nota ultimei încercări."
+    },
+    "yourGrade": "Nota ta",
+    "submittedOn": "Predat pe {{date}}, ora {{time}}",
+    "subject_1": "Subiectul I",
+    "subject_2": "Subiectul II",
+    "baseline": "Din oficiu",
+    "total": "Total",
+    "cohortNote": "Nota examinatorului pentru clasă",
+    "item": "Itemul {{position}}",
+    "problem": "Problema {{position}}",
+    "yours": "Răspunsul tău",
+    "correct": "Răspuns corect",
+    "yoursCorrect": "Răspunsul tău · corect",
+    "yoursWrong": "Răspunsul tău",
+    "correctOption": "Răspuns corect",
+    "noAnswer": "Fără răspuns",
+    "explanation": "Explicație.",
+    "written": "Rezolvarea ta",
+    "photos": "Fotografiile tale ({{count}})",
+    "photo": "Fotografia {{index}} din {{total}}",
+    "barem": "Barem",
+    "adjustment": "Ajustare",
+    "holistic": "Corectată fără barem: un singur punctaj pentru toată problema.",
+    "comment": "Comentariul examinatorului.",
+    "nothing": "Nu ai scris nimic și nu ai încărcat fotografii."
   }
 }

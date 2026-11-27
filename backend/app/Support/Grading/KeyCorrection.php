@@ -29,20 +29,24 @@ final class KeyCorrection
         return self::correctness($before) != self::correctness($after);
     }
 
-    /** Q-088: once drawn, the options keep their number and order; only their texts may be fixed. */
+    /**
+     * Q-088: once drawn, the options keep their number and order; a text may be fixed only in place.
+     * An existing option's text found at another position is a reorder, even if other texts changed.
+     */
     public static function optionsMoved(array $before, array $after): bool
     {
-        $old = array_values((array) ($before['options'] ?? []));
-        $new = array_values((array) ($after['options'] ?? []));
+        $old = array_values(array_map('strval', (array) ($before['options'] ?? [])));
+        $new = array_values(array_map('strval', (array) ($after['options'] ?? [])));
         if (count($old) !== count($new)) {
             return true;
         }
-        $sortedOld = $old;
-        $sortedNew = $new;
-        sort($sortedOld);
-        sort($sortedNew);
+        foreach ($new as $position => $text) {
+            if (($old[$position] ?? null) !== $text && in_array($text, $old, true)) {
+                return true;
+            }
+        }
 
-        return $old !== $new && $sortedOld === $sortedNew;
+        return false;
     }
 
     /** The Attempt items of this question in exams whose results aren't published. */

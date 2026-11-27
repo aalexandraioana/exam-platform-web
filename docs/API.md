@@ -300,7 +300,8 @@ List, newest first. Create: `{ "title" }` → `201 { "exam" }`, a draft. `422`: 
 `available_until`, `max_attempts`, `score_policy` (`highest`, `latest`), `class_ids` (the full list).
 `422`: a field `invalid` (another Examiner's class; `available_until` not after `available_from`).
 Once published, only `title`, `description` and `available_until` change; anything else is
-`409 exam_published` (Q-060). `DELETE`: a draft only, `204`; `409 exam_published` (Q-061).
+`409 exam_published` (Q-060). Once its results are published, a change to `available_until` is
+`409 results_published`; sending the same moment again is accepted (Q-081). `DELETE`: a draft only, `204`; `409 exam_published` (Q-061).
 
 ### POST /api/exams/{id}/items · PATCH, DELETE /api/exams/{id}/items/{itemId} · PUT /api/exams/{id}/items/order
 Item fields: `section` (required when adding), `points`, `pool_id`, `competence_id`, `difficulty`,
@@ -356,7 +357,8 @@ Subject II. `200 { "item" }`. `422`: `steps` `required` / `invalid`, `points` `r
 ### POST /api/exams/{id}/results
 `{ "cohort_note"? }` → `200 { "exam" }` with `results_published_at` and `cohort_note`. Expired
 Attempts are sealed first. `422` `status: results_not_ready` with `missing`: `ungraded` (a submitted
-Attempt isn't graded yet), `open_attempts` (an Attempt is still running), `window_open`
+Attempt isn't graded yet), `recheck` (an answer is marked for re-check, Q-079), `open_attempts` (an
+Attempt is still running), `window_open`
 (`available_until` hasn't passed or isn't set) (Q-076). `409 results_published`. Publishing can't be
 undone; afterwards the barem and answer key of the exam's questions are locked (C-004).
 

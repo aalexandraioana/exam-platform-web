@@ -63,11 +63,11 @@
 
 ## C-005 · Exams API: exams, blueprint Items, publish checks, preview
 - **Status:** approved
-- **Date:** 2026-11-25
-- **Confirmed:** 2026-11-26
+- **Date:** 2026-11-27 (Q-081 end locked after results)
+- **Confirmed:** 2026-11-27
 - **Provider:** `backend/` (routes/api.php, ExamController, ExamItemController, Support/Exams/Blueprint, Support/Exams/PublishChecks)
 - **Consumers:** `frontend/src/api/exams.ts` (P5 Part 3); P6 reuses `Blueprint::assign` server-side
-- **Interface:** [docs/API.md → Exams](../API.md#exams): the Examiner's exams (list, create, show with `checks`, edit settings, delete a draft), Items (add, edit, delete, reorder; `type`/`topic` null = any; `eligible` count), match count for unsaved criteria, publish (422 `not_publishable` with `problems`), preview draw. After publishing only title, description and `available_until` change (409 `exam_published`).
+- **Interface:** [docs/API.md → Exams](../API.md#exams): the Examiner's exams (list, create, show with `checks`, edit settings, delete a draft), Items (add, edit, delete, reorder; `type`/`topic` null = any; `eligible` count), match count for unsaved criteria, publish (422 `not_publishable` with `problems`), preview draw. After publishing only title, description and `available_until` change (409 `exam_published`); once results are published `available_until` is locked too (409 `results_published`, Q-081).
 - **Evidence:** docs/plans/p5-exam-builder.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-24) · confidence high
 
@@ -83,11 +83,11 @@
 
 ## C-007 · Grading API (Examiner): queue, grades, published results, photos
 - **Status:** approved
-- **Date:** 2026-11-26
-- **Confirmed:** 2026-11-26
+- **Date:** 2026-11-27 (Q-079 re-check blocks publishing)
+- **Confirmed:** 2026-11-27
 - **Provider:** `backend/` (routes/api.php, GradingController, Requests/Grading, Support/Grading/Scorer)
 - **Consumers:** `frontend/src/api/grading.ts` (P8a, DS-009)
-- **Interface:** [docs/API.md → Grading (Examiner)](../API.md#grading-examiner): `GET /api/exams/{id}/grading` (queue, counts, publish readiness, mean and median), `GET`/`PUT /api/grading/items/{attemptItemId}` (one answer; barem steps or one score, adjustment, comment; 422 `steps`, `points`, `adjustment: out_of_range`; 409 `results_published`, `attempt_open`), `POST /api/exams/{id}/results` (cohort note; 422 `results_not_ready` with `missing`; 409 `results_published`), `GET /api/grading/images/{imageId}`.
+- **Interface:** [docs/API.md → Grading (Examiner)](../API.md#grading-examiner): `GET /api/exams/{id}/grading` (queue, counts, publish readiness, mean and median), `GET`/`PUT /api/grading/items/{attemptItemId}` (one answer; barem steps or one score, adjustment, comment; 422 `steps`, `points`, `adjustment: out_of_range`; 409 `results_published`, `attempt_open`), `POST /api/exams/{id}/results` (cohort note; 422 `results_not_ready` with `missing`: `ungraded`, `recheck` (Q-079), `open_attempts`, `window_open`; 409 `results_published`), `GET /api/grading/images/{imageId}`.
 - **Evidence:** docs/plans/p8a-grading-and-publishing.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-26) · confidence high
 

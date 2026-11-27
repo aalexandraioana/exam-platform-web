@@ -349,7 +349,7 @@
 ## D-046 · Subject I answer-key corrections recalculate until publication
 - **Status:** approved
 - **Date:** 2026-11-22
-- **Confirmed:** 2026-11-26
+- **Confirmed:** 2026-11-27
 - **Rule:** Correcting a Subject I answer key after Attempts were submitted recalculates that question's scores in every Attempt and logs the change. Once results are published, the answer key is locked. Same rule as barem edits (D-031).
 - **Why:** The catalog requires recalculation when the teacher corrects a question after the exam; locking at publication keeps published grades stable.
 - **Rejected:** Recalculating after publication; no recalculation.

@@ -201,6 +201,22 @@ describe('ExamBuilderPage (DS-008)', () => {
     expect(await screen.findByRole('link', { name: 'Corectează (1 / 4)' })).toHaveAttribute('href', '/examiner/exams/4/grading')
   })
 
+  it('opens the Item Analysis of a published exam, next to grading (P10)', async () => {
+    const published = { ...exam, status: 'published', published_at: '2026-11-25T10:00:00+00:00', results_published_at: null }
+    mockApi({ ...base, 'GET /exams/4': json(200, { exam: published }), 'GET /exams/4/grading': json(200, { counts: { total: 4, graded: 1, to_grade: 3, recheck: 0 } }) })
+    renderAt()
+
+    expect(await screen.findByRole('link', { name: 'Analiza itemilor' })).toHaveAttribute('href', '/examiner/exams/4/analysis')
+  })
+
+  it('has no Item Analysis link on a draft exam (P10)', async () => {
+    mockApi(base)
+    renderAt()
+
+    expect(await screen.findByRole('button', { name: 'Publică pentru clase' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Analiza itemilor' })).not.toBeInTheDocument()
+  })
+
   it('locks the end once the results are published, keeping the title and description editable (Q-081)', async () => {
     const done = { ...exam, status: 'published', published_at: '2026-11-25T10:00:00+00:00', results_published_at: '2026-12-01T16:20:00+00:00' }
     mockApi({ ...base, 'GET /exams/4': json(200, { exam: done }), 'GET /exams/4/grading': json(200, { counts: { total: 4, graded: 4, to_grade: 0, recheck: 0 } }) })

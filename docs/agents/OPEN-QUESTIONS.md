@@ -100,6 +100,7 @@
 - Q-089 · Does a formula correction on a drawn question with generated values re-grade? · _answered_
 - Q-090 · Does the question editor say how many Attempts were re-graded after a key correction? · _answered_
 - Q-091 · Should correcting the formula of a drawn question with generated values recompute each Attempt's expected answer and re-grade? · _investigating_
+- Q-092 · Can a drawn question's type or Subject change? · _answered_
 
 ---
 
@@ -683,3 +684,11 @@
 - **Confirmed:** 2026-11-27
 - **Blocks:** P8c
 - **Context:** Out of P8c (Q-089); until answered, such a formula change is refused once the question is drawn.
+
+## Q-092 · Can a drawn question's type or Subject change?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8c (review of PR #18)
+- **Context:** Each Attempt grades by the type it drew (its snapshot); a later key correction in another type's shape (e.g. single → multiple choice with `correct: [1, 3]`) would re-grade every Attempt wrongly, and a Subject II → I change skipped the Attempt locks.
+- **Answer:** No. Once an Attempt has drawn the question, its type and Subject are locked like its options and named values (Q-088, Q-089): the save is refused with a clear message, and another type means a new question. (User, 2026-11-27.)
+

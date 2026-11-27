@@ -38,7 +38,7 @@
 
 ## PATTERN-003 · Tokens-only Tailwind theme
 - **Status:** candidate
-- **Confirmed:** 2026-11-26
+- **Confirmed:** 2026-11-27
 - **Use when:** Styling any frontend component.
 - **How:** Design tokens live once, as CSS variables in `frontend/src/index.css` (`:root` for light, `[data-theme='dark']` for dark). `frontend/tailwind.config.js` *replaces* (does not extend) the theme keys for colors, spacing, radii, shadows, font sizes and screens with `var(--token)` references, so the default palette and scale are unavailable and a raw value cannot slip in as a utility class. Class names drop the token's group prefix: `bg-surface`, `text-secondary`, `border-input`, `text-h1`, `rounded-lg`, `shadow-subtle`.
 - **Example:** frontend/tailwind.config.js; frontend/src/App.tsx

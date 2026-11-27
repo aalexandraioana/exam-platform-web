@@ -121,7 +121,7 @@
 ## D-058 · Examiner-defined competences; one topic per question
 - **Status:** approved
 - **Date:** 2026-11-24
-- **Confirmed:** 2026-11-26
+- **Confirmed:** 2026-11-27
 - **Rule:** Each Examiner keeps their own list of competences: a short code (e.g. C1, unique for that Examiner) and a Romanian description of what is assessed. Questions and blueprint Items are tagged with one of the Examiner's competences, and Item Analysis groups by them. Each Examiner also keeps their own list of topics (chapters such as Mulțimi de numere întregi, Drepte, Unghiuri); a question has exactly one topic, and Items can match on it (D-057). Questions and exams carry a grade level (5–8).
 - **Why:** Competences are what the teacher decides to assess; the user wants Items to draw by topic, with one topic per question (Q-046).
 - **Rejected:** Several topics per question (D-039); a small fixed competence list (D-030); topics as a seeded curriculum structure; competences tied to a topic.

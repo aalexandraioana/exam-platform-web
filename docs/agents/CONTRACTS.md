@@ -16,6 +16,7 @@
 - C-005 · Exams API: exams, blueprint Items, publish checks, preview · provided
 - C-006 · Attempts API (Candidate): exams, start, read, autosave, submit; sealing cron · provided
 - C-007 · Grading API (Examiner): queue, grades, published results, photos · provided
+- C-008 · Item Analysis API (Examiner): difficulty, discrimination, distractors · provided
 
 ---
 
@@ -90,6 +91,16 @@
 - **Interface:** [docs/API.md → Grading (Examiner)](../API.md#grading-examiner): `GET /api/exams/{id}/grading` (queue, counts, publish readiness, mean and median), `GET`/`PUT /api/grading/items/{attemptItemId}` (one answer; barem steps or one score, adjustment, comment; 422 `steps`, `points`, `adjustment: out_of_range`; 409 `results_published`, `attempt_open`), `POST /api/exams/{id}/results` (cohort note; 422 `results_not_ready` with `missing`: `ungraded`, `recheck` (Q-079), `open_attempts`, `window_open`; 409 `results_published`), `GET /api/grading/images/{imageId}`.
 - **Evidence:** docs/plans/p8a-grading-and-publishing.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-26) · confidence high
+
+## C-008 · Item Analysis API (Examiner): difficulty, discrimination, distractors
+- **Status:** approved
+- **Date:** 2026-11-27
+- **Confirmed:** 2026-11-27
+- **Provider:** `backend/` (routes/api.php, ItemAnalysisController, Support/Analysis/ItemAnalysis, Support/Grading/CountedAttempts)
+- **Consumers:** `frontend/src/api/analysis.ts` (P10, DS-010)
+- **Interface:** [docs/API.md → Item Analysis (Examiner)](../API.md#item-analysis-examiner): `GET /api/exams/{id}/analysis`, Examiner only, another Examiner's exam 404. From each Candidate's counted, graded Attempt (D-012; a tie under highest: the later Attempt; Q-093, Q-094, Q-097): `graded` and `submissions` counts, `recheck` count, mean and median grade; per competence (code, description, p, weak Items; Q-096), per Item and per question: `n`, `p` (0–1, 4 decimals), `r` (corrected item-total), `flags` (`too_hard`, `too_easy`, `low_discrimination`, `negative_discrimination`), `not_enough_data` per D-047 and Q-095; choice questions list each original option's count with `unused` under 5%. Computed on every read; nothing stored.
+- **Evidence:** docs/plans/p10-item-analysis.md
+- **Source:** user (approved plan, 2026-11-27) · confidence high
 
 ## Consumed
 

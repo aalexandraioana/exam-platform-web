@@ -78,6 +78,11 @@
 
 ### [Item analysis](questions/item-analysis.md)
 - Q-031 · Which thresholds flag an item as weak, and how are partial-credit items measured? · _answered_
+- Q-093 · Which Attempts go into Item Analysis when an Exam allows several? · _answered_
+- Q-094 · When can the Examiner see Item Analysis, and from which Attempts? · _answered_
+- Q-095 · What does an item show when every Candidate scored the same on it? · _answered_
+- Q-096 · What does a competence group show in Item Analysis? · _answered_
+- Q-097 · Which Attempt counts when a Candidate's best totals are tied? · _answered_
 
 ### [Platform and delivery](questions/platform-and-delivery.md)
 - Q-001 · What web framework and technology stack should be used? · _answered_

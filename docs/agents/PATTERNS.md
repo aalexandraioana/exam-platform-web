@@ -15,6 +15,7 @@
 - PATTERN-007 · A write that depends on a row's state locks that row first · candidate
 - PATTERN-008 · Dialog buttons in equal halves through DialogActions · candidate
 - PATTERN-009 · A file import checks the whole file, then inserts in one transaction · candidate
+- PATTERN-010 · Frontend tests run in the users' time zone · candidate
 
 ---
 
@@ -95,4 +96,12 @@
 - **How:** First pass: parse the file and check every record's shape with `Validator::make`, reusing the request rules (`CodeRules`, `TypeFitsSection`); collect every error, labelled by the record's code, and stop with nothing written if there is one. Second pass, inside `DB::transaction`: insert-only, keyed on the stable code (an existing code is skipped and reported, never updated); find-or-create the owner's own lists; let the domain check (`Readiness`) decide the status rather than refusing. Print one line per fact, so tests can match each with `expectsOutputToContain` (it consumes a line per match). Tests write fixtures with `tempnam` and pass them through a `--file` option.
 - **Example:** backend/app/Console/Commands/LoadQuestions.php; backend/tests/Feature/Console/LoadQuestionsTest.php
 - **Why:** A half-loaded file is worse than none, and re-running must be safe (D-029).
+- **Source:** agent · confidence medium
+
+## PATTERN-010 · Frontend tests run in the users' time zone
+- **Status:** candidate
+- **Use when:** A Vitest test checks a date or time as the user sees it (for example "30.11.2026, 14:00").
+- **How:** Write the fixture in UTC (`2026-11-30T12:00:00+00:00`) and assert the Romanian local time (14:00). `vitest.config.ts` sets `process.env.TZ = 'Europe/Bucharest'` before the workers start, as `playwright.config.ts` sets `timezoneId`. Never rely on the machine's own zone.
+- **Example:** frontend/vitest.config.ts; frontend/src/pages/examiner/GradingPage.test.tsx
+- **Why:** The DS-009 tests passed on a laptop in Romania and failed on CI in UTC (PR #14, 2026-11-27).
 - **Source:** agent · confidence medium

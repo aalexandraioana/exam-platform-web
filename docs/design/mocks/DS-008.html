@@ -31,6 +31,7 @@
   body:has(.published-marker:not([hidden])) .lockable .input,
   body:has(.published-marker:not([hidden])) .lockable .select,
   body:has(.published-marker:not([hidden])) .lockable .chip { opacity: 0.5; cursor: not-allowed; }
+  body:has(.results-marker:not([hidden])) .end-field .input { opacity: 0.5; cursor: not-allowed; }
   body:has(.published-marker:not([hidden])) .item-actions,
   body:has(.published-marker:not([hidden])) .add-item { display: none; }
   .exams td { vertical-align: top; }
@@ -60,6 +61,7 @@
       <button type="button" class="mock-btn" data-state-btn="s-item2">Item Subiectul II (20 p fix)</button>
       <button type="button" class="mock-btn" data-state-btn="s-publish">Confirmare publicare</button>
       <button type="button" class="mock-btn" data-state-btn="s-published">Publicat (blocat)</button>
+      <button type="button" class="mock-btn" data-state-btn="s-results">Rezultate publicate</button>
       <button type="button" class="mock-btn" data-state-btn="s-delete">Ștergere ciornă</button>
       <button type="button" class="mock-btn" data-state-btn="s-preview">Previzualizare candidat</button>
       <button type="button" class="mock-btn" data-state-btn="s-empty">Examen nou (gol)</button>
@@ -86,14 +88,15 @@
 </header>
 
 <!-- ============ BUILDER (valid + errors) ============ -->
-<main class="page" data-show="s-valid s-errors s-item s-item2 s-publish s-published s-delete">
-  <span class="published-marker" data-show="s-published" hidden></span>
+<main class="page" data-show="s-valid s-errors s-item s-item2 s-publish s-published s-delete s-results">
+  <span class="published-marker" data-show="s-published s-results" hidden></span>
+  <span class="results-marker" data-show="s-results" hidden></span>
   <div class="page-head">
     <div class="stack-sm">
       <a href="#" class="t-caption accent row" style="gap: var(--space-1);"><i data-icon="arrow-left" class="sm"></i>Examene</a>
       <h1 class="t-display text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</h1>
       <div class="row" data-show="s-valid s-errors s-item s-item2 s-publish s-delete"><span class="badge">Ciornă</span><span class="t-caption secondary">Salvat automat · acum 10 s</span></div>
-      <div class="row" data-show="s-published"><span class="badge success">Publicat</span><span class="t-caption secondary">pe 24.11.2026, 18:40</span></div>
+      <div class="row" data-show="s-published s-results"><span class="badge success">Publicat</span><span class="t-caption secondary">pe 24.11.2026, 18:40</span></div>
     </div>
     <div class="row">
       <button type="button" class="btn btn-ghost" style="color: var(--status-error);" data-show="s-valid s-errors s-item s-item2 s-publish s-delete"><i data-icon="trash" class="sm"></i>Șterge ciorna</button>
@@ -103,9 +106,9 @@
     </div>
   </div>
 
-  <div class="alert info" role="status" data-show="s-published">
+  <div class="alert info" role="status" data-show="s-published s-results">
     <i data-icon="info"></i>
-    <span><strong>Examenul este publicat pentru Clasa a VI-a A și Clasa a VI-a B.</strong> Poți schimba doar titlul, descrierea și sfârșitul ferestrei. Itemii, clasele, durata și încercările sunt blocate, iar examenul nu mai poate fi retras.</span>
+    <span><strong>Examenul este publicat pentru Clasa a VI-a A și Clasa a VI-a B.</strong> Poți schimba doar titlul<span data-show="s-published">, descrierea și sfârșitul ferestrei</span><span data-show="s-results"> și descrierea</span>. Itemii, clasele, durata și încercările sunt blocate, iar examenul nu mai poate fi retras.</span>
   </div>
 
   <!-- Checks (S-10) -->
@@ -153,7 +156,7 @@
         </div>
       </div>
       <div class="field lockable"><label for="from">Disponibil de la</label><input id="from" class="input" value="30.11.2026, 08:00"></div>
-      <div class="field"><label for="to">Disponibil până la</label><input id="to" class="input" value="30.11.2026, 14:00"><span class="help">După această oră nu mai pot începe încercări noi.</span></div>
+      <div class="field end-field"><label for="to">Disponibil până la</label><input id="to" class="input" value="30.11.2026, 14:00"><span class="help" data-show="s-valid s-errors s-item s-item2 s-publish s-published s-delete s-empty">După această oră nu mai pot începe încercări noi.</span><span class="help" data-show="s-results">Rezultatele sunt publicate, așa că data de încheiere nu se mai poate schimba.</span></div>
       <div class="field lockable"><label for="att">Încercări permise</label><input id="att" class="input" value="1" inputmode="numeric"></div>
       <div class="field lockable"><label for="pol">Nota care contează</label>
         <select id="pol" class="select" disabled aria-describedby="pol-h"><option>Cea mai mare</option><option>Ultima</option></select>

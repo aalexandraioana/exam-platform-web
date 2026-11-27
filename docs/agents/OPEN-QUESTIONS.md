@@ -95,6 +95,11 @@
 - Q-084 · Which Attempts does the results page show when an Exam allowed several? · _answered_
 - Q-085 · Does a Candidate see class statistics with their results? · _answered_
 - Q-086 · What happens to answers graded with one score when the question switches to a barem? · _answered_
+- Q-087 · Where is an answer-key correction logged (D-046)? · _answered_
+- Q-088 · What may change in a Subject I question's options once it has been drawn? · _answered_
+- Q-089 · Does a formula correction on a drawn question with generated values re-grade? · _answered_
+- Q-090 · Does the question editor say how many Attempts were re-graded after a key correction? · _answered_
+- Q-091 · Should correcting the formula of a drawn question with generated values recompute each Attempt's expected answer and re-grade? · _investigating_
 
 ---
 
@@ -644,3 +649,37 @@
 - **Context:** D-031 recalculates graded answers after a barem edit from their ticked steps; an answer graded with one score has none, so it kept its points unflagged, and a Candidate would see every barem step at 0 next to those points.
 - **Answer:** Every answer graded with one score is marked for re-check when its question switches to a barem (exams whose results aren't published), keeping its points until it is graded again; it goes back to the grading queue, and publishing waits until the Examiner gives points on the barem steps (Q-079), so a Candidate never sees zero barem steps. (User, 2026-11-27.)
 
+## Q-087 · Where is an answer-key correction logged (D-046)?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8c
+- **Context:** D-046 requires recalculation when a Subject I answer key is corrected after Attempts were submitted, until results are published; the details were open.
+- **Answer:** Stored in the database (who corrected which key, when, the key before and after, how many answers were recalculated) and shown in the question editor as the last corrections, one short line each. (User, 2026-11-27.)
+
+## Q-088 · What may change in a Subject I question's options once it has been drawn?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8c
+- **Context:** D-046 requires recalculation when a Subject I answer key is corrected after Attempts were submitted, until results are published; the details were open.
+- **Answer:** Which option(s) are correct and the accepted answers or value can be corrected, and re-grade. Option texts can be fixed, but Attempts keep what the Candidate saw. Adding, removing or reordering options is refused, because Attempts store options by their original position. (User, 2026-11-27.)
+
+## Q-089 · Does a formula correction on a drawn question with generated values re-grade?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8c
+- **Context:** D-046 requires recalculation when a Subject I answer key is corrected after Attempts were submitted, until results are published; the details were open.
+- **Answer:** Not in P8c: it re-grades fixed keys only. A formula change on a drawn question is refused with a clear message; re-grading from each Attempt's drawn values stays open (Q-091). (User, 2026-11-27.)
+
+## Q-090 · Does the question editor say how many Attempts were re-graded after a key correction?
+- **Status:** answered
+- **Date:** 2026-11-27
+- **Blocks:** P8c
+- **Context:** D-046 requires recalculation when a Subject I answer key is corrected after Attempts were submitted, until results are published; the details were open.
+- **Answer:** Yes: a success notice after the save, e.g. "Răspunsul corect a fost salvat: 14 încercări recalculate". (User, 2026-11-27.)
+
+## Q-091 · Should correcting the formula of a drawn question with generated values recompute each Attempt's expected answer and re-grade?
+- **Status:** investigating
+- **Date:** 2026-11-27
+- **Confirmed:** 2026-11-27
+- **Blocks:** P8c
+- **Context:** Out of P8c (Q-089); until answered, such a formula change is refused once the question is drawn.

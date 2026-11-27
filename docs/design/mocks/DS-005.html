@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS-005 · Candidate Results Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+<style>
+  .narrow { max-width: 880px; width: 100%; margin: 0 auto; }
+  .grade-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-6); }
+  .grade-big { font-family: var(--font-mono); font-size: 48px; line-height: 56px; font-weight: 700; color: var(--text-primary-accent); }
+  .scores { display: grid; grid-template-columns: auto auto; gap: var(--space-1) var(--space-6); }
+  .scores dd { margin: 0; text-align: right; font-family: var(--font-mono); }
+  .scores dt.total, .scores dd.total { border-top: 1px solid var(--border-subtle); padding-top: var(--space-1); font-weight: 600; }
+  .item { display: grid; gap: var(--space-3); }
+  .item-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+  .pts { font-family: var(--font-mono); font-weight: 700; white-space: nowrap; }
+  .pts.full { color: var(--status-success); }
+  .pts.zero { color: var(--status-error); }
+  .options { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+  .options li { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); }
+  .options li.mine { border-color: var(--border-strong); }
+  .options li.right { border-color: var(--status-success); background: var(--status-success-bg); }
+  .options li.wrong { border-color: var(--status-error); background: var(--status-error-bg); }
+  .options .tag-note { margin-left: auto; font-size: 13px; line-height: 18px; color: var(--text-secondary); }
+  .answer-row { display: grid; grid-template-columns: max-content 1fr; gap: var(--space-1) var(--space-3); }
+  .explain { border-left: 3px solid var(--border-focus); padding: var(--space-2) var(--space-4); background: var(--bg-surface-subtle); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+  .written { white-space: pre-line; padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--bg-surface-subtle); }
+  .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--space-3); }
+  .photo { aspect-ratio: 3 / 4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: #fffdf8; display: grid; place-items: center; }
+  .barem { list-style: none; margin: 0; padding: 0; display: grid; }
+  .barem li { display: flex; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--border-subtle); }
+  .comment { border: 1px solid var(--border-focus); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+  .attempts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .item h3, .item h4, .item p { margin: 0; }
+</style>
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-005 · Candidate results (mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-one">O încercare</button>
+      <button type="button" class="mock-btn" data-state-btn="s-many">Mai multe încercări</button>
+      <button type="button" class="mock-btn" data-state-btn="s-long">Text lung</button>
+      <button type="button" class="mock-btn" data-state-btn="s-notyet">Nepublicate încă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
+    </div>
+  </div>
+</aside>
+
+<header class="app-header">
+  <a href="#" class="brand">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    Evaluare Digitală
+  </a>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+    <div class="avatar" aria-label="Andrei Ionescu, candidat">AI</div>
+    <button class="btn btn-icon menu-btn" data-menu aria-label="Deschide meniul"><i data-icon="menu"></i></button>
+  </div>
+</header>
+
+<main class="page narrow">
+  <a href="#" class="link t-caption row" style="gap: var(--space-1);"><i data-icon="arrow-left" class="sm"></i>Tablou de bord</a>
+
+  <!-- RESULTS (D-019 published; Q-082–Q-085) -->
+  <div class="stack" data-show="s-one s-many s-long">
+    <div class="stack-sm">
+      <h1 class="t-display text-wrap" data-show="s-one s-many">Evaluare Unitatea 3: Rapoarte și proporții</h1>
+      <h1 class="t-display text-wrap" data-show="s-long">Evaluare națională pregătitoare interdisciplinară de matematică aplicată și raționament logic pentru clasa a VI-a</h1>
+      <span class="t-caption secondary">Rezultate publicate pe 01.12.2026, ora 18:20</span>
+    </div>
+
+    <!-- Several Attempts (Q-084): each with its grade, the counted one marked (D-012) -->
+    <nav class="attempts" aria-label="Încercările tale" data-show="s-many">
+      <a href="#" class="btn">Încercarea 1 · <span class="t-math">6,40</span></a>
+      <a href="#" class="btn" aria-current="page" style="border-color: var(--border-focus); background: var(--bg-primary-subtle);">Încercarea 2 · <span class="t-math">7,90</span> · contează</a>
+    </nav>
+
+    <section class="card grade-card" aria-labelledby="grade-h">
+      <div class="stack-sm">
+        <h2 id="grade-h" class="t-h3 secondary">Nota ta</h2>
+        <span class="grade-big">7,90</span>
+        <span class="t-caption secondary" data-show="s-many">Contează nota cea mai mare dintre încercări.</span>
+        <span class="t-caption secondary" data-show="s-one s-long">Predat pe 30.11.2026, ora 09:48</span>
+      </div>
+      <dl class="scores">
+        <dt>Subiectul I</dt><dd>25 / 30</dd>
+        <dt>Subiectul II</dt><dd>44 / 60</dd>
+        <dt>Din oficiu</dt><dd>10</dd>
+        <dt class="total">Total</dt><dd class="total">79 / 100</dd>
+      </dl>
+    </section>
+
+    <!-- Cohort note (D-019): one note for the whole class -->
+    <section class="card stack-sm" aria-labelledby="note-h">
+      <h2 id="note-h" class="t-h3">Nota examinatorului pentru clasă</h2>
+      <p>Greșeala cea mai des întâlnită la Subiectul I: confuzia dintre mărimi direct și invers proporționale (itemul 4). La Subiectul II, nu uitați să scrieți concluzia fiecărei demonstrații.</p>
+    </section>
+
+    <!-- SUBJECT I (Q-082): the question as shown, your answer, the correct one, the points, the explanation -->
+    <section class="stack" aria-labelledby="s1-h">
+      <h2 id="s1-h" class="t-h2">Subiectul I</h2>
+
+      <article class="card item">
+        <div class="item-head"><h3 class="t-h3">Itemul 1</h3><span class="pts full">5 / 5</span></div>
+        <p>Trei sferturi din <span class="t-math">48</span> reprezintă …</p>
+        <ul class="options">
+          <li><span class="t-math">12</span></li>
+          <li class="right mine"><i data-icon="circle-check" class="sm" style="color: var(--status-success);"></i><span class="t-math">36</span><span class="tag-note">Răspunsul tău · corect</span></li>
+          <li><span class="t-math">32</span></li>
+          <li><span class="t-math">64</span></li>
+        </ul>
+        <div class="explain"><strong>Explicație.</strong> Un sfert din <span class="t-math">48</span> este <span class="t-math">12</span>, deci trei sferturi sunt <span class="t-math">36</span>.</div>
+      </article>
+
+      <article class="card item">
+        <div class="item-head"><h3 class="t-h3">Itemul 4</h3><span class="pts zero">0 / 5</span></div>
+        <p>Numerele <span class="t-math">a</span> și <span class="t-math">b</span> sunt direct proporționale cu <span class="t-math">3</span> și <span class="t-math">5</span>, iar <span class="t-math">a + b = 32</span>. Numărul <span class="t-math">a</span> este egal cu …</p>
+        <div class="answer-row">
+          <span class="secondary">Răspunsul tău</span><span class="row" style="gap: var(--space-2);"><i data-icon="x" class="sm" style="color: var(--status-error);"></i><span class="t-math">20</span></span>
+          <span class="secondary">Răspuns corect</span><span class="t-math">12</span>
+        </div>
+      </article>
+
+      <article class="card item">
+        <div class="item-head"><h3 class="t-h3">Itemul 5</h3><span class="pts zero">0 / 5</span></div>
+        <p>Orice număr întreg negativ este mai mic decât <span class="t-math">0</span>.</p>
+        <div class="answer-row">
+          <span class="secondary">Răspunsul tău</span><span class="secondary">Fără răspuns</span>
+          <span class="secondary">Răspuns corect</span><span>Adevărat</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- SUBJECT II (Q-083): your steps and photos, points, barem steps earned, adjustment, comment -->
+    <section class="stack" aria-labelledby="s2-h">
+      <h2 id="s2-h" class="t-h2">Subiectul II</h2>
+
+      <article class="card item">
+        <div class="item-head"><h3 class="t-h3">Problema 7</h3><span class="pts">14 / 20</span></div>
+        <p>În triunghiul <span class="t-math">ABC</span>, <span class="t-math">AB = AC</span> și <span class="t-math">∢A = 40°</span>. a) Calculează <span class="t-math">∢B</span>. b) Arată că bisectoarea din <span class="t-math">A</span> este și mediană.</p>
+        <h4 class="t-body-m">Rezolvarea ta</h4>
+        <p class="written">a) ABC isoscel ⇒ ∢B = ∢C. ∢B + ∢C = 180° − 40° = 140° ⇒ ∢B = 70°.
+b) AD bisectoare. △ABD și △ACD: AB = AC, ∢BAD = ∢CAD, AD comună ⇒ congruente.</p>
+        <div class="photos" aria-label="Fotografiile tale (2)">
+          <div class="photo"><svg viewBox="0 0 120 160" width="90" aria-hidden="true"><path d="M60 20 L15 130 L105 130 Z M60 20 L60 130" fill="none" stroke="#333" stroke-width="2"/></svg></div>
+          <div class="photo"><svg viewBox="0 0 120 160" width="90" aria-hidden="true"><g stroke="#555" stroke-width="2"><line x1="15" y1="40" x2="105" y2="40"/><line x1="15" y1="65" x2="80" y2="65"/><line x1="15" y1="90" x2="105" y2="90"/><line x1="15" y1="115" x2="80" y2="115"/></g></svg></div>
+        </div>
+        <h4 class="t-body-m">Barem</h4>
+        <ul class="barem">
+          <li><span>1 · Triunghi isoscel ⇒ ∢B = ∢C</span><span class="t-math">3 / 3</span></li>
+          <li><span>2 · ∢B + ∢C = 140°</span><span class="t-math">3 / 3</span></li>
+          <li><span>3 · ∢B = 70°</span><span class="t-math">2 / 2</span></li>
+          <li><span>4 · Bisectoarea AD, triunghiurile ABD și ACD</span><span class="t-math">2 / 2</span></li>
+          <li><span>5 · △ABD ≅ △ACD (LUL), cu justificare</span><span class="t-math">3 / 5</span></li>
+          <li><span>6 · BD = DC ⇒ AD mediană</span><span class="t-math">0 / 5</span></li>
+          <li><span class="secondary">Ajustare</span><span class="t-math">+1</span></li>
+        </ul>
+        <div class="comment"><strong>Comentariul examinatorului.</strong> La b) lipsește concluzia BD = DC; justificarea congruenței e incompletă.</div>
+      </article>
+
+      <article class="card item">
+        <div class="item-head"><h3 class="t-h3">Problema 8</h3><span class="pts">16 / 20</span></div>
+        <p>Unghiurile <span class="t-math">AOB</span> și <span class="t-math">BOC</span> sunt adiacente suplementare, iar <span class="t-math">∢AOB = 3 · ∢BOC</span>. Calculează măsurile celor două unghiuri.</p>
+        <h4 class="t-body-m">Rezolvarea ta</h4>
+        <p class="written">∢AOB + ∢BOC = 180°, 4 · ∢BOC = 180°, ∢BOC = 45°, ∢AOB = 135°.</p>
+        <p class="t-caption secondary">Corectată fără barem: un singur punctaj pentru toată problema.</p>
+        <div class="comment"><strong>Comentariul examinatorului.</strong> Corect, dar explică de ce suma este <span class="t-math">180°</span>.</div>
+      </article>
+
+      <article class="card item">
+        <div class="item-head"><h3 class="t-h3">Problema 9</h3><span class="pts zero">0 / 20</span></div>
+        <p>Un produs costă <span class="t-math">120</span> de lei. După o reducere de <span class="t-math">15%</span>, cât costă produsul?</p>
+        <p class="secondary">Nu ai scris nimic și nu ai încărcat fotografii.</p>
+      </article>
+    </section>
+  </div>
+
+  <!-- NOT YET PUBLISHED (409 results_not_published): e.g. an old link -->
+  <div class="empty" data-show="s-notyet">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <h1 class="t-h2">Rezultatele nu sunt publicate încă</h1>
+    <p class="secondary" style="max-width: 480px;">Examinatorul corectează Subiectul II. Rezultatul apare în tabloul de bord după ce îl publică.</p>
+    <a href="#" class="btn">Înapoi la tabloul de bord</a>
+  </div>
+
+  <!-- LOADING -->
+  <div class="stack" data-show="s-loading" aria-busy="true" aria-label="Se încarcă rezultatele">
+    <div class="skeleton" style="width: 60%; height: 40px;"></div>
+    <div class="card stack"><div class="skeleton" style="width: 20%; height: 48px;"></div><div class="skeleton" style="width: 40%;"></div></div>
+    <div class="card stack"><div class="skeleton" style="width: 30%;"></div><div class="skeleton"></div><div class="skeleton" style="width: 80%;"></div></div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="alert error" role="alert" data-show="s-error">
+    <i data-icon="wifi-off"></i>
+    <div class="row between" style="flex: 1;"><span><strong>Nu am putut încărca rezultatele.</strong> Verifică conexiunea la internet și încearcă din nou.</span><button class="btn">Încearcă din nou</button></div>
+  </div>
+</main>
+<script src="shared/mock.js"></script>
+</body>
+</html>

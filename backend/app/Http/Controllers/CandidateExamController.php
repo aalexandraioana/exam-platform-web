@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AttemptStatus;
 use App\Enums\MembershipStatus;
 use App\Http\Resources\AttemptResource;
 use App\Http\Resources\ResultsResource;
@@ -31,7 +32,7 @@ class CandidateExamController extends Controller
                 'accepted' => (int) ($requests[MembershipStatus::Accepted->value] ?? 0),
                 'pending' => (int) ($requests[MembershipStatus::Pending->value] ?? 0),
             ],
-            'exams' => $exams->map(function ($exam) use ($candidate) {
+            'exams' => $exams->map(function ($exam) {
                 $state = Starter::state($exam);
                 $open = $exam->attempts->first(fn ($a) => in_array($a->status, Starter::OPEN, true));
                 $used = $exam->attempts->count();
@@ -64,7 +65,8 @@ class CandidateExamController extends Controller
                     'results_published' => $exam->results_published_at !== null,
                     // P8b: the counted grade, only once the results are published (D-012, D-019).
                     'grade' => $exam->results_published_at === null ? null
-                        : ResultsResource::grade(ResultsResource::counted($exam, ResultsResource::attempts($exam, $candidate->id))),
+                        : ResultsResource::grade(ResultsResource::counted($exam, $exam->attempts
+                            ->filter(fn ($a) => in_array($a->status, [AttemptStatus::Submitted, AttemptStatus::Graded], true)))),
                 ];
             }),
         ]);

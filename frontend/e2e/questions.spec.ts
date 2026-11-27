@@ -49,9 +49,12 @@ const entries = [
   { id: 42, code: 'LIB-TR-017', section: 'subject_2', type: 'structured_problem', grade_level: 6, difficulty: 'hard', statement: 'Arătați că în orice triunghi isoscel, mediana din vârf este și înălțime.', competence: { code: 'C4', description: '' }, topic: { name: 'Triunghiuri' }, author: 'Ana Rusu', copied_as: 'M6-TR-011' },
 ]
 
-async function mockBank(page: Page, bank = questions) {
+async function mockBank(page: Page, bank = questions, patch?: { status: number; body: (id: string) => object }) {
   await page.route('http://localhost:8000/api/**', (route) => {
     const path = new URL(route.request().url()).pathname.replace(/^\/api/, '')
+    if (patch && route.request().method() === 'PATCH') {
+      return route.fulfill({ status: patch.status, contentType: 'application/json', body: JSON.stringify(patch.body(path.split('/')[2])) })
+    }
     const body =
       path === '/user' ? { user: { ...userWith('examiner'), name: 'Maria Popa' } }
       : path === '/competences' ? { competences }
@@ -65,6 +68,11 @@ async function mockBank(page: Page, bank = questions) {
   })
 }
 
+const corrections = [
+  { corrected_at: '2026-11-27T12:20:00Z', examiner: 'Maria Popa', answers: 14 },
+  { corrected_at: '2026-11-26T07:05:00Z', examiner: 'Maria Popa', answers: 3 },
+]
+
 function screenshotPath(name: string) {
   return fileURLToPath(new URL(`../../docs/design/screens/${name}`, import.meta.url))
 }
@@ -75,13 +83,20 @@ const states = [
   { name: 'choice', search: '?q=7', ready: (page: Page) => expect(page.getByRole('radio', { name: 'Varianta a este corectă' })).toBeChecked() },
   { name: 'library', search: '?tab=library', ready: (page: Page) => expect(page.getByText('LIB-RP-044')).toBeVisible() },
   { name: 'empty', search: '', ready: (page: Page) => expect(page.getByRole('heading', { name: 'Banca ta este goală' })).toBeVisible() },
+  // P8c (D-046, Q-087–Q-090): after saving a corrected key, and the refusals once drawn.
+  { name: 'corrected', search: '?q=7', patch: { status: 200, body: (id: string) => ({ question: { ...(details[id] as object), key_corrections: corrections }, regraded: { answers: 14, flagged: 0 } }) },
+    ready: async (page: Page) => { await page.getByRole('button', { name: 'Salvează' }).click(); await expect(page.getByRole('list', { name: 'Corecturi ale răspunsului corect' })).toBeVisible() } },
+  { name: 'optlocked', search: '?q=7', patch: { status: 422, body: () => ({ message: 'x', errors: { answer_key: ['options_locked'] } }) },
+    ready: async (page: Page) => { await page.getByRole('button', { name: 'Salvează' }).click(); await expect(page.getByRole('alert')).toBeVisible() } },
+  { name: 'paramlocked', search: '?q=14', patch: { status: 422, body: () => ({ message: 'x', errors: { parameters: ['parameters_locked'] } }) },
+    ready: async (page: Page) => { await page.getByRole('button', { name: 'Salvează' }).click(); await expect(page.getByRole('alert')).toBeVisible() } },
 ]
 
 for (const theme of ['light', 'dark'] as const) {
   for (const width of [1440, 320]) {
     for (const state of states) {
       test(`DS-007 ${state.name}, ${theme} at ${width} px`, async ({ page }) => {
-        await mockBank(page, state.name === 'empty' ? [] : questions)
+        await mockBank(page, state.name === 'empty' ? [] : questions, 'patch' in state ? state.patch : undefined)
         await page.addInitScript((t) => {
           localStorage.setItem('auth_token', '1|e2e')
           localStorage.setItem('theme', t)
@@ -89,6 +104,7 @@ for (const theme of ['light', 'dark'] as const) {
         await page.setViewportSize({ width, height: 900 })
         await page.goto(`/examiner/questions${state.search}`)
         await state.ready(page)
+        await page.evaluate('window.scrollTo(0, 0)') // a click may have scrolled; full-page shots start at the top
         const suffix = width === 320 ? '.320' : ''
         const name = state.name === 'short' ? '' : `.${state.name}`
         await page.screenshot({ path: screenshotPath(`DS-007${name}.${theme}${suffix}.png`), fullPage: true })

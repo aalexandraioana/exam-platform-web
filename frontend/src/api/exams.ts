@@ -12,6 +12,8 @@ export interface ExamSummary {
   available_from: string | null
   available_until: string | null
   published_at: string | null
+  /** Set once the results are published (C-007); the end is locked from then on (Q-081). */
+  results_published_at?: string | null
   classes: Ref[]
   item_count: number
 }

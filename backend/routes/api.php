@@ -6,6 +6,7 @@ use App\Http\Controllers\AttemptImageController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BankListController;
 use App\Http\Controllers\CandidateExamController;
+use App\Http\Controllers\CandidateResultsController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\ExamController;
@@ -94,6 +95,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/memberships', [MembershipController::class, 'join']);
                 Route::get('/candidate/exams', [CandidateExamController::class, 'index']);
                 Route::post('/candidate/exams/{id}/attempts', [CandidateExamController::class, 'start'])->whereNumber('id');
+                Route::get('/candidate/exams/{id}/results', [CandidateResultsController::class, 'show'])->whereNumber('id');
                 Route::get('/attempts/{id}', [AttemptController::class, 'show'])->whereNumber('id');
                 Route::put('/attempts/{id}/items/{position}/answer', [AttemptController::class, 'save'])->whereNumber(['id', 'position']);
                 Route::post('/attempts/{id}/submit', [AttemptController::class, 'submit'])->whereNumber('id');

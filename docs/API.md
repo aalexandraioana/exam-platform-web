@@ -389,6 +389,36 @@ Since P7a (the dashboard) the answer also has a top-level `server_time`, `classe
 (`{ "id", "started_at", "expires_at" }` or `null`, beside `open_attempt_id`) and `submitted`
 (the Candidate has a submitted or sealed Attempt of it: "submitted, awaiting grading", D-019).
 
+Since P8b each exam also has `grade`: the grade (1–10, total / 10) of the Candidate's counted
+Attempt under the score policy (D-012), only once the results are published; `null` before.
+
+### GET /api/candidate/exams/{id}/results
+P8b (DS-005). The Candidate's own results, only after the Examiner published them (D-019).
+`409 results_not_published` before; `404` for an Exam not published to one of the Candidate's
+classes. `200`:
+```json
+{ "exam": { "id": 4, "title": "Evaluare Unitatea 3", "score_policy": "highest",
+    "results_published_at": "2026-12-01T16:20:00+00:00", "cohort_note": "Scrieți concluzia." },
+  "attempts": [{ "id": 51, "attempt_number": 1, "submitted_at": "2026-11-30T07:48:00+00:00",
+    "auto_submitted": false, "subject_1_score": 25, "subject_2_score": 44, "total_score": 79,
+    "grade": 7.9, "counted": true,
+    "items": [
+      { "position": 1, "section": "subject_1", "type": "single_choice", "points": 5,
+        "statement": "Trei sferturi din 48 reprezintă …", "options": ["12", "36", "32", "64"],
+        "answer": 2, "awarded_points": 5, "correct": 2, "explanation": "Un sfert din 48 este 12 …" },
+      { "position": 7, "section": "subject_2", "type": "structured_problem", "points": 20,
+        "statement": "…", "options": [], "answer": "a) ∢B = 70° …", "awarded_points": 10,
+        "images": [{ "id": 9, "position": 1, "name": "pagina-1.jpg", "size": 182044 }],
+        "adjustment": 1, "comment": "La b) lipsește concluzia.", "uses_barem": true,
+        "barem": [{ "description": "Triunghi isoscel", "points": 6, "earned": 6 }] }] }] }
+```
+Every Attempt the Candidate submitted, by number; `counted` marks the one whose grade counts
+(D-012, Q-084). Subject I items (Q-082): `answer` and `correct` as shown to the Candidate (option
+positions in the shown order, D-045; `true`/`false`; or the expected value), `explanation` from the
+question (may be `null`). Subject II problems (Q-083): the written steps in `answer`, the Candidate's
+photos (bytes from `GET /api/attempts/{id}/images/{imageId}`), `adjustment`, `comment`, and with a
+barem each step's `points` and `earned`. No class statistics (Q-085).
+
 ### POST /api/candidate/exams/{id}/attempts
 Starts an Attempt → `201 { "attempt" }` (below). The Attempt gets a seed; every Item its own Ready
 question (D-057); named values drawn (D-006); options shuffled (D-045); all stored, so the same seed

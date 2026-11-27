@@ -18,6 +18,7 @@ const ExamRoomPage = lazy(() => import('./pages/candidate/ExamRoomPage'))
 const ClassesPage = lazy(() => import('./pages/examiner/ClassesPage'))
 const ExamBuilderPage = lazy(() => import('./pages/examiner/ExamBuilderPage'))
 const ExamsPage = lazy(() => import('./pages/examiner/ExamsPage'))
+const GradingPage = lazy(() => import('./pages/examiner/GradingPage'))
 const QuestionBankPage = lazy(() => import('./pages/examiner/QuestionBankPage'))
 
 /** Shown while a page's code loads (usually a moment). */
@@ -56,6 +57,7 @@ export default function App() {
               <Route path="/examiner/questions" element={<ProtectedRoute role="examiner"><QuestionBankPage /></ProtectedRoute>} />
               <Route path="/examiner/exams" element={<ProtectedRoute role="examiner"><ExamsPage /></ProtectedRoute>} />
               <Route path="/examiner/exams/:id" element={<ProtectedRoute role="examiner"><ExamBuilderPage /></ProtectedRoute>} />
+              <Route path="/examiner/exams/:id/grading" element={<ProtectedRoute role="examiner"><GradingPage /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute role="administrator"><UsersPage /></ProtectedRoute>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

@@ -302,12 +302,41 @@ class QuestionController extends Controller
         if (array_key_exists('answer_key', $data) && KeyCorrection::optionsMoved((array) $question->answer_key, (array) $data['answer_key'])) {
             $errors['answer_key'] = ['options_locked'];
         }
-        if (array_key_exists('parameters', $data) && ($data['parameters'] ?? []) != ($question->parameters ?? [])) {
+        if (array_key_exists('parameters', $data) && self::canonical($data['parameters'] ?? []) !== self::canonical($question->parameters ?? [])) {
             $errors['parameters'] = ['parameters_locked'];
         }
         if ($errors) {
             throw ValidationException::withMessages($errors);
         }
+    }
+
+    /**
+     * Named values in one comparable shape: the editor rebuilds them on every save (it drops empty
+     * lists, trims text, writes whole numbers as numbers), so only a real change differs (Q-089).
+     */
+    private static function canonical(mixed $value): mixed
+    {
+        if (is_array($value)) {
+            $out = [];
+            foreach ($value as $key => $item) {
+                $item = self::canonical($item);
+                if ($item !== null && $item !== '' && $item !== []) {
+                    $out[$key] = $item;
+                }
+            }
+            if (! array_is_list($out)) {
+                ksort($out);
+            }
+
+            return $out;
+        }
+        if (is_string($value)) {
+            $value = trim($value);
+
+            return is_numeric($value) ? $value + 0 : $value;
+        }
+
+        return $value;
     }
 
     /** The editor sends the whole question on every save; an unchanged barem is not a change. */

@@ -193,6 +193,45 @@ describe('ExamBuilderPage (DS-008)', () => {
     expect(screen.queryByRole('button', { name: 'Șterge ciorna' })).not.toBeInTheDocument()
   })
 
+  it('opens the grading of a published exam with its progress (P8a)', async () => {
+    const published = { ...exam, status: 'published', published_at: '2026-11-25T10:00:00+00:00', results_published_at: null }
+    mockApi({ ...base, 'GET /exams/4': json(200, { exam: published }), 'GET /exams/4/grading': json(200, { counts: { total: 4, graded: 1, to_grade: 3, recheck: 0 } }) })
+    renderAt()
+
+    expect(await screen.findByRole('link', { name: 'Corectează (1 / 4)' })).toHaveAttribute('href', '/examiner/exams/4/grading')
+  })
+
+  it('locks the end once the results are published, keeping the title and description editable (Q-081)', async () => {
+    const done = { ...exam, status: 'published', published_at: '2026-11-25T10:00:00+00:00', results_published_at: '2026-12-01T16:20:00+00:00' }
+    mockApi({ ...base, 'GET /exams/4': json(200, { exam: done }), 'GET /exams/4/grading': json(200, { counts: { total: 4, graded: 4, to_grade: 0, recheck: 0 } }) })
+    renderAt()
+
+    expect(await screen.findByText('Rezultatele sunt publicate, așa că data de încheiere nu se mai poate schimba.')).toBeInTheDocument()
+    expect(screen.getByLabelText('Disponibil până la')).toBeDisabled()
+    expect(screen.getByLabelText('Titlu')).toBeEnabled()
+    expect(screen.getByLabelText('Descriere (opțional)')).toBeEnabled()
+    expect(screen.getByText('Examenul este publicat pentru Clasa a VI-a A.', { exact: false }).parentElement).toHaveTextContent('Poți schimba doar titlul și descrierea.')
+  })
+
+  it('fixes a Subject II Item at 20 points (D-062)', async () => {
+    const fetchMock = mockApi({ ...base, 'POST /exams/4/match': json(200, { count: 4 }), 'POST /exams/4/items': json(201, { exam }) })
+    renderAt()
+
+    fireEvent.click(await screen.findByRole('button', { name: '+ Adaugă item' }))
+    const dialog = screen.getByRole('dialog', { name: 'Item nou' })
+    fireEvent.change(within(dialog).getByLabelText('Subiect'), { target: { value: 'subject_2' } })
+    const points = within(dialog).getByLabelText('Puncte')
+    expect(points).toHaveValue('20')
+    expect(points).toHaveAttribute('readonly')
+    expect(within(dialog).getByText('La Subiectul II, fiecare problemă are 20 de puncte.')).toBeInTheDocument()
+    fireEvent.change(within(dialog).getByLabelText('Set de întrebări'), { target: { value: '2' } })
+    fireEvent.change(within(dialog).getByLabelText('Competență'), { target: { value: '3' } })
+    fireEvent.change(within(dialog).getByLabelText('Dificultate'), { target: { value: 'medium' } })
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Salvează itemul' }))
+
+    await waitFor(() => expect(bodyOf(fetchMock, 'POST /exams/4/items')).toMatchObject({ section: 'subject_2', points: 20 }))
+  })
+
   it('deletes a draft after a confirmation', async () => {
     mockApi({ ...base, 'DELETE /exams/4': json(204) })
     renderAt()

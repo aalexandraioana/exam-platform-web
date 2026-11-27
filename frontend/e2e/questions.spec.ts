@@ -88,6 +88,8 @@ const states = [
     ready: async (page: Page) => { await page.getByRole('button', { name: 'Salvează' }).click(); await expect(page.getByRole('list', { name: 'Corecturi ale răspunsului corect' })).toBeVisible() } },
   { name: 'optlocked', search: '?q=7', patch: { status: 422, body: () => ({ message: 'x', errors: { answer_key: ['options_locked'] } }) },
     ready: async (page: Page) => { await page.getByRole('button', { name: 'Salvează' }).click(); await expect(page.getByRole('alert')).toBeVisible() } },
+  { name: 'typelocked', search: '?q=7', patch: { status: 422, body: () => ({ message: 'x', errors: { type: ['type_locked'] } }) },
+    ready: async (page: Page) => { await page.getByRole('button', { name: 'Salvează' }).click(); await expect(page.getByRole('alert')).toBeVisible() } },
   { name: 'paramlocked', search: '?q=14', patch: { status: 422, body: () => ({ message: 'x', errors: { parameters: ['parameters_locked'] } }) },
     ready: async (page: Page) => { await page.getByRole('button', { name: 'Salvează' }).click(); await expect(page.getByRole('alert')).toBeVisible() } },
 ]

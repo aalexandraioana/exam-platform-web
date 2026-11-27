@@ -157,6 +157,8 @@ it('refuses adding, removing or reordering options, and changing a formula, once
     'an option added' => ['single', ['answer_key' => ['options' => ['12', '36', '32', '64', '48'], 'correct' => 2]], 'answer_key', 'options_locked'],
     'an option removed' => ['single', ['answer_key' => ['options' => ['12', '36', '32'], 'correct' => 2]], 'answer_key', 'options_locked'],
     'options reordered' => ['single', ['answer_key' => ['options' => ['36', '12', '32', '64'], 'correct' => 1]], 'answer_key', 'options_locked'],
+    // An option's text may change only in place: one moved is a reorder, even with a typo fixed.
+    'options reordered with a typo fixed' => ['single', ['answer_key' => ['options' => ['36', '12', '32', '46'], 'correct' => 1]], 'answer_key', 'options_locked'],
     'a formula changed' => ['values', ['parameters' => ['values' => ['a' => ['random' => ['min' => 1, 'max' => 9]], 'b' => ['fixed' => 10]], 'answer' => 'a + b + 1']], 'parameters', 'parameters_locked'],
     // Q-092: each Attempt grades by the type it drew; another type's key would re-grade it wrongly.
     'the type changed' => ['single', ['type' => 'multiple_choice', 'answer_key' => ['options' => ['12', '36', '32', '64'], 'correct' => [1, 3]]], 'type', 'type_locked'],

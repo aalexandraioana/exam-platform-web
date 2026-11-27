@@ -253,4 +253,3 @@ it('accepts the editor sending back drawn named values in its own shape, and sti
     $this->patchJson("/api/questions/{$s['questions']['values']->id}", ['parameters' => [...$editor, 'answer' => 'a + b + 1']])
         ->assertUnprocessable()->assertJsonPath('errors.parameters.0', 'parameters_locked');
 });
-

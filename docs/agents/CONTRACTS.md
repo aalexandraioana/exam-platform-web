@@ -16,6 +16,8 @@
 - C-005 · Exams API: exams, blueprint Items, publish checks, preview · provided
 - C-006 · Attempts API (Candidate): exams, start, read, autosave, submit; sealing cron · provided
 - C-007 · Grading API (Examiner): queue, grades, published results, photos · provided
+- C-008 · Item Analysis API (Examiner): difficulty, discrimination, distractors · provided
+- C-009 · Overview API: the Examiner's dashboard and the Administrator's exam list · provided
 
 ---
 
@@ -90,6 +92,25 @@
 - **Interface:** [docs/API.md → Grading (Examiner)](../API.md#grading-examiner): `GET /api/exams/{id}/grading` (queue, counts, publish readiness, mean and median), `GET`/`PUT /api/grading/items/{attemptItemId}` (one answer; barem steps or one score, adjustment, comment; 422 `steps`, `points`, `adjustment: out_of_range`; 409 `results_published`, `attempt_open`), `POST /api/exams/{id}/results` (cohort note; 422 `results_not_ready` with `missing`: `ungraded`, `recheck` (Q-079), `open_attempts`, `window_open`; 409 `results_published`), `GET /api/grading/images/{imageId}`.
 - **Evidence:** docs/plans/p8a-grading-and-publishing.md; docs/API.md
 - **Source:** user (approved plan, 2026-11-26) · confidence high
+
+## C-008 · Item Analysis API (Examiner): difficulty, discrimination, distractors
+- **Status:** approved
+- **Date:** 2026-11-27
+- **Confirmed:** 2026-11-27
+- **Provider:** `backend/` (routes/api.php, ItemAnalysisController, Support/Analysis/ItemAnalysis, Support/Grading/CountedAttempts)
+- **Consumers:** `frontend/src/api/analysis.ts` (P10, DS-010)
+- **Interface:** [docs/API.md → Item Analysis (Examiner)](../API.md#item-analysis-examiner): `GET /api/exams/{id}/analysis`, Examiner only, another Examiner's exam 404. From each Candidate's counted, graded Attempt (D-012; a tie under highest: the later Attempt; Q-093, Q-094, Q-097): `graded` and `submissions` counts, `recheck` count, mean and median grade; per competence (code, description, p, weak Items; Q-096), per Item and per question: `n`, `p` (0–1, 4 decimals), `r` (corrected item-total), `flags` (`too_hard`, `too_easy`, `low_discrimination`, `negative_discrimination`), `not_enough_data` per D-047 and Q-095; choice questions list each original option's count with `unused` under 5%. Computed on every read; nothing stored.
+- **Evidence:** docs/plans/p10-item-analysis.md
+- **Source:** user (approved plan, 2026-11-27) · confidence high
+
+## C-009 · Overview API: the Examiner's dashboard and the Administrator's exam list
+- **Status:** approved
+- **Date:** 2026-11-28
+- **Provider:** `backend/` (routes/api.php, OverviewController)
+- **Consumers:** `frontend/src/api/overview.ts` (P11, DS-006, DS-012)
+- **Interface:** [docs/API.md → Overview](../API.md#overview): `GET /api/examiner/dashboard` (Examiner, own exams): `counts` (`active_exams`: published and open; `attempts_in_progress`: started or in progress before deadline + grace, D-004; `awaiting_grading`: submitted Attempts) and `exams` (published, open or with submissions awaiting grading; open first). `GET /api/admin/exams` (Administrator, read-only, Q-098): every exam, drafts included, newest first, with Examiner, status, state (null for a draft), window, `results_published_at`, classes and `attempts` (`submitted`: submitted or graded; `graded`). No Candidate data, no scores. Computed on every read.
+- **Evidence:** docs/plans/p11-overview-screens.md
+- **Source:** user (approved plan, 2026-11-28) · confidence high
 
 ## Consumed
 

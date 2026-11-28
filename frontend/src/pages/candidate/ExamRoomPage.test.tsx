@@ -224,7 +224,7 @@ describe('ExamRoomPage (DS-004, P7b)', () => {
 
     expect(await screen.findByRole('heading', { name: 'Timpul s-a încheiat' })).toBeInTheDocument()
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Mergi la tabloul de bord' })).toHaveAttribute('href', '/candidate')
+    expect(screen.getByRole('link', { name: 'Mergi la panou' })).toHaveAttribute('href', '/candidate')
   })
 
   it('opens a sealed Attempt on its end screen, without the inputs (P7c)', async () => {

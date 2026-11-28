@@ -135,7 +135,7 @@ describe('ExamRoomPage timer (P7c)', () => {
     expect(await screen.findByRole('heading', { name: 'Timpul s-a încheiat' }, { timeout: 3000 })).toBeInTheDocument()
     expect(calls).toEqual(['put 2 "17"', 'submit'])
     expect(screen.getByText(/a fost predat automat la \d\d:\d\d/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Mergi la tabloul de bord' })).toHaveAttribute('href', '/candidate')
+    expect(screen.getByRole('link', { name: 'Mergi la panou' })).toHaveAttribute('href', '/candidate')
   })
 })
 
@@ -158,7 +158,7 @@ describe('ExamRoomPage submit (P7c)', () => {
     expect(await screen.findByRole('heading', { name: 'Examen predat' })).toBeInTheDocument()
     expect(calls).toEqual(['submit'])
     expect(screen.getByText(/Ai predat examenul „Evaluare Unitatea 3” la \d\d:\d\d\. Răspunsurile tale au ajuns pe server \(1 din 5 itemi cu răspuns\)\./)).toBeInTheDocument()
-    expect(screen.getByText('Rezultatele apar în tabloul de bord după ce examinatorul le publică.')).toBeInTheDocument()
+    expect(screen.getByText('Rezultatele apar în panou după ce examinatorul le publică.')).toBeInTheDocument()
   })
 
   it('sends the typed answer first and does not submit while one is unsaved', async () => {

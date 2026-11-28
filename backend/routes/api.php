@@ -12,8 +12,10 @@ use App\Http\Controllers\CronController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamItemController;
 use App\Http\Controllers\GradingController;
+use App\Http\Controllers\ItemAnalysisController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\OverviewController;
 use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +90,12 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::get('/grading/items/{id}', [GradingController::class, 'show'])->whereNumber('id');
                 Route::put('/grading/items/{id}', [GradingController::class, 'grade'])->whereNumber('id');
                 Route::get('/grading/images/{id}', [GradingController::class, 'image'])->whereNumber('id');
+
+                // C-008 (docs/API.md → Item Analysis): difficulty, discrimination, distractors (P10).
+                Route::get('/exams/{id}/analysis', [ItemAnalysisController::class, 'show'])->whereNumber('id');
+
+                // C-009 (docs/API.md → Overview): the Examiner's dashboard (P11, DS-006).
+                Route::get('/examiner/dashboard', [OverviewController::class, 'examinerDashboard']);
             });
 
             // C-002 (docs/API.md → Joining a class) and C-006 (docs/API.md → Attempts): the Candidate.
@@ -111,6 +119,8 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('/examiners', [UserController::class, 'store']);
                 Route::put('/users/{id}/password', [UserController::class, 'setPassword'])->whereNumber('id');
                 Route::patch('/users/{id}', [UserController::class, 'update'])->whereNumber('id');
+                // C-009 (docs/API.md → Overview): every exam, read-only (P11, DS-012, Q-098).
+                Route::get('/exams', [OverviewController::class, 'adminExams']);
             });
         });
     });

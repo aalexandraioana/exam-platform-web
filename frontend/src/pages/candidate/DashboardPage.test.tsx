@@ -201,7 +201,7 @@ describe('DashboardPage (DS-003, P7a)', () => {
     })
     renderPage()
 
-    expect(screen.getByLabelText('Se încarcă tabloul de bord')).toBeInTheDocument()
+    expect(screen.getByLabelText('Se încarcă panoul')).toBeInTheDocument()
     const alert = await screen.findByRole('alert')
     expect(alert).toHaveTextContent('Nu am putut încărca examenele.')
     fireEvent.click(within(alert).getByRole('button', { name: 'Încearcă din nou' }))

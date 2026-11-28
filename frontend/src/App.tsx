@@ -13,13 +13,16 @@ import SessionLoading from './components/SessionLoading'
 // Signed-in screens load when first opened, so the login screen stays light (one chunk per page).
 const ChangePasswordPage = lazy(() => import('./pages/ChangePasswordPage'))
 const UsersPage = lazy(() => import('./pages/admin/UsersPage'))
+const AdminExamsPage = lazy(() => import('./pages/admin/AdminExamsPage'))
 const DashboardPage = lazy(() => import('./pages/candidate/DashboardPage'))
 const ExamRoomPage = lazy(() => import('./pages/candidate/ExamRoomPage'))
 const ResultsPage = lazy(() => import('./pages/candidate/ResultsPage'))
 const ClassesPage = lazy(() => import('./pages/examiner/ClassesPage'))
 const ExamBuilderPage = lazy(() => import('./pages/examiner/ExamBuilderPage'))
 const ExamsPage = lazy(() => import('./pages/examiner/ExamsPage'))
+const ExaminerDashboardPage = lazy(() => import('./pages/examiner/ExaminerDashboardPage'))
 const GradingPage = lazy(() => import('./pages/examiner/GradingPage'))
+const ItemAnalysisPage = lazy(() => import('./pages/examiner/ItemAnalysisPage'))
 const QuestionBankPage = lazy(() => import('./pages/examiner/QuestionBankPage'))
 
 /** Shown while a page's code loads (usually a moment). */
@@ -55,12 +58,15 @@ export default function App() {
               <Route path="/candidate" element={<ProtectedRoute role="candidate"><DashboardPage /></ProtectedRoute>} />
               <Route path="/candidate/attempts/:id" element={<ProtectedRoute role="candidate"><ExamRoomPage /></ProtectedRoute>} />
               <Route path="/candidate/exams/:id/results" element={<ProtectedRoute role="candidate"><ResultsPage /></ProtectedRoute>} />
-              <Route path="/examiner" element={<ProtectedRoute role="examiner"><ClassesPage /></ProtectedRoute>} />
+              <Route path="/examiner" element={<ProtectedRoute role="examiner"><ExaminerDashboardPage /></ProtectedRoute>} />
+              <Route path="/examiner/classes" element={<ProtectedRoute role="examiner"><ClassesPage /></ProtectedRoute>} />
               <Route path="/examiner/questions" element={<ProtectedRoute role="examiner"><QuestionBankPage /></ProtectedRoute>} />
               <Route path="/examiner/exams" element={<ProtectedRoute role="examiner"><ExamsPage /></ProtectedRoute>} />
               <Route path="/examiner/exams/:id" element={<ProtectedRoute role="examiner"><ExamBuilderPage /></ProtectedRoute>} />
               <Route path="/examiner/exams/:id/grading" element={<ProtectedRoute role="examiner"><GradingPage /></ProtectedRoute>} />
+              <Route path="/examiner/exams/:id/analysis" element={<ProtectedRoute role="examiner"><ItemAnalysisPage /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute role="administrator"><UsersPage /></ProtectedRoute>} />
+              <Route path="/admin/exams" element={<ProtectedRoute role="administrator"><AdminExamsPage /></ProtectedRoute>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>

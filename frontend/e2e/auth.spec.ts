@@ -2,9 +2,9 @@ import { expect, test } from '@playwright/test'
 import { mockAuthApi, type Role } from './mockApi.ts'
 
 const homes: Array<{ role: Role; path: string; heading: string }> = [
-  { role: 'candidate', path: '/candidate', heading: 'Tablou de bord' },
-  // P3: the Examiner's home is the classes screen (DS-013).
-  { role: 'examiner', path: '/examiner', heading: 'Clase' },
+  { role: 'candidate', path: '/candidate', heading: 'Panou' },
+  // P11 (Q-099): the Examiner's home is the dashboard (DS-006).
+  { role: 'examiner', path: '/examiner', heading: 'Panou' },
   // P3b: the Administrator's home is the users screen (DS-011).
   { role: 'administrator', path: '/admin', heading: 'Utilizatori' },
 ]
@@ -36,5 +36,5 @@ test('registration lands on the Candidate home', async ({ page }) => {
   await page.getByRole('button', { name: 'Creează contul' }).click()
 
   await expect(page).toHaveURL(/\/candidate$/)
-  await expect(page.getByRole('heading', { level: 1, name: 'Tablou de bord' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Panou' })).toBeVisible()
 })

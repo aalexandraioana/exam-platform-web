@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>DS-012 · Administrator Exam Supervision Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+<style>
+  .num { font-family: var(--font-mono); white-space: nowrap; }
+  td.num, th.num { text-align: right; }
+  th.num { font-family: inherit; }
+  .exams-card { overflow: hidden; padding: 0; }
+  .filter { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); padding: var(--space-4) var(--space-6) 0; }
+  .filter .select { max-width: 240px; }
+  .exams { table-layout: fixed; }
+  .exams col.c-state { width: 16%; } .exams col.c-window { width: 21%; } .exams col.c-classes { width: 12%; } .exams col.c-att { width: 17%; }
+  .exams td.cell-window > span { display: block; }
+  .exams td { vertical-align: middle; }
+  .exams tbody tr:last-child td { border-bottom: 0; }
+  .exams td.cell-exam > span { display: block; }
+  .states { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  @media (max-width: 639px) {
+    .filter { padding: var(--space-4) var(--space-4) 0; }
+    .filter .select { max-width: none; }
+    .exams, .exams tbody { display: block; table-layout: auto; } .exams colgroup { display: none; }
+    .exams thead { display: none; }
+    .exams tr { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle); }
+    .exams td { display: grid; gap: 0; padding: 0; border: 0; text-align: left; }
+    .exams td.num { text-align: left; }
+    .exams td[data-label]::before { content: attr(data-label); font-family: var(--font-ui); font-size: 13px; line-height: 18px; color: var(--text-secondary); }
+    .exams td.wide { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-012 · Examene (administrator, mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-all">Toate</button>
+      <button type="button" class="mock-btn" data-state-btn="s-archived">Filtru: arhivate</button>
+      <button type="button" class="mock-btn" data-state-btn="s-none">Filtru fără rezultat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-empty">Niciun examen</button>
+      <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
+    </div>
+  </div>
+</aside>
+
+<header class="app-header">
+  <a href="#" class="brand"><i data-icon="book-open-text" class="lg"></i>Evaluare Digitală</a>
+  <nav class="nav" aria-label="Navigare administrator">
+    <a href="#">Utilizatori</a><a href="#" aria-current="page">Examene</a>
+  </nav>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+    <div class="avatar" aria-label="Radu Ionescu, administrator">RI</div>
+    <button class="btn btn-icon menu-btn" data-menu aria-label="Deschide meniul"><i data-icon="menu"></i></button>
+  </div>
+</header>
+
+<main class="page narrow">
+  <div class="page-head">
+    <div class="stack-sm">
+      <h1 class="t-display">Examene</h1>
+      <span class="secondary">Toate examenele de pe platformă, ale tuturor examinatorilor. Doar pentru consultare.</span>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="alert error" role="alert" data-show="s-error">
+    <i data-icon="wifi-off"></i>
+    <div class="row between"><span><strong>Lista de examene nu s-a încărcat.</strong> Nu ne-am putut conecta la server. Încearcă din nou.</span><button class="btn"><i data-icon="rotate-cw" class="sm"></i>Încearcă din nou</button></div>
+  </div>
+
+  <!-- No exam on the platform yet -->
+  <div class="empty" data-show="s-empty">
+    <i data-icon="list"></i>
+    <h2 class="t-h2">Încă nu există examene</h2>
+    <p class="secondary" style="max-width: 520px; margin: 0;">Examenele create de examinatori apar aici, de la ciornă până după închidere.</p>
+  </div>
+
+  <section class="card exams-card stack-sm" aria-label="Examene" data-show="s-all s-archived s-none s-loading">
+    <div class="filter">
+      <label for="state" class="t-body-m">Arată</label>
+      <select id="state" class="select" data-show="s-all s-loading"><option selected>Toate (6)</option><option>Active (3)</option><option>Arhivate (2)</option><option>Ciorne (1)</option></select>
+      <select class="select" aria-label="Arată" data-show="s-archived s-none"><option>Toate (6)</option><option>Active (3)</option><option selected>Arhivate (2)</option><option>Ciorne (1)</option></select>
+    </div>
+
+    <!-- Loading: skeleton rows keep the table layout -->
+    <div class="stack" style="padding: var(--space-4) var(--space-6) var(--space-6);" data-show="s-loading" aria-busy="true" aria-label="Se încarcă examenele">
+      <div class="skeleton" style="width: 60%;"></div><div class="skeleton" style="width: 80%;"></div><div class="skeleton" style="width: 50%;"></div>
+    </div>
+
+    <p class="secondary" style="padding: var(--space-4) var(--space-6) var(--space-6);" data-show="s-none">Niciun examen arhivat încă. Un examen ajunge aici după ce i se închide fereastra.</p>
+
+    <div class="table-wrap" data-show="s-all s-archived">
+      <table class="exams">
+        <colgroup><col><col class="c-state"><col class="c-window"><col class="c-classes"><col class="c-att"></colgroup>
+        <thead><tr><th>Examen</th><th>Stare</th><th>Fereastră</th><th>Clase</th><th class="num">Predate / corectate</th></tr></thead>
+        <tbody>
+          <tr data-show="s-all">
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</span><span class="t-caption secondary">Maria Popa</span></td>
+            <td data-label="Stare"><span class="states"><span class="badge success">Deschis</span></span></td>
+            <td class="cell-window" data-label="Fereastră"><span class="num">30 nov., 09:00</span><span class="num">– 30 nov., 12:00</span></td>
+            <td data-label="Clase">6A, 6B</td>
+            <td class="num" data-label="Predate / corectate">9 / 4</td>
+          </tr>
+          <tr data-show="s-all">
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Test de recapitulare la fracții zecimale și operații cu numere raționale pozitive, semestrul I</span><span class="t-caption secondary text-wrap">Elena-Alexandra Popescu-Vasilescu</span></td>
+            <td data-label="Stare"><span class="states"><span class="badge success">Deschis</span></span></td>
+            <td class="cell-window" data-label="Fereastră"><span class="num">25 nov., 08:00</span><span class="secondary">fără dată de închidere</span></td>
+            <td data-label="Clase" class="text-wrap">6C</td>
+            <td class="num" data-label="Predate / corectate">2 / 0</td>
+          </tr>
+          <tr data-show="s-all">
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Evaluare finală semestrul I</span><span class="t-caption secondary">Maria Popa</span></td>
+            <td data-label="Stare"><span class="states"><span class="badge accent">Urmează</span></span></td>
+            <td class="cell-window" data-label="Fereastră"><span class="num">15 dec., 09:00</span><span class="num">– 15 dec., 11:00</span></td>
+            <td data-label="Clase">6A, 6B, 6C</td>
+            <td class="num" data-label="Predate / corectate">0 / 0</td>
+          </tr>
+          <tr>
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Evaluare Unitatea 2: Unghiuri</span><span class="t-caption secondary">Maria Popa</span></td>
+            <td data-label="Stare"><span class="states"><span class="badge">Închis</span><span class="badge success">Rezultate publicate</span></span></td>
+            <td class="cell-window" data-label="Fereastră"><span class="num">20 nov., 09:00</span><span class="num">– 20 nov., 12:00</span></td>
+            <td data-label="Clase">6A, 6B</td>
+            <td class="num" data-label="Predate / corectate">24 / 24</td>
+          </tr>
+          <tr>
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Evaluare Unitatea 1: Numere naturale</span><span class="t-caption secondary">Ion Rusu</span></td>
+            <td data-label="Stare"><span class="states"><span class="badge">Închis</span></span></td>
+            <td class="cell-window" data-label="Fereastră"><span class="num">10 nov., 09:00</span><span class="num">– 10 nov., 12:00</span></td>
+            <td data-label="Clase">5A</td>
+            <td class="num" data-label="Predate / corectate">18 / 12</td>
+          </tr>
+          <tr data-show="s-all">
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Fracții ordinare (în lucru)</span><span class="t-caption secondary">Ion Rusu</span></td>
+            <td data-label="Stare"><span class="states"><span class="badge">Ciornă</span></span></td>
+            <td class="cell-window" data-label="Fereastră"><span class="secondary">nestabilită</span></td>
+            <td data-label="Clase"><span class="secondary">nicio clasă</span></td>
+            <td class="num" data-label="Predate / corectate">–</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

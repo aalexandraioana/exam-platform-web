@@ -81,3 +81,10 @@
 - **Blocks:** P5
 - **Context:** DS-008 warns about a competence with no Item.
 - **Answer:** Every competence of the Examiner that has at least one Ready question for the Exam's grade level; a missing one is a warning, not a block. (Answered 2026-11-24.)
+
+## Q-098 · What does the Administrator's exam supervision (DS-012) show, and can the Administrator act on exams?
+- **Status:** answered
+- **Date:** 2026-11-28
+- **Blocks:** P11 (DS-012)
+- **Context:** The README promises "a platform-wide directory of all active and archived exams" and "lifecycle management"; there is no archive feature, and D-054–D-056 give the Administrator no power over exams.
+- **Answer:** A read-only list of every exam, drafts included, with a state filter: All / Active (upcoming and open) / Archived (closed: the window has ended) / Drafts. No actions on exams. (User, 2026-11-28.)

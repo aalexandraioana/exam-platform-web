@@ -19,3 +19,10 @@
 - **Blocks:** P4b (question bank), P7 (exam room)
 - **Context:** Plain text with JetBrains Mono (DESIGN.md `font-math`), or rendered notation such as KaTeX (a new dependency).
 - **Answer:** Plain text in JetBrains Mono (DESIGN.md `font-math`), with Unicode symbols typed in the text (∢, °, ², ·, :, ≤); no rendering library. (Answered 2026-11-24.)
+
+## Q-099 · Where does an Examiner land after signing in once the dashboard (DS-006) exists?
+- **Status:** answered
+- **Date:** 2026-11-28
+- **Blocks:** P11 (DS-006)
+- **Context:** Examiners landed on their classes at `/examiner` (DS-013). The Candidate already lands on a dashboard (DS-003).
+- **Answer:** On the dashboard at `/examiner`; the classes move to `/examiner/classes` and the menu starts with "Panou". (User, 2026-11-28.)

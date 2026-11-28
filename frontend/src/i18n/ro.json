@@ -59,7 +59,7 @@
     "classCode": "Codul clasei",
     "optional": "(opțional)",
     "classCodeNotFound": "Niciun cod de clasă nu se potrivește. Verifică-l cu examinatorul clasei sau lasă câmpul gol și adaugă codul mai târziu.",
-    "classCodeHelp": "Îl primești de la examinatorul clasei. Intri în clasă după ce examinatorul îți acceptă cererea. Poți adăuga codul și mai târziu, din tabloul de bord.",
+    "classCodeHelp": "Îl primești de la examinatorul clasei. Intri în clasă după ce examinatorul îți acceptă cererea. Poți adăuga codul și mai târziu, din panou.",
     "submit": "Creează contul",
     "submitting": "Se creează contul…",
     "haveAccount": "Ai deja cont?",
@@ -116,7 +116,7 @@
     "joinCodeLabel": "Codul de înscriere: {{spelled}}",
     "copy": "Copiază",
     "newCode": "Generează alt cod",
-    "joinHelp": "Candidații introduc codul la înregistrare sau din tabloul de bord. Intră în clasă doar după ce îi accepți. Un cod nou îl oprește pe cel vechi; cererile deja trimise rămân.",
+    "joinHelp": "Candidații introduc codul la înregistrare sau din panou. Intră în clasă doar după ce îi accepți. Un cod nou îl oprește pe cel vechi; cererile deja trimise rămân.",
     "requestsTitle": "Cereri în așteptare ({{count}})",
     "noRequests": "Nicio cerere în așteptare. Când un candidat introduce codul clasei, cererea lui apare aici.",
     "accept": "Acceptă",
@@ -585,12 +585,12 @@
     "analysis": "Analiza itemilor"
   },
   "candidate": {
-    "title": "Tablou de bord",
+    "title": "Panou",
     "subtitle": "Examenele publicate pentru clasele tale.",
     "subtitleEmpty": "Nu ai niciun examen programat acum.",
     "join": "Am un cod de clasă",
     "joinOther": "Am alt cod de clasă",
-    "loading": "Se încarcă tabloul de bord",
+    "loading": "Se încarcă panoul",
     "loadFailed": "<strong>Nu am putut încărca examenele.</strong> Verifică conexiunea la internet și încearcă din nou. Dacă problema continuă, anunță examinatorul.",
     "inProgress": "Încercare în desfășurare",
     "counts": "Subiectul I ({{subjectOne}}) + Subiectul II ({{subjectTwo}})",
@@ -675,7 +675,7 @@
     "stepsLabel": "Pașii rezolvării",
     "stepsHint": "Scrie toți pașii: datele, calculele și răspunsul.",
     "notSaved": "<strong>Răspunsul la itemul {{number}} nu s-a salvat.</strong> Verifică internetul; răspunsul rămâne pe ecran.",
-    "toDashboard": "Mergi la tabloul de bord",
+    "toDashboard": "Mergi la panou",
     "navigator": {
       "label": "Navigator itemi",
       "title": "Itemi",
@@ -726,7 +726,7 @@
       "sealedText": "Examenul „{{title}}” a fost predat automat la {{time}}, cu toate răspunsurile salvate ({{answered}} din {{total}} itemi au ajuns pe server).",
       "doneTitle": "Examen predat",
       "doneText": "Ai predat examenul „{{title}}” la {{time}}. Răspunsurile tale au ajuns pe server ({{answered}} din {{total}} itemi cu răspuns).",
-      "resultsLater": "Rezultatele apar în tabloul de bord după ce examinatorul le publică."
+      "resultsLater": "Rezultatele apar în panou după ce examinatorul le publică."
     },
     "offlineStatus_one": "Fără conexiune · {{count}} răspuns în așteptare",
     "offlineStatus_few": "Fără conexiune · {{count}} răspunsuri în așteptare",
@@ -854,13 +854,13 @@
     }
   },
   "results": {
-    "back": "Tablou de bord",
+    "back": "Panou",
     "publishedOn": "Rezultate publicate pe {{date}}, ora {{time}}",
     "loading": "Se încarcă rezultatele",
     "loadFailed": "<strong>Nu am putut încărca rezultatele.</strong> Verifică conexiunea la internet și încearcă din nou.",
     "notYet": "Rezultatele nu sunt publicate încă",
-    "notYetText": "Examinatorul corectează Subiectul II. Rezultatul apare în tabloul de bord după ce îl publică.",
-    "backToDashboard": "Înapoi la tabloul de bord",
+    "notYetText": "Examinatorul corectează Subiectul II. Rezultatul apare în panou după ce îl publică.",
+    "backToDashboard": "Înapoi la panou",
     "attempts": "Încercările tale",
     "attempt": "Încercarea {{number}} · {{grade}}",
     "counts": " · contează",

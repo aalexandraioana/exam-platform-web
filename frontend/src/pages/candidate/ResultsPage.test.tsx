@@ -66,7 +66,7 @@ describe('ResultsPage (DS-005, P8b)', () => {
     expect(valueOf('Subiectul I')).toHaveTextContent('25 / 30')
     expect(valueOf('Subiectul II')).toHaveTextContent('44 / 60')
     expect(screen.getByText('Scrieți concluzia fiecărei demonstrații.')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Tablou de bord' })).toHaveAttribute('href', '/candidate')
+    expect(screen.getByRole('link', { name: 'Panou' })).toHaveAttribute('href', '/candidate')
     // Q-085: no class statistics (the Examiner's "Media: … · mediana: …"); "mediană" in a barem step is not one.
     expect(screen.queryByText(/Media:|mediana:/)).not.toBeInTheDocument()
   })
@@ -131,7 +131,7 @@ describe('ResultsPage (DS-005, P8b)', () => {
     renderAt()
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Rezultatele nu sunt publicate încă' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Înapoi la tabloul de bord' })).toHaveAttribute('href', '/candidate')
+    expect(screen.getByRole('link', { name: 'Înapoi la panou' })).toHaveAttribute('href', '/candidate')
   })
 
   it('offers to try again when the results do not load', async () => {

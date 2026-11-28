@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ro" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>DS-006 · Examiner Dashboard Mock</title>
+<link rel="stylesheet" href="shared/mock.css">
+<style>
+  .summary { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .stat { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0 var(--space-3); padding: var(--space-4); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--bg-surface); }
+  .stat > i { grid-row: span 2; color: var(--text-primary-accent); }
+  .stat .val { font-family: var(--font-mono); font-size: 20px; line-height: 28px; font-weight: 700; }
+  .num { font-family: var(--font-mono); white-space: nowrap; }
+  td.num, th.num { text-align: right; }
+  th.num { font-family: inherit; }
+  .attention-card { overflow: hidden; padding: 0; }
+  .attention-card > h2 { padding: var(--space-4) var(--space-6) 0; }
+  .attention { table-layout: fixed; }
+  .attention col.c-state { width: 16%; } .attention col.c-n { width: 15%; } .attention col.c-act { width: 18%; }
+  .attention td { vertical-align: middle; }
+  .attention tbody tr:last-child td { border-bottom: 0; }
+  .attention td.cell-exam > span { display: block; }
+  @media (max-width: 639px) {
+    .attention, .attention tbody { display: block; table-layout: auto; } .attention colgroup { display: none; }
+    .attention thead { display: none; }
+    .attention tr { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle); }
+    .attention td { display: grid; gap: 0; padding: 0; border: 0; text-align: left; }
+    .attention td.num { text-align: left; }
+    .attention td[data-label]::before { content: attr(data-label); font-family: var(--font-ui); font-size: 13px; line-height: 18px; color: var(--text-secondary); }
+    .attention td.wide { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<aside class="mock-controls" aria-label="Mock state switcher">
+  <span class="label">DS-006 · Panou (examinator, mock)</span>
+  <div class="row">
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-theme-btn="light">Light</button>
+      <button type="button" class="mock-btn" data-theme-btn="dark">Dark (Espresso)</button>
+    </div>
+    <div class="mock-group">
+      <button type="button" class="mock-btn active" data-state-btn="s-data">Date</button>
+      <button type="button" class="mock-btn" data-state-btn="s-calm">Nimic de făcut</button>
+      <button type="button" class="mock-btn" data-state-btn="s-empty">Niciun examen publicat</button>
+      <button type="button" class="mock-btn" data-state-btn="s-loading">Se încarcă</button>
+      <button type="button" class="mock-btn" data-state-btn="s-error">Eroare</button>
+    </div>
+  </div>
+</aside>
+
+<header class="app-header">
+  <a href="#" class="brand"><i data-icon="book-open-text" class="lg"></i>Evaluare Digitală</a>
+  <nav class="nav" aria-label="Navigare examinator">
+    <a href="#" aria-current="page">Panou</a><a href="#">Bancă de întrebări</a><a href="#">Examene</a><a href="#">Clase</a>
+  </nav>
+  <div class="header-tools">
+    <div class="lang" role="group" aria-label="Limba"><button aria-pressed="true" data-toggle>RO</button><button aria-pressed="false" data-toggle>EN</button></div>
+    <button class="btn btn-icon theme-btn" aria-label="Schimbă tema"><i data-icon="moon"></i></button>
+    <div class="avatar" aria-label="Maria Popa, examinator">MP</div>
+    <button class="btn btn-icon menu-btn" data-menu aria-label="Deschide meniul"><i data-icon="menu"></i></button>
+  </div>
+</header>
+
+<main class="page narrow">
+  <div class="page-head">
+    <h1 class="t-display">Panou</h1>
+  </div>
+
+  <!-- Loading: skeletons keep the final layout -->
+  <div class="stack" data-show="s-loading" aria-busy="true" aria-label="Se încarcă panoul">
+    <div class="summary">
+      <div class="stat"><div class="skeleton" style="width: 120px;"></div><div class="skeleton" style="width: 48px; margin-top: var(--space-2);"></div></div>
+      <div class="stat"><div class="skeleton" style="width: 120px;"></div><div class="skeleton" style="width: 48px; margin-top: var(--space-2);"></div></div>
+      <div class="stat"><div class="skeleton" style="width: 120px;"></div><div class="skeleton" style="width: 48px; margin-top: var(--space-2);"></div></div>
+    </div>
+    <section class="card stack-sm"><div class="skeleton" style="width: 40%;"></div><div class="skeleton"></div><div class="skeleton"></div></section>
+  </div>
+
+  <!-- Error -->
+  <div class="alert error" role="alert" data-show="s-error">
+    <i data-icon="circle-alert"></i>
+    <div class="row between"><span>Panoul nu s-a putut încărca. Verifică conexiunea și încearcă din nou.</span><button type="button" class="btn"><i data-icon="rotate-cw" class="sm"></i>Încearcă din nou</button></div>
+  </div>
+
+  <!-- Summary: three counts -->
+  <div class="summary" data-show="s-data s-calm s-empty">
+    <div class="stat"><i data-icon="calendar-check" class="lg"></i><span class="t-caption secondary">Examene active</span><span class="val" data-show="s-data">2</span><span class="val" data-show="s-calm s-empty">0</span></div>
+    <div class="stat"><i data-icon="timer" class="lg"></i><span class="t-caption secondary">Încercări în desfășurare</span><span class="val" data-show="s-data">11</span><span class="val" data-show="s-calm s-empty">0</span></div>
+    <div class="stat"><i data-icon="clipboard-check" class="lg"></i><span class="t-caption secondary">Încercări de corectat</span><span class="val" data-show="s-data">7</span><span class="val" data-show="s-calm s-empty">0</span></div>
+  </div>
+
+  <!-- Exams that need attention: open, or with Attempts awaiting grading -->
+  <section class="card attention-card stack-sm" aria-labelledby="att-h" data-show="s-data">
+    <h2 id="att-h" class="t-h2">Necesită atenție</h2>
+    <div class="table-wrap">
+      <table class="attention">
+        <colgroup><col><col class="c-state"><col class="c-n"><col class="c-n"><col class="c-act"></colgroup>
+        <thead><tr><th>Examen</th><th>Stare</th><th class="num">În desfășurare</th><th class="num">De corectat</th><th><span class="sr-only">Acțiune</span></th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Evaluare Unitatea 3: Rapoarte și proporții</span><span class="t-caption secondary">Se închide pe <span class="num">30 nov., 12:00</span></span></td>
+            <td data-label="Stare"><span><span class="badge success">Deschis</span></span></td>
+            <td class="num" data-label="În desfășurare">8</td>
+            <td class="num" data-label="De corectat">3</td>
+            <td class="wide"><a href="#" class="btn"><i data-icon="clipboard-check" class="sm"></i>Corectează</a></td>
+          </tr>
+          <tr>
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Test de recapitulare la fracții zecimale și operații cu numere raționale pozitive, semestrul I</span><span class="t-caption secondary">Fără dată de închidere</span></td>
+            <td data-label="Stare"><span><span class="badge success">Deschis</span></span></td>
+            <td class="num" data-label="În desfășurare">3</td>
+            <td class="num" data-label="De corectat">0</td>
+            <td class="wide"><a href="#" class="btn"><i data-icon="clipboard-check" class="sm"></i>Corectează</a></td>
+          </tr>
+          <tr>
+            <td class="cell-exam wide"><span class="t-body-m text-wrap">Evaluare Unitatea 2: Unghiuri</span><span class="t-caption secondary">Închis pe <span class="num">20 nov., 12:00</span></span></td>
+            <td data-label="Stare"><span><span class="badge">Închis</span></span></td>
+            <td class="num" data-label="În desfășurare">0</td>
+            <td class="num" data-label="De corectat">4</td>
+            <td class="wide"><a href="#" class="btn"><i data-icon="clipboard-check" class="sm"></i>Corectează</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Nothing open and nothing to grade -->
+  <div class="empty" data-show="s-calm">
+    <i data-icon="circle-check"></i>
+    <h2 class="t-h2">Nimic de făcut acum</h2>
+    <p class="secondary" style="max-width: 520px; margin: 0;">Niciun examen nu e deschis și toate încercările predate sunt corectate.</p>
+    <a href="#" class="btn">Vezi examenele</a>
+  </div>
+
+  <!-- No published exam yet -->
+  <div class="empty" data-show="s-empty">
+    <i data-icon="file-plus"></i>
+    <h2 class="t-h2">Încă nu ai publicat niciun examen</h2>
+    <p class="secondary" style="max-width: 520px; margin: 0;">După ce publici un examen pentru o clasă, aici vezi câte încercări sunt în desfășurare și câte așteaptă corectarea.</p>
+    <a href="#" class="btn btn-primary"><i data-icon="plus" class="sm"></i>Examen nou</a>
+  </div>
+</main>
+
+<script src="shared/mock.js"></script>
+</body>
+</html>

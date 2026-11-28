@@ -51,6 +51,7 @@
 - Q-061 · Can an Exam be unpublished or deleted? · _answered_
 - Q-062 · What is the "departajare" label on DS-008's Item 9? · _answered_
 - Q-063 · Which competences should an Exam cover (DS-008 coverage warning)? · _answered_
+- Q-098 · What does the Administrator's exam supervision (DS-012) show, and can the Administrator act on exams? · _answered_
 
 ### [Grading and results](questions/grading-and-results.md)
 - Q-005 · How should cohort-wide general feedback and individual candidate feedback be published? · _answered_
@@ -121,4 +122,5 @@
 - Q-015 · Which language is the UI in? · _answered_
 - Q-017 · Which Romanian and English UI words map to each CONTEXT.md term? · _answered_
 - Q-032 · How is mathematical notation shown in question text? · _answered_
+- Q-099 · Where does an Examiner land after signing in once the dashboard (DS-006) exists? · _answered_
 

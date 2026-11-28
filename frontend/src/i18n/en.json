@@ -89,7 +89,8 @@
     "administrator": "Administrator navigation",
     "users": "Users",
     "questions": "Question bank",
-    "exams": "Exams"
+    "exams": "Exams",
+    "dashboard": "Dashboard"
   },
   "classes": {
     "title": "Classes",
@@ -927,5 +928,69 @@
     "options": "Options of question {{code}}",
     "correct": "Correct",
     "unused": "Unused"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "loading": "Loading the dashboard",
+    "loadFailed": "The dashboard couldn't load. Check your connection and try again.",
+    "active": "Active exams",
+    "inProgress": "Attempts in progress",
+    "awaiting": "Attempts to grade",
+    "attention": "Needs attention",
+    "colExam": "Exam",
+    "colState": "State",
+    "colInProgress": "In progress",
+    "colAwaiting": "To grade",
+    "colAction": "Action",
+    "state": {
+      "open": "Open",
+      "closed": "Closed",
+      "upcoming": "Upcoming"
+    },
+    "closesOn": "Closes on {{date}}",
+    "closedOn": "Closed on {{date}}",
+    "noEnd": "No end date",
+    "grade": "Grade",
+    "calmTitle": "Nothing to do right now",
+    "calmText": "No exam is open and every submitted Attempt is graded.",
+    "seeExams": "See the exams",
+    "emptyTitle": "You haven't published an exam yet",
+    "emptyText": "Once you publish an exam for a class, you'll see here how many Attempts are in progress and how many are waiting to be graded.",
+    "newExam": "New exam"
+  },
+  "supervision": {
+    "title": "Exams",
+    "subtitle": "Every exam on the platform, from every Examiner. View only.",
+    "loading": "Loading the exams",
+    "loadFailed": "<strong>The exam list didn't load.</strong> We couldn't reach the server. Try again.",
+    "show": "Show",
+    "filter": {
+      "all": "All ({{count}})",
+      "active": "Active ({{count}})",
+      "archived": "Archived ({{count}})",
+      "drafts": "Drafts ({{count}})"
+    },
+    "none": {
+      "all": "No exams.",
+      "active": "No active exam right now. An exam is active from publication until its window closes.",
+      "archived": "No archived exam yet. An exam moves here once its window has closed.",
+      "drafts": "No drafts. Every exam is published."
+    },
+    "colExam": "Exam",
+    "colState": "State",
+    "colWindow": "Window",
+    "colClasses": "Classes",
+    "colAttempts": "Submitted / graded",
+    "state": {
+      "draft": "Draft",
+      "upcoming": "Upcoming",
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "resultsPublished": "Results published",
+    "unset": "not set",
+    "noClasses": "no class",
+    "emptyTitle": "No exams yet",
+    "emptyText": "Exams created by Examiners show up here, from draft until after they close."
   }
 }

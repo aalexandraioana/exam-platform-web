@@ -1,5 +1,5 @@
 import { ArrowLeft, ClipboardCheck, Eye, Info, Trash2, WifiOff } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 import { listClasses } from '../../api/classes'
@@ -305,28 +305,38 @@ function ConfirmDialog({ title, text, confirm, variant, onClose, onConfirm }: { 
   )
 }
 
-// DS-008 "Examen nou": the exam is created once its title is written, then the builder opens.
+// DS-008 "Examen nou": the exam is created only when the Examiner presses "Creează examenul" (or
+// Enter), once, then the builder opens. Nothing is saved while the title is typed.
 function NewExam() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [failed, setFailed] = useState(false)
+  const [missing, setMissing] = useState(false)
+  const [busy, setBusy] = useState(false)
+  // A ref, not state: a second click or Enter in the same tick must not start a second request.
+  const sending = useRef(false)
 
-  useEffect(() => {
+  const create = (event: FormEvent) => {
+    event.preventDefault()
     const trimmed = title.trim()
-    if (!trimmed) return
-    let active = true
-    const timer = setTimeout(() => {
-      createExam(trimmed).then(
-        (exam) => active && navigate(`/examiner/exams/${exam.id}`, { replace: true }),
-        () => active && setFailed(true),
-      )
-    }, SAVE_DELAY_MS)
-    return () => {
-      active = false
-      clearTimeout(timer)
+    if (!trimmed) {
+      setMissing(true)
+      return
     }
-  }, [title, navigate])
+    if (sending.current) return
+    sending.current = true
+    setBusy(true)
+    setFailed(false)
+    createExam(trimmed).then(
+      (exam) => navigate(`/examiner/exams/${exam.id}`, { replace: true }),
+      () => {
+        sending.current = false
+        setBusy(false)
+        setFailed(true)
+      },
+    )
+  }
 
   return (
     <main className="mx-auto grid w-full max-w-screen-wide content-start gap-6 px-4 pb-12 pt-6 tablet:px-6 tablet:pb-16 tablet:pt-8">
@@ -337,9 +347,24 @@ function NewExam() {
         </Link>
         <h1 className="text-display">{t('exams.newTitle')}</h1>
       </div>
-      <section className="grid gap-4 rounded-lg border border-subtle bg-surface p-6 shadow-subtle">
-        <TextField id="exam-title" label={t('exams.titleLabel')} placeholder={t('exams.titlePlaceholder')} maxLength={255} value={title} onChange={(e) => setTitle(e.target.value)} help={t('exams.titleHelp')} error={failed ? t('exams.createFailed') : undefined} />
-      </section>
+      <form noValidate onSubmit={create} className="grid gap-4 rounded-lg border border-subtle bg-surface p-6 shadow-subtle">
+        <TextField
+          id="exam-title"
+          label={t('exams.titleLabel')}
+          placeholder={t('exams.titlePlaceholder')}
+          maxLength={255}
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value)
+            setMissing(false)
+          }}
+          help={t('exams.titleHelp')}
+          error={missing ? t('exams.titleRequired') : failed ? t('exams.createFailed') : undefined}
+        />
+        <div>
+          <Button type="submit" variant="primary" disabled={busy}>{t('exams.create')}</Button>
+        </div>
+      </form>
       <div className="grid justify-items-center gap-3 rounded-lg border border-dashed border-strong px-6 py-12 text-center">
         <h2 className="text-h2">{t('exams.noItemsTitle')}</h2>
         <p className="text-secondary">{t('exams.noItemsText')}</p>

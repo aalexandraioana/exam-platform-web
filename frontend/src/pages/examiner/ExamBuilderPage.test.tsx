@@ -262,15 +262,94 @@ describe('ExamBuilderPage (DS-008)', () => {
     expect(await screen.findByText('Subiectul I: 30 / 30')).toBeInTheDocument()
   })
 
-  it('creates a new exam once its title is written', async () => {
+  it('creates a new exam once Creează examenul is pressed', async () => {
     const fetchMock = mockApi({ ...base, 'POST /exams': json(201, { exam: { ...exam, id: 9, title: 'Evaluare Unitatea 4' } }), 'GET /exams/9': json(200, { exam: { ...exam, id: 9, title: 'Evaluare Unitatea 4' } }) })
     renderAt('/examiner/exams/new')
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Examen nou' })).toBeInTheDocument()
     fireEvent.change(screen.getByLabelText('Titlul examenului'), { target: { value: 'Evaluare Unitatea 4' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Creează examenul' }))
 
     await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/examiner/exams/9'), { timeout: 3000 })
     expect(bodyOf(fetchMock, 'POST /exams')).toEqual({ title: 'Evaluare Unitatea 4' })
+  })
+
+  it('saves nothing while the title is being typed', async () => {
+    const fetchMock = mockApi({ ...base, 'POST /exams': json(201, { exam: { ...exam, id: 9 } }) })
+    renderAt('/examiner/exams/new')
+
+    fireEvent.change(await screen.findByLabelText('Titlul examenului'), { target: { value: 'Evaluare Un' } })
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    expect(fetchMock.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0)
+    expect(screen.getByTestId('where')).toHaveTextContent('/examiner/exams/new')
+  })
+
+  it('creates the exam with Enter in the title field', async () => {
+    const fetchMock = mockApi({ ...base, 'POST /exams': json(201, { exam: { ...exam, id: 9 } }), 'GET /exams/9': json(200, { exam: { ...exam, id: 9 } }) })
+    renderAt('/examiner/exams/new')
+
+    const field = await screen.findByLabelText('Titlul examenului')
+    fireEvent.change(field, { target: { value: 'Evaluare Unitatea 4' } })
+    fireEvent.submit(field.closest('form')!)
+
+    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/examiner/exams/9'))
+    expect(bodyOf(fetchMock, 'POST /exams')).toEqual({ title: 'Evaluare Unitatea 4' })
+  })
+
+  it('creates a single exam when the button is pressed twice quickly', async () => {
+    let created = 0
+    let answer: (r: Response) => void = () => {}
+    mockApi({
+      ...base,
+      'POST /exams': () => {
+        created += 1
+        return new Promise<Response>((resolve) => { answer = resolve })
+      },
+      'GET /exams/9': json(200, { exam: { ...exam, id: 9 } }),
+    })
+    renderAt('/examiner/exams/new')
+
+    fireEvent.change(await screen.findByLabelText('Titlul examenului'), { target: { value: 'Evaluare Unitatea 4' } })
+    const button = screen.getByRole('button', { name: 'Creează examenul' })
+    fireEvent.click(button)
+    fireEvent.click(button)
+    fireEvent.submit(button.closest('form')!)
+
+    expect(button).toBeDisabled()
+    expect(created).toBe(1)
+    answer(json(201, { exam: { ...exam, id: 9 } }))
+    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/examiner/exams/9'))
+    expect(created).toBe(1)
+  })
+
+  it('asks for a title before creating the exam', async () => {
+    const fetchMock = mockApi({ ...base, 'POST /exams': json(201, { exam: { ...exam, id: 9 } }) })
+    renderAt('/examiner/exams/new')
+
+    fireEvent.change(await screen.findByLabelText('Titlul examenului'), { target: { value: '   ' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Creează examenul' }))
+
+    expect(await screen.findByText('Scrie titlul examenului.')).toBeInTheDocument()
+    expect(fetchMock.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0)
+  })
+
+  it('lets the Examiner try again when the exam cannot be created', async () => {
+    let calls = 0
+    mockApi({
+      ...base,
+      'POST /exams': () => (++calls === 1 ? json(500) : json(201, { exam: { ...exam, id: 9 } })),
+      'GET /exams/9': json(200, { exam: { ...exam, id: 9 } }),
+    })
+    renderAt('/examiner/exams/new')
+
+    fireEvent.change(await screen.findByLabelText('Titlul examenului'), { target: { value: 'Evaluare Unitatea 4' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Creează examenul' }))
+    expect(await screen.findByText('Nu am putut crea examenul. Încearcă din nou.')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Creează examenul' }))
+    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/examiner/exams/9'))
+    expect(calls).toBe(2)
   })
 
   it('offers to try again when the exam cannot be loaded', async () => {

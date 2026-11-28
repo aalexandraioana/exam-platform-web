@@ -30,10 +30,13 @@ function dashboardAttempt(Exam $exam, AttemptStatus $status, int $minutesAgo = 5
 {
     $started = now()->subMinutes($minutesAgo);
 
-    return Attempt::factory()->create([
-        'exam_id' => $exam->id, 'status' => $status, 'started_at' => $started, 'expires_at' => $started->copy()->addMinutes(50),
-        'submitted_at' => in_array($status, [AttemptStatus::Submitted, AttemptStatus::Graded], true) ? now() : null,
-    ]);
+    $factory = match ($status) {
+        AttemptStatus::Graded => Attempt::factory()->graded(),
+        AttemptStatus::Submitted => Attempt::factory()->submitted(),
+        default => Attempt::factory()->state(['status' => $status]),
+    };
+
+    return $factory->create(['exam_id' => $exam->id, 'started_at' => $started, 'expires_at' => $started->copy()->addMinutes(50)]);
 }
 
 it('counts active exams: published with the window open now', function () {
@@ -134,6 +137,7 @@ it('uses the same number of queries however many exams there are', function () {
     };
     $exam = dashboardExam($examiner);
     dashboardAttempt($exam, AttemptStatus::Submitted);
+    $count(); // the first request also loads the signed-in user's token
     $one = $count();
     foreach (range(1, 4) as $i) {
         dashboardAttempt(dashboardExam($examiner), AttemptStatus::Submitted);

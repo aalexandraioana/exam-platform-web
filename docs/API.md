@@ -589,6 +589,50 @@ Request: `{ "is_active": false }`. `200 OK`: `{ "user": <user> }`.
 `422`: `is_active` (`required`; `invalid` for anything but `false`, so no reactivation).
 `403 forbidden_target` for an Administrator (including oneself); `409 already_deactivated`; `404` for an unknown user.
 
+## Overview
+
+C-009 (P11). Read-only overviews, computed on every read, with no Candidate data and no scores.
+
+### GET /api/examiner/dashboard
+Examiner only (DS-006), over their own exams; another role gets `403 forbidden_role`. `200 OK`:
+
+```json
+{
+  "counts": { "active_exams": 1, "attempts_in_progress": 4, "awaiting_grading": 7 },
+  "exams": [
+    { "id": 12, "title": "Evaluare Unitatea 3", "state": "open", "available_until": "2026-11-30T12:00:00+02:00",
+      "in_progress": 4, "awaiting_grading": 3, "results_published": false }
+  ]
+}
+```
+
+- `active_exams`: published exams whose window is open now.
+- `attempts_in_progress`: Attempts `started` or `in_progress` still taking answers (deadline + the
+  grace period, D-004); an expired Attempt not sealed yet (D-044) is not counted.
+- `awaiting_grading`: Attempts `submitted` and not yet `graded`.
+- `exams`: published exams that are open or have Attempts awaiting grading; open first, then
+  newest. `state` is `open` or `closed` (an upcoming exam with nothing to grade isn't listed).
+
+### GET /api/admin/exams
+Administrator only (DS-012, Q-098): every exam on the platform, drafts included, newest first.
+Read-only: the Administrator can't change an exam. `200 OK`:
+
+```json
+{
+  "exams": [
+    { "id": 12, "title": "Evaluare Unitatea 3", "examiner": { "id": 3, "name": "Ana Popa" },
+      "status": "published", "state": "open",
+      "available_from": "2026-11-30T09:00:00+02:00", "available_until": "2026-11-30T12:00:00+02:00",
+      "results_published_at": null, "classes": [ { "id": 2, "name": "6A" } ],
+      "attempts": { "submitted": 9, "graded": 4 } }
+  ]
+}
+```
+
+- `status`: `draft` or `published`; `state`: `upcoming`, `open` or `closed` for a published exam,
+  `null` for a draft.
+- `attempts.submitted`: submitted or graded Attempts; `attempts.graded`: graded ones.
+
 ## Accounts created by the operator
 Administrators have no endpoint (D-055). They, and Examiners if needed, are created on the server with:
 ```bash

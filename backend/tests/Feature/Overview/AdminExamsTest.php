@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\AttemptStatus;
 use App\Models\Attempt;
 use App\Models\Exam;
 use App\Models\SchoolClass;
@@ -108,6 +107,7 @@ it('uses the same number of queries however many exams there are', function () {
     $exam = Exam::factory()->published()->create();
     $exam->classes()->attach(SchoolClass::factory()->for($exam->examiner, 'examiner')->create());
     Attempt::factory()->submitted()->create(['exam_id' => $exam->id]);
+    $count(); // the first request also loads the signed-in user's token
     $one = $count();
     foreach (range(1, 4) as $i) {
         $more = Exam::factory()->published()->create();

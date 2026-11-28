@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AttemptStatus;
-use App\Enums\ScorePolicy;
 use App\Enums\Section;
 use App\Http\Requests\Grading\GradeRequest;
 use App\Http\Requests\Grading\PublishResultsRequest;
@@ -18,9 +17,9 @@ use App\Models\Exam;
 use App\Models\Question;
 use App\Support\Attempts\Sealer;
 use App\Support\Attempts\Starter;
+use App\Support\Grading\CountedAttempts;
 use App\Support\Grading\Scorer;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +93,7 @@ class GradingController extends Controller
                 'to_grade' => $statuses['to_grade'] ?? 0,
                 'recheck' => $statuses['recheck'] ?? 0,
             ],
-            'publish' => ['ready' => ! $missing, 'missing' => $missing, ...self::stats($exam)],
+            'publish' => ['ready' => ! $missing, 'missing' => $missing, ...CountedAttempts::stats(CountedAttempts::of($exam))],
         ]);
     }
 
@@ -292,24 +291,6 @@ class GradingController extends Controller
         }
 
         return $missing;
-    }
-
-    /** Mean and median grade (1–10) over each Candidate's counted Attempt (D-012); null before any is graded. */
-    private static function stats(Exam $exam): array
-    {
-        /** @var Collection<int, Attempt> $graded */
-        $graded = $exam->attempts()->where('status', AttemptStatus::Graded)->get();
-        $counted = $graded->groupBy('candidate_id')->map(fn ($attempts) => $exam->score_policy === ScorePolicy::Latest
-            ? $attempts->sortByDesc('attempt_number')->first()
-            : $attempts->sortByDesc(fn ($a) => (float) $a->total_score)->first());
-        $grades = $counted->map(fn ($a) => (float) $a->total_score / 10)->sort()->values();
-        if ($grades->isEmpty()) {
-            return ['mean' => null, 'median' => null];
-        }
-        $n = $grades->count();
-        $median = $n % 2 ? $grades[intdiv($n, 2)] : ($grades[$n / 2 - 1] + $grades[$n / 2]) / 2;
-
-        return ['mean' => round($grades->avg(), 2), 'median' => round($median, 2)];
     }
 
     /** Attempts handed in: submitted (awaiting grading) or graded. */

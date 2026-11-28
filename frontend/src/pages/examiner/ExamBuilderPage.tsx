@@ -1,4 +1,4 @@
-import { ArrowLeft, ClipboardCheck, Eye, Info, Trash2, WifiOff } from 'lucide-react'
+import { ArrowLeft, ChartColumn, ClipboardCheck, Eye, Info, Trash2, WifiOff } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
@@ -199,6 +199,12 @@ export default function ExamBuilderPage() {
               <Link to={`/examiner/exams/${exam.id}/grading`} className={`inline-flex min-h-hit items-center gap-2 rounded-md border border-strong bg-surface px-4 py-2 font-medium text-primary hover:bg-surface-subtle ${focusRing}`}>
                 <ClipboardCheck className="size-icon-sm" aria-hidden="true" />
                 {grading ? t('exams.gradeProgress', grading) : t('exams.grade')}
+              </Link>
+            )}
+            {published && (
+              <Link to={`/examiner/exams/${exam.id}/analysis`} className={`inline-flex min-h-hit items-center gap-2 rounded-md border border-strong bg-surface px-4 py-2 font-medium text-primary hover:bg-surface-subtle ${focusRing}`}>
+                <ChartColumn className="size-icon-sm" aria-hidden="true" />
+                {t('exams.analysis')}
               </Link>
             )}
             <Button onClick={() => setPreview(true)}>

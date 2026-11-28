@@ -1,0 +1,63 @@
+{
+  "source": "Expected p and r computed independently with Python 3 (python3 -I): p = statistics.mean(scores) / max, r = statistics.correlation(scores, rests) (Pearson), both rounded to 4 decimals. P10, D-047.",
+  "cases": {
+    "subject_1": {
+      "max": 5,
+      "scores": [
+        5,
+        5,
+        0,
+        5,
+        0,
+        5,
+        5,
+        0,
+        5,
+        0
+      ],
+      "rests": [
+        62,
+        48,
+        30,
+        71,
+        25,
+        55,
+        40,
+        38,
+        66,
+        20
+      ],
+      "p": 0.6,
+      "r": 0.8363
+    },
+    "subject_2": {
+      "max": 20,
+      "scores": [
+        18,
+        12,
+        4,
+        20,
+        6,
+        15,
+        10,
+        8,
+        17,
+        2
+      ],
+      "rests": [
+        50,
+        41,
+        22,
+        58,
+        30,
+        44,
+        35,
+        27,
+        49,
+        15
+      ],
+      "p": 0.56,
+      "r": 0.9862
+    }
+  }
+}

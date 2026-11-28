@@ -450,7 +450,7 @@
     "newTitle": "New exam",
     "titleLabel": "Exam title",
     "titlePlaceholder": "E.g. Unit 4 test: Angles",
-    "titleHelp": "The exam is saved automatically once you write its title.",
+    "titleHelp": "The exam is created when you press “Create exam”. After that, its settings save automatically.",
     "createFailed": "We couldn't create the exam. Try again.",
     "saving": "Saving…",
     "saved": "Saved automatically",
@@ -570,7 +570,9 @@
     "grade": "Grade",
     "gradeProgress": "Grade ({{graded}} / {{total}})",
     "resultsNotice": "<strong>The exam is published for {{classes}}.</strong> You can only change the title and the description. The items, classes, duration, attempts and end date are locked, and the exam can no longer be withdrawn.",
-    "analysis": "Item Analysis"
+    "analysis": "Item Analysis",
+    "create": "Create exam",
+    "titleRequired": "Write the exam's title."
   },
   "candidate": {
     "title": "Dashboard",

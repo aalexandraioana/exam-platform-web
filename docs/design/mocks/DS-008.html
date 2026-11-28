@@ -350,7 +350,10 @@
 <main class="page" data-show="s-empty">
   <div class="page-head"><div class="stack-sm"><a href="#" class="t-caption accent row" style="gap: var(--space-1);"><i data-icon="arrow-left" class="sm"></i>Examene</a><h1 class="t-display">Examen nou</h1></div></div>
   <div class="card stack">
-    <div class="field"><label for="title-new">Titlul examenului</label><input id="title-new" class="input" placeholder="De exemplu: Evaluare Unitatea 4: Unghiuri"></div>
+    <form class="stack" novalidate>
+      <div class="field"><label for="title-new">Titlul examenului</label><input id="title-new" class="input" placeholder="De exemplu: Evaluare Unitatea 4: Unghiuri" aria-describedby="title-new-help"><span id="title-new-help" class="help">Examenul se creează când apeși „Creează examenul”. După aceea, setările se salvează automat.</span></div>
+      <div class="row"><button type="submit" class="btn btn-primary">Creează examenul</button></div>
+    </form>
   </div>
   <div class="empty">
     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="muted" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>

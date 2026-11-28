@@ -69,7 +69,7 @@ DS-010 (draft): the mock is drawn from the existing tokens and DS-009's layout (
 ## Sequencing
 One builder on `feat/p10-item-analysis` (from `origin/main`): backend tests first; draw the DS-010 mock and **stop for confirmation**; UI and screenshots.
 
-**Release (D-063):** nothing is merged before or during the 30 Nov pilot. On 1 Dec, after the pilot and with the user's go, merge and deploy by hand (API, then site), so the analysis runs on the pilot data while grading finishes; test 20 on 2 Dec.
+**Release (D-063):** changed by the user on 2026-11-28: merged that day (PR #19), before the pilot, in one grouped release with P11 and the new-exam fix, deployed API then site. Original plan: nothing is merged before or during the 30 Nov pilot. On 1 Dec, after the pilot and with the user's go, merge and deploy by hand (API, then site), so the analysis runs on the pilot data while grading finishes; test 20 on 2 Dec.
 
 ## Risks
 - Small samples per question: many per-question rows show `not_enough_data`; per-Item rows carry the pilot's weak item.

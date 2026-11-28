@@ -78,6 +78,7 @@ function screenshotPath(name: string) {
 const states = [
   { name: 'list', path: '/examiner/exams', exam, ready: (p: Page) => expect(p.getByText('Test inițial · clasa a VI-a')).toBeVisible() },
   { name: 'empty', path: '/examiner/exams', exam, exams: [], ready: (p: Page) => expect(p.getByRole('heading', { name: 'Încă nu ai niciun examen' })).toBeVisible() },
+  { name: 'new', path: '/examiner/exams/new', exam, ready: (p: Page) => expect(p.getByRole('button', { name: 'Creează examenul' })).toBeVisible() },
   { name: '', path: '/examiner/exams/4', exam, ready: (p: Page) => expect(p.getByText('Subiectul I: 30 / 30')).toBeVisible() },
   { name: 'errors', path: '/examiner/exams/4', exam: errors, ready: (p: Page) => expect(p.getByText('Subiectul II: 45 / 60')).toBeVisible() },
   { name: 'item', path: '/examiner/exams/4', exam, ready: async (p: Page) => { await p.getByRole('button', { name: 'Editează itemul 3' }).click(); await expect(p.getByRole('dialog').getByText('3 întrebări finalizate se potrivesc', { exact: false })).toBeVisible({ timeout: 5000 }) }, viewport: true },

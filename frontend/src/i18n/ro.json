@@ -459,7 +459,7 @@
     "newTitle": "Examen nou",
     "titleLabel": "Titlul examenului",
     "titlePlaceholder": "De exemplu: Evaluare Unitatea 4: Unghiuri",
-    "titleHelp": "Examenul se salvează automat după ce scrii titlul.",
+    "titleHelp": "Examenul se creează când apeși „Creează examenul”. După aceea, setările se salvează automat.",
     "createFailed": "Nu am putut crea examenul. Încearcă din nou.",
     "saving": "Se salvează…",
     "saved": "Salvat automat",
@@ -583,7 +583,9 @@
     "grade": "Corectează",
     "gradeProgress": "Corectează ({{graded}} / {{total}})",
     "resultsNotice": "<strong>Examenul este publicat pentru {{classes}}.</strong> Poți schimba doar titlul și descrierea. Itemii, clasele, durata, încercările și data de încheiere sunt blocate, iar examenul nu mai poate fi retras.",
-    "analysis": "Analiza itemilor"
+    "analysis": "Analiza itemilor",
+    "create": "Creează examenul",
+    "titleRequired": "Scrie titlul examenului."
   },
   "candidate": {
     "title": "Panou",

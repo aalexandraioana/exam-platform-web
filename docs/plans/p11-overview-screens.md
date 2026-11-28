@@ -1,7 +1,7 @@
 # P11: Overview screens (DS-006 Examiner dashboard, DS-012 Administrator exam supervision)
 
 Approved by the user on 2026-11-28, with the four test changes below. Built on `feat/p11-overview`
-from `feat/p10-item-analysis`; merged with P10 on 1 Dec, after the pilot (D-063). Contract C-009.
+from `feat/p10-item-analysis`; planned to merge with P10 on 1 Dec; the user moved both to 2026-11-28, before the pilot (PR #19, PR #22; D-063). Contract C-009.
 Answers: Q-098 (DS-012 read-only, every exam, state filter), Q-099 (the dashboard is the Examiner's landing).
 
 ## Size

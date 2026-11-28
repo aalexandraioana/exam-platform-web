@@ -35,8 +35,9 @@ designs:
   - id: DS-006
     name: examiner-dashboard
     kind: screen
-    status: approved
-    description: Examiner dashboard with summary cards for active exams, live candidate attempts, and pending grading queue
+    status: implemented
+    source: frontend/src/pages/examiner/ExaminerDashboardPage.tsx
+    description: Examiner landing "Panou" at /examiner (P11, Q-099, C-009); three counts (active exams, Attempts in progress, Attempts to grade) and the exams needing attention (open, or with Attempts to grade) linking to their grading; nothing-to-do and no-published-exam states, loading, error with retry; stacked rows below tablet width
   - id: DS-007
     name: question-bank-manager
     kind: screen
@@ -70,8 +71,9 @@ designs:
   - id: DS-012
     name: admin-exam-supervision
     kind: screen
-    status: approved
-    description: Administrator overview providing platform-wide directory and supervision of all exams
+    status: implemented
+    source: frontend/src/pages/admin/AdminExamsPage.tsx
+    description: Administrator "Examene" at /admin/exams (P11, Q-098, C-009); every exam read-only with Examiner, state (and results published), window, classes and submitted / graded Attempts; a state filter (all, active, archived, drafts) with counts; empty filter, no exams, loading, error with retry; capped at the desktop width like DS-011
   - id: DS-013
     name: examiner-classes
     kind: screen

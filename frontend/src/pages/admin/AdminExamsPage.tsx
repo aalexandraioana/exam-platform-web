@@ -47,9 +47,9 @@ export default function AdminExamsPage() {
   }, [reload])
 
   const shown = exams?.filter(matches[filter]) ?? []
-  const cell = 'border-b border-subtle px-4 py-3 align-middle max-tablet:border-0 max-tablet:p-0'
+  const cell = 'border-b border-subtle px-4 py-3 align-middle max-tablet:border-0 max-tablet:p-0 max-tablet:content-start max-tablet:justify-items-start'
   const th = 'border-b border-subtle bg-surface-subtle px-4 py-3 text-left text-caption font-semibold text-secondary'
-  const label = (text: string) => <span className="text-caption text-secondary tablet:hidden">{text}</span>
+  const label = (text: string) => <span className="font-sans text-caption text-secondary tablet:hidden">{text}</span>
 
   return (
     <main className="mx-auto grid w-full max-w-screen-desktop content-start gap-6 px-4 pb-12 pt-6 tablet:px-6 tablet:pb-16 tablet:pt-8">
@@ -92,10 +92,10 @@ export default function AdminExamsPage() {
               <table className="w-full table-fixed border-collapse max-tablet:block">
                 <colgroup className="max-tablet:hidden">
                   <col />
+                  <col className="w-[16%]" />
+                  <col className="w-[21%]" />
+                  <col className="w-[12%]" />
                   <col className="w-[17%]" />
-                  <col className="w-[22%]" />
-                  <col className="w-[14%]" />
-                  <col className="w-[14%]" />
                 </colgroup>
                 <thead className="max-tablet:hidden">
                   <tr>

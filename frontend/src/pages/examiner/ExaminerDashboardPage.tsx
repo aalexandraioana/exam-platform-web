@@ -87,9 +87,9 @@ export default function ExaminerDashboardPage() {
       <span className="font-mono text-timer">{value}</span>
     </div>
   )
-  const cell = 'border-b border-subtle px-4 py-3 align-middle max-tablet:border-0 max-tablet:p-0'
+  const cell = 'border-b border-subtle px-4 py-3 align-middle max-tablet:border-0 max-tablet:p-0 max-tablet:content-start max-tablet:justify-items-start'
   const th = 'border-b border-subtle bg-surface-subtle px-4 py-3 text-left text-caption font-semibold text-secondary'
-  const label = (text: string) => <span className="text-caption text-secondary tablet:hidden">{text}</span>
+  const label = (text: string) => <span className="font-sans text-caption text-secondary tablet:hidden">{text}</span>
 
   return (
     <main className={shell}>

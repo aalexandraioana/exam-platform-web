@@ -92,7 +92,8 @@
     "administrator": "Navigare administrator",
     "users": "Utilizatori",
     "questions": "Bancă de întrebări",
-    "exams": "Examene"
+    "exams": "Examene",
+    "dashboard": "Panou"
   },
   "classes": {
     "title": "Clase",
@@ -959,5 +960,69 @@
     "options": "Opțiunile întrebării {{code}}",
     "correct": "Corect",
     "unused": "Nefolosită"
+  },
+  "dashboard": {
+    "title": "Panou",
+    "loading": "Se încarcă panoul",
+    "loadFailed": "Panoul nu s-a putut încărca. Verifică conexiunea și încearcă din nou.",
+    "active": "Examene active",
+    "inProgress": "Încercări în desfășurare",
+    "awaiting": "Încercări de corectat",
+    "attention": "Necesită atenție",
+    "colExam": "Examen",
+    "colState": "Stare",
+    "colInProgress": "În desfășurare",
+    "colAwaiting": "De corectat",
+    "colAction": "Acțiune",
+    "state": {
+      "open": "Deschis",
+      "closed": "Închis",
+      "upcoming": "Urmează"
+    },
+    "closesOn": "Se închide pe {{date}}",
+    "closedOn": "Închis pe {{date}}",
+    "noEnd": "Fără dată de închidere",
+    "grade": "Corectează",
+    "calmTitle": "Nimic de făcut acum",
+    "calmText": "Niciun examen nu e deschis și toate încercările predate sunt corectate.",
+    "seeExams": "Vezi examenele",
+    "emptyTitle": "Încă nu ai publicat niciun examen",
+    "emptyText": "După ce publici un examen pentru o clasă, aici vezi câte încercări sunt în desfășurare și câte așteaptă corectarea.",
+    "newExam": "Examen nou"
+  },
+  "supervision": {
+    "title": "Examene",
+    "subtitle": "Toate examenele de pe platformă, ale tuturor examinatorilor. Doar pentru consultare.",
+    "loading": "Se încarcă examenele",
+    "loadFailed": "<strong>Lista de examene nu s-a încărcat.</strong> Nu ne-am putut conecta la server. Încearcă din nou.",
+    "show": "Arată",
+    "filter": {
+      "all": "Toate ({{count}})",
+      "active": "Active ({{count}})",
+      "archived": "Arhivate ({{count}})",
+      "drafts": "Ciorne ({{count}})"
+    },
+    "none": {
+      "all": "Niciun examen.",
+      "active": "Niciun examen activ acum. Un examen e activ de la publicare până i se închide fereastra.",
+      "archived": "Niciun examen arhivat încă. Un examen ajunge aici după ce i se închide fereastra.",
+      "drafts": "Nicio ciornă. Toate examenele sunt publicate."
+    },
+    "colExam": "Examen",
+    "colState": "Stare",
+    "colWindow": "Fereastră",
+    "colClasses": "Clase",
+    "colAttempts": "Predate / corectate",
+    "state": {
+      "draft": "Ciornă",
+      "upcoming": "Urmează",
+      "open": "Deschis",
+      "closed": "Închis"
+    },
+    "resultsPublished": "Rezultate publicate",
+    "unset": "nestabilită",
+    "noClasses": "nicio clasă",
+    "emptyTitle": "Încă nu există examene",
+    "emptyText": "Examenele create de examinatori apar aici, de la ciornă până după închidere."
   }
 }

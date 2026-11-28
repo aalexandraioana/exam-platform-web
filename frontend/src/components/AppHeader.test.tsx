@@ -71,7 +71,7 @@ describe('AppHeader for an Examiner', () => {
     setToken('1|t')
     mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'examiner' } }) })
     render(
-      <MemoryRouter initialEntries={['/examiner']}>
+      <MemoryRouter initialEntries={['/examiner/classes']}>
         <AuthProvider>
           <AppHeader />
         </AuthProvider>
@@ -82,7 +82,7 @@ describe('AppHeader for an Examiner', () => {
     expect(within(nav).getByRole('link', { name: 'Clase' })).toHaveAttribute('aria-current', 'page')
   })
 
-  it('lists the Examiner screens in the mocks\' order (DS-007, DS-008, DS-013)', async () => {
+  it('lists the Examiner screens in the mocks\' order (DS-006, DS-007, DS-008, DS-013)', async () => {
     setToken('1|t')
     mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'examiner' } }) })
     render(
@@ -94,7 +94,7 @@ describe('AppHeader for an Examiner', () => {
     )
 
     const nav = await screen.findByRole('navigation', { name: 'Navigare examinator' })
-    expect(within(nav).getAllByRole('link').map((l) => l.textContent)).toEqual(['Bancă de întrebări', 'Examene', 'Clase'])
+    expect(within(nav).getAllByRole('link').map((l) => l.textContent)).toEqual(['Panou', 'Bancă de întrebări', 'Examene', 'Clase'])
     expect(within(nav).getByRole('link', { name: 'Examene' })).toHaveAttribute('href', '/examiner/exams')
   })
 
@@ -180,5 +180,43 @@ describe('AppHeader in the exam room', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 50))
     expect(container.querySelector('header')).toBeNull()
+  })
+})
+
+describe('AppHeader for an Administrator (P11)', () => {
+  it('links the users and the exam supervision (DS-011, DS-012)', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'administrator' } }) })
+    render(
+      <MemoryRouter initialEntries={['/admin/exams']}>
+        <AuthProvider>
+          <AppHeader />
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+
+    const nav = await screen.findByRole('navigation', { name: 'Navigare administrator' })
+    expect(within(nav).getAllByRole('link').map((l) => l.textContent)).toEqual(['Utilizatori', 'Examene'])
+    expect(within(nav).getByRole('link', { name: 'Examene' })).toHaveAttribute('aria-current', 'page')
+    expect(within(nav).getByRole('link', { name: 'Utilizatori' })).toHaveAttribute('href', '/admin')
+  })
+})
+
+describe('AppHeader dashboard link (P11, Q-099)', () => {
+  it('marks Panou on the Examiner landing and links Clase to /examiner/classes', async () => {
+    setToken('1|t')
+    mockApi({ 'GET /user': json(200, { user: { ...candidate, role: 'examiner' } }) })
+    render(
+      <MemoryRouter initialEntries={['/examiner']}>
+        <AuthProvider>
+          <AppHeader />
+        </AuthProvider>
+      </MemoryRouter>,
+    )
+
+    const nav = await screen.findByRole('navigation', { name: 'Navigare examinator' })
+    expect(within(nav).getByRole('link', { name: 'Panou' })).toHaveAttribute('aria-current', 'page')
+    expect(within(nav).getByRole('link', { name: 'Clase' })).toHaveAttribute('href', '/examiner/classes')
+    expect(within(nav).getByRole('link', { name: 'Clase' })).not.toHaveAttribute('aria-current')
   })
 })

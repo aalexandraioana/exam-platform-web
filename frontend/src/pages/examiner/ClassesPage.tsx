@@ -323,7 +323,7 @@ function Roster({ candidates }: { candidates: ClassCandidate[] }) {
             placeholder={t('classes.search')}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            className={`min-h-hit w-full rounded-md border border-input bg-surface px-3 py-2 text-primary placeholder:text-muted tablet:w-auto ${focusRing}`}
+            className={`min-h-hit w-full rounded-md border border-input bg-surface px-3 py-2 text-primary placeholder:text-muted tablet:max-w-auth tablet:flex-1 ${focusRing}`}
           />
         )}
       </div>

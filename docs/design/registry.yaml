@@ -35,7 +35,7 @@ designs:
   - id: DS-006
     name: examiner-dashboard
     kind: screen
-    status: draft
+    status: approved
     description: Examiner dashboard with summary cards for active exams, live candidate attempts, and pending grading queue
   - id: DS-007
     name: question-bank-manager
@@ -70,7 +70,7 @@ designs:
   - id: DS-012
     name: admin-exam-supervision
     kind: screen
-    status: draft
+    status: approved
     description: Administrator overview providing platform-wide directory and supervision of all exams
   - id: DS-013
     name: examiner-classes
